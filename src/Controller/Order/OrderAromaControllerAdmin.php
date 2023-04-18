@@ -49,7 +49,7 @@ class OrderAromaControllerAdmin extends AbstractController
             ['prop' => 'status'],
             ['prop' => 'dateMin', 'col' => 'orderDate', 'op' => '>='],
             ['prop' => 'dateMax', 'col' => 'orderDate', 'op' => '<='],
-            ['prop' => 'clientName', 'col' => "concat(concat(coalesce(u.prenom, ''), ' '), u.nom)", 'alias' => null, 'op' => 'LIKE']
+            ['prop' => 'clientName', 'col' => "concat(concat(coalesce(ad.firstname, ''), ' '), ad.lastname)", 'alias' => null, 'op' => 'LIKE']
         ];
 
         $filter = [];
@@ -69,6 +69,7 @@ class OrderAromaControllerAdmin extends AbstractController
             ->join('o.user', 'u')
             ->join('o.agent', 'a')
             ->join('o.secteur', 's')
+            ->join('o.address', 'ad')
         ;  
 
         $where =  $searchService->getWhere($filter, new MyCriteriaParam($criteria, 'o'));   

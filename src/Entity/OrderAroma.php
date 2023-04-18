@@ -97,15 +97,21 @@ class OrderAroma
      */
     private $tva;
 
-    /**
-     * @ORM\Column(type="decimal", precision=16, scale=6, nullable=true)
-     */
-    private $montantTtc;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $invoicePath;
+
+    /**
+     * @ORM\Column(type="decimal", precision=12, scale=2, nullable=true)
+     */
+    private $fraisLivraison;
+
+    /**
+     * @ORM\Column(type="decimal", precision=12, scale=2, nullable=true)
+     */
+    private $montantSansFraisLivraison;
 
     public function __construct()
     {
@@ -272,21 +278,6 @@ class OrderAroma
         return $this;
     }
 
-    public function getMontantTtc(): ?string
-    {
-        return $this->montantTtc;
-    }
-
-    public function setMontantTtc(?string $montantTtc): self
-    {
-        $this->montantTtc = $montantTtc;
-
-        return $this;
-    }
-
-    public function getMontantTva(){
-        return $this->getMontantTtc() / (1.0 + 100/$this->getTva());
-    }
 
     public function getInvoicePath(): ?string
     {
@@ -298,5 +289,37 @@ class OrderAroma
         $this->invoicePath = $invoicePath;
 
         return $this;
+    }
+
+    public function getFraisLivraison(): ?string
+    {
+        return $this->fraisLivraison;
+    }
+
+    public function setFraisLivraison(?string $fraisLivraison): self
+    {
+        $this->fraisLivraison = $fraisLivraison;
+
+        return $this;
+    }
+
+    public function getMontantSansFraisLivraison(): ?string
+    {
+        return $this->montantSansFraisLivraison;
+    }
+
+    public function setMontantSansFraisLivraison(?string $montantSansFraisLivraison): self
+    {
+        $this->montantSansFraisLivraison = $montantSansFraisLivraison;
+
+        return $this;
+    }
+
+    public function getMontantTva(){
+        return $this->getMontantSansFraisLivraison() * $this->getTva() / (100 + $this->getTva());
+    }
+
+    public function getMontantHt(){
+        return $this->getMontantSansFraisLivraison() / (1. + $this->getTva()/100);
     }
 }

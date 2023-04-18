@@ -1,3 +1,9 @@
+{% set secteurId = app.session.get('secteurId') %}
+{% set secteur = secteurRepository.find(secteurId) %}
+{% set fraisLivraison = configSecteurService.calculerFraisDeLivraison(totalCost, secteur) %}
+{% set configFraisLivraison = configSecteurService.findFraisLivraison(secteur) %}
+{% set configPrixMinFraisLivraisonGratuit = configSecteurService.findPrixMinFraisLivraisonGratuit(secteur) %}
+{% set configTva = configSecteurService.findTva(secteur) %}
 {% set active = 'cart' %}
 {% extends 'user_category/client/aroma/cart/base_cart.html.twig' %}
 
@@ -84,7 +90,7 @@
                         <hr /> #}
                         <ul class="list-unstyled">
                             
-                            <li class="price-detail">
+                            {# <li class="price-detail">
                                 <div class="detail-title detail-total">Montant total HT  :</div>
                                 <div class="detail-amt fw-bolder" id="cart-total">{{(totalCost / (1.0 + tva/100)) | number_format(2, ',', ' ')}} €</div>
                             </li>
@@ -95,7 +101,36 @@
                             <li class="price-detail">
                                 <div class="detail-title detail-total">Montant total TTC  :</div>
                                 <div class="detail-amt fw-bolder" id="cart-total-ttc">{{(totalCost) | number_format(2, ',', ' ')}} €</div>
+                            </li> #}
+
+                            <li class="price-detail">
+                                <div class="detail-title detail-total">Sous-total</div>
+                                <div class="detail-amt fw-bolder" id="cart-subtotal" data-totalcoast="{{totalCost}}">{{totalCost| number_format(2, ',', ' ')}} €</div>
                             </li>
+                            <li class="price-detail">
+                                <div class="detail-title detail-total">TVA ({{configTva | number_format(0, ',', ' ')}} %)</div>
+                                <div class="detail-amt fw-bolder" id="cart-tva" data-tva="{{configTva}}">{{(totalCost * configTva / (100 + configTva))| number_format(2, ',', ' ')}} €</div>
+                            </li>
+                            <li class="price-detail mt-4">
+                                <div class="detail-title detail-total">Prix net (sans TVA)</div>
+                                <div class="detail-amt fw-bolder" id="cart-total-ht">{{(totalCost / (1.0 + configTva/100))| number_format(2, ',', ' ')}} €</div>
+                            </li>
+                            <li class="price-detail">
+                                <div class="detail-title detail-total">Frais de livraison</div>
+                                <div class="detail-amt fw-bolder" id="cart-frais-livraison" data-frais="{{configFraisLivraison}}" data-prix-min-gratuit="{{configPrixMinFraisLivraisonGratuit}}"> {{fraisLivraison| number_format(2, ',', ' ')}} €</div>
+                                
+                            </li>
+                            {% if configPrixMinFraisLivraisonGratuit >= 0 %}
+                            <li class="price-detail">
+                            <p>Frais de livraison gratuit pour votre commande au-delà de {{configPrixMinFraisLivraisonGratuit| number_format(2, ',', ' ')}} €</p>
+                            </li>
+                            {% endif %}
+                            
+                            <li class="price-detail">
+                                <div class="detail-title detail-total">Prix total (TVA incluse)</div>
+                                <div class="detail-amt fw-bolder" id="cart-total">{{(totalCost + fraisLivraison)| number_format(2, ',', ' ')}} €</div>
+                            </li>
+
                         </ul>
                         <a role="button" onclick="updateBasketItems(event)" class="btn btn-warning w-100 btn-next place-order mb-2" href="#">Enregistrer les modifications</a>
                         {% if is_granted('ROLE_CLIENT') %}
@@ -188,18 +223,25 @@
             let subtotal = getTotalCostOf(basketItems[i]['productId']);
             total += subtotal;
         }
-        //let subtotalDOM = document.getElementById(`cart-subtotal`);
-        let totalDOM = document.getElementById(`cart-total`);
         let tvaDOM = document.getElementById(`cart-tva`);
-        let totalTtcDOM = document.getElementById(`cart-total-ttc`);
-        //subtotalDOM.innerHTML = `${total} €`;
-        //totalDOM.innerHTML = formatPrix(total);
-        //tvaDOM.innerHTML = formatPrix(total * tva/100);
-        //totalTtcDOM.innerHTML = formatPrix(total * (1 + tva/100));
+        let totalHtDOM = document.getElementById(`cart-total-ht`);
+        let subtotalDOM = document.getElementById(`cart-subtotal`);
+        let totalDOM = document.getElementById(`cart-total`);
+        let fraisLivraisonDOM = document.getElementById(`cart-frais-livraison`);
+        let tva = parseFloat(tvaDOM.dataset.tva);
+        let configFraisLivraison = parseFloat(fraisLivraisonDOM.dataset.frais);
+        let configPrixMinFraisLivraisonGratuit = parseFloat(fraisLivraisonDOM.dataset.prixMinGratuit);
 
-        totalTtcDOM.innerHTML = formatPrix(total);
-        tvaDOM.innerHTML = formatPrix(total / (1. + 100/tva));
-        totalDOM.innerHTML = formatPrix(total / (1. + tva/100));
+        let fraisLivraison = 0;
+        if(total > 0 && (total < configPrixMinFraisLivraisonGratuit || configPrixMinFraisLivraisonGratuit < 0)){
+            fraisLivraison = configFraisLivraison;
+        }
+
+        subtotalDOM.innerHTML = formatPrix(total);
+        tvaDOM.innerHTML = formatPrix(total * tva / (100 + tva));
+        totalHtDOM.innerHTML = formatPrix(total / (1.0 + tva/100));
+        fraisLivraisonDOM.innerHTML = formatPrix(fraisLivraison);
+        totalDOM.innerHTML = formatPrix(total + fraisLivraison);
 
     }
 

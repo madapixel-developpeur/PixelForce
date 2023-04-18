@@ -8,16 +8,19 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 class FileHandler
 {
     private $filesDirectory;
     private $slugger;
+    private $kernel;
 
-    public function __construct($filesDirectory, SluggerInterface $slugger)
+    public function __construct($filesDirectory, SluggerInterface $slugger, KernelInterface $kernel)
     {
         $this->filesDirectory = $filesDirectory;
         $this->slugger = $slugger;
+        $this->kernel = $kernel;
     }
 
 
@@ -123,5 +126,13 @@ class FileHandler
         }
     
         return false;
+    }
+
+    public function convertImageToBase64($path){
+        $path = $this->kernel->getProjectDir().'/public/'.$path;
+        $type = pathinfo($path, PATHINFO_EXTENSION);
+        $data = file_get_contents($path);
+        $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+        return $base64;
     }
 }

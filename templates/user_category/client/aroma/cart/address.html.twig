@@ -1,3 +1,7 @@
+{% set secteurId = app.session.get('secteurId') %}
+{% set secteur = secteurRepository.find(secteurId) %}
+{% set fraisLivraison = configSecteurService.calculerFraisDeLivraison(totalCost, secteur) %}
+{% set configTva = configSecteurService.findTva(secteur) %}
 {% set active = 'address' %}
 {% extends 'user_category/client/aroma/cart/base_cart.html.twig' %}
 
@@ -11,24 +15,45 @@
         <!-- Checkout Customer Address Left starts -->
         <div class="card">
             <div class="card-header flex-column align-items-start">
-                <h4 class="card-title display-4 p-3">Adresse de livraison</h4>
+                <h4 class="card-title display-4 p-3">Vos informations</h4>
                 {# <p class="card-text text-muted mt-25">Be sure to check "Deliver to this address" when you have finished</p> #}
             </div>
             <div class="card-body pt-3">
                 
                 <div class="row">
-                    <div class="col-md-12 col-sm-12">
+                    <div class="col-md-6 col-sm-12">
                         <div class="mb-2">
-                            {{form_label(form.address)}}
-                            {{form_widget(form.address)}}
-                            {{form_errors(form.address)}}
+                            {{form_label(form.lastname)}}
+                            {{form_widget(form.lastname)}}
+                            {{form_errors(form.lastname)}}
                         </div>
                     </div>
                     <div class="col-md-6 col-sm-12">
                         <div class="mb-2">
-                            {{form_label(form.city)}}
-                            {{form_widget(form.city)}}
-                            {{form_errors(form.city)}}
+                            {{form_label(form.firstname)}}
+                            {{form_widget(form.firstname)}}
+                            {{form_errors(form.firstname)}}
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-sm-12">
+                        <div class="mb-2">
+                            {{form_label(form.phone)}}
+                            {{form_widget(form.phone)}}
+                            {{form_errors(form.phone)}}
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-sm-12">
+                        <div class="mb-2">
+                            {{form_label(form.mail)}}
+                            {{form_widget(form.mail)}}
+                            {{form_errors(form.mail)}}
+                        </div>
+                    </div>
+                    <div class="col-md-12 col-sm-12">
+                        <div class="mb-2">
+                            {{form_label(form.deliveryAddress)}}
+                            {{form_widget(form.deliveryAddress)}}
+                            {{form_errors(form.deliveryAddress)}}
                         </div>
                     </div>
                     <div class="col-md-6 col-sm-12">
@@ -38,19 +63,42 @@
                             {{form_errors(form.postalCode)}}
                         </div>
                     </div>
-
                     <div class="col-md-6 col-sm-12">
                         <div class="mb-2">
-                            {{form_label(form.latitude)}}
-                            {{form_widget(form.latitude)}}
-                            {{form_errors(form.latitude)}}
+                            {{form_label(form.city)}}
+                            {{form_widget(form.city)}}
+                            {{form_errors(form.city)}}
+                        </div>
+                    </div>
+                    
+
+                    <div class="col-md-12 col-sm-12">
+                        <div class="mb-2">
+                            {{form_label(form.billingAddress)}}
+                            {{form_widget(form.billingAddress)}}
+                            {{form_errors(form.billingAddress)}}
                         </div>
                     </div>
                     <div class="col-md-6 col-sm-12">
                         <div class="mb-2">
-                            {{form_label(form.longitude)}}
-                            {{form_widget(form.longitude)}}
-                            {{form_errors(form.longitude)}}
+                            {{form_label(form.billingPostalCode)}}
+                            {{form_widget(form.billingPostalCode)}}
+                            {{form_errors(form.billingPostalCode)}}
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-sm-12">
+                        <div class="mb-2">
+                            {{form_label(form.billingCity)}}
+                            {{form_widget(form.billingCity)}}
+                            {{form_errors(form.billingCity)}}
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 col-sm-12">
+                        <div class="mb-2">
+                            {{form_label(form.notes)}}
+                            {{form_widget(form.notes)}}
+                            {{form_errors(form.notes)}}
                         </div>
                     </div>
                     
@@ -63,40 +111,45 @@
         <!-- Checkout Customer Address Left ends -->
 
         <!-- Checkout Customer Address Right starts -->
-        <div class="customer-card" style="position:relative;">
-            <div id="map_canvas" class="map" style="height:350px" ></div>
+        <div class="checkout-options" >
             <div class="card">
-                <div class="card-header">
-                    <h4 class="card-title display-5 p-2" id="current_position">Position indéfini</h4>
-                </div>
-                <div class="card-body actions p-3">
-                    <p class="card-text mb-0"><i>Latitude : <span id="latitude">0</span></i></p>
-                    <p class="card-text mb-0"><i>Longitude : <span id="longitude">0</span></i></p>
-                    {# <p class="card-text mb-0">9447 Glen Eagles Drive</p>
-                    
-                    <p class="card-text">202-555-0140</p> #}
-                    <button type="button" class="btn btn-primary w-100 btn-next delivery-address mt-2" onclick="findMyLocation()">
-                       Trouver ma position <i class="fas fa-map-pin ms-2"></i>
-                    </button>
-                </div>
-            </div>
+                <div class="card-body">
+                    <label class="section-label form-label mb-3">Détails de la commande</label>
+                    <div class="price-details">
+                        
+                        <ul class="list-unstyled">
+                            
+                            
+                            <li class="price-detail">
+                                <div class="detail-title detail-total">Sous-total</div>
+                                <div class="detail-amt fw-bolder" >{{totalCost| number_format(2, ',', ' ')}} €</div>
+                            </li>
+                            <li class="price-detail">
+                                <div class="detail-title detail-total">TVA ({{configTva | number_format(0, ',', ' ')}} %)</div>
+                                <div class="detail-amt fw-bolder" >{{(totalCost * configTva / (100 + configTva))| number_format(2, ',', ' ')}} €</div>
+                            </li>
+                            <li class="price-detail mt-4">
+                                <div class="detail-title detail-total">Prix net (sans TVA)</div>
+                                <div class="detail-amt fw-bolder" >{{(totalCost / (1.0 + configTva/100))| number_format(2, ',', ' ')}} €</div>
+                            </li>
+                            <li class="price-detail">
+                                <div class="detail-title detail-total">Frais de livraison</div>
+                                <div class="detail-amt fw-bolder" > {{fraisLivraison| number_format(2, ',', ' ')}} €</div>
+                                
+                            </li>
+                            
+                            
+                            <li class="price-detail">
+                                <div class="detail-title detail-total">Prix total (TVA incluse)</div>
+                                <div class="detail-amt fw-bolder" >{{(totalCost + fraisLivraison)| number_format(2, ',', ' ')}} €</div>
+                            </li>
 
-            <div class="searchbar-wrap">
-                <div class="searchbar-input-wrap">
-                    
-                    <input type="text" placeholder="Recherchez des villes, quartiers ... " id="address_search"/>
-                    <div class="icon-wrap" onclick="search()">
-                        <svg class="icon search-icon" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                        </ul>
+                        
                     </div>
                 </div>
-                <div class="suggestion-wrap unselectable custom-scrollbar" id="suggestion-wrap">
-                    <h4 class="suggestion-wrap-title">Résultat(s)</h4>
-                    <div class="suggestions" id="addresses">
-                        <!-- Suggestion content goes here -->
-                    </div>
-                </div>
             </div>
-
+            <!-- Checkout Place Order Right ends -->
         </div>
         <!-- Checkout Customer Address Right ends -->
     {# </form> #}
@@ -108,121 +161,7 @@
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript">  
-        let addressSearchDOM = document.getElementById("address_search");
-        let addressesDOM = document.getElementById("addresses");
-        let suggestionWrapDOM = document.getElementById("suggestion-wrap");
-        let currentPositionDOM = document.getElementById("current_position");
-        let latitudeDOM = document.getElementById("latitude");
-        let longitudeDOM = document.getElementById("longitude");
-        let orderAddressLatitudeInput = document.getElementById("order_address_aroma_form_latitude");
-        let orderAddressLongitudeInput = document.getElementById("order_address_aroma_form_longitude");
-
-        let map = null;
-        let markerGroup = null;
-        let addresses = [];
-        const provider = new GeoSearch.OpenStreetMapProvider({
-            params: {
-                addressdetails: 1, // include additional address detail parts // city_district: "Paris";country: "France";country_code: "fr";county: "Paris";region: "France métropolitaine";state: "Île-de-France";suburb: "Paris"
-                extratags : 1
-            },
-        });
-
-		$(document).ready(function () {  
-            map = L.map('map_canvas', { zoomControl: false });
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-				attribution: 'Pixel Force &copy;',
-				minZoom: 1,
-				maxZoom: 20,
-			}).addTo(map);
-            map.on('click', function (e){
-                setPostion({x: e.latlng.lng, y: e.latlng.lat, label: ""});
-            });
-
-            findMyLocation();
-        });
-        
-        function findMyLocation(){
-            map.locate({setView: true, enableHighAccuracy: true, maxZoom: 15})
-				.on('locationfound', function(e){
-					console.log(e.latlng.lat+" | "+e.latlng.lng);
-                    addMarker([e.latlng.lat, e.latlng.lng]);
-                    currentPositionDOM.innerHTML = "Position actuelle";
-                    latitudeDOM.innerHTML = e.latlng.lat;
-                    longitudeDOM.innerHTML = e.latlng.lng;
-
-                    orderAddressLatitudeInput.value = e.latlng.lat;
-                    orderAddressLongitudeInput.value = e.latlng.lng;
-				});
-            
-        }
-        function addMarker(position, reset = true){
-            if(reset && markerGroup!=null) {
-                markerGroup.remove();
-                markerGroup = null;
-            }
-            if(markerGroup==null) markerGroup = new L.LayerGroup().addTo(map); 
-            L.marker(position).addTo(markerGroup);
-            console.log('Marker added at : '+position);
-        }
-
-        async function searchAddress(to_search){
-            let res = await provider.search({ query: to_search});
-            return res;
-        }
-        
-        function createSuggestionDOM(i){
-            let htmlString = `<div class="suggestion" tabindex="0" onclick="setCurrentLocation(${i})">
-                        <div class="suggestion-content">
-                            ${addresses[i].label}
-                        </div>
-                    </div>`;
-            var parser = new DOMParser();
-            var doc = parser.parseFromString(htmlString, 'text/html');
-            return doc.querySelector(".suggestion");
-        }
-
-        
-        async function search(){
-            hideAddressesDOM();
-            let to_search = addressSearchDOM.value;
-            addresses = await searchAddress(to_search);
-            addressesDOM.innerHTML = "";
-            for(let i=0; i<addresses.length; i++){
-                let el = createSuggestionDOM(i);
-                addressesDOM.appendChild(el);
-            }
-            if(addresses.length !=0) showAddressesDOM();
-        }
-
-        function hideAddressesDOM(){
-            suggestionWrapDOM.style.display = "none";
-        }
-        function showAddressesDOM(){
-            suggestionWrapDOM.style.display = "block";
-        }
-        function setCurrentLocation(i){
-            let address = addresses[i];
-            console.log("Current location is : "+ address.label);
-            setPostion(address, true);
-        }
-
-        function setPostion(address, setView = false){
-            currentPositionDOM.innerHTML = address.label;
-            latitudeDOM.innerHTML = address.y;
-            longitudeDOM.innerHTML = address.x;
-
-            orderAddressLatitudeInput.value = address.y;
-            orderAddressLongitudeInput.value = address.x;
-
-            addMarker([address.y, address.x]);
-            if(setView) map.setView([address.y, address.x], 7);
-            hideAddressesDOM();
-        }
-
-        addressSearchDOM.addEventListener('focus', ()=>{
-            if(addresses.length !=0) showAddressesDOM();
-        })
-        
+                
     </script>
 {% endblock %}
 

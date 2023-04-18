@@ -13,9 +13,16 @@ use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Nucleos\DompdfBundle\Wrapper\DompdfWrapperInterface;
+use Twig\Environment as Twig_Environment;
+
 
 class OrderServiceAroma
 {
+    const TYPE_DOCUMENT = [
+        'FACTURE' => 1,
+        'BON_DE_LIVRAISON' => 2
+    ];
+
     private $basketService;
     private $entityManager;
     private $stripeService;
@@ -24,8 +31,9 @@ class OrderServiceAroma
     private $mailerService;
     private $fileHandler;
     private $wrapper;
+    private $twig;
 
-    public function __construct(BasketServiceAroma $basketService, EntityManagerInterface $entityManager, StripeService $stripeService, OrderImplantationAromaRepository $orderImplantationAromaRepository, ConfigSecteurService $configSecteurService, DompdfWrapperInterface $wrapper, FileHandler $fileHandler, MailerService $mailerService)
+    public function __construct(BasketServiceAroma $basketService, EntityManagerInterface $entityManager, StripeService $stripeService, OrderImplantationAromaRepository $orderImplantationAromaRepository, ConfigSecteurService $configSecteurService, DompdfWrapperInterface $wrapper, FileHandler $fileHandler, MailerService $mailerService, Twig_Environment $twig)
     {
         $this->basketService = $basketService;
         $this->entityManager = $entityManager;
@@ -35,6 +43,7 @@ class OrderServiceAroma
         $this->mailerService = $mailerService;
         $this->fileHandler = $fileHandler;
         $this->wrapper = $wrapper;
+        $this->twig = $twig;
     }
 
     public function saveOrder(OrderAroma $order): ?OrderAroma{
@@ -47,7 +56,6 @@ class OrderServiceAroma
 
             $order->getAddress()->setUser($order->getUser());
             $order->setOrderDate(new DateTime());
-            $order->setTva($this->configSecteurService->findTva($order->getSecteur()));
             $order->setStatus(OrderAroma::CREATED);
             $this->entityManager->persist($order->getAddress());
             $this->entityManager->persist($order);
@@ -83,12 +91,13 @@ class OrderServiceAroma
                     $this->entityManager->persist($orderImplantationElmt);
                 }
             }
-            // $order->setAmount($amount); 
-            // $order->setMontantTtc($order->getAmount() * (1 + $order->getTva()/100));
-            $order->setMontantTtc($amount); 
-            $order->setAmount($amount / (1.0 + $order->getTva()/100));
+
+            $order->setMontantSansFraisLivraison($amount);
+            $order->setTva($this->configSecteurService->findTva($order->getSecteur()));
+            $order->setFraisLivraison($this->configSecteurService->calculerFraisDeLivraison($order->getMontantSansFraisLivraison(), $order->getSecteur()));
+            $order->setAmount(($order->getMontantSansFraisLivraison() + $order->getFraisLivraison())); 
            
-            $paymentIntent = $this->stripeService->paymentIntent(round($order->getMontantTtc(), 2));
+            $paymentIntent = $this->stripeService->paymentIntent(round($order->getAmount(), 2));
             $order->setChargeId($paymentIntent->id); 
 
             $this->entityManager->flush();
@@ -135,13 +144,48 @@ class OrderServiceAroma
     }
 
     public function saveInvoice(OrderAroma $order){
-        $facturePdf = $this->mailerService->renderTwig('pdf/facture_aroma.html.twig', [
-            'order' => $order
-        ]);
-        $binary = $this->wrapper->getPdf($facturePdf, ['isRemoteEnabled' => true, 'isHtml5ParserEnabled'=>true, 'defaultFont'=> 'Arial']);
-        $directory = "factures/aroma";
-        $pj_filepath = $this->fileHandler->saveBinary($binary, "Facture Pixelforce-Commande n°".$order->getId()." du ".date('Y-m-d-H-i-s').'.pdf', $directory);
-        $order->setInvoicePath($pj_filepath);
+        $invoicePath = $this->getInvoicePath($order);
+        $order->setInvoicePath($invoicePath);
         $this->entityManager->flush();
+    }
+
+
+    public function generateDocument(OrderAroma $order, string $title, int $typeDocument)
+    {
+        $logoBase64 = $typeDocument === self::TYPE_DOCUMENT['FACTURE'] 
+            ?  $this->fileHandler->convertImageToBase64('assets/img/webp/home/af_logo_d2_blanc.webp') 
+            : $this->fileHandler->convertImageToBase64('assets/img/webp/home/af_logo_d2.webp');
+
+        
+        return $this->twig->render('pdf/document.html.twig', [
+            'title' => $title,
+            'order' => $order,
+            'logoBase64' => $logoBase64,
+            'typeDocument' => $typeDocument
+        ]);
+    }
+
+    public function getInvoicePath(OrderAroma $order)
+    {
+        $facturePdf = $this->generateDocument($order, 'Facture', self::TYPE_DOCUMENT['FACTURE']);
+        
+        $binary = $this->wrapper->getPdf($facturePdf, ['isRemoteEnabled' => true, 'isHtml5ParserEnabled'=>true, 'defaultFont'=> 'Arial']);
+        
+        $directory = "factures/aroma";
+        $pj_filepath = $this->fileHandler->saveBinary($binary, "Facture Aromaforest-Commande n°".$order->getId()." du ".date('Y-m-d-H-i-s').'.pdf', $directory);
+        
+        return $pj_filepath ;
+    }
+
+    public function getDeliveryOrderPath(OrderAroma $order)
+    {
+        $facturePdf = $this->generateDocument($order, 'Bon de livraison', self::TYPE_DOCUMENT['BON_DE_LIVRAISON']);
+        
+        $binary = $this->wrapper->getPdf($facturePdf, ['isRemoteEnabled' => true, 'isHtml5ParserEnabled'=>true, 'defaultFont'=> 'Arial']);
+        
+        $directory = "factures/aroma";
+        $pj_filepath = $this->fileHandler->saveBinary($binary, "Bon de livraison Aromaforest-Commande n°".$order->getId()." du ".date('Y-m-d-H-i-s').'.pdf', $directory);
+        
+        return $pj_filepath ;
     }
 }

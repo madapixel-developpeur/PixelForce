@@ -284,8 +284,8 @@ class MailerService
     public function sendFactureAroma(OrderAroma $order){
         
         $body = $this->renderTwig('emails/commande_aroma.html.twig', [
-            'nomClient' => $order->getUser()->getNom(),
-            'prenomClient' => $order->getUser()->getPrenom(),
+            'nomClient' => $order->getAddress()->getLastname(),
+            'prenomClient' => $order->getAddress()->getFirstname(),
             'order' => $order
         ]);
 
@@ -293,7 +293,7 @@ class MailerService
         $embeddedImages = ['logo' => 'assets/img/logo/pixelforce/logo-pixelforce-min.png'];
         $this->mySendMail([
             'subject' => 'Confirmation de commande '.$order->getId(),
-            'to' => $order->getUser()->getEmail(),
+            'to' => $order->getAddress()->getMail(),
             'body' => $body
         ], $attachmentsPath, null, $embeddedImages);
 

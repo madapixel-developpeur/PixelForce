@@ -94,31 +94,32 @@
                     <h4 class="card-title">Détails de la commande</h4>
                 </div>
                 <div class="card-body pt-3">
-                    {# <ul class="list-unstyled price-details">
-                        <li class="price-detail">
-                            <div class="details-title">Price of 3 items</div>
-                            <div class="detail-amt">
-                                <strong>$699.30</strong>
-                            </div>
-                        </li>
-                        <li class="price-detail">
-                            <div class="details-title">Delivery Charges</div>
-                            <div class="detail-amt discount-amt text-success">Free</div>
-                        </li>
-                    </ul>
-                    <hr /> #}
+                    
                     <ul class="list-unstyled price-details">
+                        
+
                         <li class="price-detail">
-                            <div class="detail-title detail-total">Montant total HT:</div>
-                            <div class="detail-amt fw-bolder">{{order.amount | number_format(2, ',', ' ')}} €</div>
+                            <div class="detail-title detail-total">Sous-total</div>
+                            <div class="detail-amt fw-bolder" >{{order.montantSansFraisLivraison| number_format(2, ',', ' ')}} €</div>
                         </li>
                         <li class="price-detail">
-                            <div class="detail-title detail-total">TVA ({{order.tva | number_format(2, ',', ' ')}} %)  :</div>
-                            <div class="detail-amt fw-bolder">{{order.montantTva | number_format(2, ',', ' ')}} €</div>
+                            <div class="detail-title detail-total">TVA ({{order.tva | number_format(0, ',', ' ')}} %)</div>
+                            <div class="detail-amt fw-bolder" >{{order.montantTva| number_format(2, ',', ' ')}} €</div>
+                        </li>
+                        <li class="price-detail mt-4">
+                            <div class="detail-title detail-total">Prix net (sans TVA)</div>
+                            <div class="detail-amt fw-bolder" >{{order.montantHt| number_format(2, ',', ' ')}} €</div>
                         </li>
                         <li class="price-detail">
-                            <div class="detail-title detail-total">Montant total TTC  :</div>
-                            <div class="detail-amt fw-bolder">{{order.montantTtc | number_format(2, ',', ' ')}} €</div>
+                            <div class="detail-title detail-total">Frais de livraison</div>
+                            <div class="detail-amt fw-bolder" > {{order.fraisLivraison| number_format(2, ',', ' ')}} €</div>
+                            
+                        </li>
+                        
+                        
+                        <li class="price-detail">
+                            <div class="detail-title detail-total">Prix total (TVA incluse)</div>
+                            <div class="detail-amt fw-bolder" >{{order.amount| number_format(2, ',', ' ')}} €</div>
                         </li>
                     </ul>
                     

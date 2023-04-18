@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\Address;
 use App\Entity\OrderAddressAroma;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -16,35 +17,62 @@ class OrderAddressAromaFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('address', TextType::class, [
-                "label" => "Adresse",
+            ->add('lastname', TextType::class,  [
+                "label" => "Nom (*)",
                 "required" => true,
-                "constraints" => [
-                    new NotBlank(["message" => "Adresse obligatoire"])
-                ],
                 "trim" => true,
             ])
+            ->add('firstname', TextType::class,  [
+                "label" => "Prénom (*)",
+                "required" => true,
+                "trim" => true,
+            ])
+            ->add('phone', TextType::class,  [
+                "label" => "Téléphone (*)",
+                "required" => true,
+                "trim" => true
+            ])
+            ->add('mail', TextType::class,  [
+                "label" => "Adresse e-mail (*)",
+                "required" => true,
+                "trim" => true
+            ])
+            ->add('deliveryAddress', TextType::class,  [
+                "label" => "Adresse de livraison (*)",
+                "required" => true,
+                "trim" => true
+            ])
             ->add('city', TextType::class,  [
-                "label" => "Ville",
-                "required" => false,
+                "label" => "Ville (*)",
+                "required" => true,
                 "trim" => true
             ])
             ->add('postalCode', TextType::class,  [
-                "label" => "Code Postal",
+                "label" => "Code Postal (*)",
+                "required" => true,
+                "trim" => true
+            ])
+            ->add('billingAddress', TextType::class,  [
+                "label" => "Adresse de facturation",
                 "required" => false,
                 "trim" => true
             ])
-            ->add('longitude', TextType::class,  [
-                "label" => "Longitude",
+            ->add('billingPostalCode', TextType::class,  [
+                "label" => "Code postal",
                 "required" => false,
                 "trim" => true
             ])
-            ->add('latitude', TextType::class,  [
-                "label" => "Latitude",
+            ->add('billingCity', TextType::class,  [
+                "label" => "Ville",
                 "required" => false,
                 "trim" => true
-            ])
-            
+            ])  
+            ->add('notes', TextareaType::class,  [
+                "label" => "Notes",
+                "required" => false,
+                "attr" =>  ["placeholder" => "Notes à propos de votre commande, ex: des notes spéciales pour la livraison."],
+                "trim" => true
+            ])  
         ;
     }
 

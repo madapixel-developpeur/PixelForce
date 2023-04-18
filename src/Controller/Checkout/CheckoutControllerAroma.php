@@ -6,6 +6,7 @@ use App\Entity\BasketItemAroma;
 use App\Entity\Order;
 use App\Entity\OrderAddressAroma;
 use App\Entity\OrderAroma;
+use App\Entity\User;
 use App\Form\OrderAddressAromaFormType;
 use App\Repository\SecteurRepository;
 use App\Repository\UserRepository;
@@ -54,10 +55,16 @@ class CheckoutControllerAroma extends AbstractController
     #[Route(path: '/address', name: 'client_aroma_checkout_address')]
     public function address(string $token, Request $request, SecteurRepository $secteurRepository): Response
     {
+        /** @var User */
+        $user = $this->getUser();
         $secteurId = $this->session->get('secteurId');
         $secteur = $secteurRepository->find($secteurId);
         $agent = $this->userRepository->findAgentByToken($token);
         $address = new OrderAddressAroma();
+        $address->setLastname($user->getNom());
+        $address->setFirstname($user->getPrenom());
+        $address->setPhone($user->getTelephone());
+        $address->setMail($user->getEmail());
         $form = $this->createForm(OrderAddressAromaFormType::class, $address);
         $form->handleRequest($request);
 
@@ -66,7 +73,7 @@ class CheckoutControllerAroma extends AbstractController
             try{
                 $request->getSession()->set('addressAroma', $address);
                 $order = new OrderAroma();
-                $order->setUser($this->getUser());
+                $order->setUser($user);
                 $order->setSecteur($secteur);
                 $order->setAgent($agent);
                 $order->setAddress($request->getSession()->get('addressAroma'));
@@ -76,12 +83,17 @@ class CheckoutControllerAroma extends AbstractController
                 $this->addFlash('danger', $ex->getMessage());
             }
         }
-
+        
+        $groupKey = BasketItemAroma::getGroupKeyStatic($agent->getId(), $secteurId);
+        $basket = $this->basketService->refreshBasket($groupKey);
+        $totalCost = $this->basketService->getTotalCostBasket($basket);
         
         return $this->render('user_category/client/aroma/cart/address.html.twig',[
             'form' => $form->createView(),
             'agent' => $agent,
-            'token' => $token
+            'token' => $token,
+            'totalCost' => $totalCost,
+            'agent' => $agent,
         ]);
         
     }

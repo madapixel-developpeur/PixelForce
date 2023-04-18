@@ -180,37 +180,71 @@
                                                 </li>
                                                 {% if order.address %}
                                                 <li class="price-detail">
-                                                    <div class="detail-title">Adresse</div>
-                                                    <div class="detail-amt">{{order.address.address}}</div>
+                                                    <div class="detail-title">Nom et prénom(s)</div>
+                                                    <div class="detail-amt">{{order.address.firstname}} {{order.address.lastname}}</div>
+                                                </li>
+                                                <li class="price-detail">
+                                                    <div class="detail-title">Téléphone</div>
+                                                    <div class="detail-amt">{{order.address.phone}}</div>
+                                                </li>
+                                                <li class="price-detail">
+                                                    <div class="detail-title">Adresse e-mail</div>
+                                                    <div class="detail-amt">{{order.address.mail}}</div>
+                                                </li>
+                                                <li class="price-detail">
+                                                    <div class="detail-title">Adresse de livraison</div>
+                                                    <div class="detail-amt">{{order.address.deliveryAddress}}</div>
                                                 </li>
 
-                                                {% if order.address.city %}
-                                                <li class="price-detail">
-                                                    <div class="detail-title">Ville</div>
-                                                    <div class="detail-amt">{{order.address.city}}</div>
-                                                </li>
-                                                {% endif %}
-                                                {% if order.address.postalCode %}
                                                 <li class="price-detail">
                                                     <div class="detail-title">Code postal</div>
                                                     <div class="detail-amt">{{order.address.postalCode}}</div>
                                                 </li>
-                                                {% endif %}
+                                                <li class="price-detail">
+                                                    <div class="detail-title">Ville</div>
+                                                    <div class="detail-amt">{{order.address.city}}</div>
+                                                </li>
+
+                                                <li class="price-detail">
+                                                    <div class="detail-title">Adresse de facturation</div>
+                                                    <div class="detail-amt">{{order.address.billingAddress ? '--'}}</div>
+                                                </li>
+
+                                                <li class="price-detail">
+                                                    <div class="detail-title">Code postal</div>
+                                                    <div class="detail-amt">{{order.address.billingPostalCode ? '--'}}</div>
+                                                </li>
+                                                <li class="price-detail">
+                                                    <div class="detail-title">Ville</div>
+                                                    <div class="detail-amt">{{order.address.billingCity ? '--'}}</div>
+                                                </li>
+                                                
                                                 {% endif %}
                                             </ul>
                                             <hr />
                                             <ul class="list-unstyled">
                                                 <li class="price-detail">
-                                                    <div class="detail-title detail-total">Montant total HT  :</div>
-                                                    <div class="detail-amt fw-bolder" id="total-cost" >{{order.amount | number_format(2, ',', ' ')}} €</div>
+                                                    <div class="detail-title detail-total">Sous-total</div>
+                                                    <div class="detail-amt fw-bolder" >{{order.montantSansFraisLivraison| number_format(2, ',', ' ')}} €</div>
                                                 </li>
                                                 <li class="price-detail">
-                                                    <div class="detail-title detail-total">TVA ({{order.tva | number_format(2, ',', '0')}} %)  :</div>
-                                                    <div class="detail-amt fw-bolder" id="total-cost" >{{order.montantTva | number_format(2, ',', ' ')}} €</div>
+                                                    <div class="detail-title detail-total">TVA ({{order.tva | number_format(0, ',', ' ')}} %)</div>
+                                                    <div class="detail-amt fw-bolder" >{{order.montantTva| number_format(2, ',', ' ')}} €</div>
+                                                </li>
+                                                <li class="price-detail mt-4">
+                                                    <div class="detail-title detail-total">Prix net (sans TVA)</div>
+                                                    <div class="detail-amt fw-bolder" >{{order.montantHt| number_format(2, ',', ' ')}} €</div>
                                                 </li>
                                                 <li class="price-detail">
-                                                    <div class="detail-title detail-total">Montant total TTC  :</div>
-                                                    <div class="detail-amt fw-bolder" id="total-cost" >{{order.montantTtc | number_format(2, ',', ' ')}} €</div>
+                                                    <div class="detail-title detail-total">Frais de livraison</div>
+                                                    <div class="detail-amt fw-bolder" > {{order.fraisLivraison| number_format(2, ',', ' ')}} €</div>
+                                                    
+                                                </li>
+                                                
+                                                
+                                                <li class="price-detail">
+                                                    <div class="detail-title detail-total">Prix total (TVA incluse)</div>
+                                                    <div class="detail-amt fw-bolder" >{{order.amount| number_format(2, ',', ' ')}} €</div>
                                                 </li>
                                             </ul>
                                             {# <a role="button" class="btn btn-primary w-100 btn-next place-order" href="{{path('client_order_address')}}">Commander</a> #}

@@ -9,6 +9,7 @@ twig:
         files_directory_relative: 'files/'
         stripe_public_key: '%env(STRIPE_PUBLIC_KEY)%'
         configSecteurService: '@util.config'
+        secteurRepository: '@App\Repository\SecteurRepository'
     paths:
         # pour spécifier le namespace des image. Exemple d'utilisation : email.image('@images/logo.png')
         '%kernel.project_dir%/assets/images': images

@@ -73,7 +73,7 @@
                     {% for order in orderList %}
                     <tr>
                         <td>{{order.orderDate | date("d/m/Y H:i")}}</td>
-                        <td class="text-right">{{order.montantTtc | number_format(2, ',', ' ') }} €</td>
+                        <td class="text-right">{{order.amount | number_format(2, ',', ' ') }} €</td>
                         <td>{{order.statusStr}}</td>
                         <td class="col-action ">
                             <a href="{{path('client_aroma_order_details', {'id': order.id, 'token': token})}}">
