@@ -326,24 +326,24 @@
                     <table class="table table-striped">
                         <tr>
                             <th>{% trans %}Sous-total{% endtrans %}</th>
-                            <td class="text-right">{{order.montantSansFraisLivraison|number_format(2, ',', ' ')}} €}}</td>
+                            <td class="text-right">{{order.montantSansFraisLivraison|number_format(2, ',', ' ')}} €</td>
                         </tr>
                         <tr>
                             <th>{% trans %}TVA{% endtrans %} ({{order.tva | number_format(0, ',', ' ')}} %)</th>
-                            <td class="text-right">{{order.montantTva|number_format(2, ',', ' ')}} €}}</td>
+                            <td class="text-right">{{order.montantTva|number_format(2, ',', ' ')}} €</td>
                         </tr>
                         <tr>
                             <th>{% trans %}Prix net (sans TVA){% endtrans %}</th>
-                            <td class="text-right">{{order.montantHt|number_format(2, ',', ' ')}} €}}</td>
+                            <td class="text-right">{{order.montantHt|number_format(2, ',', ' ')}} €</td>
                         </tr>
                         <tr>
                             <th>{% trans %}Frais de livraison{% endtrans %}</th>
-                            <td class="text-right">{{order.fraisLivraison|number_format(2, ',', ' ')}} €}}</td>
+                            <td class="text-right">{{order.fraisLivraison|number_format(2, ',', ' ')}} €</td>
                         </tr>
                         
                         <tr>
                             <th>{% trans %}Prix total (TVA incluse){% endtrans %}</th>
-                            <td class="text-right">{{order.amount|number_format(2, ',', ' ')}} €}}</td>
+                            <td class="text-right">{{order.amount|number_format(2, ',', ' ')}} €</td>
                         </tr>
                     </table>
                 </div> 
