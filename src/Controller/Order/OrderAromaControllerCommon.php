@@ -17,7 +17,7 @@ use Symfony\Component\Routing\Annotation\Route;
 /**
  * @Route("/common/orderaroma")
  */
-class OrderControllerCommon extends AbstractController
+class OrderAromaControllerCommon extends AbstractController
 {
     
 
