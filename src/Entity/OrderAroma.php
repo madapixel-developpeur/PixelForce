@@ -28,7 +28,7 @@ class OrderAroma
         "Créée" => self::CREATED, 
         "Payée" => self::PAIED,
         "Livrée" => self::VALIDATED,
-        "Refusée" => self::REFUSED
+        // "Refusée" => self::REFUSED
     ];
 
     /**
@@ -112,6 +112,11 @@ class OrderAroma
      * @ORM\Column(type="decimal", precision=12, scale=2, nullable=true)
      */
     private $montantSansFraisLivraison;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $deliveryOrderPath;
 
     public function __construct()
     {
@@ -321,5 +326,17 @@ class OrderAroma
 
     public function getMontantHt(){
         return $this->getMontantSansFraisLivraison() / (1. + $this->getTva()/100);
+    }
+
+    public function getDeliveryOrderPath(): ?string
+    {
+        return $this->deliveryOrderPath;
+    }
+
+    public function setDeliveryOrderPath(?string $deliveryOrderPath): self
+    {
+        $this->deliveryOrderPath = $deliveryOrderPath;
+
+        return $this;
     }
 }

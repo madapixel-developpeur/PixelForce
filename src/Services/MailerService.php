@@ -290,7 +290,7 @@ class MailerService
         ]);
 
         $attachmentsPath = [$order->getInvoicePath()];
-        $embeddedImages = ['logo' => 'assets/img/logo/pixelforce/logo-pixelforce-min.png'];
+        $embeddedImages = ['logo' => 'assets/img/home/af_logo_d2-min.png'];
         $this->mySendMail([
             'subject' => 'Confirmation de commande '.$order->getId(),
             'to' => $order->getAddress()->getMail(),
@@ -307,6 +307,24 @@ class MailerService
         ];
 
         $this->mySendMail($MailToAdmin, $attachmentsPath, null, $embeddedImages);
+
+    }
+
+    public function sendDeliveryOrder(OrderAroma $order){
+
+        $body = $this->renderTwig('emails/livraison_aroma.html.twig', [
+            'nomClient' => $order->getAddress()->getLastname(),
+            'prenomClient' => $order->getAddress()->getFirstname(),
+            'order' => $order
+        ]);
+
+        $attachmentsPath = [$order->getDeliveryOrderPath()];
+        $embeddedImages = ['logo' => 'assets/img/home/af_logo_d2-min.png'];
+        $this->mySendMail([
+            'subject' => 'Livraison de commande '.$order->getId(),
+            'to' => $order->getAddress()->getMail(),
+            'body' => $body
+        ], $attachmentsPath, null, $embeddedImages);
 
     }
 

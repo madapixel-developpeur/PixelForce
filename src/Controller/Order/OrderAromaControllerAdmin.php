@@ -107,12 +107,12 @@ class OrderAromaControllerAdmin extends AbstractController
     
 
     /**
-     * @Route("/{id}/validate", name="admin_aroma_order_validate")
+     * @Route("/{id}/deliver", name="admin_aroma_order_validate")
      */
     public function validate(OrderAroma $order, Request $request): Response
     {
         try{
-            $this->orderService->changeStatus($order, OrderAroma::VALIDATED);
+            $this->orderService->deliverOrder($order);
             $this->addFlash(
                 'success',
                 'Commande livrée'
@@ -126,24 +126,6 @@ class OrderAromaControllerAdmin extends AbstractController
         return $this->redirectToRoute('admin_aroma_order_details', ['id' => $order->getId()]);
     }
 
-    /**
-     * @Route("/{id}/refuse", name="admin_aroma_order_refuse")
-     */
-    public function refuse(OrderAroma $order, Request $request): Response
-    {
-        try{
-            $this->orderService->changeStatus($order, OrderAroma::REFUSED);
-            $this->addFlash(
-                'success',
-                'Commande refusée'
-            ); 
-        } catch(Exception $ex){
-            $this->addFlash(
-               'danger',
-               $ex->getMessage()
-            );
-        } 
-        return $this->redirectToRoute('admin_aroma_order_details', ['id' => $order->getId()]);
-    }
+    
 
 }

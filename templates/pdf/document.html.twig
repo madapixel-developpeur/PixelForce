@@ -250,8 +250,8 @@
                 <p class="font-weight-bold invoice-for">{% trans from 'messages.order' %}Facture pour :{% endtrans %}</p>
                 <p>
                     {{order.address.firstname}} {{order.address.lastname}} <br/>
-                    {{order.address.deliveryAddress}} <br/>
-                    {{order.address.city}} <br/>
+                    {{order.address.billingAddress ?? order.address.deliveryAddress }} <br/>
+                    {{order.address.billingCity ?? order.address.city}} <br/>
                     {{order.address.mail}} <br/>
                     {{order.address.phone}}
                 </p>

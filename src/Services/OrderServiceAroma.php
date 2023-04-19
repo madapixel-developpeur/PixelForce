@@ -122,19 +122,21 @@ class OrderServiceAroma
         $paymentIntent = $this->stripeService->getPaymentIntent($order->getChargeId());
         if($paymentIntent->status != "succeeded") throw new Exception("Erreur rencontrée lors du paiement");
         $order->setStatus(OrderAroma::PAIED);
+        $invoicePath = $this->getInvoicePath($order);
+        $order->setInvoicePath($invoicePath);
         $this->entityManager->persist($order);
         $this->entityManager->flush();
-        try{
-            $this->saveInvoice($order);
-            $this->mailerService->sendFactureAroma($order);
-        } catch(Exception $ex){}
+        $this->mailerService->sendFactureAroma($order);
     }
 
-    public function changeStatus(OrderAroma $order, int $status)
+    public function deliverOrder(OrderAroma $order)
     {
-        $order->setStatus($status);
+        $order->setStatus(OrderAroma::VALIDATED);
+        $deliveryOrderPath = $this->getDeliveryOrderPath($order);
+        $order->setDeliveryOrderPath($deliveryOrderPath);
         $this->entityManager->persist($order);
         $this->entityManager->flush();
+        $this->mailerService->sendDeliveryOrder($order);
     }
 
     public function checkUserEnableReassort(User $user, ImplantationAroma $implantation): ?bool 
@@ -143,11 +145,7 @@ class OrderServiceAroma
         return count($orderImplantationElmts) > 0;
     }
 
-    public function saveInvoice(OrderAroma $order){
-        $invoicePath = $this->getInvoicePath($order);
-        $order->setInvoicePath($invoicePath);
-        $this->entityManager->flush();
-    }
+    
 
 
     public function generateDocument(OrderAroma $order, string $title, int $typeDocument)

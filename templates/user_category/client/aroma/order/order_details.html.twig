@@ -207,16 +207,21 @@
 
                                                 <li class="price-detail">
                                                     <div class="detail-title">Adresse de facturation</div>
-                                                    <div class="detail-amt">{{order.address.billingAddress ? '--'}}</div>
+                                                    <div class="detail-amt">{{order.address.billingAddress ?? '--'}}</div>
                                                 </li>
 
                                                 <li class="price-detail">
                                                     <div class="detail-title">Code postal</div>
-                                                    <div class="detail-amt">{{order.address.billingPostalCode ? '--'}}</div>
+                                                    <div class="detail-amt">{{order.address.billingPostalCode ?? '--'}}</div>
                                                 </li>
                                                 <li class="price-detail">
                                                     <div class="detail-title">Ville</div>
-                                                    <div class="detail-amt">{{order.address.billingCity ? '--'}}</div>
+                                                    <div class="detail-amt">{{order.address.billingCity ?? '--'}}</div>
+                                                </li>
+
+                                                <li class="price-detail">
+                                                    <div class="detail-title">Notes</div>
+                                                    <div class="detail-amt">{{order.address.notes ?? '--'}}</div>
                                                 </li>
                                                 
                                                 {% endif %}
@@ -248,6 +253,12 @@
                                                 </li>
                                             </ul>
                                             {# <a role="button" class="btn btn-primary w-100 btn-next place-order" href="{{path('client_order_address')}}">Commander</a> #}
+                                            {% if order.status >= constant('App\\Entity\\OrderAroma::PAIED') %}
+                                            <a role="button" class="btn btn-primary w-100 btn-next place-order mt-2" href="{{path('common_orderaroma_download_facture', {'id': order.id})}}"><i class="fa fa-download"></i>&nbsp; Facture</a>
+                                            {% endif %}
+                                            {% if order.status >= constant('App\\Entity\\OrderAroma::VALIDATED') %}
+                                            <a role="button" class="btn btn-primary w-100 btn-next place-order mt-2" href="{{path('common_orderaroma_download_bl', {'id': order.id})}}"><i class="fa fa-download"></i>&nbsp;Bon de livraison</a>
+                                            {% endif %}
                                         </div>
                                     </div>
                                 </div>
