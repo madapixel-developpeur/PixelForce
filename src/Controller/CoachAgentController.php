@@ -104,6 +104,8 @@ class CoachAgentController extends AbstractController
             ->remove('secteur')
             ->remove('username')
             ->remove('password')
+            ->remove('ville')
+            ->remove('numero_rue')
         ;
         $formUser->handleRequest($request);
 

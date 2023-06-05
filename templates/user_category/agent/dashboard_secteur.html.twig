@@ -26,7 +26,7 @@
                             <p class="card-text font-small-3">Vous avez gagné la médaille d'or</p>
                             {# {% if (estSecurite or estEcommerce) %} #}
                             <h3 class="mb-75 mt-2 pt-50">
-                                <a href="#">{{statVente.ca | number_format(2, ',', ' ')}} €</a>
+                            <a href="#">{{ statVente ? statVente.ca | number_format(2, ',', ' ') : 0 }} €</a>                           
                             </h3>
                             {# {% endif %} #}
                             {% if estSecurite %}
@@ -55,11 +55,12 @@
                                     <div class="d-flex flex-row">
                                         <div class="avatar bg-light-primary me-2">
                                             <div class="avatar-content">
-                                                <a href="{% if estSecurite %}{{path('admin_ordersecu_list')}}{% elseif estEcommerce %}{{path('admin_order_list')}}{% elseif estDemandeDevis %}{{path('agent_demandedevis_list')}}{% else %}#{% endif %}"><i data-feather="trending-up" class="avatar-icon"></i></a>
+                                                <a href="{% if estSecurite %}{{path('admin_ordersecu_list')}}{% elseif estEcommerce %}{{path('agent_order_list')}}{% elseif estDemandeDevis %}{{path('agent_demandedevis_list')}}{% else %}#{% endif %}"><i data-feather="trending-up" class="avatar-icon"></i></a>
                                             </div>
                                         </div>
                                         <div class="my-auto">
-                                            <h4 class="fw-bolder mb-0">{{statVente.nbr_ventes | number_format(0, ',', ' ')}}</h4>
+
+                                            <h4 class="fw-bolder mb-0">{{statVente ? statVente.nbr_ventes | number_format(0, ',', ' ') : 0}}</h4>
                                             <p class="card-text font-small-3 mb-0">Ventes</p>
                                         </div>
                                     </div>
@@ -95,11 +96,11 @@
                                     <div class="d-flex flex-row">
                                         <div class="avatar bg-light-success me-2">
                                             <div class="avatar-content">
-                                                <a href="{% if estSecurite %}{{path('admin_ordersecu_list')}}{% elseif estEcommerce %}{{path('admin_order_list')}}{% elseif estDemandeDevis %}{{path('agent_demandedevis_list')}}{% else %}#{% endif %}"><i data-feather="dollar-sign" class="avatar-icon"></i></a>
+                                                <a href="{% if estSecurite %}{{path('admin_ordersecu_list')}}{% elseif estEcommerce %}{{path('agent_order_list')}}{% elseif estDemandeDevis %}{{path('agent_demandedevis_list')}}{% else %}#{% endif %}"><i data-feather="dollar-sign" class="avatar-icon"></i></a>
                                             </div>
                                         </div>
                                         <div class="my-auto">
-                                            <h4 class="fw-bolder mb-0">{{statVente.ca | number_format(2, ',', ' ')}} €</h4>
+                                            <h4 class="fw-bolder mb-0">{{ statVente ? statVente.ca | number_format(2, ',', ' ') : 0 }} €</h4>
                                             <p class="card-text font-small-3 mb-0">Revenu</p>
                                         </div>
                                     </div>
