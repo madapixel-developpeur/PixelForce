@@ -21,7 +21,7 @@
 
         <li class=" nav-item"><a class="d-flex align-items-center" href="{{path('agent_contact_meeting_list')}}"><i data-feather="coffee"></i><span class="menu-title text-truncate" data-i18n="Meetings">Rendez-vous</span></a></li>
         {% if app.session.get('typeSecteurId') == 1 %}
-            <li class=" nav-item"><a class="d-flex align-items-center" href="{{path('admin_order_list')}}"><i data-feather="eye"></i><span class="menu-title text-truncate" data-i18n="Calendar">Ventes</span></a></li>
+            <li class=" nav-item"><a class="d-flex align-items-center" href="{{path('agent_order_list')}}"><i data-feather="eye"></i><span class="menu-title text-truncate" data-i18n="Calendar">Ventes</span></a></li>
         {% elseif app.session.get('typeSecteurId') == 2 %}
             <li class=" nav-item"><a class="d-flex align-items-center" href="{{path('agent_demandedevis_list')}}"><i data-feather="eye"></i><span class="menu-title text-truncate" data-i18n="Calendar">Demandes de devis</span></a></li>
             <li class=" nav-item"><a class="d-flex align-items-center" href="{{path('agent_company_devis_liste')}}"><i class="fa-regular fa-file"></i><span class="menu-title text-truncate" data-i18n="Calendar">Devis</span></a></li>

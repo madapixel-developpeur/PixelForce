@@ -200,7 +200,7 @@
                                             <a role="button" class="btn btn-primary w-100 btn-next place-order mb-2" href="{{path('common_order_download_contrat', {id: order.id})}}"><i class="fa fa-file" aria-hidden="true"></i>&nbsp;Télécharger la facture</a>
                                             {% endif %}
                                             {% if order.status == ORDER_STATUS_PAIED %}
-                                            <a role="button" class="btn btn-success w-100 btn-next place-order" href="{{path('admin_order_validate', {'id': order.id})}}">Livrer</a>
+                                            <a role="button" class="btn btn-success w-100 btn-next place-order" href="{{path('agent_order_validate', {'id': order.id})}}">Livrer</a>
                                             {% endif %}
                                         </div>
                                             

@@ -83,7 +83,7 @@
                         <td class="text-right">{{order.amount | number_format(2, ',', ' ') }}</td>
                         <td>{{order.statusStr}}</td>
                         <td class="col-action ">
-                            <a href="{{path('admin_order_details', {'id': order.id})}}">
+                            <a href="{{path('agent_order_details', {'id': order.id})}}">
                                 <i data-feather="eye"></i>
                             </a>
                         </td>

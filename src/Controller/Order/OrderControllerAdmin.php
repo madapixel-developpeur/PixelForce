@@ -2,9 +2,7 @@
 
 namespace App\Controller\Order;
 
-use App\Controller\BaseControllerAdmin;
 use App\Entity\Order;
-use App\Entity\Utilisateur;
 use App\Form\OrderClientFilterType;
 use App\Repository\OrderRepository;
 use App\Services\OrderService;
@@ -38,7 +36,7 @@ class OrderControllerAdmin extends AbstractController
     }
 
     /**
-     * @Route("/", name="admin_order_list")
+     * @Route("/", name="agent_order_list")
      */
     public function index(Request $request, PaginatorInterface $paginator, SearchService $searchService): Response
     {
@@ -94,7 +92,7 @@ class OrderControllerAdmin extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="admin_order_details")
+     * @Route("/{id}", name="agent_order_details")
      */
     public function details(Request $request, Order $order): Response
     {
@@ -108,7 +106,7 @@ class OrderControllerAdmin extends AbstractController
     }
 
     /**
-     * @Route("/{id}/validate", name="admin_order_validate")
+     * @Route("/{id}/validate", name="agent_order_validate")
      */
     public function validate(Request $request, int $id): Response
     {
@@ -124,7 +122,7 @@ class OrderControllerAdmin extends AbstractController
                $ex->getMessage()
             );
         } 
-        return $this->redirectToRoute('admin_order_details', ['id' => $id]);
+        return $this->redirectToRoute('agent_order_details', ['id' => $id]);
     }
 
 }

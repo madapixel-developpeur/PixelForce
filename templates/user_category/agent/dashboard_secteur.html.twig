@@ -32,7 +32,7 @@
                             {% if estSecurite %}
                             <a role="button" href="{{path('admin_ordersecu_list')}}" class="btn btn-primary">Voir les ventes</a>
                             {% elseif estEcommerce %}
-                            <a role="button" href="{{path('admin_order_list')}}" class="btn btn-primary">Voir les ventes</a>
+                            <a role="button" href="{{path('agent_order_list')}}" class="btn btn-primary">Voir les ventes</a>
                             {% elseif estDemandeDevis %}
                             <a role="button" href="{{path('agent_demandedevis_list')}}" class="btn btn-primary">Voir les ventes</a>
                             {% endif %}
