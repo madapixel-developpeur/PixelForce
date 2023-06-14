@@ -11,6 +11,7 @@ parameters:
     stripe_secret_key: '%env(STRIPE_SECRET_KEY)%'
     stripe_currency: '%env(STRIPE_CURRENCY)%'
     base_url: '%env(BASE_URL)%'
+    pbb_ws_url: '%env(PBB_WS_URL)%'
 
 services:
     # default configuration for services in *this* file

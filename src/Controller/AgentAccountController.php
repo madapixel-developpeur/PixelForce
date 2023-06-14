@@ -178,7 +178,10 @@ class AgentAccountController extends AbstractController
         $topClients = $statAgentService->getTopClients($agent->getId(), $secteur->getId(), 5);
         $revenuAnnee = $statAgentService->getRevenuAnnee($annee, $secteur->getId(), $agent->getId());
         $nbrRdv = $statAgentService->getNbrRdv($agent->getId());
-
+        $pbb_summary = $statAgentService->getPbbSummary($agent->getId(), $agent->getNom());
+        //dd($pbb_summary);
+        $chiffreAffaireTotal = $pbb_summary['chiffreAffaire'] + ($statVente != null ? $statVente['ca'] : 0);
+        $nbVentesTotal = count($pbb_summary['orders']) + ($statVente != null ? $statVente['nbr_ventes'] : 0);
         return $this->render('user_category/agent/dashboard_secteur.html.twig', [
             'secteur' => $secteur,
             'formations' => $formations,
@@ -195,7 +198,9 @@ class AgentAccountController extends AbstractController
             'revenuAnnee' => $revenuAnnee,
             'annee' => $annee,
             'anneeActuelle' => $anneeActuelle,
-            'nbrRdv' => $nbrRdv
+            'nbrRdv' => $nbrRdv,
+            'chiffreAffaireTotal' => $chiffreAffaireTotal,
+            'nbVentesTotal' => $nbVentesTotal,
         ]);
     }
     // public function agent_dashboard_secteur( Request $request, PaginatorInterface $paginator, Secteur $secteur, StatAgentService $statAgentService)

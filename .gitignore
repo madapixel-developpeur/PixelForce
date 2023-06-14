@@ -26,3 +26,5 @@ yarn-error.log
 ###< symfony/webpack-encore-bundle ###
 
 /public/files/
+
+._**

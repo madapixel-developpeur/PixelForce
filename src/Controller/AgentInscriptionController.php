@@ -6,6 +6,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Entity\AgentSecteur;
 use App\Entity\PlanAgentAccount;
+use App\Entity\Secteur;
 use App\Form\InscriptionAgentType;
 use App\Manager\EntityManager;
 use App\Manager\StripeManager;
@@ -44,8 +45,8 @@ class AgentInscriptionController extends AbstractController
 
     /** @var PlanAgentAccountRepository $repoPlanAgentAccount */
     protected $repoPlanAgentAccount;
-
-    public function __construct(EntityManager $entityManager, UserManager $userManager, StripeManager $stripeManager, SessionInterface $session, UserRepository $userRepository, AgentSecteurRepository $repoAgentSecteur, PlanAgentAccountRepository $repoPlanAgentAccount)
+    private $secteurRepository;
+    public function __construct(EntityManager $entityManager, UserManager $userManager, StripeManager $stripeManager, SessionInterface $session, UserRepository $userRepository, AgentSecteurRepository $repoAgentSecteur, PlanAgentAccountRepository $repoPlanAgentAccount, SecteurRepository $secteurRepository)
     {
         $this->entityManager = $entityManager;
         $this->userManager = $userManager;
@@ -54,6 +55,7 @@ class AgentInscriptionController extends AbstractController
         $this->userRepository = $userRepository;
         $this->repoAgentSecteur = $repoAgentSecteur;
         $this->repoPlanAgentAccount = $repoPlanAgentAccount;
+        $this->secteurRepository = $secteurRepository;
     }
 
 
@@ -87,6 +89,49 @@ class AgentInscriptionController extends AbstractController
 
     }
 
+    /**
+     * @Route("/inscription/agent/api", name="agent_inscription_api")
+     */
+    public function inscriptionAgentAPI(Request $request)
+    {
+
+        // Parse the JSON body from the request
+        $data = json_decode($request->getContent(), true);
+        $user = new User();
+        $user->setNom($data['nom']);
+        $user->setPrenom($data['prenom']);
+        $user->setTelephone($data['telephone']);
+        $user->setCodePostal($data['codePostal']);
+        $user->setUsername($data['username']);
+        $user->setEmail($data['email']);
+        $user->setPassword($data['password']);
+        $user->setVille($data['ville']);
+
+        $secteurPBB = $this->secteurRepository->find(Secteur::PBB);
+        $userSecteur = (new AgentSecteur())
+            ->setAgent($user)
+            ->setSecteur($secteurPBB)
+            ->setStatut(true)
+            ->setDateValidation(new \DateTime())
+        ;
+
+        // $user->removeAllAgentSecteur();
+        $user->addAgentSecteur($userSecteur);
+
+        $user->setRoles([ User::ROLE_AGENT ]);
+        $user->setActive(1);
+        $user->setAccountStatus(User::ACCOUNT_STATUS['ACTIVE']);
+        
+        $this->entityManager->save($user);
+
+        // Return a success response
+        return $this->json([
+            'message' => 'User created successfully',
+            'userId' => $user->getId(),
+            'data' => $data,
+
+        ]);
+    }
     /**
      * @Route("/inscription/agent/payement/intent", name="agent_register_payment_intent")
      */

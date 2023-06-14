@@ -13,6 +13,7 @@ use JsonSerializable;
  */
 class Secteur implements JsonSerializable
 {
+    const PBB = 9;
     /**
      * @ORM\Id
      * @ORM\GeneratedValue

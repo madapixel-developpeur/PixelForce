@@ -5,11 +5,14 @@ use App\Entity\TypeSecteur;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\ResultSetMapping;
 use Exception;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
+
 class StatAgentService
 {
     private $entityManager;
 
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(EntityManagerInterface $entityManager, private HttpClientInterface $client,private ParameterBagInterface $parameterBag)
     {
         $this->entityManager = $entityManager;
     }
@@ -28,7 +31,15 @@ class StatAgentService
         if(count($result) == 0) return null;
         return $result[0];
     }
-
+    public function getPbbSummary($pbb_id){
+        $pbb_ws_url = $this->parameterBag->get('pbb_ws_url');
+        $response = $this->client->request(
+            'GET',
+            $pbb_ws_url.'/api/pbb_summary?pbb_id='.$pbb_id
+        );
+        $content = json_decode($response->getContent(), true);
+        return $content;
+    }
     public function getRevenuAnnee($annee, $secteurId = -1, $agentId = -1){
         $conn = $this->entityManager->getConnection();
 
