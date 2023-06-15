@@ -123,7 +123,7 @@ class UserController extends AbstractController
      */
     public function accountSettingTemplate(User $user, Request $request)
     {
-        $form = $this->createForm(AccountAgentType::class, $user)->remove('secteur');
+        $form = $this->createForm(AccountAgentType::class, $user)->remove('secteur')->add('id');
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()) {
             // upload profil

@@ -307,7 +307,7 @@
                 </div>
                 <!--/ Browser States Card -->
     
-                <!-- Goal Overview Card -->
+                {# <!-- Goal Overview Card -->
                 <div class="col-lg-4 col-md-6 col-12">
                     <div class="card">
                         <div class="card-header d-flex justify-content-between align-items-center">
@@ -329,21 +329,21 @@
                         </div>
                     </div>
                 </div>
-                <!--/ Goal Overview Card -->
+                <!--/ Goal Overview Card --> #}
     
-                <!-- Liste Formation -->
+                {# <!-- Liste Formation -->
                 <div class="col-lg-8 col-md-6 col-12">
                     <div class="card card-transaction">
                         <div class="card-header">
                             <h4 class="card-title">Analyse clients</h4>
-                            {# <div class="dropdown chart-dropdown">
+                            <div class="dropdown chart-dropdown">
                                 <i data-feather="more-vertical" class="font-medium-3 cursor-pointer" data-bs-toggle="dropdown"></i>
                                 <div class="dropdown-menu dropdown-menu-end">
                                     <a class="dropdown-item" href="#">28 derniers jours</a>
                                     <a class="dropdown-item" href="#">Le mois dernier</a>
                                     <a class="dropdown-item" href="#">L'année dernière</a>
                                 </div>
-                            </div> #}
+                            </div> 
                         </div>
                         <div class="card-body p-1">
                             {% for client in topClients %}
@@ -359,18 +359,19 @@
                                         <small>{{client.email}}</small>
                                     </div>
                                 </div>
-                                {# <div class="fw-bolder text-danger">- $74</div> #}
+                                <!-- <div class="fw-bolder text-danger">- $74</div> -->
                                 <div class="fw-bolder text-success">{{loop.index}}</div>
                             </div>
                             {% endfor %}
                         </div>
                     </div>
                 </div>
-                <!--/ Liste Formation -->
+                <!--/ Liste Formation --> #}
             </div>
 
             <div class="row match-height">
-                <div class="col-lg-4 col-12">
+                {# informations statiques  #}
+                {# <div class="col-lg-4 col-12">
                     <div class="row match-height">
                         <!-- Bar Chart - Orders -->
                         <div class="col-lg-6 col-md-3 col-6">
@@ -418,11 +419,11 @@
                         </div>
                         <!--/ Earnings Card -->
                     </div>
-                </div>
+                </div> #}
     
                 <!-- Revenue Report Card -->
                 {# {% if estDemandeDevis %}d-none{% endif %} #}
-                <div class="col-lg-8 col-12 ">
+                <div class="col-lg-12 col-12 ">
                     <div class="card card-revenue-budget">
                         <div class="row mx-0">
                             <div class="col-md-8 col-12 revenue-report-wrapper">

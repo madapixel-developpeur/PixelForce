@@ -82,14 +82,19 @@
 
                     <!-- form -->
                     <div class="row mt-4">
-                        <div class="col-md-4 col-12">
+                        <div class="col-md-6 col-12">
+                            {{ form_row(form.id, {attr: {readonly: true}}) }}
+                        </div>
+                        <div class="col-md-6 col-12">
+                            {{ form_row(form.username) }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 col-12">
                             {{ form_row(form.nom) }}
                         </div>
-                        <div class="col-md-4 col-12">
+                        <div class="col-md-6 col-12">
                             {{ form_row(form.prenom) }}
-                        </div>
-                        <div class="col-md-4 col-12">
-                            {{ form_row(form.username) }}
                         </div>
                     </div>
                     <div class="row">
