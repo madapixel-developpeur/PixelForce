@@ -50,6 +50,7 @@ security:
             - { path: ^/do, roles: ROLE_DOCUMENT_OWNER }
             - { path: ^/dc, roles: IS_AUTHENTICATED_ANONYMOUSLY }
             - { path: ^/boutique, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+            - { path: ^/api, roles: IS_AUTHENTICATED_ANONYMOUSLY }
             - { path: ^/*, roles: IS_AUTHENTICATED_REMEMBERED }
         # - { path: ^/profile, roles: ROLE_USER }
 

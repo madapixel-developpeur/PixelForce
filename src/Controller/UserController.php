@@ -181,8 +181,9 @@ class UserController extends AbstractController
     /**
      * @Route("/api/user/{id}", name="find_user")
      */
-    public function findUser(User $user)
+    public function findUser($id)
     {
+        $user = $this->userRepository->find($id);
         if($user==null) return $this->json(null, 404);
         return $this->json($user, 200);
     }
