@@ -37,6 +37,7 @@ class AuthController extends AbstractController
         $this->userRepository = $userRepository;
         $this->authService = $authService;
     }
+
     
     /**
      * @Route("/inscription/client/{token}", name="signup_client")

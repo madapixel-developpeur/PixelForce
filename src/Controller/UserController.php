@@ -177,4 +177,13 @@ class UserController extends AbstractController
             'border_error' => isset($error_password) || isset($emptyPass)
         ]);
     }
+
+    /**
+     * @Route("/api/user/{id}", name="find_user")
+     */
+    public function findUser(User $user)
+    {
+        if($user==null) return $this->json(null, 404);
+        return $this->json($user, 200);
+    }
 }

@@ -22,7 +22,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @UniqueEntity("username", message="Nom d'utilisateur déjà utilisé")
  * @UniqueEntity("email", message="Adresse email déjà utilisé")
  */
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSerializable
 {
 
     const ROLE_AGENT = 'ROLE_AGENT';
@@ -1393,5 +1393,41 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         return $this;
+    }
+
+    public function jsonSerialize()
+    {
+       /* $vars = get_object_vars($this);
+        unset($vars['password']);
+        unset($vars['roles']);
+        unset($vars['coachAgents']);
+        unset($vars['liveChatVideosFromUserA']);
+        unset($vars['liveChatVideosFromUserB']);
+        unset($vars['videoFormations']);
+        unset($vars['commentaires']);
+        unset($vars['messages']);
+        unset($vars['canalMessages']);
+        unset($vars['created_at']);
+        unset($vars['contact']);
+        unset($vars['formations']);
+        unset($vars['formationAgents']);
+        unset($vars['coachSecteurs']);
+        unset($vars['agentSecteurs']);
+        unset($vars['calendarEvents']);
+        unset($vars['categorieFormationAgents']);
+        unset($vars['meetings']);
+        unset($vars['meetingGuests']);
+        unset($vars['subscriptionPlanAgentAccounts']);
+        unset($vars['orderDigitals']);
+        unset($vars['devisCompanies']);*/
+
+        $vars = [
+            'id'=>$this->getId(),
+            'email'=>$this->getEmail(),
+            'userIdentifer'=>$this->getUserIdentifier(),
+            'nom'=>$this->getNom(),
+            'prenom'=>$this->getPrenom(),
+        ];
+        return $vars;
     }
 }
