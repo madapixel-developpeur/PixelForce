@@ -7,6 +7,7 @@ use App\Entity\User;
 use App\Entity\AgentSecteur;
 use App\Entity\PlanAgentAccount;
 use App\Entity\Secteur;
+use App\Form\InscriptionAgentOldType;
 use App\Form\InscriptionAgentType;
 use App\Manager\EntityManager;
 use App\Manager\StripeManager;
@@ -91,6 +92,36 @@ class AgentInscriptionController extends AbstractController
         }
 
             return $this->render('security/inscription/form.html.twig', [
+            'form' => $form->createView()
+        ]);
+
+    }
+
+    /**
+     * @Route("/inscription/agent/index-old", name="agent_inscription_old")
+     */
+    public function inscriptionAgentOld(Request $request, SecteurRepository $secteurRepository)
+    {
+        $user = new User();
+        $form = $this->createForm(InscriptionAgentOldType::class, $user);
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()) {
+            $this->userManager->setUserPasword($user, $request->request->get('inscription_agent')['password']['first'], '', false);
+            $user->setRoles([ User::ROLE_AGENT ]);
+            $user->setActive(1);
+            // $user->setAccountStatus(User::ACCOUNT_STATUS['UNPAID']);
+            $user->setAccountStatus(User::ACCOUNT_STATUS['ACTIVE']); // On met temporairement le statut comme ACTIVE
+            $this->entityManager->save($user);
+            $this->session->set('agentId', $user->getId());
+            $this->addFlash(
+                'success',
+                'Votre inscription sur Pixelforce a été effectuée avec succès'
+            );
+            return $this->redirectToRoute('app_login');
+        }
+
+            return $this->render('security/inscription/form-old.html.twig', [
             'form' => $form->createView()
         ]);
 

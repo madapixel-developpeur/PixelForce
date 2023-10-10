@@ -1,0 +1,73 @@
+{% extends 'security/login.html.twig' %}
+
+{% block title %}Inscription agent{% endblock %}
+
+{% block form %}
+    <h5 class="my-4">Inscription</h5>
+    {{ form_start(form) }}
+        <div class="row">
+            <div class="col-md-6 col-12">
+                {{ form_row(form.nom) }}
+            </div>
+            <div class="col-md-6 col-12">
+                {{ form_row(form.prenom) }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 col-12">
+                {{ form_row(form.email) }}
+            </div>
+            <div class="col-md-6 col-12">
+                {{ form_row(form.telephone) }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 col-12">
+                {{ form_row(form.adresse) }}
+            </div>
+            <div class="col-md-6 col-12">
+                {{ form_row(form.numero_rue) }}
+            </div>
+            <div class="col-md-6 col-12">
+                {{ form_row(form.codePostal) }}
+            </div>
+            <div class="col-md-6 col-12">
+                {{ form_row(form.ville) }}
+            </div>
+        </div>
+        <h5 class="mt-4">Choix du secteur</h5>
+        <div class="row my-3">
+            {% for secteurList in form.secteur.children.secteur.children %}
+                <div class="col-12 col-md-4">
+                    {{ form_row(secteurList) }}
+                </div>
+
+            {% endfor %}
+        </div>
+
+        <h5 class="mb-4">Information sur la connexion</h5>
+        {{ form_row(form.username) }}
+        {{ form_row(form.password) }}
+        <div class="w-100 text-center">
+{#            <button class="btn btn-primary" type="submit" id="btn-next">Procéder au paiement <i class="fa-solid fa-angles-right"></i></button>#}
+            <button class="btn btn-primary" type="submit" id="btn-next">S’inscrire <i class="fa-solid fa-angles-right"></i></button>
+        </div>
+    {{ form_end(form) }}
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        // Fix required checkbox
+        $(document).ready(function () {
+            $('button#btn-next').click(function() {
+              checked = $("input[type=checkbox]:checked").length;
+
+              if(!checked) {
+                alert("Vous devez choisir au moins un secteur.");
+                return false;
+              }
+
+            });
+        });
+    </script>
+{% endblock %}
