@@ -17,6 +17,7 @@ use App\Repository\SecteurRepository;
 use App\Repository\UserRepository;
 use App\Services\StripeService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
@@ -69,18 +70,24 @@ class AgentInscriptionController extends AbstractController
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid()) {
-            $this->userManager->setUserPasword($user, $request->request->get('inscription_agent')['password']['first'], '', false);
-            $user->setRoles([ User::ROLE_AGENT ]);
-            $user->setActive(1);
-            // $user->setAccountStatus(User::ACCOUNT_STATUS['UNPAID']);
-            $user->setAccountStatus(User::ACCOUNT_STATUS['ACTIVE']); // On met temporairement le statut comme ACTIVE
-            $this->entityManager->save($user);
-            $this->session->set('agentId', $user->getId());
-            $this->addFlash(
-               'success',
-               'Votre inscription sur Pixelforce a été effectuée avec succès'
-            );
-            return $this->redirectToRoute('app_login');
+            $parrainUsername = $form->get('parrain')->getData();
+            $parrain = $this->userRepository->findOneBy(['username' => $parrainUsername]);
+            if(!isset($parrain)) $form->get('parrain')->addError(new FormError("Le parrain avec le nom d'utilisateur '".$parrainUsername."' n'existe pas."));
+            else {
+                $user->setParrain($parrain); // Assuming 'parrain' is a property in your entity
+                $this->userManager->setUserPasword($user, $request->request->get('inscription_agent')['password']['first'], '', false);
+                $user->setRoles([ User::ROLE_AGENT ]);
+                $user->setActive(1);
+                // $user->setAccountStatus(User::ACCOUNT_STATUS['UNPAID']);
+                $user->setAccountStatus(User::ACCOUNT_STATUS['ACTIVE']); // On met temporairement le statut comme ACTIVE
+                $this->entityManager->save($user);
+                $this->session->set('agentId', $user->getId());
+                $this->addFlash(
+                   'success',
+                   'Votre inscription sur Pixelforce a été effectuée avec succès'
+                );
+                return $this->redirectToRoute('app_login');
+            }
         }
 
             return $this->render('security/inscription/form.html.twig', [

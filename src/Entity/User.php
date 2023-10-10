@@ -93,7 +93,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
     private $email;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="string", length=255, unique=true)
      */
     private $username;
 
@@ -278,6 +278,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
      * @ORM\ManyToOne(targetEntity=User::class)
      */
     private $clientAgent;
+
+    /**
+     * 
+     * @ORM\ManyToOne(targetEntity=User::class)
+     */
+    private $parrain;
+
 
     private $plainPassword;
 
@@ -1213,6 +1220,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
 
         return $this;
     }
+    public function getParrain(): ?self
+    {
+        return $this->parrain;
+    }
+
+    public function setParrain(?self $parrain): self
+    {
+        $this->parrain = $parrain;
+
+        return $this;
+    }
+
 
     /**
      * Get the value of plainPassword
