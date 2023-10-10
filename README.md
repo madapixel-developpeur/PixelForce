@@ -51,5 +51,7 @@ To Persist data form from pdf :
 - Convert PDF to image with https://www.ilovepdf.com/fr/pdf_en_jpg
 - Print PDF - Save a PDF version of it and it will be un modifiable!
 
-
+# DUMP DB 
+mysqldump -u root -p pixelfocedev_bdd > pixelforce.sql
+mysql -u root -p pixelforce < pixelforce.sql
 
