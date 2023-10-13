@@ -56,7 +56,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for pack in packs %}
+                                {# {% for pack in packs %}
                                 <tr>
                                     <td>{{pack.name}}</td>
                                     <td>{{pack.description}}</td>
@@ -68,9 +68,19 @@
                                         </a>
                                     </td>                       
                                 </tr>
+                                {% endfor %} #}
+                                {% for pack in packs %}
+                                <tr class="selectable-row" data-link="{{ path('client_pack_payment', {'id': pack.id}) }}">
+                                    <td>{{pack.name}}</td>
+                                    <td>{{pack.description}}</td>
+                                    <td class="text-right">{{pack.cost |format_currency('EUR') }}</td>
+                                </tr>
                                 {% endfor %}
                             </tbody>
                         </table>
+                        <button id="nextButton" class="btn btn-primary" disabled>
+                            Suivant
+                        </button>
                     </div>
                     {% endif %}
                 </div>
@@ -78,5 +88,29 @@
         </div>
     </div>
 
+{% endblock %}
+
+
+{% block javascripts %}
+{{ parent() }}
+<script type="text/javascript">
+document.querySelectorAll('.selectable-row').forEach(row => {
+        row.addEventListener('click', () => {
+            document.querySelectorAll('.selectable-row').forEach(row => {
+                row.classList.remove('selected');
+            });
+            row.classList.add('selected');
+            document.getElementById('nextButton').disabled = false;
+            document.getElementById('nextButton').dataset.link = row.dataset.link;
+        });
+    });
+
+    document.getElementById('nextButton').addEventListener('click', () => {
+        const link = document.getElementById('nextButton').dataset.link;
+        if (link) {
+            window.location.href = link;
+        }
+    });
+</script>
 {% endblock %}
 

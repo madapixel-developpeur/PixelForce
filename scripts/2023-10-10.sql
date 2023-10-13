@@ -13,3 +13,7 @@ insert into pack_category (id, name, description, image, status) values (1, 'Cat
 insert into pack (id, id_pack_category, name, description, cost, image) values (1, 1, 'Pack 1', 'Description pack 1', 200, NULL);
 insert into pack (id, id_pack_category, name, description, cost, image) values (2, 1, 'Pack 2', 'Description pack 2', 500, NULL);
 insert into pack (id, id_pack_category, name, description, cost, image) values (3, 1, 'Pack 3', 'Description pack 3', 1000, NULL);
+
+drop table order_pack;
+drop table pack;
+drop table pack_category;

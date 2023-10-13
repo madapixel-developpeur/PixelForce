@@ -125,9 +125,7 @@ class InscriptionAgentType extends AbstractType
                 'attr' => [
                     'placeholder' => 'Numéro de rue'
                 ],
-                'constraints' => [
-                    new NotNull([],'champ obligatoire')
-                ]
+                'required'=>false
             ])
             ->add('ville', TextType::class, [
                 'label' => false,

@@ -13,6 +13,10 @@ WE WILL RELEASE FUTURE UPDATES SO IN ORDER TO NOT OVERWRITE YOUR STYLES IT'S BET
 .color-pixelforce{
 	color: #6f64e2 !important;
 }
+.selectable-row.selected{
+	background-color: #6f64e2 !important;
+	color: #ffffff !important;
+}
 
 a, a:hover{
 	color : unset;

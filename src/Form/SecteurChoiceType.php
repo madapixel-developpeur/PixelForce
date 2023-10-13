@@ -29,6 +29,8 @@ class SecteurChoiceType extends AbstractType
            ->add('secteur', EntityType::class, [
                'class' => Secteur::class,
                'choices' => $secteurs,
+               'data' => $secteurs,
+
                'choice_label' => 'nom',
                'expanded' => true,
                'multiple' => true
