@@ -1,0 +1,82 @@
+{% extends 'base_anonymous.html.twig' %}
+
+{% block title %}
+	Achat de packs
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+<div class="app-content content client ecommerce-application">
+        <div class="content-overlay"></div>
+        <div class="header-navbar-shadow"></div>
+        <div class="content-wrapper container-xxl p-0">
+            <div class="content-header row">
+                <div class="content-header-left col-md-9 col-12 mb-2">
+                    <div class="row breadcrumbs-top">
+                        <div class="col-12">
+                            <h2 class="content-header-title float-start mb-0">Achat de pack</h2>
+                            
+                            <div class="breadcrumb-wrapper pt-2">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="{{path('agent_home')}}">Accueil</a>
+                                    </li>
+                                    <li class="breadcrumb-item active"><a href="{{path('client_pack_index')}}">Liste des packs</a>
+                                    </li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="content-body">
+                <div class="block block--bordered block--rounded">
+                    <div class="block__header mb-1" >
+                        <h1 class="block__title">Liste des packs disponibles :</h1>
+                        
+                    </div>
+                    {% if packs|length ==0 %}
+                            <div class="alert alert-primary p-3 text-center" role="alert">
+                                <div class="alert-body">
+                                    Aucun pack disponible.
+                                </div>
+                            </div>
+                    {% endif %}
+                    {% if packs|length !=0 %}
+                    <div class="table-responsive mb-1">
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Nom du pack</th>
+                                    <th>Description</th>
+                                    <th>Montant</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for pack in packs %}
+                                <tr>
+                                    <td>{{pack.name}}</td>
+                                    <td>{{pack.description}}</td>
+
+                                    <td class="text-right">{{pack.cost |format_currency('EUR') }}</td>
+                                    <td class="col-action ">
+                                        <a href="{{path('client_pack_payment', {'id': pack.id})}}">
+                                            Acheter ce pack
+                                        </a>
+                                    </td>                       
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+

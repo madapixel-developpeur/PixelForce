@@ -55,3 +55,4 @@ To Persist data form from pdf :
 mysqldump -u root -p pixelfocedev_bdd > pixelforce.sql
 mysql -u root -p pixelforce < pixelforce.sql
 
+$agentToken = $request->get('agentToken');

@@ -16,6 +16,7 @@ use App\Repository\AgentSecteurRepository;
 use App\Repository\PlanAgentAccountRepository;
 use App\Repository\SecteurRepository;
 use App\Repository\UserRepository;
+use App\Services\AuthService;
 use App\Services\StripeService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
@@ -48,7 +49,7 @@ class AgentInscriptionController extends AbstractController
     /** @var PlanAgentAccountRepository $repoPlanAgentAccount */
     protected $repoPlanAgentAccount;
     private $secteurRepository;
-    public function __construct(EntityManager $entityManager, UserManager $userManager, StripeManager $stripeManager, SessionInterface $session, UserRepository $userRepository, AgentSecteurRepository $repoAgentSecteur, PlanAgentAccountRepository $repoPlanAgentAccount, SecteurRepository $secteurRepository)
+    public function __construct(private AuthService $authService, EntityManager $entityManager, UserManager $userManager, StripeManager $stripeManager, SessionInterface $session, UserRepository $userRepository, AgentSecteurRepository $repoAgentSecteur, PlanAgentAccountRepository $repoPlanAgentAccount, SecteurRepository $secteurRepository)
     {
         $this->entityManager = $entityManager;
         $this->userManager = $userManager;
@@ -87,7 +88,8 @@ class AgentInscriptionController extends AbstractController
                    'success',
                    'Votre inscription sur Pixelforce a été effectuée avec succès'
                 );
-                return $this->redirectToRoute('app_login');
+                $this->authService->autoAuthenticate($user);
+                return $this->redirectToRoute('client_pack_index');
             }
         }
 

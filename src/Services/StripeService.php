@@ -2,12 +2,14 @@
 
 namespace App\Services;
 
+use App\Entity\OrderPack;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Google\Service\CloudFunctions\Retry;
 use Stripe\Charge;
 use Stripe\Stripe;
+use Stripe\Subscription;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
@@ -163,12 +165,12 @@ class StripeService
     /**
      * Permet de créer un client dans Stripe (souvent relié par un abonnement)
      */
-    public function createCustomer($email, $name, $desciption)
+    public function createCustomer($email, $name, $description)
     {
         $stripe = new \Stripe\StripeClient($this->secretKey);
 
         $customer = $stripe->customers->create([
-            'description' => $desciption,
+            'description' => $description,
             'email' => $email,
             'name' => $name
         ]);
@@ -632,5 +634,46 @@ class StripeService
     public function getPaymentIntent($id)
     {
         return \Stripe\PaymentIntent::retrieve($id, []);
+    }
+
+    /**
+     * Permet de créer un nouveau Price ou (Plan) d'un produit 
+     * Un produit qui est à titre de "Abonnement Aromaforest"
+     */
+    public function create_recurring_price($amount, $interval_unit, $productName)
+    {
+        $stripe = new \Stripe\StripeClient($this->secretKey);
+
+        // $reccurringSubscription = $this->orderRepository->findOneBy( ['payment_type' => Order::PAYMENT_TYPE[1]]);
+        $product = $this->createProduct($productName);
+        $productId = $product['id'];
+
+        $price = $stripe->prices->create([
+            'unit_amount' => $amount * 100,
+            'currency' => 'eur',
+            'recurring' => [
+                'interval' => $interval_unit
+            ],
+            'product' => $productId
+        ]);
+
+        return $price;
+    }
+
+    public function subscribe($paymentMethodId, $amountSubscription, $userDatas)
+    {
+        $interval_unit = OrderPack::SUBSCRIPTION_INTERVAL;
+        //$iteration = OrderPack::SUBSCRIPTION_ITERATION;
+        $productName = OrderPack::SUBSCRIPTION_LABEL;
+
+        $paymentMethod = $this->getPaymentMethods($paymentMethodId);
+
+        $customer = $this->createCustomer($userDatas['mail'], $userDatas['lastname'], $productName);
+        $paymentMethod->attach([ 'customer' => $customer['id'] ]);
+        $this->updateCustomer($customer['id'], $paymentMethodId);
+ 
+        $price = $this->create_recurring_price($amountSubscription, $interval_unit, $productName);
+        $subscription = $this->createSubscription($customer['id'], $price['id']);
+        return $subscription;
     }
 }

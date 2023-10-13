@@ -1,0 +1,86 @@
+<?php
+
+namespace App\Controller\Pack;
+
+use App\Entity\OrderPack;
+use App\Entity\Pack;
+use App\Form\PackPayFormType;
+use App\Repository\PackRepository;
+use App\Services\OrderPackService;
+use App\Services\StripeService;
+use Exception;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Routing\Annotation\Route;
+
+/**
+ * @Route("/pack")
+ */
+class PackController extends AbstractController
+{
+    public function __construct(private OrderPackService $orderPackService,private PackRepository $packRepository, private StripeService $stripeService)
+    {
+       
+    }
+
+    /**
+     * @Route("/", name="client_pack_index")
+     */
+    public function index(): Response
+    {
+        $packs = $this->packRepository->findAll();
+        return $this->render('user_category/client/pack/pack_index.html.twig', [
+            'packs' => $packs
+        ]);
+
+    }
+    /**
+     * @Route("/payment", name="client_pack_payment")
+     */
+    public function payment(Request $request): Response
+    {
+        $id = $request->query->get('id');
+        $pack = $this->packRepository->find($id);
+        $error = null;
+        $form = $this->createForm(PackPayFormType::class);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            try{
+                $stripeToken = $form->get('token')->getData();
+                $fullname = $form->get('fullname')->getData();
+                $agent = $this->getUser();
+                $orderPack = new OrderPack();
+                $orderPack->setFullname($fullname);
+                $orderPack->setAmount($pack->getCost());
+                $orderPack->setAgent($agent);
+                $orderPack->setPack($pack);
+                $orderPack->setStatut(OrderPack::CREATED);
+                $orderPack = $this->orderPackService->saveOrder($orderPack, $stripeToken);
+                $this->addFlash('success', 'Paiement effectué');
+                return $this->redirectToRoute('agent_home');
+            } catch(Exception $ex){
+                $error = $ex->getMessage();
+            }
+        }
+        $totalAmount = $pack->getCost();
+        $paymentIntent = $this->stripeService->paymentIntent($totalAmount);
+        $paymentIntentId = $paymentIntent->id;
+        $stripeIntentSecret = $this->stripeService->intentSecretByPaymentIntentId($paymentIntentId);
+        
+        return $this->render('user_category/client/pack/pack_payment.html.twig',[
+            'pack' => $pack,
+            'stripe_public_key' => $this->getParameter('stripe_public_key'),
+            'form' => $form->createView(),
+            'error' => $error,
+            'stripeIntentSecret' => $stripeIntentSecret,
+            'subscription'=>[
+                'amount'=>OrderPack::SUBSCRIPTION_AMOUNT,
+                'interval'=>OrderPack::SUBSCRIPTION_INTERVAL,
+            ]
+        ]);
+
+    }
+}
