@@ -43,7 +43,9 @@ class OrderPackService
                 "mail"=>$order->getAgent()->getEmail()
             ];
             $this->stripeService->subscribe($stripeToken, $order->getAmount(), $userDatas);
-
+            
+            $order->getAgent()->setHasPaidSubscription(true);
+            
             $this->entityManager->flush();
             $this->entityManager->commit();
             

@@ -333,6 +333,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
      */
     private $devisCompanies;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $has_paid_subscription;
+
     public function __construct()
     {
         $this->coachAgents = new ArrayCollection();
@@ -1402,7 +1407,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
 
         return $this;
     }
+    public function getHasPaidSubscription(): ?bool
+    {
+        return $this->has_paid_subscription;
+    }
 
+    public function setHasPaidSubscription(?bool $has_paid_subscription): self
+    {
+        $this->has_paid_subscription = $has_paid_subscription;
+
+        return $this;
+    }
     public function removeDevisCompany(DevisCompany $devisCompany): self
     {
         if ($this->devisCompanies->removeElement($devisCompany)) {

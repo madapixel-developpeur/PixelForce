@@ -77,6 +77,8 @@ class AgentInscriptionController extends AbstractController
             if(!isset($parrain)) $form->get('parrain')->addError(new FormError("Le parrain avec le nom d'utilisateur '".$parrainUsername."' n'existe pas."));
             else {
                 $user->setParrain($parrain); // Assuming 'parrain' is a property in your entity
+                $user->setHasPaidSubscription(false); // Par défaut l'agent n'a pas encore payé l'abonnement
+
                 $this->userManager->setUserPasword($user, $request->request->get('inscription_agent')['password']['first'], '', false);
                 $user->setRoles([ User::ROLE_AGENT ]);
                 $user->setActive(1);

@@ -17,7 +17,7 @@
                 <div class="content-header-left col-md-9 col-12 mb-2">
                     <div class="row breadcrumbs-top">
                         <div class="col-12">
-                            <h2 class="content-header-title float-start mb-0">Achat de pack</h2>
+                            <h4 class="content-header-title float-start mb-0">Achat de pack</h4>
                             
                             <div class="breadcrumb-wrapper pt-2">
                                 <ol class="breadcrumb">
@@ -78,8 +78,8 @@
                                 {% endfor %}
                             </tbody>
                         </table>
-                        <button id="nextButton" class="btn btn-primary" disabled>
-                            Suivant
+                        <button id="nextButton" class="btn btn-primary">
+                            Passer
                         </button>
                     </div>
                     {% endif %}
@@ -100,7 +100,8 @@ document.querySelectorAll('.selectable-row').forEach(row => {
                 row.classList.remove('selected');
             });
             row.classList.add('selected');
-            document.getElementById('nextButton').disabled = false;
+            document.getElementById('nextButton').textContent  = "Suivant";
+            // document.getElementById('nextButton').disabled = false;
             document.getElementById('nextButton').dataset.link = row.dataset.link;
         });
     });
@@ -109,6 +110,9 @@ document.querySelectorAll('.selectable-row').forEach(row => {
         const link = document.getElementById('nextButton').dataset.link;
         if (link) {
             window.location.href = link;
+        }
+        else{
+            window.location.href = "{{ path('client_pack_payment') }}";
         }
     });
 </script>

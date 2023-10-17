@@ -43,10 +43,14 @@ class PackController extends AbstractController
     public function payment(Request $request): Response
     {
         $id = $request->query->get('id');
-        $pack = $this->packRepository->find($id);
+        $pack = isset($id) ? $this->packRepository->find($id) : null;
         $error = null;
         $form = $this->createForm(PackPayFormType::class);
         $form->handleRequest($request);
+        
+        $packCost = isset($pack) ? $pack->getCost() : 0;
+        $totalAmount = $packCost + OrderPack::SUBSCRIPTION_AMOUNT;
+
         if ($form->isSubmitted() && $form->isValid()) {
             try{
                 $stripeToken = $form->get('token')->getData();
@@ -54,9 +58,9 @@ class PackController extends AbstractController
                 $agent = $this->getUser();
                 $orderPack = new OrderPack();
                 $orderPack->setFullname($fullname);
-                $orderPack->setAmount($pack->getCost());
+                $orderPack->setAmount($totalAmount);
                 $orderPack->setAgent($agent);
-                $orderPack->setPack($pack);
+                if($pack!=null) $orderPack->setPack($pack);
                 $orderPack->setStatut(OrderPack::CREATED);
                 $orderPack = $this->orderPackService->saveOrder($orderPack, $stripeToken);
                 $this->addFlash('success', 'Paiement effectué');
@@ -65,7 +69,8 @@ class PackController extends AbstractController
                 $error = $ex->getMessage();
             }
         }
-        $totalAmount = $pack->getCost();
+       
+
         $paymentIntent = $this->stripeService->paymentIntent($totalAmount);
         $paymentIntentId = $paymentIntent->id;
         $stripeIntentSecret = $this->stripeService->intentSecretByPaymentIntentId($paymentIntentId);
@@ -76,6 +81,7 @@ class PackController extends AbstractController
             'form' => $form->createView(),
             'error' => $error,
             'stripeIntentSecret' => $stripeIntentSecret,
+            'totalAmount'=>$totalAmount,
             'subscription'=>[
                 'amount'=>OrderPack::SUBSCRIPTION_AMOUNT,
                 'interval'=>OrderPack::SUBSCRIPTION_INTERVAL,

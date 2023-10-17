@@ -18,7 +18,7 @@
                 <div class="content-header-left col-md-9 col-12 mb-2">
                     <div class="row breadcrumbs-top">
                         <div class="col-12">
-                            <h2 class="content-header-title float-start mb-0">Achat {{pack.name}}  <br> <small>{{pack.cost|format_currency('EUR')}}</small></h2>
+                            <h4 class="content-header-title float-start mb-0">Achat {{pack is null ? 'Abonnement' : pack.name ~ '+Abonnement'}}  <br> <small>{{totalAmount|format_currency('EUR')}}</small></h4>
                             
                             <div class="breadcrumb-wrapper pt-2">
                                 <ol class="breadcrumb">
@@ -26,7 +26,7 @@
                                     </li>
                                     <li class="breadcrumb-item"><a href="{{path('client_pack_index')}}">Liste des packs</a>
                                     </li>
-                                    <li class="breadcrumb-item active"><a href="{{path('client_pack_payment', {'id': pack.id})}}">Paiement</a>
+                                    <li class="breadcrumb-item active"><a href="#">Paiement</a>
                                     </li>
                                 </ol>
                             </div>
@@ -150,7 +150,7 @@
                         <!-- Checkout Payment Ends -->
 
                         <div class="block block--rounded">
-                            <h1 class="block__text block__text--center mt-2" >Montant total dû: {{pack.cost | format_currency('EUR')}} + {{subscription.amount | format_currency('EUR')}}/{{subscription.interval}}</h1>
+                            <h1 class="block__text block__text--center mt-2" >Montant total dû: {{ (pack is null ? 0 : pack.cost) | format_currency('EUR')}} + {{subscription.amount | format_currency('EUR')}}/{{subscription.interval}}</h1>
                                 
                                 {{ form_start(form, {'attr': {'class': 'my-form', 'id': 'pack_pay_form'}}) }}
                                     {% if error %}
@@ -187,7 +187,7 @@
                                     </div>
                                     {{form_widget(form.token)}}
                                     <div class="btn-wrap">
-                                        <button class="btn btn-primary" type="submit"><i data-feather="send"></i>Payer {{(pack.cost + subscription.amount) | format_currency('EUR')}}</button>
+                                        <button class="btn btn-primary" type="submit"><i data-feather="send"></i>Payer {{(totalAmount) | format_currency('EUR')}}</button>
                                     </div>
                                 {{ form_end(form) }}
                         </div>
