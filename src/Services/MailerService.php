@@ -232,7 +232,7 @@ class MailerService
         ]);
 
         $attachmentsPath = [$order->getInvoicePath()];
-        $embeddedImages = ['logo' => 'assets/img/logo/pixelforce/logo-pixelforce-min.png'];
+        $embeddedImages = ['logo' => 'assets/img/logo/greenlife/greenlife.png'];
         $this->mySendMail([
             'subject' => 'Confirmation de commande '.$order->getId(),
             'to' => $order->getAddress()->getEmail(),
@@ -261,7 +261,7 @@ class MailerService
         ]);
 
         $attachmentsPath = [$order->getInvoicePath(), $order->getContratSigned()];
-        $embeddedImages = ['logo' => 'assets/img/logo/pixelforce/logo-pixelforce-min.png'];
+        $embeddedImages = ['logo' => 'assets/img/logo/greenlife/greenlife.png'];
         $this->mySendMail([
             'subject' => 'Confirmation de commande '.$order->getId(),
             'to' => $order->getClient()->getEmail(),
@@ -336,7 +336,7 @@ class MailerService
         ]);
 
         $attachmentsPath = [$devisCompany->getPjFilename()];
-        $embeddedImages = ['logo' => 'assets/img/logo/pixelforce/logo-pixelforce-min.png'];
+        $embeddedImages = ['logo' => 'assets/img/logo/greenlife/greenlife.png'];
         $this->mySendMail([
             'subject' => 'Confirmation du devis '.$devisCompany->getId(),
             'to' => $devisCompany->getClientMail(),
@@ -364,7 +364,7 @@ class MailerService
         ]);
 
         $attachmentsPath = [$order->getInvoicePath(), $order->getDevis()->getContratFileName()];
-        $embeddedImages = ['logo' => 'assets/img/logo/pixelforce/logo-pixelforce-min.png'];
+        $embeddedImages = ['logo' => 'assets/img/logo/greenlife/greenlife.png'];
         $this->mySendMail([
             'subject' => 'Confirmation de la commande '.$order->getId(),
             'to' => $order->getDevis()->getDemandeDevis()->getEmail(),

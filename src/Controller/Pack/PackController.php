@@ -84,7 +84,7 @@ class PackController extends AbstractController
             'totalAmount'=>$totalAmount,
             'subscription'=>[
                 'amount'=>OrderPack::SUBSCRIPTION_AMOUNT,
-                'interval'=>OrderPack::SUBSCRIPTION_INTERVAL,
+                'interval'=>OrderPack::IntervaltoLocale(OrderPack::SUBSCRIPTION_INTERVAL),
             ]
         ]);
 

@@ -22,6 +22,13 @@ class OrderPack
     public const PAIED = 1;
     public const VALIDATED = 2;
 
+    public static function IntervaltoLocale($interval){
+        if($interval == "year") return "an";
+        else if($interval == "month") return "mois";
+        else if($interval == "day") return "jour";
+        else return $interval;
+    }
+
     public const STATUS = [
         self::CREATED => "Créée", 
         self::PAIED => "Payée",
