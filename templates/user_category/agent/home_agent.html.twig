@@ -12,7 +12,7 @@
     {% set stripe_defaultButton =  "S'abonner (" ~ planPrice ~ " €)" %}
 
     <div class="container-page">
-        <h1 class="text-center mt-3">Bienvenue sur PixelForce</h1>    
+        <h1 class="text-center mt-3">Bienvenue sur Green Life Ultimate</h1>    
 
         {% if app.session.get('enabledContent') == true %}
             {% if app.request.get('stripe_checkout') == 'successfully' %}
@@ -21,7 +21,7 @@
                 </div>
             {% endif %}
             
-            <h4 class="text-center mb-3" style="padding: 0 100px">Voici tous les secteurs disponibles sur la plateforme PixelForce. Vous pouvez accéder au secteur qui vous est attribué.</h4>
+            <h4 class="text-center mb-3" style="padding: 0 100px">Voici tous les secteurs disponibles sur la plateforme Green Life Ultimate. Vous pouvez accéder au secteur qui vous est attribué.</h4>
             <div class="block-list-card-secteur mt-5">
                 <div class="row d-flex justify-content-center">
                     {% for secteur in allSecteurs %}
@@ -59,7 +59,7 @@
                             <h5 class="text-warning"> Veuillez procéder au paiement pour activer votre compte </h5>
                         {% elseif expiredAccount %}
                             {% set agent_accountStatus = USER_ACCOUNT_STATUS['EXPIRED'] %}
-                            Votre essaie de 14 jours sur PixelForce est expirée, veuillez procéder au paiement pour reactiver votre compte
+                            Votre essaie de 14 jours sur Green Life Ultimate est expirée, veuillez procéder au paiement pour reactiver votre compte
                             <span class="mt-2">...Ou contacter le responsable pour plus d'informations</span>
                         {% endif %}
 
