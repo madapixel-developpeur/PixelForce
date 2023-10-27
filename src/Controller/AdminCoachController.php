@@ -107,6 +107,9 @@ class AdminCoachController extends AbstractController
         $formUser->handleRequest($request);
         if ($formUser->isSubmitted() && $formUser->isValid()) {
             $coach->setRoles([USER::ROLE_COACH]);
+            if(!$coach->getUsername()){
+                $coach->setUsername($coach->getEmail());
+            }
             $coach->setPassword(base64_encode('_dfdkf12132_1321df'));
             
             $this->entityManager->save($coach);

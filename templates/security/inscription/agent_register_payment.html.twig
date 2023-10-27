@@ -27,12 +27,12 @@
             {% if app.request.get('stripe_subscription_plan') == 'successfully' %}
                 <div class="text-center alert alert-success h5">
                     Paiement effectué avec succès !  <br>
-                    Votre inscription sur Pixelforce a été effectuée avec succès <br>
+                    Votre inscription sur Green Life Ultimate a été effectuée avec succès <br>
                     <a href="{{ path('app_login') }}">Lien connexion </a>
                 </div>
             {% elseif app.request.get('stripe_subscription_plan') == 'error_different_agent_id' %}
                 <div class="text-center alert alert-success">
-                    Veuillez reprocéder au paiment car le navigateur a perdu votre session ou vous pouvez aussi vous connecter sur PixelForce pour poursuivre le paiment
+                    Veuillez reprocéder au paiment car le navigateur a perdu votre session ou vous pouvez aussi vous connecter sur Green Life Ultimate pour poursuivre le paiment
                     Mais avant de poursuivre, vueillez verifier votre solde bancaire
                 </div>
             {% endif %}
