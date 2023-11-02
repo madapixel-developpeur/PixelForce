@@ -47,7 +47,7 @@
                     <th scope="col">Nom et prénoms</th>
                     <th scope="col">Email</th>
                     <td>Téléphone</td>
-                    <th scope="col">ACTION</th>
+                    {# <th scope="col">ACTION</th> #}
                 </tr>
                 </thead>
                 <tbody>
@@ -57,7 +57,7 @@
                         <td>{{ coach.fullName }}</td>
                         <td>{{ coach.email }}</td>
                         <td>{{ coach.telephone }}</td>
-                        <td >
+                        {# <td >
                             {% set chatCanal =  render(controller(
                                 'App\\Controller\\ChatController::getSingleCanalBy_idUser',
                                 {
@@ -69,7 +69,7 @@
                             <a href="#" class="btn btn-primary chat-choose-canal" data-canal="{{ chatCanal|url_encode }}">
                                 <i class="fa-brands fa-facebook-messenger"></i> Envoyer un message
                             </a>
-                        </td>
+                        </td> #}
                     </tr>
                 {% else %}
                     <tr>

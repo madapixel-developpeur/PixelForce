@@ -80,9 +80,9 @@
                         ))
                     %}
 
-                    <a href="#" class="btn btn-primary chat-choose-canal me-2" data-canal="{{ chatCanal|url_encode }}">
+                    {# <a href="#" class="btn btn-primary chat-choose-canal me-2" data-canal="{{ chatCanal|url_encode }}">
                         <i class="fa-brands fa-facebook-messenger"> </i> envoyer un message
-                    </a>
+                    </a> #}
                 {% endif %}
                 {% if is_granted('ROLE_ADMINISTRATEUR')  %}
                     <a href="{{ path('admin_agent_edit', {id:user.id}) }}" class="btn btn-primary me-1 d-none" >
