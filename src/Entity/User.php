@@ -338,6 +338,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
      */
     private $has_paid_subscription;
 
+    /**
+     * @ORM\OneToMany(targetEntity=OrderPack::class, mappedBy="agent")
+     */
+    private $orderPacks;
+
     public function __construct()
     {
         $this->coachAgents = new ArrayCollection();
@@ -360,6 +365,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
         $this->subscriptionPlanAgentAccounts = new ArrayCollection();
         $this->orderDigitals = new ArrayCollection();
         $this->devisCompanies = new ArrayCollection();
+        $this->orderPacks = new ArrayCollection();
+
 
 
     }
@@ -1428,6 +1435,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
         }
 
         return $this;
+    }
+
+    /**
+     * @return Collection<int, OrderPack>
+     */
+    public function getOrderPacks(): Collection
+    {
+        return $this->orderPacks;
     }
 
     public function jsonSerialize()

@@ -102,6 +102,7 @@ class AdminAgentController extends AbstractController
             $request->query->getInt('page', 1),
             20
         );
+        // dd($agents[12]);
 
         return $this->render('user_category/admin/agent/list_agents.html.twig', [
             'agents' => $agents,

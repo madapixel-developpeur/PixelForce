@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Repository\PackRepository;
 use Cocur\Slugify\Slugify;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JsonSerializable;
 
@@ -45,6 +47,12 @@ class Pack implements JsonSerializable
      */
     private $image;
 
+    /**
+     * @ORM\OneToMany(targetEntity=OrderPack::class, mappedBy="agent")
+     */
+    private $orderPacks;
+
+    
     public function getId(): ?int
     {
         return $this->id;
@@ -112,6 +120,7 @@ class Pack implements JsonSerializable
 
 
     public function __construct(){
+        $this->orderPacks = new ArrayCollection();
     }
 
     public function jsonSerialize()
@@ -129,5 +138,13 @@ class Pack implements JsonSerializable
     public function getSlugPack()
     {
        return  (new Slugify())->slugify($this->getName())  ;
+    }
+
+    /**
+     * @return Collection<int, OrderPack>
+     */
+    public function getOrderPacks(): Collection
+    {
+        return $this->orderPacks;
     }
 }
