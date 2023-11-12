@@ -1,0 +1,49 @@
+{{ form_start(form, {'attr': {'class': 'form'}}) }}
+{% if error %}
+	<div class="alert alert-danger" role="alert">
+		<div class="alert-body">
+			{{error}}
+		</div>
+	</div>
+{% endif %}
+<div class="my-form-widget form-group">
+	{{form_label(form.name)}}
+	{{form_widget(form.name,{ 'attr': {'class': 'form-control'} })}}
+	{{form_errors(form.name)}}
+</div>
+<div class="my-form-widget form-group">
+	{{form_label(form.description)}}
+	{{form_widget(form.description,{ 'attr': {'class': 'form-control'} })}}
+	{{form_errors(form.description)}}
+</div>
+<div class="my-form-widget form-group">
+	{{form_label(form.cost)}}
+	{{form_widget(form.cost,{ 'attr': {'class': 'form-control'} })}}
+	{{form_errors(form.cost)}}
+</div>
+<div class="my-form-widget form-group">
+	{{form_label(form.packCategory)}}
+	{{form_widget(form.packCategory,{ 'attr': {'class': 'form-control'} })}}
+	{{form_errors(form.packCategory)}}
+</div>
+{# <div class="my-form-widget">
+	{{form_label(form.imageFile)}}
+	{{form_widget(form.imageFile,{ 'attr': {'class': 'form-control'} })}}
+	{{form_errors(form.imageFile)}}
+</div> #}
+<div class="my-form-widget">
+	{{form_label(form.documentFile)}}
+	{{form_widget(form.documentFile,{ 'attr': {'class': 'form-control'} })}}
+	{{form_errors(form.documentFile)}}
+</div>
+{# <div class="my-form-img-preview-container">
+                        {% if pack != null and pack.image != null %}
+                            <img class="my-form-img-preview" id="my-form-img-preview" src="{{ asset( files_directory_relative ~ pack.image) }}" alt="Image pour {{pack.name}}" />
+                        {% endif %}
+                    </div> #}
+<div class="btn-wrap mt-3">
+	<button class="btn btn-primary" type="submit">
+		<i data-feather="save"></i>
+		{{ isEdit ? 'Enregistrer les modifications' : 'Créer' }}</button>
+</div>
+{{ form_end(form) }}

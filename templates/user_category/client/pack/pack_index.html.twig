@@ -52,7 +52,7 @@
                                     <th>Nom du pack</th>
                                     <th>Description</th>
                                     <th>Montant</th>
-                                    <th></th>
+                                    <th>Document (.pdf)</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -73,7 +73,13 @@
                                 <tr class="selectable-row" data-link="{{ path('client_pack_payment', {'id': pack.id}) }}">
                                     <td>{{pack.name}}</td>
                                     <td>{{pack.description}}</td>
+                                    
                                     <td class="text-right">{{pack.cost |format_currency('EUR') }}</td>
+                                    <td>
+                                        {% if pack.document is not null %}
+                                        <a href="{{ path('app_pack_preview',{'pack_id' : pack.id}) }}" class="btn btn-sm"><i class="fa fa-eye"></i> Voir document</a>
+                                        {% endif %}
+                                    </td>
                                 </tr>
                                 {% endfor %}
                             </tbody>

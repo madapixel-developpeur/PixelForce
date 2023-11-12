@@ -89,15 +89,21 @@ class PackRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('p')->getQuery();
     }
 
-    public function findAllActivePack(){
-        $nb_pack_per_category = 3;
-        $sql = "SELECT * FROM (SELECT *, ROW_NUMBER() OVER(PARTITION BY id_pack_category ORDER BY id) as RN FROM pack) as t WHERE RN <= ".$nb_pack_per_category;
-        $rsm = new \Doctrine\ORM\Query\ResultSetMappingBuilder($this->_em);
-        $rsm->addRootEntityFromClassMetadata('App\Entity\Pack', 't');
+    // public function findAllActivePack(){
+    //     $nb_pack_per_category = 3;
+    //     $sql = "SELECT * FROM (SELECT *, ROW_NUMBER() OVER(PARTITION BY id_pack_category ORDER BY id) as RN FROM pack) as t WHERE RN <= ".$nb_pack_per_category;
+    //     $rsm = new \Doctrine\ORM\Query\ResultSetMappingBuilder($this->_em);
+    //     $rsm->addRootEntityFromClassMetadata('App\Entity\Pack', 't');
 
-        $query = $this->_em->createNativeQuery($sql, $rsm);
-        $result = $query->getResult();
-        return $result;
+    //     $query = $this->_em->createNativeQuery($sql, $rsm);
+    //     $result = $query->getResult();
+    //     return $result;
+    // }
+
+    public function findAllActivePackQuery(){
+        $qb = $this->createQueryBuilder('p');
+        $qb->where('p.status = 1');
+        return $qb->getQuery();
     }
 
 //    /**

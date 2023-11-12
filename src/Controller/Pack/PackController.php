@@ -8,11 +8,14 @@ use App\Form\PackPayFormType;
 use App\Repository\PackRepository;
 use App\Services\OrderPackService;
 use App\Services\StripeService;
+use App\Util\GenericUtil;
 use Exception;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -36,6 +39,23 @@ class PackController extends AbstractController
             'packs' => $packs
         ]);
 
+    }
+    /**
+     * @Route("/preview/{pack_id}", name="app_pack_preview")
+     */
+    public function pack_doc_download($pack_id)
+    {
+        $pack = $this->packRepository->find($pack_id);
+        $filepath = $pack->getDocument();
+        $response = new BinaryFileResponse(
+            $this->getParameter('files_directory_relative')."/".
+            $filepath
+        );
+        $response->setContentDisposition(
+            ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+            GenericUtil::getFileName($filepath)
+        );
+        return $response;
     }
     /**
      * @Route("/payment", name="client_pack_payment")

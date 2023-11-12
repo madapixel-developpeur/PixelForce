@@ -52,6 +52,16 @@ class Pack implements JsonSerializable
      */
     private $orderPacks;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true, options={"default" : 1})
+     */
+    private $status;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $document;
+
     
     public function getId(): ?int
     {
@@ -117,6 +127,17 @@ class Pack implements JsonSerializable
 
         return $this;
     }
+    public function getDocument(): ?string
+    {
+        return $this->document;
+    }
+
+    public function setDocument(?string $document): self
+    {
+        $this->document = $document;
+
+        return $this;
+    }
 
 
     public function __construct(){
@@ -146,5 +167,17 @@ class Pack implements JsonSerializable
     public function getOrderPacks(): Collection
     {
         return $this->orderPacks;
+    }
+
+    public function getStatus(): ?int
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?int $status): self
+    {
+        $this->status = $status;
+
+        return $this;
     }
 }
