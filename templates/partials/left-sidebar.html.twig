@@ -34,7 +34,7 @@
                         {% endfor %}
                     {% endif %}
                     <li class=" nav-item">
-                        <a role="button" data-toggle="tooltip" data-placement="right" class="d-flex align-items-center" href="{{ path('boutique_home', {token: app.user.agentToken})}}"><i class="fa-solid fa-cube"></i><span class="menu-title text-truncate" data-i18n="Email">Ma boutique en ligne</span></a>
+                        <a role="button" data-toggle="tooltip" data-placement="right" class="d-flex align-items-center" href="{{ path('boutique_home', {token: app.user.username})}}"><i class="fa-solid fa-cube"></i><span class="menu-title text-truncate" data-i18n="Email">Ma boutique en ligne</span></a>
                     </li>
                 {% else %}
                     {# Contenus masqués  #}

@@ -42,7 +42,7 @@ class OrderSecuControllerClient extends AbstractController
     public function index($token, Request $request, PaginatorInterface $paginator, SearchService $searchService): Response
     {
         $secteurId = $this->session->get('secteurId');
-        $agent = $this->userRepository->findAgentByToken($token);
+        $agent = $this->userRepository->findAgentByUsername($token);
         $page = $request->query->get('page', 1);
         $limit = 5;
         $criteria = [
@@ -101,7 +101,7 @@ class OrderSecuControllerClient extends AbstractController
     {
         $error = null;
         $secteurId = $this->session->get('secteurId');
-        $agent = $this->userRepository->findAgentByToken($token);
+        $agent = $this->userRepository->findAgentByUsername($token);
         return $this->render('user_category/client/secu/order/order_details.html.twig',[
             'error' => $error,
             'order' => $order,

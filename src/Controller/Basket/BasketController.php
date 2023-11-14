@@ -66,7 +66,7 @@ class BasketController extends AbstractController
     {
 
         $secteurId = $this->session->get('secteurId');
-        $agent = $this->userRepository->findAgentByToken($token);
+        $agent = $this->userRepository->findAgentByUsername($token);
         $groupKey = BasketItem::getGroupKeyStatic($agent->getId(), $secteurId);
         $error = null;
         $basket = $this->basketService->getBasket($groupKey);
@@ -87,7 +87,7 @@ class BasketController extends AbstractController
     public function address($token, Request $request, SecteurRepository $secteurRepository): Response
     {
         $secteurId = $this->session->get('secteurId');
-        $agent = $this->userRepository->findAgentByToken($token);
+        $agent = $this->userRepository->findAgentByUsername($token);
         $groupKey = BasketItem::getGroupKeyStatic($agent->getId(), $secteurId);
         if(!$this->basketService->hasItem($groupKey))
             return $this->redirectToRoute('client_basket', ['token' => $token]);
@@ -132,7 +132,7 @@ class BasketController extends AbstractController
     {
         
         $secteurId = $this->session->get('secteurId');
-        $agent = $this->userRepository->findAgentByToken($token);
+        $agent = $this->userRepository->findAgentByUsername($token);
 
         $error = null;
         $form = $formFactory
@@ -176,7 +176,7 @@ class BasketController extends AbstractController
     public function add($token, Request $request): JsonResponse
     {
         try{
-            $agent = $this->userRepository->findAgentByToken($token);
+            $agent = $this->userRepository->findAgentByUsername($token);
             $data = json_decode( $request->getContent(), true);
             $productId = $data['productId'];
             $quantity = $data['quantity'];
@@ -202,7 +202,7 @@ class BasketController extends AbstractController
     public function addNormal($token, Produit $product, Request $request): Response
     {
         try{
-            $agent = $this->userRepository->findAgentByToken($token);
+            $agent = $this->userRepository->findAgentByUsername($token);
             $quantity = 1;
             $basketItem = new BasketItem($product, $quantity);
             $basketItem->setAgentId($agent->getId());
@@ -222,7 +222,7 @@ class BasketController extends AbstractController
     public function update($token, Request $request): JsonResponse
     {
         try{
-            $agent = $this->userRepository->findAgentByToken($token);
+            $agent = $this->userRepository->findAgentByUsername($token);
             $data = json_decode( $request->getContent(), true);
             $productId = $data['productId'];
             $quantity = $data['quantity'];
@@ -246,7 +246,7 @@ class BasketController extends AbstractController
     public function remove($token, Produit $product): JsonResponse
     {
         try{
-            $agent = $this->userRepository->findAgentByToken($token);
+            $agent = $this->userRepository->findAgentByUsername($token);
             $groupKey = BasketItem::getGroupKeyStatic($agent->getId(), $product->getSecteur()->getId());
             $this->basketService->remove($groupKey, $product->getId());
             

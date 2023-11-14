@@ -52,7 +52,7 @@ class CartControllerAroma extends AbstractController
     {
         $secteurId = $this->session->get('secteurId');
         $secteur = $this->secteurRepository->find($secteurId);
-        $agent = $this->userRepository->findAgentByToken($token);
+        $agent = $this->userRepository->findAgentByUsername($token);
         $groupKey = BasketItemAroma::getGroupKeyStatic($agent->getId(), $secteurId);
         $basket = $this->basketService->refreshBasket($groupKey);
         $totalCost = $this->basketService->getTotalCostBasket($basket);
@@ -72,7 +72,7 @@ class CartControllerAroma extends AbstractController
     {
         try{
             $secteurId = $this->session->get('secteurId');
-            $agent = $this->userRepository->findAgentByToken($token);
+            $agent = $this->userRepository->findAgentByUsername($token);
             $quantity = $request->get('quantity', 1);            
             $basketItem = new BasketItemAroma($implantation, $quantity);
             $basketItem->setAgentId($agent->getId());
@@ -92,7 +92,7 @@ class CartControllerAroma extends AbstractController
     {
         try{
             $secteurId = $this->session->get('secteurId');
-            $agent = $this->userRepository->findAgentByToken($token);
+            $agent = $this->userRepository->findAgentByUsername($token);
             $groupKey = BasketItemAroma::getGroupKeyStatic($agent->getId(), $secteurId);
             $this->basketService->remove($groupKey, $implantation->getId());
             $this->addFlash('success', $implantation->getNom().' supprimé(e) du panier.');
@@ -109,7 +109,7 @@ class CartControllerAroma extends AbstractController
         try{
             $basketItems = json_decode( $request->getContent(), true);
             $secteurId = $this->session->get('secteurId');
-            $agent = $this->userRepository->findAgentByToken($token);
+            $agent = $this->userRepository->findAgentByUsername($token);
             $groupKey = BasketItemAroma::getGroupKeyStatic($agent->getId(), $secteurId);
             $this->basketService->refreshBasket($groupKey, true);
             $this->basketService->updateAll($agent->getId(), $secteurId, $basketItems);

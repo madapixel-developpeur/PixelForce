@@ -2,7 +2,7 @@
     <div class="navbar-container d-flex content">
         <ul class="nav navbar-nav flex-row">
             <li class="nav-item me-auto ">
-                <a class="navbar-brand d-flex" href="{{path('boutique_home', {'token': agent.agentToken})}}">
+                <a class="navbar-brand d-flex" href="{{path('boutique_home', {'token': agent.username})}}">
                     <img src="/assets/img/logo/greenlife/greenlife.png" class="img-fluid width-100" alt="logo-Green Life Ultimate">
                 </a>
             </li>
@@ -16,28 +16,28 @@
                 {% set typeSecteurId = app.session.get('typeSecteurId') %}
                 {% if secteurId %}
                     {% if typeSecteurId == 1 %}
-                    <li class="nav-item d-none d-lg-block"><a class="nav-link" href="{{path('boutique_secteur', {'token': agent.agentToken, 'id': secteurId})}}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Produits"><i class="fa-solid fa-bag-shopping"></i></a></li>
+                    <li class="nav-item d-none d-lg-block"><a class="nav-link" href="{{path('boutique_secteur', {'token': agent.username, 'id': secteurId})}}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Produits"><i class="fa-solid fa-bag-shopping"></i></a></li>
                         {% if is_granted('ROLE_CLIENT') %}
-                        <li class="nav-item d-none d-lg-block"><a class="nav-link" href="{{path('client_produit_favoris', {'token': agent.agentToken})}}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Produits favoris"><i class="fa-regular fa-heart"></i></a></li>
-                        <li class="nav-item d-none d-lg-block"><a class="nav-link" href="{{path('client_basket', {'token': agent.agentToken})}}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Mon panier"><i class="ficon" data-feather="shopping-cart"></i></a></li>
-                        <li class="nav-item d-none d-lg-block"><a class="nav-link" href="{{path('client_order_list', {'token': agent.agentToken})}}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Mes commandes"><i class="fa-solid fa-list-check"></i></a></li>
+                        <li class="nav-item d-none d-lg-block"><a class="nav-link" href="{{path('client_produit_favoris', {'token': agent.username})}}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Produits favoris"><i class="fa-regular fa-heart"></i></a></li>
+                        <li class="nav-item d-none d-lg-block"><a class="nav-link" href="{{path('client_basket', {'token': agent.username})}}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Mon panier"><i class="ficon" data-feather="shopping-cart"></i></a></li>
+                        <li class="nav-item d-none d-lg-block"><a class="nav-link" href="{{path('client_order_list', {'token': agent.username})}}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Mes commandes"><i class="fa-solid fa-list-check"></i></a></li>
                         {% endif %}
                     {% elseif typeSecteurId == 2 %}
-                    <li class="nav-item d-none d-lg-block"><a class="nav-link" href="{{path('boutique_secteurdd', {'token': agent.agentToken, 'id': secteurId})}}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Produits"><i class="fa-solid fa-bag-shopping"></i></a></li>
+                    <li class="nav-item d-none d-lg-block"><a class="nav-link" href="{{path('boutique_secteurdd', {'token': agent.username, 'id': secteurId})}}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Produits"><i class="fa-solid fa-bag-shopping"></i></a></li>
                         {% if is_granted('ROLE_CLIENT') %}
-                        <li class="nav-item d-none d-lg-block"><a class="nav-link" href="{{path('client_demandedevis_list', {'token': agent.agentToken})}}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Mes demandes de devis"><i class="fa-solid fa-list-check"></i></a></li>
+                        <li class="nav-item d-none d-lg-block"><a class="nav-link" href="{{path('client_demandedevis_list', {'token': agent.username})}}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Mes demandes de devis"><i class="fa-solid fa-list-check"></i></a></li>
                         {% endif %}
                     {% elseif typeSecteurId == 4 %}
-                    <li class="nav-item d-none d-lg-block"><a class="nav-link" href="{{path('boutique_secteur_aroma', {'token': agent.agentToken, 'id': secteurId})}}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Produits"><i class="fa-solid fa-bag-shopping"></i></a></li>
-                    <li class="nav-item d-none d-lg-block"><a class="nav-link" href="{{path('client_cart_aroma_index', {'token': agent.agentToken})}}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Mon panier"><i class="ficon" data-feather="shopping-cart"></i></a></li>
+                    <li class="nav-item d-none d-lg-block"><a class="nav-link" href="{{path('boutique_secteur_aroma', {'token': agent.username, 'id': secteurId})}}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Produits"><i class="fa-solid fa-bag-shopping"></i></a></li>
+                    <li class="nav-item d-none d-lg-block"><a class="nav-link" href="{{path('client_cart_aroma_index', {'token': agent.username})}}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Mon panier"><i class="ficon" data-feather="shopping-cart"></i></a></li>
                         {% if is_granted('ROLE_CLIENT') %}
-                        <li class="nav-item d-none d-lg-block"><a class="nav-link" href="{{path('client_aroma_order_list', {'token': agent.agentToken})}}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Mes commandes"><i class="fa-solid fa-list-check"></i></a></li>
+                        <li class="nav-item d-none d-lg-block"><a class="nav-link" href="{{path('client_aroma_order_list', {'token': agent.username})}}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Mes commandes"><i class="fa-solid fa-list-check"></i></a></li>
                         {% endif %}
                     {% else %}  
-                    <li class="nav-item d-none d-lg-block"><a class="nav-link" href="{{path('boutique_secteursecu', {'token': agent.agentToken, 'id': secteurId})}}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Kits de base"><i class="fa-solid fa-bag-shopping"></i></a></li>  
+                    <li class="nav-item d-none d-lg-block"><a class="nav-link" href="{{path('boutique_secteursecu', {'token': agent.username, 'id': secteurId})}}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Kits de base"><i class="fa-solid fa-bag-shopping"></i></a></li>  
                         {% if is_granted('ROLE_CLIENT') %}
                         {# <li class="nav-item d-none d-lg-block"><a class="nav-link" href="{{path('client_produitsecu_favoris', {'token': agent.agentToken})}}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Produits favoris"><i class="fa-regular fa-heart"></i></a></li> #}
-                        <li class="nav-item d-none d-lg-block"><a class="nav-link" href="{{path('client_ordersecu_list', {'token': agent.agentToken})}}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Mes commandes"><i class="fa-solid fa-list-check"></i></a></li>
+                        <li class="nav-item d-none d-lg-block"><a class="nav-link" href="{{path('client_ordersecu_list', {'token': agent.username})}}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Mes commandes"><i class="fa-solid fa-list-check"></i></a></li>
                         {% endif %}
                     {% endif %}
                 {% endif %}
