@@ -107,7 +107,7 @@
                         <div class="card">
                             <div class="card-body pb-50">
                                 <h6>Secteur clé</h6>
-                                <h2 class="fw-bolder mb-1">{{ repoSecteur.findOneBy({'id' : bestStatVente.secteur_id }).nom }}</h2>
+                                <h2 class="text-greenlife fw-bolder mb-1">{{ repoSecteur.findOneBy({'id' : bestStatVente.secteur_id }).nom }}</h2>
                                 <div id="statistics-order-chart"></div>
                             </div>
                         </div>
@@ -119,7 +119,7 @@
                         <div class="card card-tiny-line-stats">
                             <div class="card-body pb-50">
                                 <h6>Revenus</h6>
-                                <h4 class="fw-bolder mb-1">{{bestStatVente.ca}} €</h4>
+                                <h4 class="text-greenlife fw-bolder mb-1">{{bestStatVente.ca}} €</h4>
                                 <div id="statistics-profit-chart"></div>
                             </div>
                         </div>
