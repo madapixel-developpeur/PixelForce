@@ -18,7 +18,7 @@
                 <div class="content-header-left col-md-9 col-12 mb-2">
                     <div class="row breadcrumbs-top">
                         <div class="col-12">
-                            <h4 class="content-header-title float-start mb-0">Achat {{pack is null ? 'Abonnement' : pack.name ~ '+Abonnement'}}  <br> <small>{{totalAmount|format_currency('EUR')}}</small></h4>
+                            <h4 class="content-header-title float-start mb-0">Achat {{pack is null ? 'Abonnement' : pack.name ~ ' + Abonnement'}} à GreenLife <br> <small>{{totalAmount|format_currency('EUR')}}</small></h4>
                             
                             <div class="breadcrumb-wrapper pt-2">
                                 <ol class="breadcrumb">
@@ -51,106 +51,11 @@
                     </div>
                     <!-- Wizard ends -->
                     <div class="bs-stepper-content">
-                        
-                         <!-- Checkout Payment Starts -->
-                        {# <div id="step-payment" class="content active dstepper-block" role="tabpanel" aria-labelledby="step-payment-trigger">
-                            <form id="checkout-payment" class="list-view product-checkout" onsubmit="return false;">
-                                <div class="payment-type">
-                                    <div class="card">
-                                        <div class="card-header flex-column align-items-start">
-                                            <h4 class="card-title">Payment options</h4>
-                                            <p class="card-text text-muted mt-25">Be sure to click on correct payment option</p>
-                                        </div>
-                                        <div class="card-body">
-                                            <h6 class="card-holder-name my-75">John Doe</h6>
-                                            <div class="form-check">
-                                                <input type="radio" id="customColorRadio1" name="paymentOptions" class="form-check-input" checked />
-                                                <label class="form-check-label" for="customColorRadio1">
-                                                    US Unlocked Debit Card 12XX XXXX XXXX 0000
-                                                </label>
-                                            </div>
-                                            <div class="customer-cvv mt-1 row row-cols-lg-auto">
-                                                <div class="col-3 d-flex align-items-center">
-                                                    <label class="mb-50 form-label" for="card-holder-cvv">Enter CVV:</label>
-                                                </div>
-                                                <div class="col-4 p-0">
-                                                    <input type="password" class="form-control mb-50 input-cvv" name="input-cvv" id="card-holder-cvv" />
-                                                </div>
-                                                <div class="col-3">
-                                                    <button type="button" class="btn btn-primary btn-cvv mb-50">Continue</button>
-                                                </div>
-                                            </div>
-                                            <hr class="my-2" />
-                                            <ul class="other-payment-options list-unstyled">
-                                                <li class="py-50">
-                                                    <div class="form-check">
-                                                        <input type="radio" id="customColorRadio2" name="paymentOptions" class="form-check-input" />
-                                                        <label class="form-check-label" for="customColorRadio2"> Credit / Debit / ATM Card </label>
-                                                    </div>
-                                                </li>
-                                                <li class="py-50">
-                                                    <div class="form-check">
-                                                        <input type="radio" id="customColorRadio3" name="paymentOptions" class="form-check-input" />
-                                                        <label class="form-check-label" for="customColorRadio3"> Net Banking </label>
-                                                    </div>
-                                                </li>
-                                                <li class="py-50">
-                                                    <div class="form-check">
-                                                        <input type="radio" id="customColorRadio4" name="paymentOptions" class="form-check-input" />
-                                                        <label class="form-check-label" for="customColorRadio4"> EMI (Easy Installment) </label>
-                                                    </div>
-                                                </li>
-                                                <li class="py-50">
-                                                    <div class="form-check">
-                                                        <input type="radio" id="customColorRadio5" name="paymentOptions" class="form-check-input" />
-                                                        <label class="form-check-label" for="customColorRadio5"> Cash On Delivery </label>
-                                                    </div>
-                                                </li>
-                                            </ul>
-                                            <hr class="my-2" />
-                                            <div class="gift-card mb-25">
-                                                <p class="card-text">
-                                                    <i data-feather="plus-circle" class="me-50 font-medium-5"></i>
-                                                    <span class="align-middle">Add Gift Card</span>
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="amount-payable checkout-options">
-                                    <div class="card">
-                                        <div class="card-header">
-                                            <h4 class="card-title">Price Details</h4>
-                                        </div>
-                                        <div class="card-body">
-                                            <ul class="list-unstyled price-details">
-                                                <li class="price-detail">
-                                                    <div class="details-title">Price of 3 items</div>
-                                                    <div class="detail-amt">
-                                                        <strong>$699.30</strong>
-                                                    </div>
-                                                </li>
-                                                <li class="price-detail">
-                                                    <div class="details-title">Delivery Charges</div>
-                                                    <div class="detail-amt discount-amt text-success">Free</div>
-                                                </li>
-                                            </ul>
-                                            <hr />
-                                            <ul class="list-unstyled price-details">
-                                                <li class="price-detail">
-                                                    <div class="details-title">Amount Payable</div>
-                                                    <div class="detail-amt fw-bolder">$699.30</div>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
-                        </div> #}
-                        <!-- Checkout Payment Ends -->
-
                         <div class="block block--rounded">
-                            <h1 class="block__text block__text--center mt-2" >Montant total dû: {{ (pack is null ? 0 : pack.cost) | format_currency('EUR')}} + {{subscription.amount | format_currency('EUR')}}/{{subscription.interval}}</h1>
+                            <h1 class="block__text block__text--center mt-2" >Montant total : {{ (pack is null ? 0 : pack.cost) | format_currency('EUR')}} + {{subscription.amount | format_currency('EUR')}}/{{subscription.interval}}</h1>
+                            <p>
+                                Finaliser votre abonnement en fournissant les informations nécessaires ci-dessous
+                            </p>
                                 
                                 {{ form_start(form, {'attr': {'class': 'my-form', 'id': 'pack_pay_form'}}) }}
                                     {% if error %}
@@ -180,10 +85,18 @@
                                     </div>
 
                                     <div class="my-form-widget">
-                                        <label for="pack_pay_form_codeSecurite" class="form-label">Code de sécurité</label>
+                                        <label for="pack_pay_form_codeSecurite" class="form-label">Code de sécurité (il s’agit des 3 derniers chiffres au dos de la carte)</label>
                                         <div id="pack_pay_form_codeSecurite" class="form-control">
                                         </div>
                                         <div id="pack_pay_form_codeSecurite_error" class="invalid-feedback d-block"></div> 
+                                    </div>
+
+                                    <div class="my-form-widget">
+                                        <p>
+                                            <small>
+                                                GreenLife utilise des protocoles de sécurité pour garantir la confidentialité de paiement.
+                                            </small>
+                                        </p>
                                     </div>
                                     {{form_widget(form.token)}}
                                     <div class="btn-wrap">
