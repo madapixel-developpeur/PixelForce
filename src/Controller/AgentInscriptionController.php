@@ -88,7 +88,7 @@ class AgentInscriptionController extends AbstractController
                 $this->session->set('agentId', $user->getId());
                 $this->addFlash(
                    'success',
-                   'Votre inscription sur Pixelforce a été effectuée avec succès'
+                   'Votre inscription sur Greenlife Ultimate a été effectuée avec succès'
                 );
                 $this->authService->autoAuthenticate($user);
                 return $this->redirectToRoute('client_pack_index');
@@ -120,7 +120,7 @@ class AgentInscriptionController extends AbstractController
             $this->session->set('agentId', $user->getId());
             $this->addFlash(
                 'success',
-                'Votre inscription sur Pixelforce a été effectuée avec succès'
+                'Votre inscription sur Greenlife Ultimate a été effectuée avec succès'
             );
             return $this->redirectToRoute('app_login');
         }

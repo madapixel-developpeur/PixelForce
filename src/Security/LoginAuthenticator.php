@@ -50,7 +50,7 @@ class LoginAuthenticator extends AbstractLoginFormAuthenticator
                $user = $this->userRepository->findOneBy(['email' => $value]);
                 if($user) {
                     if($user->getActive() === -1){
-                        $request->getSession()->getFlashBag()->add('danger', 'Vous n’êtes pas autorisé sur la plateforme Pixelforce');
+                        $request->getSession()->getFlashBag()->add('danger', 'Vous n’êtes pas autorisé sur la plateforme Greenlife Ultimate');
                         return null;
                     }
                     if(in_array(User::ROLE_CLIENT,$user->getRoles())){

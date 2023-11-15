@@ -347,7 +347,7 @@ $('#btn_export_mobile_pdf').on('click', function (e) {
       $('#spinner_loader').html('');
     }
   });
-}); // Permet d'importer les contacts vers PixelForce
+}); // Permet d'importer les contacts vers Greenlife Ultimate
 
 $('#contact_form').on('submit', function (e) {
   e.preventDefault();

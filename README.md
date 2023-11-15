@@ -1,4 +1,4 @@
-# Pixel force
+# Greenlife Ultimate
 ## doctrine/doctrine-bundle
 ```DATABASE_URL="mysql://root:@127.0.0.1:3306/pixelForce?serverVersion=5.7&charset=utf8mb4"```
 #mail

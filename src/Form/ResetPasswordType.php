@@ -32,7 +32,7 @@ class ResetPasswordType extends AbstractType
                         'label' => 'Nouveau mot de passe',
 
                     ],
-                    'second_options' => ['label' => 'Repéter le mot de passe'],
+                    'second_options' => ['label' => 'Confirmation du mot de passe'],
                     'mapped' => false,
                     'constraints' => [
                         new Length([

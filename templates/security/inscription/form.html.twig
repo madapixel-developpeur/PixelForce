@@ -51,9 +51,18 @@
         <h5 class="mb-4">Information sur la connexion</h5>
         {{ form_row(form.username) }}
         {{ form_row(form.password) }}
-        <div class="w-100 text-center">
-{#            <button class="btn btn-primary" type="submit" id="btn-next">Procéder au paiement <i class="fa-solid fa-angles-right"></i></button>#}
-            <button class="btn btn-primary" type="submit" id="btn-next">S’inscrire <i class="fa-solid fa-angles-right"></i></button>
+        <div class="text-center mt-4">
+            <button class="btn btn-primary w-100 font-weight-bold" type="submit" id="btn-next">
+                S’inscrire
+            </button>
+        </div>
+        <div class="mt-4">
+            <p class="text-center">
+                Vous n'avez pas déjà un compte ? 
+                <a class="text-greenlife" href="{{ path('app_login') }}">
+                        Se connecter
+                </a>
+            </p>
         </div>
     {{ form_end(form) }}
 {% endblock %}
