@@ -10,5 +10,28 @@ $teal:    #20c997;
 $cyan:    #0dcaf0;
 
 $theme-colors: (
-       "primary":#1f4393
+       "primary":#a9d82e
 );
+
+.input-bg{
+	background: rgb(240 240 240) !important;
+}
+
+.text-dark-greenlife{
+	color: #676767 !important;
+}
+
+.text-greenlife{
+	color: #a9d82e !important;
+}
+
+.form-check-input:checked{
+	background-color: #a9d82e !important;
+	border-color: #a9d82e !important;
+}
+
+.btn-primary{
+	background: #a9d82e !important;
+	border: #a9d82e !important;
+	color: black;
+}

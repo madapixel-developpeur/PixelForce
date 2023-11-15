@@ -139,7 +139,7 @@ class InscriptionAgentType extends AbstractType
             ->add('parrain', TextType::class, [
                 'label' => false,
                 'attr' => [
-                    'placeholder' => "Nom d'utilisateur du parrain"
+                    'placeholder' => "Nom d’utilisateur de la personne qui vous a recommandé le service"
                 ],
                 'mapped'=>false,
                 'required'=>false,

@@ -67,7 +67,7 @@ $(window).on('load', function () {
   var isRtl = $('html').attr('data-textdirection') === 'rtl'; // On load Toast
 
   setTimeout(function () {
-    toastr['success']('Vous vous êtes connecté avec succès à Green life ultimate. Vous pouvez maintenant commencer à explorer !', '👋 Bonjour !', {
+    toastr['success']('Vous vous êtes connecté avec succès à Greenlife Ultimate. Vous pouvez maintenant commencer à explorer !', '👋 Bonjour !', {
       closeButton: true,
       tapToDismiss: false,
       rtl: isRtl

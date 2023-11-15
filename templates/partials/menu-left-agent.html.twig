@@ -11,6 +11,17 @@
     {% if app.session.get('secteurId') and app.session.get('enabledContent') == true  %}
         <li class=" nav-item"><a class="d-flex align-items-center" href="{{ path('agent_dashboard_secteur', {id:app.session.get('secteurId')}) }}"><i class="fa fa-dashboard"></i><span class="menu-title text-truncate" data-i18n="Dashboards">Tableau de bord</span></a></li>
         <li class=" navigation-header mt-3"><span data-i18n="User Interface">Espace agent</span><i data-feather="more-horizontal"></i></li>
+        {# <li class=" nav-item"><a class="d-flex align-items-center" href="{{ path('agent_home') }}"><i data-feather="home"></i><span class="menu-title text-truncate" data-i18n="Dashboards">Choix secteur</span></a></li>
+
+        <li class=" nav-item"><a class="d-flex align-items-center" href="{{ path('agent_contact_list') }}"><i data-feather="user"></i><span class="menu-title text-truncate" data-i18n="User">Contacts</span></a></li>
+        <li class=" nav-item"><a class="d-flex align-items-center" href="{{ path('agent_formation_list') }}"><i data-feather="eye"></i><span class="menu-title text-truncate" data-i18n="Feather">Formations</span></a></li> #}
+        {# <li class=" nav-item"><a class="d-flex align-items-center" href="{{ path('agent_zoom_list') }}"><i data-feather="video"></i><span class="menu-title text-truncate" data-i18n="User">Réunions</span></a> #}
+        {# <li class=" nav-item"><a class="d-flex align-items-center" href="{{ path('agent_coach_list') }}"><i data-feather="users"></i><span class="menu-title text-truncate" data-i18n="User">Coachs</span></a>
+        <li class=" nav-item"><a class="d-flex align-items-center" href="{{path('calendar_index')}}"><i data-feather="calendar"></i><span class="menu-title text-truncate" data-i18n="Calendar">Mon Agenda</span></a></li> #}
+
+        
+        
+        <li class=" nav-item"><a class="d-flex align-items-center" href="{{path('agent_contact_meeting_list')}}"><i data-feather="coffee"></i><span class="menu-title text-truncate" data-i18n="Meetings">Rendez-vous</span></a></li>
         {% if app.session.get('typeSecteurId') == 1 %}
             <li class=" nav-item"><a class="d-flex align-items-center" href="{{path('agent_order_list')}}"><i data-feather="eye"></i><span class="menu-title text-truncate" data-i18n="Calendar">Ventes</span></a></li>
         {% elseif app.session.get('typeSecteurId') == 2 %}
@@ -42,6 +53,15 @@
         <li class=" nav-item"><a class="d-flex align-items-center" href="{{path('calendar_index')}}"><i data-feather="calendar"></i><span class="menu-title text-truncate" data-i18n="Calendar">Agenda</span></a></li>
         {# <li class=" nav-item"><a class="d-flex align-items-center" href="{{ path('agent_zoom_list') }}"><i data-feather="video"></i><span class="menu-title text-truncate" data-i18n="User">Réunions</span></a> #}
 
+        <li class=" nav-item"><a class="d-flex align-items-center" href="#"><i data-feather="briefcase"></i><span class="menu-title text-truncate" data-i18n="Components">Boutique</span></a>
+            <ul class="menu-content">
+                <li class=" nav-item"><a class="d-flex align-items-center" href="{{path('client_pack_index')}}"><i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="Alerts">Acheter un pack</span></a></li>
+                <li class=" nav-item"><a class="d-flex align-items-center" href="{{path('app_agent_pack_index')}}"><i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="Alerts">Mes packs</span></a></li>
+                <li class=" nav-item"><a class="d-flex align-items-center" href="{{ path('boutique_home', {token: app.user.agentToken})}}"><i data-feather="circle"></i><span class="menu-title text-truncate" data-i18n="Calendar">Boutique en ligne</span></a></li>
+
+                
+            </ul>
+        </li>
         <li class=" nav-item"><a class="d-flex align-items-center" href="{{path('agent_contact_meeting_list')}}"><i data-feather="coffee"></i><span class="menu-title text-truncate" data-i18n="Meetings">Rendez-vous</span></a></li>
         <li class=" nav-item"><a class="d-flex align-items-center" href="{{ path('agent_home') }}"><i data-feather="home"></i><span class="menu-title text-truncate" data-i18n="Dashboards">Choix secteur</span></a></li>
     {% else %}

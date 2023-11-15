@@ -5,6 +5,7 @@ namespace App\Controller\Pack;
 use App\Entity\OrderPack;
 use App\Entity\Pack;
 use App\Form\PackPayFormType;
+use App\Repository\OrderPackRepository;
 use App\Repository\PackRepository;
 use App\Services\OrderPackService;
 use App\Services\StripeService;
@@ -24,7 +25,7 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class PackController extends AbstractController
 {
-    public function __construct(private OrderPackService $orderPackService,private PackRepository $packRepository, private StripeService $stripeService)
+    public function __construct(private OrderPackRepository $orderPackRepo,private OrderPackService $orderPackService,private PackRepository $packRepository, private StripeService $stripeService)
     {
        
     }
@@ -37,6 +38,19 @@ class PackController extends AbstractController
         $packs = $this->packRepository->findAll();
         return $this->render('user_category/client/pack/pack_index.html.twig', [
             'packs' => $packs
+        ]);
+
+    }
+    /**
+     * @Route("/list", name="app_my_pack_list")
+     */
+    public function packList(): Response
+    {
+
+        $orderPacks = $this->orderPackRepo->findBy(["agent"=>$this->getUser()]);
+
+        return $this->render('user_category/client/pack/pack_list.html.twig', [
+            'orderPacks' => $orderPacks
         ]);
 
     }

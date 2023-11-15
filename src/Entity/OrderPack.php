@@ -13,7 +13,7 @@ class OrderPack
     // Subscription : 49 euros par an
     public const SUBSCRIPTION_AMOUNT = 49;
     public const SUBSCRIPTION_INTERVAL = "year";
-    public const SUBSCRIPTION_LABEL = "Abonnement Pack Green life ultimate";
+    public const SUBSCRIPTION_LABEL = "Abonnement Pack Greenlife Ultimate";
     public const SUBSCRIPTION_ITERATION = 1;
 
     

@@ -12,23 +12,23 @@
     {% set stripe_defaultButton =  "S'abonner (" ~ planPrice ~ " €)" %}
 
     <div class="container-page">
-            <h1 class="text-center mt-3">Bienvenue sur Green Life Ultimate</h1>    
+        <h1 class="text-center mt-3">Bienvenue dans GreenLife Ultimate</h1>    
 
-            {% if app.session.get('enabledContent') == true %}
-                {% if app.request.get('stripe_checkout') == 'successfully' %}
-                    <div class="text-center alert alert-success h5">
-                        Paiement efféctué avec success !
-                    </div>
-                {% endif %}
-                
-                <h4 class="text-center mb-3" style="padding: 0 100px">Voici tous les secteurs disponibles sur la plateforme Green Life Ultimate. Vous pouvez accéder au secteur qui vous est attribué.</h4>
-                <div class="block-list-card-secteur mt-5">
-                    <div class="row d-flex justify-content-center">
-                        {% for secteur in allSecteurs %}
-                            <div class="col-md-4 mb-3">
-                                {% set agentSecteur = repoAgentSecteur.findOneBy({'secteur' : secteur, 'agent' : agent}) %}
-                            
-                                <div style="min-height: 140px;" class="card-secteur bg-{% if agentSecteur and agentSecteur.statut == true %}primary{% elseif agentSecteur and agentSecteur.statut == false %}warning{% else %}secondary{% endif %} p-3">
+        {% if app.session.get('enabledContent') == true %}
+            {% if app.request.get('stripe_checkout') == 'successfully' %}
+                <div class="text-center alert alert-success h5">
+                    Paiement efféctué avec success !
+                </div>
+            {% endif %}
+            
+            <h4 class="text-center mb-3" style="padding: 0 100px">Votre Hub pour une expérience personnalisée : explorez les secteurs disponibles et accédez à celui qui correspond à vos préférences.</h4>
+            <div class="block-list-card-secteur mt-5">
+                <div class="row d-flex justify-content-center">
+                    {% for secteur in allSecteurs %}
+                        <div class="col-4 mb-3">
+                            {% set agentSecteur = repoAgentSecteur.findOneBy({'secteur' : secteur, 'agent' : agent}) %}
+                        
+                            <div style="min-height: 140px;" class="card-secteur bg-{% if agentSecteur and agentSecteur.statut == true %}primary{% elseif agentSecteur and agentSecteur.statut == false %}warning{% else %}secondary{% endif %} p-3">
 
                                     <h2 class="text-white text-center">{{ secteur.nom }}</h2>
                                     <div class="secteur-info d-none text-center">

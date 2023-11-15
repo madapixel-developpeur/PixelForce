@@ -138,11 +138,10 @@ class SecurityController extends AbstractController
                $set = $this->userManager->setUserPasword($user, $password, $repeatedPass);
                if($set) {
                    $this->userManager->clearAllForgottenPassCode($user);
-                   $this->addFlash('success', 'Mot de passe Changer avec success');
-                   $this->addFlash('info', 'Veuillez vous connecter');
+                   $this->addFlash('success', 'Votre mot de passe a été modifié avec succès');
                    return $this->redirectToRoute('app_login');
                }
-               $this->addFlash('danger', 'Veuillez bien repéter votre mot de passe');
+               $this->addFlash('danger', 'Veuillez bien confirmer votre mot de passe');
 
             }
 

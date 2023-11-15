@@ -60,7 +60,7 @@ $(window).on('load', function () {
   // On load Toast
   setTimeout(function () {
     toastr['success'](
-      'Vous vous êtes connecté avec succès à Green life ultimate. Vous pouvez maintenant commencer à explorer !',
+      'Vous vous êtes connecté avec succès à Greenlife Ultimate. Vous pouvez maintenant commencer à explorer !',
       '👋 Bonjour !',
       {
         closeButton: true,

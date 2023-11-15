@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\OrderPack;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -38,7 +39,17 @@ class OrderPackRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
-
+   /**
+    * @return Query Returns an array of OrderPack objects
+    */
+   public function findByAgentQuery($value): Query
+   {
+       return $this->createQueryBuilder('o')
+           ->andWhere('o.agent = :val')
+           ->setParameter('val', $value)
+           ->orderBy('o.id', 'ASC')
+           ->getQuery();
+   }
 //    /**
 //     * @return OrderPack[] Returns an array of OrderPack objects
 //     */
