@@ -22,11 +22,9 @@
                     <div class="card-body">
                         <h5>Félicitation {{ app.user.prenom }}</h5>
                         <p class="card-text font-small-3"></p>
-                        {# {% if (estSecurite or estEcommerce) %} #}
-                        <h3 class="mb-75 mt-2 pt-50">
-                            <a href="#">{{statVente.ca | number_format(2, ',', ' ')}} €</a>
+                        <h3 class="mb-75 mt-2 mb-2 pt-50 text-greenlife fs-1">
+                            {{statVente.ca | number_format(2, ',', ' ')}} €              
                         </h3>
-                        {# {% endif %} #}
                         <img src="{{asset('assets/img/greenlife/trophee-min.png')}}" class="congratulation-medal" alt="Medal Pic" />
                     </div>
                 </div>
@@ -46,9 +44,9 @@
                         <div class="row">
                             <div class="col-xl-3 col-sm-6 col-12 mb-2 mb-xl-0">
                                 <div class="d-flex flex-row">
-                                    <div class="avatar bg-light-primary me-2">
+                                    <div class="avatar bg-white me-2 border border-primary text-greenlife">
                                         <div class="avatar-content">
-                                            <i data-feather="trending-up" class="avatar-icon"></i>
+                                            <i class="fa-solid fa-chart-line fa-xl"></i>
                                         </div>
                                     </div>
                                     <div class="my-auto">
@@ -59,9 +57,11 @@
                             </div>
                             <div class="col-xl-3 col-sm-6 col-12 mb-2 mb-xl-0">
                                 <div class="d-flex flex-row">
-                                    <div class="avatar bg-light-info me-2">
+                                    <div class="avatar bg-white me-2 border border-primary">
                                         <div class="avatar-content">
-                                            <a href="{{ path('coach_agent_list') }}"><i data-feather="user" class="avatar-icon"></i></a>
+                                            <a class="text-greenlife" href="{{ path('coach_agent_list') }}">
+                                                <i data-feather="user" class="avatar-icon"></i>
+                                            </a>
                                         </div>
                                     </div>
                                     <div class="my-auto">
@@ -72,7 +72,7 @@
                             </div>
                             <div class="col-xl-3 col-sm-6 col-12 mb-2 mb-xl-0">
                                 <div class="d-flex flex-row">
-                                    <div class="avatar bg-light-info me-2">
+                                    <div class="avatar bg-white me-2 border border-primary text-greenlife">
                                         <div class="avatar-content">
                                             <i data-feather="user" class="avatar-icon"></i>
                                         </div>
@@ -85,9 +85,9 @@
                             </div>
                             <div class="col-xl-3 col-sm-6 col-12 mb-2 mb-sm-0">
                                 <div class="d-flex flex-row">
-                                    <div class="avatar bg-light-danger me-2">
+                                    <div class="avatar bg-white me-2 border border-primary text-greenlife">
                                         <div class="avatar-content">
-                                            <a href="{{path('agent_contact_meeting_list')}}"><i data-feather="box" class="avatar-icon"></i></a>
+                                            <a class="text-greenlife" href="{{path('agent_contact_meeting_list')}}"><i data-feather="box" class="avatar-icon"></i></a>
                                         </div>
                                     </div>
                                     <div class="my-auto">
@@ -183,7 +183,7 @@
                                 <form method="get" id="form-annee">
                                     <input name="annee" type="hidden" value="{{annee}}" />
                                 </form>
-                                <button type="button" class="btn btn-outline-primary btn-sm dropdown-toggle budget-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <button type="button" class="btn btn-outline-secondary btn-sm dropdown-toggle budget-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <span id="anneeSelected">{{annee}}</span>
                                 </button>
                                 <div class="dropdown-menu" id="anneeContainer">
@@ -284,7 +284,7 @@
             var revenueReportChart;
             var $textMutedColor = '#b9b9c3';
             var anneeSelected = $('#anneeSelected');
-
+            var colorGreenLife = "#a9d82e";
 
             $('#anneeContainer .annee-item').click(function (e){
                 let val = $(this).attr('data-annee');
@@ -309,7 +309,7 @@
                 },
                 distributed: true
                 },
-                colors: [window.colors.solid.primary, window.colors.solid.warning],
+                colors: [colorGreenLife, colorGreenLife],
                 series: [
                 {
                     name: 'Revenu',

@@ -18,10 +18,9 @@
                     <div class="card-body">
                         <h5>Félicitation {{ app.user.prenom }}</h5>
                         <p class="card-text font-small-3"></p>
-                        <h3 class="mb-75 mt-2 pt-50">
-                            <a href="#">{{statVente.ca | number_format(2, ',', ' ')}} €</a>
+                        <h3 class="mb-75 mt-2 mb-2 pt-50 text-greenlife fs-1">
+                            {{statVente.ca | number_format(2, ',', ' ')}} €              
                         </h3>
-                        {# <button type="button" class="btn btn-primary">Voir les ventes</button> #}
                         <img src="{{asset('assets/img/greenlife/trophee-min.png')}}" class="congratulation-medal" alt="Medal Pic" />
                     </div>
                 </div>
@@ -41,9 +40,9 @@
                         <div class="row">
                             <div class="col-xl-3 col-sm-6 col-12 mb-2 mb-xl-0">
                                 <div class="d-flex flex-row">
-                                    <div class="avatar bg-light-primary me-2">
+                                    <div class="avatar bg-white me-2 border border-primary">
                                         <div class="avatar-content">
-                                            <i data-feather="trending-up" class="avatar-icon"></i>
+                                            <i class="fa-solid fa-chart-line fa-xl"></i>
                                         </div>
                                     </div>
                                     <div class="my-auto">
@@ -54,9 +53,9 @@
                             </div>
                             <div class="col-xl-3 col-sm-6 col-12 mb-2 mb-xl-0">
                                 <div class="d-flex flex-row">
-                                    <div class="avatar bg-light-info me-2">
+                                    <div class="avatar bg-white me-2 border border-primary">
                                         <div class="avatar-content">
-                                            <a href="{{ path('admin_coach_list') }}"><i data-feather="user" class="avatar-icon"></i></a>
+                                            <a href="{{ path('admin_coach_list') }}"><i data-feather="user" class="text-greenlife avatar-icon"></i></a>
                                         </div>
                                     </div>
                                     <div class="my-auto">
@@ -67,9 +66,9 @@
                             </div>
                             <div class="col-xl-3 col-sm-6 col-12 mb-2 mb-xl-0">
                                 <div class="d-flex flex-row">
-                                    <div class="avatar bg-light-info me-2">
+                                    <div class="avatar bg-white me-2 border border-primary">
                                         <div class="avatar-content">
-                                            <a href="{{ path('admin_agent_list') }}"><i data-feather="user" class="avatar-icon"></i></a>
+                                            <a href="{{ path('admin_agent_list') }}"><i data-feather="user" class="text-greenlife avatar-icon"></i></a>
                                         </div>
                                     </div>
                                     <div class="my-auto">
@@ -80,9 +79,9 @@
                             </div>
                             <div class="col-xl-3 col-sm-6 col-12 mb-2 mb-xl-0">
                                 <div class="d-flex flex-row">
-                                    <div class="avatar bg-light-info me-2">
+                                    <div class="avatar bg-white me-2 border border-primary">
                                         <div class="avatar-content">
-                                            <a href="{{ path('admin_sector_list') }}"><i data-feather="user" class="avatar-icon"></i></a>
+                                            <a href="{{ path('admin_sector_list') }}"><i data-feather="user" class="text-greenlife avatar-icon"></i></a>
                                         </div>
                                     </div>
                                     <div class="my-auto">
@@ -178,7 +177,7 @@
                                         <input name="annee" type="hidden" value="{{annee}}" />
                                         <input name="secteurId" type="hidden" value="{{secteur ? secteur.id : -1 }}" />
                                     </form>
-                                    <button type="button" class="btn btn-outline-primary btn-sm dropdown-toggle budget-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <button type="button" class="btn btn-outline-secondary btn-sm dropdown-toggle budget-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <span id="anneeSelected">{{annee}}</span>
                                     </button>
                                     <div class="dropdown-menu" id="anneeContainer">
@@ -193,7 +192,7 @@
                             </div>
                             <div>
                                 <div class="btn-group">
-                                    <button type="button" class="btn btn-outline-primary btn-sm dropdown-toggle budget-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <button type="button" class="btn btn-outline-secondary btn-sm dropdown-toggle budget-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <span id="secteurSelected">{{secteur ? secteur.nom: '--'}}</span>
                                     </button>
                                     <div class="dropdown-menu" id="secteurContainer">
@@ -349,6 +348,7 @@
             var $textMutedColor = '#b9b9c3';
             var anneeSelected = $('#anneeSelected');
             var secteurSelected = $('#secteurSelected');
+            var colorGreenLife = "#a9d82e";
 
 
             $('#anneeContainer .annee-item').click(function (e){
@@ -382,7 +382,7 @@
                 },
                 distributed: true
                 },
-                colors: [window.colors.solid.primary, window.colors.solid.warning],
+                colors: [colorGreenLife, colorGreenLife],
                 series: [
                 {
                     name: 'Revenu',

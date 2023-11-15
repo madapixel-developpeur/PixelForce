@@ -35,6 +35,11 @@ $theme-colors: (
 	border: #a9d82e !important;
 	color: black !important;
 }
+.btn-outline-primary, .btn-outline-primary:active, .btn-outline-primary:focus{
+	background: transparent !important;
+	border: #a9d82e !important;
+	color: black !important;
+}
 .congratulation-medal{
 	top: 20px !important;
 }
@@ -51,4 +56,10 @@ $theme-colors: (
 
 .table:not(.table-dark):not(.table-light) thead:not(.table-dark) th, .table:not(.table-dark):not(.table-light) tfoot:not(.table-dark) th{
 	background: #a9d82e !important;
+}
+
+.main-menu.menu-light .navigation > li.active > a{
+	background: #a9d82e !important;
+	box-shadow: 0 0 10px 1px rgb(192 192 192 / 70%);
+    color: black;
 }
