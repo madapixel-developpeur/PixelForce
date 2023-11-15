@@ -30,8 +30,25 @@ $theme-colors: (
 	border-color: #a9d82e !important;
 }
 
-.btn-primary{
+.btn-primary, .btn-primary:active, .btn-primary:focus{
 	background: #a9d82e !important;
 	border: #a9d82e !important;
-	color: black;
+	color: black !important;
+}
+.congratulation-medal{
+	top: 20px !important;
+}
+
+.bg-greenlife{
+	background: #a9d82e !important;
+	border: #a9d82e !important;
+}
+
+.card-header{
+	background: #a9d82e !important;
+	border: #a9d82e !important;
+}
+
+.table:not(.table-dark):not(.table-light) thead:not(.table-dark) th, .table:not(.table-dark):not(.table-light) tfoot:not(.table-dark) th{
+	background: #a9d82e !important;
 }

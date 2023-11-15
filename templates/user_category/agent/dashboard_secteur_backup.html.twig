@@ -26,7 +26,7 @@
                 <div class="col-xl-4 col-md-6 col-12">
                     <div class="card card-congratulation-medal">
                         <div class="card-body">
-                            <h5>Félicitation 🎉 {{ app.user.prenom }}!</h5>
+                            <h5>Félicitation {{ app.user.prenom }}</h5>
                             <p class="card-text font-small-3"></p>
                             {# {% if (estSecurite or estEcommerce) %} #}
                             <h3 class="mb-75 mt-2 pt-50">
@@ -41,7 +41,7 @@
                             <a role="button" href="{{path('agent_demandedevis_list')}}" class="btn btn-primary">Voir les ventes</a>
                             {% endif %}
                             
-                            <img src="{{asset('assets/vuexy/images/illustration/badge.svg')}}" class="congratulation-medal" alt="Medal Pic" />
+                            <img src="{{asset('assets/img/greenlife/trophee-min.png')}}" class="congratulation-medal" alt="Medal Pic" />
                         </div>
                     </div>
                 </div>
