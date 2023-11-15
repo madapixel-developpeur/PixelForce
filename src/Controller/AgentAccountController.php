@@ -49,7 +49,7 @@ class AgentAccountController extends AbstractController
     private $repoPlanAgentAccount;
     protected $repoUser;
 
-    public function __construct(SecteurRepository $repoSecteur, AgentSecteurRepository $repoAgentSecteur, FormationRepository $repoFormation,SessionInterface $session, ContactRepository $repoContact, FormationAgentRepository $repoFormationAgent, CategorieFormationRepository $repoCatFormation, RFormationCategorieRepository $repoRelationFormationCategorie, CategorieFormationAgentService $categorieFormationAgentService, CalendarEventRepository $calendarEventRepository, StripeService $stripeService, StripeManager $stripeManager, AgentService $agentService, PlanAgentAccountRepository $repoPlanAgentAccount, UserRepository $repoUser)
+    public function __construct(SecteurRepository $repoSecteur, AgentSecteurRepository $repoAgentSecteur, FormationRepository $repoFormation,SessionInterface $session, ContactRepository $repoContact, FormationAgentRepository $repoFormationAgent, CategorieFormationRepository $repoCatFormation, RFormationCategorieRepository $repoRelationFormationCategorie, CategorieFormationAgentService $categorieFormationAgentService, CalendarEventRepository $calendarEventRepository, StripeService $stripeService, StripeManager $stripeManager, AgentService $agentService, PlanAgentAccountRepository $repoPlanAgentAccount, UserRepository $repoUser, private SecteurRepository $secteurRepository)
     {
         $this->repoSecteur = $repoSecteur;
         $this->repoAgentSecteur = $repoAgentSecteur;
@@ -106,6 +106,14 @@ class AgentAccountController extends AbstractController
             $planPrice = $planAgentAccount->getAmount();
             $stripeIntentSecret = $this->stripeService->intentSecret($planPrice);
             $stripe_publishable_key = $_ENV['STRIPE_PUBLIC_KEY'];
+        }
+        if($_ENV['DEFAULT_SECTOR'] > 0){
+            $secteur = $this->secteurRepository->find($_ENV['DEFAULT_SECTOR']);
+            if($secteur){
+                $this->session->set('secteurId', $secteur->getId());
+                $this->session->set('typeSecteurId', $secteur->getType()->getId());
+                return $this->redirectToRoute('agent_dashboard_secteur', ['id' => $_ENV['DEFAULT_SECTOR']]);
+            }
         }
 
         return $this->render('user_category/agent/home_agent.html.twig', [

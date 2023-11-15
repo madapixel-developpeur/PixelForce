@@ -11,7 +11,7 @@
     {% if app.session.get('secteurId') and app.session.get('enabledContent') == true  %}
         <li class=" navigation-header mt-3"><span data-i18n="User Interface">Espace agent</span><i data-feather="more-horizontal"></i></li>
         <li class=" nav-item"><a class="d-flex align-items-center" href="{{ path('agent_dashboard_secteur', {id:app.session.get('secteurId')}) }}"><i class="fa-solid fa-house"></i><span class="menu-title text-truncate" data-i18n="Dashboards">Tableau de bord</span></a></li>
-        <li class=" nav-item"><a class="d-flex align-items-center" href="{{ path('boutique_home', {token: app.user.username})}}"><i class="fa-solid fa-shop"></i><span class="menu-title text-truncate" data-i18n="Calendar">Ma boutique en ligne</span></a></li>
+        <li class=" nav-item"><a class="d-flex align-items-center" target="_blank" href="{{ path('boutique_home', {token: app.user.username})}}"><i class="fa-solid fa-shop"></i><span class="menu-title text-truncate" data-i18n="Calendar">Ma boutique en ligne</span></a></li>
        
         {% if app.session.get('typeSecteurId') == 1 %}
             <li class=" nav-item"><a class="d-flex align-items-center" href="{{path('agent_order_list')}}"><i class="fa-regular fa-rectangle-list"></i><span class="menu-title text-truncate" data-i18n="Calendar">Ventes</span></a></li>
@@ -46,13 +46,13 @@
 
         <li class=" nav-item"><a class="d-flex align-items-center" href="#"><i data-feather="briefcase"></i><span class="menu-title text-truncate" data-i18n="Components">Packs</span></a>
             <ul class="menu-content">
-                <li class=" nav-item"><a class="d-flex align-items-center" href="{{path('client_pack_index')}}"><i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="Alerts">Acheter un pack</span></a></li>
+                {# <li class=" nav-item"><a class="d-flex align-items-center" href="{{path('client_pack_index')}}"><i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="Alerts">Acheter un pack</span></a></li> #}
                 <li class=" nav-item"><a class="d-flex align-items-center" href="{{path('app_agent_pack_index')}}"><i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="Alerts">Mes packs</span></a></li>
             </ul>
         </li>
         <li class=" nav-item"><a class="d-flex align-items-center" href="{{path('agent_contact_meeting_list')}}"><i data-feather="coffee"></i><span class="menu-title text-truncate" data-i18n="Meetings">Rendez-vous</span></a></li>
-        <li class=" nav-item"><a class="d-flex align-items-center" href="{{ path('agent_home') }}"><i data-feather="home"></i><span class="menu-title text-truncate" data-i18n="Dashboards">Choix secteur</span></a></li>
-    {% else %}
+    {% endif %}
+    {% if default_sector < 0 %}
         <li class=" nav-item"><a class="d-flex align-items-center" href="{{ path('agent_home') }}"><i data-feather="home"></i><span class="menu-title text-truncate" data-i18n="Dashboards">Choix secteur</span></a></li>
     {% endif %}
     
