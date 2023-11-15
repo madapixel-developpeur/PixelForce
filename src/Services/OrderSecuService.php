@@ -137,7 +137,7 @@ class OrderSecuService
         ]);
         $binary = $this->wrapper->getPdf($facturePdf, ['isRemoteEnabled' => true, 'isHtml5ParserEnabled'=>true, 'defaultFont'=> 'Arial']);
         $directory = "factures/secu";
-        $pj_filepath = $this->fileHandler->saveBinary($binary, "Facture Pixelforce-Commande n°".$order->getId()." du ".date('Y-m-d-H-i-s').'.pdf', $directory);
+        $pj_filepath = $this->fileHandler->saveBinary($binary, "Facture Green life ultimate-Commande n°".$order->getId()." du ".date('Y-m-d-H-i-s').'.pdf', $directory);
         $order->setInvoicePath($pj_filepath);
         $this->entityManager->flush();
     }

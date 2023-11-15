@@ -1,6 +1,11 @@
 <nav class="header-navbar navbar navbar-expand-lg align-items-center floating-nav navbar-light navbar-shadow container-xxl">
     <div class="navbar-container d-flex content">
+        <ul class="nav navbar-nav d-xl-none d-flex align-items-center">
+                <li class="nav-item"><a class="nav-link menu-toggle" href="#"><i class="ficon" data-feather="menu"></i></a></li>
+        </ul>
+
         <ul class="nav navbar-nav d-block d-lg-none">
+            
             <li class="nav-item">
                 <a class="navbar-brand" href="{{
                 is_granted('ROLE_ADMINISTRATEUR') ? path('admin_dashboard') : (

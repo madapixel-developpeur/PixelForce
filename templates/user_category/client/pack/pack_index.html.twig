@@ -53,6 +53,7 @@
                                     <th>Description</th>
                                     <th>Montant</th>
                                     <th>Document (.pdf)</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -70,15 +71,17 @@
                                 </tr>
                                 {% endfor %} #}
                                 {% for pack in packs %}
-                                <tr class="selectable-row" data-link="{{ path('client_pack_payment', {'id': pack.id}) }}">
+                                <tr>
                                     <td>{{pack.name}}</td>
                                     <td>{{pack.description}}</td>
-                                    
                                     <td class="text-right">{{pack.cost |format_currency('EUR') }}</td>
                                     <td>
                                         {% if pack.document is not null %}
                                         <a href="{{ path('app_pack_preview',{'pack_id' : pack.id}) }}" class="btn btn-sm"><i class="fa fa-eye"></i> Voir document</a>
                                         {% endif %}
+                                    </td>
+                                    <td>
+                                        <a class="btn btn-primary" href="{{ path('client_pack_payment', {'id': pack.id}) }}" role="button">Séléctionner</a>
                                     </td>
                                 </tr>
                                 {% endfor %}

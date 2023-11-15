@@ -9,13 +9,15 @@
 {% endblock %}
 
 {% block body %}
+<div class="container-fluid">
+    <div class="row">
         <h1 class="text-center mt-3">Bienvenue sur Green Life Ultimate</h1>
         {# <h4 class="text-center mb-3" style="padding: 0 100px">Voici tous les secteurs disponibles sur la plateforme Green Life Ultimate. Vous pouvez accéder au secteur qui vous est attribué.</h4> #}
 
         <div class="block-list-card-secteur  mt-5">
             <div class="row d-flex justify-content-center">
                 {% for agentSecteur in agentSecteurs %}
-                    <div class="col-4 mb-3">                      
+                    <div class="col-md-4 mb-3">                    
                         <div style="min-height: 140px;" class="card-secteur bg-primary p-3">
 
                             <h2 class="text-white text-center">{{ agentSecteur.secteur.nom }}</h2>
@@ -32,6 +34,8 @@
                 {% endfor %}
             </div>
         </div>
+    </div>
+</div>
 {% endblock %}
 
 {% block javascripts %}
