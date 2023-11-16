@@ -52,7 +52,7 @@
                     <!-- Wizard ends -->
                     <div class="bs-stepper-content">
                         <div class="block block--rounded">
-                            <h1 class="block__text block__text--center mt-2" >Montant total : {{ (pack is null ? 0 : pack.cost) | format_currency('EUR')}} + {{subscription.amount | format_currency('EUR')}}/{{subscription.interval}}</h1>
+                            <h1 class="block__text block__text--center mt-2" >Montant total : {{ (pack is null ? 0 : pack.cost) | format_currency('EUR')}} {% if agent.hasPaidSubscription == false %} + {{subscription.amount | format_currency('EUR')}}/{{subscription.interval}} {% endif %}</h1>
                             <p>
                                 Finaliser votre abonnement en fournissant les informations nécessaires ci-dessous
                             </p>

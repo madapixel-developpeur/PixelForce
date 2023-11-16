@@ -10,6 +10,7 @@ use App\Entity\Formation;
 use App\Entity\Order;
 use App\Entity\OrderAroma;
 use App\Entity\OrderDigital;
+use App\Entity\OrderPack;
 use App\Entity\OrderSecu;
 use App\Entity\User;
 use Nucleos\DompdfBundle\Wrapper\DompdfWrapperInterface;
@@ -381,6 +382,34 @@ class MailerService
         ];
 
         $this->mySendMail($MailToAdmin, $attachmentsPath, null, $embeddedImages);
+
+    }
+
+    public function sendFactureOrderPack(OrderPack $order){
+        
+        $body = $this->renderTwig('emails/commande_pack.html.twig', [
+            'prenomClient' => $order->getAgent()->getPrenom(),
+            'order' => $order
+        ]);
+
+        $attachmentsPath = [$order->getInvoicePath()];
+        $embeddedImages = ['logo' => 'assets/img/logo/greenlife/greenlife.png'];
+        $this->mySendMail([
+            'subject' => 'Confirmation de la commande '.$order->getId(),
+            'to' => $order->getAgent()->getEmail(),
+            'body' => $body
+        ], $attachmentsPath, null, $embeddedImages);
+
+        // $bodyMailToAdmin = $this->renderTwig('emails/commande_details_pack.html.twig', [
+        //     'order' => $order
+        // ]);
+        // $MailToAdmin = [
+        //     'body' => $bodyMailToAdmin,
+        //     'subject' => "Commande n°{$order->getId()}",
+        //     'to' => $order->getAgent()->getEmail() // We don*t know Admin Email list
+        // ];
+
+        // $this->mySendMail($MailToAdmin, $attachmentsPath, null, $embeddedImages);
 
     }
 

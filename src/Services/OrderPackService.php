@@ -43,11 +43,13 @@ class OrderPackService
                 "mail"=>$order->getAgent()->getEmail()
             ];
             $this->stripeService->subscribe($stripeToken, $order->getAmount(), $userDatas);
-            
-            $order->getAgent()->setHasPaidSubscription(true);
-            
+            $this->saveInvoice($order);
+            $this->mailerService->sendFactureOrderPack($order);
+
+            if(!$order->getAgent()->getHasPaidSubscription()) $order->getAgent()->setHasPaidSubscription(true);
             $this->entityManager->flush();
             $this->entityManager->commit();
+
             
             return $order;
         } 
@@ -62,41 +64,29 @@ class OrderPackService
         }
     }
 
-    public function payOrder(OrderPack $order){
-        try{
-            $this->entityManager->beginTransaction();
-            $paymentIntent = $this->stripeService->getPaymentIntent($order->getStripeChargeId());
-            if($paymentIntent->status != "succeeded") throw new Exception("Erreur rencontrée lors du paiement");
-            $order->setStatut(OrderPack::PAIED);
-            $order->getDevis()->setStatus(Devis::DEVIS_STATUS['PAID']);
-            $order->getDevis()->setStatusInt(Devis::DEVIS_STATUS_INT['PAID']);
-            $this->entityManager->persist($order);
-            $this->entityManager->persist($order->getDevis());
-            $this->entityManager->flush();
-            $this->entityManager->commit();
-            try{
-                $this->saveInvoice($order);
-                $this->mailerService->sendFactureOrderPack($order);
-            } catch(Exception $ex){}
-        } 
-        catch(\Exception $ex){
-            if($this->entityManager->getConnection()->isTransactionActive()) {
-                $this->entityManager->rollback();
-            }
-            throw $ex;
-        }
-        finally {
-            $this->entityManager->clear();
-        }
-    }
 
     public function saveInvoice(OrderPack $order){
-        $facturePdf = $this->mailerService->renderTwig('pdf/facture_devis_digital.html.twig', [
-            'order' => $order
+        // Achat du pack
+        $facturePdf = $this->mailerService->renderTwig('pdf/facture_pack.html.twig', [
+            'order' => $order,
+            'subscriptionAmount'=> OrderPack::SUBSCRIPTION_AMOUNT
         ]);
+        // dd($facturePdf);
+        // $facturePdf = mb_convert_encoding($facturePdf, 'UTF-8');
         $binary = $this->wrapper->getPdf($facturePdf, ['isRemoteEnabled' => true, 'isHtml5ParserEnabled'=>true, 'defaultFont'=> 'Arial']);
         $directory = "factures/dd";
         $pj_filepath = $this->fileHandler->saveBinary($binary, "Facture Greenlife Ultimate-Commande n°".$order->getId()." du ".date('Y-m-d-H-i-s').'.pdf', $directory);
+        
+
+        // Souscription
+        // $facturePdf = $this->mailerService->renderTwig('pdf/facture_register_subscription.html.twig', [
+        //     'order' => $order
+        // ]);
+        // $binary = $this->wrapper->getPdf($facturePdf, ['isRemoteEnabled' => true, 'isHtml5ParserEnabled'=>true, 'defaultFont'=> 'Arial']);
+        // $directory = "factures/dd";
+        // $pj_filepath_register_subscription = $this->fileHandler->saveBinary($binary, "Facture Souscription Greenlife Ultimate-Commande n°".$order->getId()." du ".date('Y-m-d-H-i-s').'.pdf', $directory);
+        // $invoicePath = implode(";", [$pj_filepath, $pj_filepath_register_subscription]);
+
         $order->setInvoicePath($pj_filepath);
         $this->entityManager->flush();
     }

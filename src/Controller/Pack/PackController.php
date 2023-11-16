@@ -79,17 +79,20 @@ class PackController extends AbstractController
         $id = $request->query->get('id');
         $pack = isset($id) ? $this->packRepository->find($id) : null;
         $error = null;
+        $agent = $this->getUser();
+
         $form = $this->createForm(PackPayFormType::class);
         $form->handleRequest($request);
         
         $packCost = isset($pack) ? $pack->getCost() : 0;
-        $totalAmount = $packCost + OrderPack::SUBSCRIPTION_AMOUNT;
+        $subscription_cost = $agent->getHasPaidSubscription() ? 0 : OrderPack::SUBSCRIPTION_AMOUNT;
+        $totalAmount = $packCost + $subscription_cost;
 
         if ($form->isSubmitted() && $form->isValid()) {
             try{
                 $stripeToken = $form->get('token')->getData();
                 $fullname = $form->get('fullname')->getData();
-                $agent = $this->getUser();
+                
                 $orderPack = new OrderPack();
                 $orderPack->setFullname($fullname);
                 $orderPack->setAmount($totalAmount);
@@ -100,6 +103,7 @@ class PackController extends AbstractController
                 $this->addFlash('success', 'Paiement effectué');
                 return $this->redirectToRoute('agent_home');
             } catch(Exception $ex){
+                // throw $ex;
                 $error = $ex->getMessage();
             }
         }
@@ -116,6 +120,7 @@ class PackController extends AbstractController
             'error' => $error,
             'stripeIntentSecret' => $stripeIntentSecret,
             'totalAmount'=>$totalAmount,
+            'agent'=>$agent,
             'subscription'=>[
                 'amount'=>OrderPack::SUBSCRIPTION_AMOUNT,
                 'interval'=>OrderPack::IntervaltoLocale(OrderPack::SUBSCRIPTION_INTERVAL),

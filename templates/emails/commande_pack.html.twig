@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Commande</title>
+    <style>
+
+    </style>
+</head>
+<body>
+    <div>
+        Bonjour {{ prenomClient }},<br><br>
+        {% if order.agent.hasPaidSubscription == false %}
+        Votre inscription a été effectuée avec succès avec l'achat de votre souscription.<br>
+        {% endif %}
+        {% if order.pack is not null %}
+            Nous confirmons l'achat du pack : {{order.pack.name}} ({{order.pack.description}}) pour un total de {{order.pack.cost|number_format(2, ',', ' ')}} €.
+        {% endif %}
+        <br>
+        Montant total de la commande : {{order.amount|number_format(2, ',', ' ')}} €<br>
+        Nous vous remercions pour votre confiance.<br>
+        Celle-ci sera traitée dans les meilleurs délais.<br>
+        A bientôt sur Green Life Ultimate.<br><br>
+    </div>
+    <div>
+        <img src="cid:logo"  style="width: 100px; height: auto;"/>
+    </div>
+
+</body>
+</html>
