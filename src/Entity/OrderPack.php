@@ -226,4 +226,10 @@ class OrderPack
         return $this;
     }
 
+    
+    public function getMinimumNumberOfPack(): int
+    {
+        return 1;
+    }
+
 }

@@ -10,6 +10,7 @@ use App\Repository\PackRepository;
 use App\Services\OrderPackService;
 use App\Services\StripeService;
 use App\Util\GenericUtil;
+use App\Util\ToolKit;
 use Exception;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -100,6 +101,9 @@ class PackController extends AbstractController
                 if($pack!=null) $orderPack->setPack($pack);
                 $orderPack->setStatut(OrderPack::CREATED);
                 $orderPack = $this->orderPackService->saveOrder($orderPack, $stripeToken);
+                if(!is_null($pack)){
+                    $this->orderPackService->sendOrderPackToSogec($orderPack);
+                }
                 $this->addFlash('success', 'Paiement effectué');
                 return $this->redirectToRoute('agent_home');
             } catch(Exception $ex){

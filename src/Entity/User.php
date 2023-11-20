@@ -881,6 +881,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
         return $this->nom .' '. $this->prenom;
     }
 
+    public function getFullName()
+    {
+        return $this->nom .' '. $this->prenom;
+    }
+
     public function getCreatedAt(): ?\DateTimeInterface
     {
         return $this->created_at;
