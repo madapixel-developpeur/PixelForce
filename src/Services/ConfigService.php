@@ -36,7 +36,6 @@ class ConfigService
         $totalPanier = floatval($totalPanier);
         $prixMinFraisLivraisonGratuit = $this->findPrixMinFraisLivraisonGratuit();
         $fraisLivraison = 0;
-        $totalPanier = 12.0;
         if($totalPanier > 0 && $totalPanier < $prixMinFraisLivraisonGratuit){
             
             $fraisLivraison = $this->findFraisLivraison();
