@@ -198,4 +198,8 @@ current_timestamp,
 'a:0:{}',
 '03350'
 )
+
+-- CONFIG
+INSERT INTO `config` VALUES (1,'TVA',20,1,1),(2,'Frais livraison',4.79,2,1),(3,'Prix min frais de livraison gratuit',35,3,1);
+
 ```

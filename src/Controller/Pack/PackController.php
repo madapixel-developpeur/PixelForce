@@ -7,6 +7,7 @@ use App\Entity\Pack;
 use App\Form\PackPayFormType;
 use App\Repository\OrderPackRepository;
 use App\Repository\PackRepository;
+use App\Services\ConfigService;
 use App\Services\OrderPackService;
 use App\Services\StripeService;
 use App\Util\GenericUtil;
@@ -26,7 +27,7 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class PackController extends AbstractController
 {
-    public function __construct(private OrderPackRepository $orderPackRepo,private OrderPackService $orderPackService,private PackRepository $packRepository, private StripeService $stripeService)
+    public function __construct(private ConfigService $configService,private OrderPackRepository $orderPackRepo,private OrderPackService $orderPackService,private PackRepository $packRepository, private StripeService $stripeService)
     {
        
     }
@@ -89,6 +90,12 @@ class PackController extends AbstractController
         $subscription_cost = $agent->getHasPaidSubscription() ? 0 : OrderPack::SUBSCRIPTION_AMOUNT;
         $totalAmount = $packCost + $subscription_cost;
 
+        // TVA
+        $tva = $this->configService->findTva(); 
+        $fraisLivraison = $this->configService->calculerFraisDeLivraison($totalAmount);
+        $totalAmountAvecFraisLivraison = $totalAmount + $fraisLivraison;
+
+
         if ($form->isSubmitted() && $form->isValid()) {
             try{
                 $stripeToken = $form->get('token')->getData();
@@ -96,8 +103,16 @@ class PackController extends AbstractController
                 
                 $orderPack = new OrderPack();
                 $orderPack->setFullname($fullname);
-                $orderPack->setAmount($totalAmount);
+                // $orderPack->setAmount($totalAmount);
                 $orderPack->setAgent($agent);
+                
+
+                $orderPack->setMontantSansFraisLivraison($totalAmount);
+                $orderPack->setTva( $tva );
+                $orderPack->setFraisLivraison($this->configService->calculerFraisDeLivraison($orderPack->getMontantSansFraisLivraison()));
+                $orderPack->setAmount(($orderPack->getMontantSansFraisLivraison() + $orderPack->getFraisLivraison())); 
+
+
                 if($pack!=null) $orderPack->setPack($pack);
                 $orderPack->setStatut(OrderPack::CREATED);
                 $orderPack = $this->orderPackService->saveOrder($orderPack, $stripeToken);
@@ -113,18 +128,19 @@ class PackController extends AbstractController
         }
        
 
-        $paymentIntent = $this->stripeService->paymentIntent($totalAmount);
+        $paymentIntent = $this->stripeService->paymentIntent($totalAmountAvecFraisLivraison);
         $paymentIntentId = $paymentIntent->id;
         $stripeIntentSecret = $this->stripeService->intentSecretByPaymentIntentId($paymentIntentId);
-        
         return $this->render('user_category/client/pack/pack_payment.html.twig',[
             'pack' => $pack,
             'stripe_public_key' => $this->getParameter('stripe_public_key'),
             'form' => $form->createView(),
             'error' => $error,
             'stripeIntentSecret' => $stripeIntentSecret,
-            'totalAmount'=>$totalAmount,
+            'totalAmount'=>$totalAmountAvecFraisLivraison,
             'agent'=>$agent,
+            'tva'=>$tva,
+            'fraisLivraison'=>$fraisLivraison,
             'subscription'=>[
                 'amount'=>OrderPack::SUBSCRIPTION_AMOUNT,
                 'interval'=>OrderPack::IntervaltoLocale(OrderPack::SUBSCRIPTION_INTERVAL),

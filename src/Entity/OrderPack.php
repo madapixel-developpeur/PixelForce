@@ -94,6 +94,22 @@ class OrderPack
      */
     private $fullname;
 
+     /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $tva;
+    
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $fraisLivraison;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $montantSansFraisLivraison;
+
+
     public function __construct()
     {
         $this->createdAt = new \DateTime();
@@ -203,9 +219,18 @@ class OrderPack
         return $this;
     }
 
-    public function getTva(){
-        return 20.;
+    public function getTva(): ?float
+    {
+        return $this->tva ?? 20.;
     }
+
+    public function setTva(?float $tva): self
+    {
+        $this->tva = $tva;
+
+        return $this;
+    }
+
     public function getAmountHt(){
         return $this->getAmount() * (1. - $this->getTva()/100);
     }
@@ -230,6 +255,28 @@ class OrderPack
     public function getMinimumNumberOfPack(): int
     {
         return 1;
+    }
+    public function getFraisLivraison(): ?string
+    {
+        return $this->fraisLivraison;
+    }
+
+    public function setFraisLivraison(?string $fraisLivraison): self
+    {
+        $this->fraisLivraison = $fraisLivraison;
+
+        return $this;
+    }
+    public function getMontantSansFraisLivraison(): ?string
+    {
+        return $this->montantSansFraisLivraison;
+    }
+
+    public function setMontantSansFraisLivraison(?string $montantSansFraisLivraison): self
+    {
+        $this->montantSansFraisLivraison = $montantSansFraisLivraison;
+
+        return $this;
     }
 
 }

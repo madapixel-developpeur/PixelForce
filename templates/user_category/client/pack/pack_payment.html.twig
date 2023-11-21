@@ -96,6 +96,8 @@
                                             <small>
                                                 GreenLife utilise des protocoles de sécurité pour garantir la confidentialité de paiement.
                                             </small>
+                                            </br>
+                                            {% if fraisLivraison != 0 %} <b>+ {{fraisLivraison|format_currency('EUR')}} de Frais de livraison </b>{% endif %}
                                         </p>
                                     </div>
                                     {{form_widget(form.token)}}
