@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\OrderPack;
+use App\Entity\SearchEntity\OrderSearch;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
@@ -50,6 +51,18 @@ class OrderPackRepository extends ServiceEntityRepository
            ->orderBy('o.id', 'ASC')
            ->getQuery();
    }
+
+   /**
+     * Permet de filtrer les ventes
+     */
+    public function findOrdersQuery()
+    {
+        $query = $this->createQueryBuilder('o');
+
+        return $query->getQuery()
+            ->getResult()
+        ;
+    }
 //    /**
 //     * @return OrderPack[] Returns an array of OrderPack objects
 //     */

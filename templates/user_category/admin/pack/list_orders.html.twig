@@ -1,7 +1,7 @@
-{% extends 'base.html.twig' %}
+{% extends 'base_admin.html.twig' %}
 
 {% block title %}
-	Liste des ventes
+	Liste des achats de packs
 {% endblock %}
 
 {% block stylesheets %}
@@ -29,7 +29,7 @@
                 <div class=" w-100 h-100 ps-3 py-3  bg-white border pe-3">
                     <div class="row h-100">
                         <div class="col-6">
-                            <h4 class="my-auto">Liste des ventes</h4>
+                            <h4 class="my-auto">Liste des achats de packs</h4>
                         </div>
                     </div>
                 </div>
@@ -40,28 +40,31 @@
 				<thead>
 					<tr style="white-space:nowrap">
                     
-						<th scope="col" class="text-center">Date de la vente</th>
-						
-                        <th scope="col" class="text-center">Secteur</th>
+						<th scope="col" class="text-center">Date de l'achat</th>
 						<th scope="col" class="text-center">Montant</th>
-						<th scope="col" class="text-center">Email du client</th>
-                        <th scope="col" class="text-center">Nom d'utilisateur (Agent)</th>
+						<th scope="col" class="text-center">Email agent</th>
+						<th scope="col" class="text-center">Nom d'utilisateur</th>
 						<th scope="col" class="text-center">Facture</th>
+						<th scope="col" class="text-center">Actions</th>
+
+
 					</tr>
 				</thead>
 				<tbody>
 					{% for order in orders %}
                         <tr>
                             
-                            <td>{{ order.orderDate|date('d/m/Y') }}</td>
-                            <td>{{ order.secteur.nom }}</td>
+                            <td>{{ order.createdAt|date('d/m/Y') }}</td>
                             <td>{{ order.amount|format_currency('EUR') }}</td>
-                            <td>{{ order.user.email }}</td>
-                             <td>{{ order.agent.username }}</td>
+                            <td>{{ order.agent.email }}</td>
+                            <td>{{ order.agent.username }}</td>
                             <td>
                                 {% if order.invoicePath is not null %}
-                                <a href="{{ path('common_order_download_contrat',{'id' : order.id}) }}" class="btn btn-primary btn-sm"><i class="fa fa-eye"></i> Voir facture</a>
+                                <a href="{{ path('app_order_pack_invoice_preview',{'order_pack_id' : order.id}) }}" class="btn btn-primary btn-sm"><i class="fa fa-eye"></i> Voir facture</a>
                                 {% endif %}
+                            </td>
+                            <td>
+                                <a href="{{ path('admin_pack_orders_details',{'order_pack_id' : order.id}) }}" class="btn btn-primary btn-sm"><i class="fa fa-eye"></i> Voir détails</a>
                             </td>
                         </tr>
 					{% endfor %}

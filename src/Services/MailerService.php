@@ -13,6 +13,7 @@ use App\Entity\OrderDigital;
 use App\Entity\OrderPack;
 use App\Entity\OrderSecu;
 use App\Entity\User;
+use App\Repository\UserRepository;
 use Nucleos\DompdfBundle\Wrapper\DompdfWrapperInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
@@ -33,9 +34,9 @@ class MailerService
     private $parameterBag;
     private $twig;
     private $wrapper;
-    private $fileHandler;
+    private $fileHandlser;
 
-    public function __construct(MailerInterface $mailer, ParameterBagInterface $parameterBag, Twig_Environment $twig, DompdfWrapperInterface $wrapper, FileHandler $fileHandler)
+    public function __construct(private UserRepository $userRepo, MailerInterface $mailer, ParameterBagInterface $parameterBag, Twig_Environment $twig, DompdfWrapperInterface $wrapper, FileHandler $fileHandler)
     {
         $this->mailer = $mailer;
         $this->from =  $_ENV['MAILER_SEND_FROM'];
@@ -399,17 +400,25 @@ class MailerService
             'to' => $order->getAgent()->getEmail(),
             'body' => $body
         ], $attachmentsPath, null, $embeddedImages);
+        
+        $admins = $this->userRepo->findAllAdmin();
+        $emailMap = function (User $user){
+            return $user->getEmail();
+        };
 
-        // $bodyMailToAdmin = $this->renderTwig('emails/commande_details_pack.html.twig', [
-        //     'order' => $order
-        // ]);
-        // $MailToAdmin = [
-        //     'body' => $bodyMailToAdmin,
-        //     'subject' => "Commande n°{$order->getId()}",
-        //     'to' => $order->getAgent()->getEmail() // We don*t know Admin Email list
-        // ];
+        $adminMailList = array_map($emailMap, $admins);
+        // $adminMails = join(",", $adminMailList);
+        $bodyMailToAdmin = $this->renderTwig('emails/commande_details_pack.html.twig', [
+            'prenomClient' => $order->getAgent()->getPrenom(),
+            'order' => $order
+        ]);
+        $MailToAdmin = [
+            'body' => $bodyMailToAdmin,
+            'subject' => "Commande n°{$order->getId()}",
+            'to' => $adminMailList // We don*t know Admin Email list
+        ];
 
-        // $this->mySendMail($MailToAdmin, $attachmentsPath, null, $embeddedImages);
+        $this->mySendMail($MailToAdmin, $attachmentsPath, null, $embeddedImages);
 
     }
 

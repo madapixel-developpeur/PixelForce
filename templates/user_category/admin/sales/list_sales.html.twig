@@ -59,6 +59,9 @@
                         <th scope="col" class="text-center">Secteur</th>
 						<th scope="col" class="text-center">Montant</th>
 						<th scope="col" class="text-center">Email du client</th>
+						<th scope="col" class="text-center">Nom d'utilisateur (Agent)</th>
+						<th scope="col" class="text-center">Facture</th>
+
 					</tr>
 				</thead>
 				<tbody>
@@ -69,6 +72,13 @@
                             <td>{{ order.secteur.nom }}</td>
                             <td>{{ order.amount|format_currency('EUR') }}</td>
                             <td>{{ order.user.email }}</td>
+                            <td>{{ order.agent.username }}</td>
+                            <td>
+                                {% if order.invoicePath is not null %}
+                                <a href="{{ path('common_order_download_contrat',{'id' : order.id}) }}" class="btn btn-primary btn-sm"><i class="fa fa-eye"></i> Voir facture</a>
+                                {% endif %}
+                            </td>
+
                         </tr>
 					{% endfor %}
 				</tbody>

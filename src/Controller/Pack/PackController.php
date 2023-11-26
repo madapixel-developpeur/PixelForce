@@ -4,9 +4,12 @@ namespace App\Controller\Pack;
 
 use App\Entity\OrderPack;
 use App\Entity\Pack;
+use App\Entity\SearchEntity\OrderSearch;
+use App\Entity\User;
 use App\Form\PackPayFormType;
 use App\Repository\OrderPackRepository;
 use App\Repository\PackRepository;
+use App\Repository\UserRepository;
 use App\Services\ConfigService;
 use App\Services\OrderPackService;
 use App\Services\StripeService;
@@ -27,7 +30,7 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class PackController extends AbstractController
 {
-    public function __construct(private ConfigService $configService,private OrderPackRepository $orderPackRepo,private OrderPackService $orderPackService,private PackRepository $packRepository, private StripeService $stripeService)
+    public function __construct(private UserRepository $userRepo, private ConfigService $configService,private OrderPackRepository $orderPackRepo,private OrderPackService $orderPackService,private PackRepository $packRepository, private StripeService $stripeService)
     {
        
     }
@@ -63,6 +66,23 @@ class PackController extends AbstractController
     {
         $pack = $this->packRepository->find($pack_id);
         $filepath = $pack->getDocument();
+        $response = new BinaryFileResponse(
+            $this->getParameter('files_directory_relative')."/".
+            $filepath
+        );
+        $response->setContentDisposition(
+            ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+            GenericUtil::getFileName($filepath)
+        );
+        return $response;
+    }
+    /**
+     * @Route("/invoice/preview/{order_pack_id}", name="app_order_pack_invoice_preview")
+     */
+    public function order_pack_invoice_download($order_pack_id)
+    {
+        $orderPack = $this->orderPackRepo->find($order_pack_id);
+        $filepath = $orderPack->getInvoicePath();
         $response = new BinaryFileResponse(
             $this->getParameter('files_directory_relative')."/".
             $filepath
@@ -147,5 +167,8 @@ class PackController extends AbstractController
             ]
         ]);
 
+
     }
+    
+
 }

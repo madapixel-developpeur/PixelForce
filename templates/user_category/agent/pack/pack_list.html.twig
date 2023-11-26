@@ -42,6 +42,8 @@
                 <th scope="col" class="text-center">Description</th>
                 <th scope="col" class="text-center">Montant</th>
                 <th scope="col" class="text-center">Document (.pdf)</th>
+                <th scope="col" class="text-center">Facture (.pdf)</th>
+
             </tr>
             </thead>
             <tbody>
@@ -55,6 +57,11 @@
                     <td>
                         {% if orderPack.pack.document is not null %}
                         <a href="{{ path('app_orderPack.pack_preview',{'orderPack.pack_id' : orderPack.pack.id}) }}" class="btn btn-primary btn-sm"><i class="fa fa-eye"></i> Voir document</a>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if order.invoicePath is not null %}
+                        <a href="{{ path('common_order_download_contrat',{'id' : order.id}) }}" class="btn btn-primary btn-sm"><i class="fa fa-eye"></i> Voir facture</a>
                         {% endif %}
                     </td>
                 </tr>
