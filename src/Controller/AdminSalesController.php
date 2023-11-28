@@ -72,5 +72,18 @@ class AdminSalesController extends AbstractController
             'searchForm' => $searchForm->createView()
         ]);
     }
+    /**
+     * @Route("/admin/sales/orders/details/{id}", name="admin_sales_orders_details")
+     */
+    public function admin_pack_orders_details($id)
+    {
+        $error = null;
+        $order = $this->repoOrder->find($id);
+        // dd($order);
+        return $this->render('user_category/admin/sales/order_details.html.twig', [
+            'order' => $order,
+            'error' => null,
+        ]);
+    }
 
 }

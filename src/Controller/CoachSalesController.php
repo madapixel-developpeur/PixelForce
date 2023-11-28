@@ -67,5 +67,18 @@ class CoachSalesController extends AbstractController
             'orders' => $orders
         ]);
     }
+    /**
+     * @Route("/coach/sales/orders/details/{id}", name="coach_sales_orders_details")
+     */
+    public function coach_pack_orders_details($id)
+    {
+        $error = null;
+        $order = $this->repoOrder->find($id);
+        // dd($order);
+        return $this->render('user_category/coach/sales/order_details.html.twig', [
+            'order' => $order,
+            'error' => null,
+        ]);
+    }
 
 }
