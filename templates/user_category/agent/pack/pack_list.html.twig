@@ -60,8 +60,8 @@
                         {% endif %}
                     </td>
                     <td>
-                        {% if order.invoicePath is not null %}
-                        <a href="{{ path('common_order_download_contrat',{'id' : order.id}) }}" class="btn btn-primary btn-sm"><i class="fa fa-eye"></i> Voir facture</a>
+                        {% if orderPack.invoicePath is not null %}
+                        <a href="{{ path('common_order_download_contrat',{'id' : orderPack.id}) }}" class="btn btn-primary btn-sm"><i class="fa fa-eye"></i> Voir facture</a>
                         {% endif %}
                     </td>
                 </tr>
