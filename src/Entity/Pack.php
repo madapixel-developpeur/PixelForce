@@ -62,6 +62,10 @@ class Pack implements JsonSerializable
      */
     private $document;
 
+    /**
+     * @ORM\OneToMany(targetEntity=PackProduct::class, mappedBy="pack")
+     */
+    private $products;
     
     public function getId(): ?int
     {
@@ -142,6 +146,7 @@ class Pack implements JsonSerializable
 
     public function __construct(){
         $this->orderPacks = new ArrayCollection();
+        $this->products = new ArrayCollection();
     }
 
     public function jsonSerialize()
@@ -177,6 +182,36 @@ class Pack implements JsonSerializable
     public function setStatus(?int $status): self
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, OrderProduct>
+     */
+    public function getProducts(): Collection
+    {
+        return $this->products;
+    }
+
+    public function addProduct(PackProduct $product): self
+    {
+        if (!$this->products->contains($product)) {
+            $this->products[] = $product;
+            $product->setPack($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrderProduct(PackProduct $product): self
+    {
+        if ($this->pro->removeElement($product)) {
+            // set the owning side to null (unless already changed)
+            if ($product->getPack() === $this) {
+                $product->setPack(null);
+            }
+        }
 
         return $this;
     }

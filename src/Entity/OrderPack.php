@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\OrderPackRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -108,14 +110,47 @@ class OrderPack
      * @ORM\Column(type="float", nullable=true)
      */
     private $montantSansFraisLivraison;
+    /**
+     * @ORM\OneToMany(targetEntity=OrderPackProduct::class, mappedBy="orderParent")
+     */
+    private $orderProducts;
 
 
     public function __construct()
     {
         $this->createdAt = new \DateTime();
+        $this->orderProducts = new ArrayCollection();
     }
 
+/**
+     * @return Collection<int, OrderProduct>
+     */
+    public function getOrderProducts(): Collection
+    {
+        return $this->orderProducts;
+    }
 
+    public function addOrderProduct(OrderPackProduct $orderProduct): self
+    {
+        if (!$this->orderProducts->contains($orderProduct)) {
+            $this->orderProducts[] = $orderProduct;
+            $orderProduct->setOrderParent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrderProduct(OrderPackProduct $orderProduct): self
+    {
+        if ($this->orderProducts->removeElement($orderProduct)) {
+            // set the owning side to null (unless already changed)
+            if ($orderProduct->getOrderParent() === $this) {
+                $orderProduct->setOrderParent(null);
+            }
+        }
+
+        return $this;
+    }
     public function getId(): ?int
     {
         return $this->id;
