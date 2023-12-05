@@ -46,6 +46,23 @@ class PackController extends AbstractController
         ]);
 
     }
+     /**
+     * @Route("/orders/details/{order_pack_id}", name="agent_pack_orders_details")
+     */
+    public function agent_pack_orders_details($order_pack_id)
+    {
+        $error = null;
+        $orderPack = $this->orderPackRepo->find($order_pack_id);
+        return $this->render('user_category/agent/pack/order_details.html.twig', [
+            'order' => $orderPack,
+            'error' => null,
+            'subscription'=>[
+                'amount'=>OrderPack::SUBSCRIPTION_AMOUNT,
+                'interval'=>OrderPack::IntervaltoLocale(OrderPack::SUBSCRIPTION_INTERVAL),
+            ]
+        ]);
+    }
+
     /**
      * @Route("/list", name="app_my_pack_list")
      */

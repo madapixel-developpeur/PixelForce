@@ -63,7 +63,7 @@ class Pack implements JsonSerializable
     private $document;
 
     /**
-     * @ORM\OneToMany(targetEntity=PackProduct::class, mappedBy="pack")
+     * @ORM\OneToMany(targetEntity=PackProduct::class, mappedBy="pack", cascade={"persist"} )
      */
     private $products;
     
@@ -187,7 +187,7 @@ class Pack implements JsonSerializable
     }
 
     /**
-     * @return Collection<int, OrderProduct>
+     * @return Collection<int, PackProduct>
      */
     public function getProducts(): Collection
     {

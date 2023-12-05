@@ -112,6 +112,13 @@ class AdminPackController extends AbstractController
                     $file = $this->fileHandler->upload($documentFile, "documents\packs");
                     $pack->setDocument($file);
                 }
+
+                for($i=0; $i<count($pack->getProducts()); $i++){
+                    $item = $pack->getProducts()[$i];
+                    if($item->getPrice()==null) $item->setPrice($item->getProduct()->getPrix() * $item->getQty());
+                    if($item->getPack()==null) $item->setPack($pack);
+                }
+
                 $pack->setStatus(1);
                 $this->entityManager->save($pack);
                 $this->addFlash('success', "Ajout d'un pack avec succès");
@@ -151,6 +158,11 @@ class AdminPackController extends AbstractController
                 if ($documentFile) {
                     $file = $this->fileHandler->upload($documentFile, "documents\productions");
                     $pack->setDocument($file);
+                }
+                for($i=0; $i<count($pack->getProducts()); $i++){
+                    $item = $pack->getProducts()[$i];
+                    if($item->getPrice()==null) $item->setPrice($item->getProduct()->getPrix() * $item->getQty());
+                    if($item->getPack()==null) $item->setPack($pack);
                 }
                 $this->entityManager->save($pack);
                 $this->addFlash('success', "Modification pack avec succès");

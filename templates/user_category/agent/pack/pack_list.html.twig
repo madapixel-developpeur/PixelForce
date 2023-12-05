@@ -43,6 +43,8 @@
                 <th scope="col" class="text-center">Montant</th>
                 <th scope="col" class="text-center">Document (.pdf)</th>
                 <th scope="col" class="text-center">Facture (.pdf)</th>
+                <th scope="col" class="text-center">Actions</th>
+
 
             </tr>
             </thead>
@@ -63,6 +65,9 @@
                         {% if orderPack.invoicePath is not null %}
                         <a href="{{ path('common_order_download_contrat',{'id' : orderPack.id}) }}" class="btn btn-primary btn-sm"><i class="fa fa-eye"></i> Voir facture</a>
                         {% endif %}
+                    </td>
+                    <td>
+                        <a href="{{ path('agent_pack_orders_details',{'order_pack_id' : orderPack.id}) }}" class="btn btn-primary btn-sm"><i class="fa fa-eye"></i> Voir détails</a>
                     </td>
                 </tr>
             {% else %}
