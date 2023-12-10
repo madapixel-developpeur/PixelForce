@@ -111,6 +111,16 @@ class PackController extends AbstractController
         return $response;
     }
     /**
+     * @Route("/order/export/csv/{order_pack_id}", name="app_order_pack_export_to_csv")
+     */
+    public function app_order_pack_export_to_csv($order_pack_id)
+    {
+        $orderPack = $this->orderPackRepo->find($order_pack_id);
+        if(!is_null($orderPack->getPack()))$this->orderPackService->sendOrderPackProductsToSogec($orderPack->getPack()->getProducts()->toArray());
+        $this->addFlash('success', 'Exportation CSV vers Sogec effectué');
+        return $this->redirectToRoute('agent_home');
+    }
+    /**
      * @Route("/payment", name="client_pack_payment")
      */
     public function payment(Request $request): Response
@@ -153,9 +163,9 @@ class PackController extends AbstractController
                 if($pack!=null) $orderPack->setPack($pack);
                 $orderPack->setStatut(OrderPack::CREATED);
                 $orderPack = $this->orderPackService->saveOrder($orderPack, $stripeToken);
-                if(!is_null($pack)){
-                    $this->orderPackService->sendOrderPackToSogec($orderPack);
-                }
+                if(!is_null($orderPack->getPack()))$this->orderPackService->sendOrderPackProductsToSogec($orderPack->getPack()->getProducts()->toArray());
+        
+
                 $this->addFlash('success', 'Paiement effectué');
                 return $this->redirectToRoute('agent_home');
             } catch(Exception $ex){

@@ -12,11 +12,13 @@ use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\BasketItemAroma;
 use App\Entity\ImplantationAroma;
+use App\Form\AnonymousSignUpType;
 use App\Repository\ConfigSecteurRepository;
 use App\Repository\SecteurRepository;
 use App\Repository\UserRepository;
 use App\Services\BasketServiceAroma;
 use App\Services\ConfigSecteurService;
+use App\Services\SecurityService;
 use Exception;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
@@ -37,7 +39,8 @@ class CartControllerAroma extends AbstractController
         UserRepository $userRepository, 
         SessionInterface $session,
         SecteurRepository $secteurRepository,
-        ConfigSecteurService $configSecteurService)
+        ConfigSecteurService $configSecteurService,
+        private SecurityService $securityService)
     {
         $this->entityManager = $entityManager;
         $this->basketService = $basketService;
@@ -48,7 +51,7 @@ class CartControllerAroma extends AbstractController
     }
 
     #[Route('/', name: 'client_cart_aroma_index')]
-    public function index($token): Response
+    public function index($token, Request $request): Response
     {
         $secteurId = $this->session->get('secteurId');
         $secteur = $this->secteurRepository->find($secteurId);
@@ -57,12 +60,32 @@ class CartControllerAroma extends AbstractController
         $basket = $this->basketService->refreshBasket($groupKey);
         $totalCost = $this->basketService->getTotalCostBasket($basket);
         $tva = $this->configSecteurService->findTva($secteur);
+
+        $anonymousForm = $this->createForm(AnonymousSignUpType::class);
+        $anonymousForm->handleRequest($request);
+        $error = null;
+        if ($anonymousForm->isSubmitted() && $anonymousForm->isValid()) {
+            try{
+                // Register the anonymous user
+                $user = $this->securityService->generateCredentialsForAnonymous($request->request->all("anonymous_sign_up"));
+                $this->securityService->autoAuthenticate($user);
+                return $this->redirectToRoute("client_aroma_checkout_address", ["token"=>$token]);
+            }
+            catch(\Exception $ex){
+                throw $ex;
+                $error = $ex->getMessage();
+            }
+           
+        }
+
         return $this->render('user_category/client/aroma/cart/cart.html.twig', [
             'basket' => $basket,
             'totalCost' => $totalCost,
             'agent' => $agent,
             'token' => $token,
-            'tva' => $tva
+            'tva' => $tva,
+            'anonymousForm' => $anonymousForm->createView(),
+            'error' => $error
         ]);
     }
 

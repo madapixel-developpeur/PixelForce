@@ -42,6 +42,11 @@ class OrderPack
         "Payée" => self::PAIED,
         "Livrée" => self::VALIDATED
     ];
+    const TO_CHANGE = [
+        "quantity" => "quantityToChange",
+        "amount" => "amountToChange",
+        "refProd" => "refProdToChange" 
+    ];
     
     /**
      * @ORM\Id
@@ -312,6 +317,21 @@ class OrderPack
         $this->montantSansFraisLivraison = $montantSansFraisLivraison;
 
         return $this;
+    }
+    public function getItemsAmount()
+    {
+        return $this->getNbrProductInOrder() > 1 ? self::TO_CHANGE['amount']  : $this->amount;
+    }
+    public function getProductsInOrder()
+    {
+       return $this->getOrderProductsArray();
+    }
+    public function getOrderProductsArray(){
+        return $this->getOrderProducts()->toArray();
+    }
+    public function getNbrProductInOrder()
+    {
+        return count($this->getOrderProductsArray());
     }
 
 }

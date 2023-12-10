@@ -8,6 +8,7 @@ use App\Entity\Order;
 use App\Entity\OrderPack;
 use App\Util\GenericUtil;
 use App\Entity\OrderProduct;
+use App\Entity\PackProduct;
 
 class SpreadsheetService
 {
@@ -42,9 +43,9 @@ class SpreadsheetService
                 /** @var OrderProduct $product */
                 foreach ($productsInOrder as $productOrder) {
                     for ($i=0; $i < count($row); $i++) { 
-                        $row[$i] === Order::TO_CHANGE['refProd'] && $row[$i] =  $productOrder->getProduct()->getReferenceSKU();
-                        $row[$i] === Order::TO_CHANGE['quantity'] && $row[$i] =  $productOrder->getQty();
-                        $row[$i] === Order::TO_CHANGE['amount'] && $row[$i] =  number_format($productOrder->getPrice(), 2, self::DECIMAL_SEPARATOR, '') ;
+                        $row[$i] === OrderPack::TO_CHANGE['refProd'] && $row[$i] =  $productOrder->getProduct()->getReferenceSKU();
+                        $row[$i] === OrderPack::TO_CHANGE['quantity'] && $row[$i] =  $productOrder->getQty();
+                        $row[$i] === OrderPack::TO_CHANGE['amount'] && $row[$i] =  number_format($productOrder->getPrice(), 2, self::DECIMAL_SEPARATOR, '') ;
                     }
 
                     $file->fputcsv($row, self::SEPARATOR);
@@ -66,6 +67,27 @@ class SpreadsheetService
 
 
 
+    public function exportPackProduct($data, array $fields, array $headers, array $options = []): ?SplFileObject
+    {
+        
+        $file = new SplFileObject(SpreadsheetService::EXPORT_FILE_NAME, "w");
+        $file->fputcsv($headers, self::SEPARATOR);
+        foreach($data as $obj){
+            $row = [];
+            foreach($fields as $row_field){
+                $value = $row_field ? GenericUtil::getPropertyValue($obj, $row_field) : null;
+                $value = $this->convertStringToNumeric($options, $row_field, $value);   
+                $row[] = $value;
+            }
+            // for ($i=0; $i < count($row); $i++) { 
+            //     if ($row[$i] instanceof PackProduct) {
+            //         $row[$i] = $row[$i]->getName();
+            //     }
+            // }
+            $file->fputcsv($row, self::SEPARATOR);
+        }
+        return $file;
+    }
     public function exportOrderPack($data, array $fields, array $headers, array $options = []): ?SplFileObject
     {
         $file = new SplFileObject(SpreadsheetService::EXPORT_FILE_NAME, "w");
@@ -98,7 +120,7 @@ class SpreadsheetService
     {
         $keys_options = array_keys($options);
         foreach ($options['convert_string_to_numeric']['fields'] as $verif_field) {     
-            if (!empty($options) && in_array('convert_string_to_numeric', $keys_options) && $row_field === $verif_field && $value_to_convert !== Order::TO_CHANGE['amount']) {
+            if (!empty($options) && in_array('convert_string_to_numeric', $keys_options) && $row_field === $verif_field && $value_to_convert !== OrderPack::TO_CHANGE['amount']) {
                 return number_format($value_to_convert, 2, self::DECIMAL_SEPARATOR, '');
             }else{
                 return $value_to_convert;
