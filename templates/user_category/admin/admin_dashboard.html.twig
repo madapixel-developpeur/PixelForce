@@ -16,13 +16,12 @@
             <div class="col-xl-4 col-md-6 col-12">
                 <div class="card card-congratulation-medal">
                     <div class="card-body">
-                        <h5>Félicitation 🎉 {{ app.user.prenom }}!</h5>
-                        <p class="card-text font-small-3">Vous avez gagné la médaille d'or</p>
-                        <h3 class="mb-75 mt-2 pt-50">
-                            <a href="#">{{statVente.ca | number_format(2, ',', ' ')}} €</a>
+                        <h5>Félicitation {{ app.user.prenom }}</h5>
+                        <p class="card-text font-small-3"></p>
+                        <h3 class="mb-75 mt-2 mb-2 pt-50 text-greenlife fs-1">
+                            {{statVente.ca | number_format(2, ',', ' ')}} €              
                         </h3>
-                        {# <button type="button" class="btn btn-primary">Voir les ventes</button> #}
-                        <img src="{{asset('assets/vuexy/images/illustration/badge.svg')}}" class="congratulation-medal" alt="Medal Pic" />
+                        <img src="{{asset('assets/img/greenlife/trophee-min.png')}}" class="congratulation-medal" alt="Medal Pic" />
                     </div>
                 </div>
             </div>
@@ -41,9 +40,9 @@
                         <div class="row">
                             <div class="col-xl-3 col-sm-6 col-12 mb-2 mb-xl-0">
                                 <div class="d-flex flex-row">
-                                    <div class="avatar bg-light-primary me-2">
+                                    <div class="avatar bg-white me-2 border border-primary">
                                         <div class="avatar-content">
-                                            <i data-feather="trending-up" class="avatar-icon"></i>
+                                            <i class="fa-solid fa-chart-line fa-xl"></i>
                                         </div>
                                     </div>
                                     <div class="my-auto">
@@ -54,9 +53,9 @@
                             </div>
                             <div class="col-xl-3 col-sm-6 col-12 mb-2 mb-xl-0">
                                 <div class="d-flex flex-row">
-                                    <div class="avatar bg-light-info me-2">
+                                    <div class="avatar bg-white me-2 border border-primary">
                                         <div class="avatar-content">
-                                            <a href="{{ path('admin_coach_list') }}"><i data-feather="user" class="avatar-icon"></i></a>
+                                            <a href="{{ path('admin_coach_list') }}"><i data-feather="user" class="text-greenlife avatar-icon"></i></a>
                                         </div>
                                     </div>
                                     <div class="my-auto">
@@ -67,9 +66,9 @@
                             </div>
                             <div class="col-xl-3 col-sm-6 col-12 mb-2 mb-xl-0">
                                 <div class="d-flex flex-row">
-                                    <div class="avatar bg-light-info me-2">
+                                    <div class="avatar bg-white me-2 border border-primary">
                                         <div class="avatar-content">
-                                            <a href="{{ path('admin_agent_list') }}"><i data-feather="user" class="avatar-icon"></i></a>
+                                            <a href="{{ path('admin_agent_list') }}"><i data-feather="user" class="text-greenlife avatar-icon"></i></a>
                                         </div>
                                     </div>
                                     <div class="my-auto">
@@ -80,9 +79,9 @@
                             </div>
                             <div class="col-xl-3 col-sm-6 col-12 mb-2 mb-xl-0">
                                 <div class="d-flex flex-row">
-                                    <div class="avatar bg-light-info me-2">
+                                    <div class="avatar bg-white me-2 border border-primary">
                                         <div class="avatar-content">
-                                            <a href="{{ path('admin_sector_list') }}"><i data-feather="user" class="avatar-icon"></i></a>
+                                            <a href="{{ path('admin_sector_list') }}"><i data-feather="user" class="text-greenlife avatar-icon"></i></a>
                                         </div>
                                     </div>
                                     <div class="my-auto">
@@ -108,7 +107,7 @@
                         <div class="card">
                             <div class="card-body pb-50">
                                 <h6>Secteur clé</h6>
-                                <h2 class="fw-bolder mb-1">{{ repoSecteur.findOneBy({'id' : bestStatVente.secteur_id }).nom }}</h2>
+                                <h2 class="text-greenlife fw-bolder mb-1">{{ repoSecteur.findOneBy({'id' : bestStatVente.secteur_id }).nom }}</h2>
                                 <div id="statistics-order-chart"></div>
                             </div>
                         </div>
@@ -120,7 +119,7 @@
                         <div class="card card-tiny-line-stats">
                             <div class="card-body pb-50">
                                 <h6>Revenus</h6>
-                                <h4 class="fw-bolder mb-1">{{bestStatVente.ca}} €</h4>
+                                <h4 class="text-greenlife fw-bolder mb-1">{{bestStatVente.ca}} €</h4>
                                 <div id="statistics-profit-chart"></div>
                             </div>
                         </div>
@@ -178,7 +177,7 @@
                                         <input name="annee" type="hidden" value="{{annee}}" />
                                         <input name="secteurId" type="hidden" value="{{secteur ? secteur.id : -1 }}" />
                                     </form>
-                                    <button type="button" class="btn btn-outline-primary btn-sm dropdown-toggle budget-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <button type="button" class="btn btn-outline-secondary btn-sm dropdown-toggle budget-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <span id="anneeSelected">{{annee}}</span>
                                     </button>
                                     <div class="dropdown-menu" id="anneeContainer">
@@ -193,7 +192,7 @@
                             </div>
                             <div>
                                 <div class="btn-group">
-                                    <button type="button" class="btn btn-outline-primary btn-sm dropdown-toggle budget-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <button type="button" class="btn btn-outline-secondary btn-sm dropdown-toggle budget-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <span id="secteurSelected">{{secteur ? secteur.nom: '--'}}</span>
                                     </button>
                                     <div class="dropdown-menu" id="secteurContainer">
@@ -324,194 +323,6 @@
                 </div>
             </div>
             <!--/ Developer Meetup Card -->
-
-
-            <!-- Browser States Card -->
-            <div class="col-lg-4 col-md-6 col-12">
-                <div class="card card-browser-states">
-                    <div class="card-header">
-                        <div>
-                            <h4 class="card-title">États du navigateur</h4>
-                            <p class="card-text font-small-2">Compteur août 2020</p>
-                        </div>
-                        <div class="dropdown chart-dropdown">
-                            <i data-feather="more-vertical" class="font-medium-3 cursor-pointer" data-bs-toggle="dropdown"></i>
-                            <div class="dropdown-menu dropdown-menu-end">
-                                <a class="dropdown-item" href="#">28 derniers jours</a>
-                                <a class="dropdown-item" href="#">Le mois dernier</a>
-                                <a class="dropdown-item" href="#">L'année dernière</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="browser-states">
-                            <div class="d-flex">
-                                <img src="{{asset('assets/vuexy/images/icons/google-chrome.png')}}" class="rounded me-1" height="30" alt="Google Chrome" />
-                                <h6 class="align-self-center mb-0">Google Chrome</h6>
-                            </div>
-                            <div class="d-flex align-items-center">
-                                <div class="fw-bold text-body-heading me-1">54.4%</div>
-                                <div id="browser-state-chart-primary"></div>
-                            </div>
-                        </div>
-                        <div class="browser-states">
-                            <div class="d-flex">
-                                <img src="{{asset('assets/vuexy/images/icons/mozila-firefox.png')}}" class="rounded me-1" height="30" alt="Mozila Firefox" />
-                                <h6 class="align-self-center mb-0">Mozila Firefox</h6>
-                            </div>
-                            <div class="d-flex align-items-center">
-                                <div class="fw-bold text-body-heading me-1">6.1%</div>
-                                <div id="browser-state-chart-warning"></div>
-                            </div>
-                        </div>
-                        <div class="browser-states">
-                            <div class="d-flex">
-                                <img src="{{asset('assets/vuexy/images/icons/apple-safari.png')}}" class="rounded me-1" height="30" alt="Apple Safari" />
-                                <h6 class="align-self-center mb-0">Apple Safari</h6>
-                            </div>
-                            <div class="d-flex align-items-center">
-                                <div class="fw-bold text-body-heading me-1">14.6%</div>
-                                <div id="browser-state-chart-secondary"></div>
-                            </div>
-                        </div>
-                        <div class="browser-states">
-                            <div class="d-flex">
-                                <img src="{{asset('assets/vuexy/images/icons/internet-explorer.png')}}" class="rounded me-1" height="30" alt="Internet Explorer" />
-                                <h6 class="align-self-center mb-0">Internet Explorer</h6>
-                            </div>
-                            <div class="d-flex align-items-center">
-                                <div class="fw-bold text-body-heading me-1">4.2%</div>
-                                <div id="browser-state-chart-info"></div>
-                            </div>
-                        </div>
-                        <div class="browser-states">
-                            <div class="d-flex">
-                                <img src="{{asset('assets/vuexy/images/icons/opera.png')}}" class="rounded me-1" height="30" alt="Opera Mini" />
-                                <h6 class="align-self-center mb-0">Opera Mini</h6>
-                            </div>
-                            <div class="d-flex align-items-center">
-                                <div class="fw-bold text-body-heading me-1">8.4%</div>
-                                <div id="browser-state-chart-danger"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!--/ Browser States Card -->
-
-            <!-- Goal Overview Card -->
-            <div class="col-lg-4 col-md-6 col-12">
-                <div class="card">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <h4 class="card-title">Aperçu des objectifs</h4>
-                        <i data-feather="help-circle" class="font-medium-3 text-muted cursor-pointer"></i>
-                    </div>
-                    <div class="card-body p-0">
-                        <div id="goal-overview-radial-bar-chart" class="my-2"></div>
-                        <div class="row border-top text-center mx-0">
-                            <div class="col-6 border-end py-1">
-                                <p class="card-text text-muted mb-0">Terminé</p>
-                                <h3 class="fw-bolder mb-0">786,617</h3>
-                            </div>
-                            <div class="col-6 py-1">
-                                <p class="card-text text-muted mb-0">En cours</p>
-                                <h3 class="fw-bolder mb-0">13,561</h3>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!--/ Goal Overview Card -->
-
-            <!-- Transaction Card -->
-            <div class="col-lg-4 col-md-6 col-12">
-                <div class="card card-transaction">
-                    <div class="card-header">
-                        <h4 class="card-title">Transactions</h4>
-                        <div class="dropdown chart-dropdown">
-                            <i data-feather="more-vertical" class="font-medium-3 cursor-pointer" data-bs-toggle="dropdown"></i>
-                            <div class="dropdown-menu dropdown-menu-end">
-                                <a class="dropdown-item" href="#">28 derniers jours</a>
-                                <a class="dropdown-item" href="#">Le mois dernier</a>
-                                <a class="dropdown-item" href="#">L'année dernière</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="transaction-item">
-                            <div class="d-flex">
-                                <div class="avatar bg-light-primary rounded float-start">
-                                    <div class="avatar-content">
-                                        <i data-feather="pocket" class="avatar-icon font-medium-3"></i>
-                                    </div>
-                                </div>
-                                <div class="transaction-percentage">
-                                    <h6 class="transaction-title">Porte monnaie</h6>
-                                    <small>Starbuck</small>
-                                </div>
-                            </div>
-                            <div class="fw-bolder text-danger">- $74</div>
-                        </div>
-                        <div class="transaction-item">
-                            <div class="d-flex">
-                                <div class="avatar bg-light-success rounded float-start">
-                                    <div class="avatar-content">
-                                        <i data-feather="check" class="avatar-icon font-medium-3"></i>
-                                    </div>
-                                </div>
-                                <div class="transaction-percentage">
-                                    <h6 class="transaction-title">Virement</h6>
-                                    <small>Ajouter de l'argent</small>
-                                </div>
-                            </div>
-                            <div class="fw-bolder text-success">+ $480</div>
-                        </div>
-                        <div class="transaction-item">
-                            <div class="d-flex">
-                                <div class="avatar bg-light-danger rounded float-start">
-                                    <div class="avatar-content">
-                                        <i data-feather="dollar-sign" class="avatar-icon font-medium-3"></i>
-                                    </div>
-                                </div>
-                                <div class="transaction-percentage">
-                                    <h6 class="transaction-title">Paypal</h6>
-                                    <small>Ajouter de l'argent</small>
-                                </div>
-                            </div>
-                            <div class="fw-bolder text-success">+ $590</div>
-                        </div>
-                        <div class="transaction-item">
-                            <div class="d-flex">
-                                <div class="avatar bg-light-warning rounded float-start">
-                                    <div class="avatar-content">
-                                        <i data-feather="credit-card" class="avatar-icon font-medium-3"></i>
-                                    </div>
-                                </div>
-                                <div class="transaction-percentage">
-                                    <h6 class="transaction-title">Mastercard</h6>
-                                    <small>Nourriture commandée</small>
-                                </div>
-                            </div>
-                            <div class="fw-bolder text-danger">- $23</div>
-                        </div>
-                        <div class="transaction-item">
-                            <div class="d-flex">
-                                <div class="avatar bg-light-info rounded float-start">
-                                    <div class="avatar-content">
-                                        <i data-feather="trending-up" class="avatar-icon font-medium-3"></i>
-                                    </div>
-                                </div>
-                                <div class="transaction-percentage">
-                                    <h6 class="transaction-title">Transférer</h6>
-                                    <small>Rembourser</small>
-                                </div>
-                            </div>
-                            <div class="fw-bolder text-success">+ $98</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!--/ Transaction Card -->
         </div>
     </section>
 {% endblock %}
@@ -537,6 +348,7 @@
             var $textMutedColor = '#b9b9c3';
             var anneeSelected = $('#anneeSelected');
             var secteurSelected = $('#secteurSelected');
+            var colorGreenLife = "#a9d82e";
 
 
             $('#anneeContainer .annee-item').click(function (e){
@@ -570,7 +382,7 @@
                 },
                 distributed: true
                 },
-                colors: [window.colors.solid.primary, window.colors.solid.warning],
+                colors: [colorGreenLife, colorGreenLife],
                 series: [
                 {
                     name: 'Revenu',

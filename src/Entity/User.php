@@ -93,7 +93,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
     private $email;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="string", length=255, unique=true)
      */
     private $username;
 
@@ -279,6 +279,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
      */
     private $clientAgent;
 
+    /**
+     * 
+     * @ORM\ManyToOne(targetEntity=User::class)
+     */
+    private $parrain;
+
+
     private $plainPassword;
 
     /**
@@ -326,6 +333,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
      */
     private $devisCompanies;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $has_paid_subscription;
+
+    /**
+     * @ORM\OneToMany(targetEntity=OrderPack::class, mappedBy="agent")
+     */
+    private $orderPacks;
+
     public function __construct()
     {
         $this->coachAgents = new ArrayCollection();
@@ -348,6 +365,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
         $this->subscriptionPlanAgentAccounts = new ArrayCollection();
         $this->orderDigitals = new ArrayCollection();
         $this->devisCompanies = new ArrayCollection();
+        $this->orderPacks = new ArrayCollection();
+
 
 
     }
@@ -862,6 +881,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
         return $this->nom .' '. $this->prenom;
     }
 
+    public function getFullName()
+    {
+        return $this->nom .' '. $this->prenom;
+    }
+
     public function getCreatedAt(): ?\DateTimeInterface
     {
         return $this->created_at;
@@ -1213,6 +1237,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
 
         return $this;
     }
+    public function getParrain(): ?self
+    {
+        return $this->parrain;
+    }
+
+    public function setParrain(?self $parrain): self
+    {
+        $this->parrain = $parrain;
+
+        return $this;
+    }
+
 
     /**
      * Get the value of plainPassword
@@ -1383,7 +1419,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
 
         return $this;
     }
+    public function getHasPaidSubscription(): ?bool
+    {
+        return $this->has_paid_subscription;
+    }
 
+    public function setHasPaidSubscription(?bool $has_paid_subscription): self
+    {
+        $this->has_paid_subscription = $has_paid_subscription;
+
+        return $this;
+    }
     public function removeDevisCompany(DevisCompany $devisCompany): self
     {
         if ($this->devisCompanies->removeElement($devisCompany)) {
@@ -1394,6 +1440,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
         }
 
         return $this;
+    }
+
+    /**
+     * @return Collection<int, OrderPack>
+     */
+    public function getOrderPacks(): Collection
+    {
+        return $this->orderPacks;
     }
 
     public function jsonSerialize()

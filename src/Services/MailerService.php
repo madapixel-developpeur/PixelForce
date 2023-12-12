@@ -10,8 +10,10 @@ use App\Entity\Formation;
 use App\Entity\Order;
 use App\Entity\OrderAroma;
 use App\Entity\OrderDigital;
+use App\Entity\OrderPack;
 use App\Entity\OrderSecu;
 use App\Entity\User;
+use App\Repository\UserRepository;
 use Nucleos\DompdfBundle\Wrapper\DompdfWrapperInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
@@ -32,9 +34,9 @@ class MailerService
     private $parameterBag;
     private $twig;
     private $wrapper;
-    private $fileHandler;
+    private $fileHandlser;
 
-    public function __construct(MailerInterface $mailer, ParameterBagInterface $parameterBag, Twig_Environment $twig, DompdfWrapperInterface $wrapper, FileHandler $fileHandler)
+    public function __construct(private UserRepository $userRepo, MailerInterface $mailer, ParameterBagInterface $parameterBag, Twig_Environment $twig, DompdfWrapperInterface $wrapper, FileHandler $fileHandler)
     {
         $this->mailer = $mailer;
         $this->from =  $_ENV['MAILER_SEND_FROM'];
@@ -232,7 +234,7 @@ class MailerService
         ]);
 
         $attachmentsPath = [$order->getInvoicePath()];
-        $embeddedImages = ['logo' => 'assets/img/logo/pixelforce/logo-pixelforce-min.png'];
+        $embeddedImages = ['logo' => 'assets/img/logo/greenlife/greenlife.png'];
         $this->mySendMail([
             'subject' => 'Confirmation de commande '.$order->getId(),
             'to' => $order->getAddress()->getEmail(),
@@ -261,7 +263,7 @@ class MailerService
         ]);
 
         $attachmentsPath = [$order->getInvoicePath(), $order->getContratSigned()];
-        $embeddedImages = ['logo' => 'assets/img/logo/pixelforce/logo-pixelforce-min.png'];
+        $embeddedImages = ['logo' => 'assets/img/logo/greenlife/greenlife.png'];
         $this->mySendMail([
             'subject' => 'Confirmation de commande '.$order->getId(),
             'to' => $order->getClient()->getEmail(),
@@ -336,7 +338,7 @@ class MailerService
         ]);
 
         $attachmentsPath = [$devisCompany->getPjFilename()];
-        $embeddedImages = ['logo' => 'assets/img/logo/pixelforce/logo-pixelforce-min.png'];
+        $embeddedImages = ['logo' => 'assets/img/logo/greenlife/greenlife.png'];
         $this->mySendMail([
             'subject' => 'Confirmation du devis '.$devisCompany->getId(),
             'to' => $devisCompany->getClientMail(),
@@ -364,7 +366,7 @@ class MailerService
         ]);
 
         $attachmentsPath = [$order->getInvoicePath(), $order->getDevis()->getContratFileName()];
-        $embeddedImages = ['logo' => 'assets/img/logo/pixelforce/logo-pixelforce-min.png'];
+        $embeddedImages = ['logo' => 'assets/img/logo/greenlife/greenlife.png'];
         $this->mySendMail([
             'subject' => 'Confirmation de la commande '.$order->getId(),
             'to' => $order->getDevis()->getDemandeDevis()->getEmail(),
@@ -378,6 +380,42 @@ class MailerService
             'body' => $bodyMailToAdmin,
             'subject' => "Commande n°{$order->getId()}",
             'to' => $order->getAgent()->getEmail()
+        ];
+
+        $this->mySendMail($MailToAdmin, $attachmentsPath, null, $embeddedImages);
+
+    }
+
+    public function sendFactureOrderPack(OrderPack $order){
+        
+        $body = $this->renderTwig('emails/commande_pack.html.twig', [
+            'prenomClient' => $order->getAgent()->getPrenom(),
+            'order' => $order
+        ]);
+
+        $attachmentsPath = [$order->getInvoicePath()];
+        $embeddedImages = ['logo' => 'assets/img/logo/greenlife/greenlife.png'];
+        $this->mySendMail([
+            'subject' => 'Confirmation de la commande '.$order->getId(),
+            'to' => $order->getAgent()->getEmail(),
+            'body' => $body
+        ], $attachmentsPath, null, $embeddedImages);
+        
+        $admins = $this->userRepo->findAllAdmin();
+        $emailMap = function (User $user){
+            return $user->getEmail();
+        };
+
+        $adminMailList = array_map($emailMap, $admins);
+        // $adminMails = join(",", $adminMailList);
+        $bodyMailToAdmin = $this->renderTwig('emails/commande_details_pack.html.twig', [
+            'prenomClient' => $order->getAgent()->getPrenom(),
+            'order' => $order
+        ]);
+        $MailToAdmin = [
+            'body' => $bodyMailToAdmin,
+            'subject' => "Commande n°{$order->getId()}",
+            'to' => $adminMailList // We don*t know Admin Email list
         ];
 
         $this->mySendMail($MailToAdmin, $attachmentsPath, null, $embeddedImages);

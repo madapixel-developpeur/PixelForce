@@ -45,7 +45,7 @@ class OrderAromaControllerClient extends AbstractController
     public function index($token, Request $request, PaginatorInterface $paginator, SearchService $searchService): Response
     {
         $secteurId = $this->session->get('secteurId');
-        $agent = $this->userRepository->findAgentByToken($token);
+        $agent = $this->userRepository->findAgentByUsername($token);
         $page = $request->query->get('page', 1);
         $limit = 5;
         $criteria = [
@@ -101,7 +101,7 @@ class OrderAromaControllerClient extends AbstractController
     public function details($token, OrderAroma $order): Response
     {
         $secteurId = $this->session->get('secteurId');
-        $agent = $this->userRepository->findAgentByToken($token);
+        $agent = $this->userRepository->findAgentByUsername($token);
         return $this->render('user_category/client/aroma/order/order_details.html.twig',[
             'order' => $order,
             'token' => $token,

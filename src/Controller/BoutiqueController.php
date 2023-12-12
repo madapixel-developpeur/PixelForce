@@ -22,6 +22,7 @@ use App\Repository\KitBaseSecuRepository;
 use App\Repository\ProduitFavoriRepository;
 use App\Repository\ProduitRepository;
 use App\Repository\ProduitSecuFavoriRepository;
+use App\Repository\SecteurRepository;
 use App\Repository\UserRepository;
 use App\Services\FileHandler;
 use App\Services\OrderServiceAroma;
@@ -49,7 +50,7 @@ class BoutiqueController extends AbstractController
     private $fileHandler;
 
     public function __construct(UserRepository $userRepository, SessionInterface $session, 
-        EntityManagerInterface $entityManager, ProduitRepository $produitRepository, FileHandler $fileHandler)
+        EntityManagerInterface $entityManager, ProduitRepository $produitRepository, FileHandler $fileHandler, private SecteurRepository $secteurRepository)
     {
         $this->userRepository = $userRepository;
         $this->session = $session;
@@ -63,8 +64,16 @@ class BoutiqueController extends AbstractController
      */
     public function index($token, AgentSecteurRepository $agentSecteurRepository): Response
     {
-        $agent = $this->userRepository->findAgentByToken($token);
+        $agent = $this->userRepository->findAgentByUsername($token);
         $agentSecteurs = $agentSecteurRepository->findValidByAgent($agent->getId());
+        if($_ENV['DEFAULT_SECTOR'] > 0){
+            $secteur = $this->secteurRepository->find($_ENV['DEFAULT_SECTOR']);
+            if($secteur){
+                $this->session->set('secteurId', $secteur->getId());
+                $this->session->set('typeSecteurId', $secteur->getType()->getId());
+                return $this->redirectToRoute('boutique_secteur', ['id' => $_ENV['DEFAULT_SECTOR'], 'token' => $token]);
+            }
+        }
         return $this->render('user_category/client/boutique/home.html.twig', [
             'agentSecteurs' => $agentSecteurs,
             'agent' => $agent,
@@ -78,7 +87,7 @@ class BoutiqueController extends AbstractController
     public function detailsAroma($token, ImplantationAroma $implantation, OrderServiceAroma $orderServiceAroma): Response
     {
 
-        $agent = $this->userRepository->findAgentByToken($token);
+        $agent = $this->userRepository->findAgentByUsername($token);
         $enableReassort = false;
         if($this->isGranted('ROLE_CLIENT')){
             $user = (object) $this->getUser();
@@ -100,7 +109,7 @@ class BoutiqueController extends AbstractController
         
         $this->session->set('secteurId', $secteur->getId());
         $this->session->set('typeSecteurId', $secteur->getType()->getId());
-        $agent = $this->userRepository->findAgentByToken($token);
+        $agent = $this->userRepository->findAgentByUsername($token);
         $page = $request->query->get('page', 1);
         $limit = 6;
         $criteria = [
@@ -158,7 +167,7 @@ class BoutiqueController extends AbstractController
     {
         $this->session->set('secteurId', $secteur->getId());
         $this->session->set('typeSecteurId', $secteur->getType()->getId());
-        $agent = $this->userRepository->findAgentByToken($token);
+        $agent = $this->userRepository->findAgentByUsername($token);
         $error = null;
         $page = $request->query->get('page', 1);
         $limit = 6;
@@ -216,7 +225,7 @@ class BoutiqueController extends AbstractController
     {
         $this->session->set('secteurId', $secteur->getId());
         $this->session->set('typeSecteurId', $secteur->getType()->getId());
-        $agent = $this->userRepository->findAgentByToken($token);
+        $agent = $this->userRepository->findAgentByUsername($token);
         $page = $request->query->get('page', 1);
         $limit = 6;
         $criteria = [
@@ -339,7 +348,7 @@ class BoutiqueController extends AbstractController
     {
         $this->session->set('secteurId', $secteur->getId());
         $this->session->set('typeSecteurId', $secteur->getType()->getId());
-        $agent = $this->userRepository->findAgentByToken($token);
+        $agent = $this->userRepository->findAgentByUsername($token);
         $error = null;
         $page = $request->query->get('page', 1);
         $limit = 6;
@@ -406,7 +415,7 @@ class BoutiqueController extends AbstractController
     {
         $user = (object)$this->getUser();
         $secteurId = $this->session->get('secteurId');
-        $agent = $this->userRepository->findAgentByToken($token);
+        $agent = $this->userRepository->findAgentByUsername($token);
         $error = null;
         $page = $request->query->get('page', 1);
         $limit = 6;
@@ -468,7 +477,7 @@ class BoutiqueController extends AbstractController
     public function details($token, Produit $product, ProduitFavoriRepository $produitFavoriRepository): Response
     {
 
-        $agent = $this->userRepository->findAgentByToken($token);
+        $agent = $this->userRepository->findAgentByUsername($token);
         $user = (object) $this->getUser();
         if($this->isGranted('ROLE_CLIENT')){
             $produitFavori = $produitFavoriRepository->findProduitFavori($product->getId(), $user->getId());
@@ -521,7 +530,7 @@ class BoutiqueController extends AbstractController
      */
     public function detailsdd($token, ProduitDD $product): Response
     {
-        $agent = $this->userRepository->findAgentByToken($token);
+        $agent = $this->userRepository->findAgentByUsername($token);
         return $this->render('user_category/client/dd/product/product_details.html.twig',[
             'product' => $product,
             'filesDirectory' => $this->getParameter('files_directory_relative'),
@@ -536,7 +545,7 @@ class BoutiqueController extends AbstractController
      */
     public function detailskbsecu($token, KitBaseSecu $kitbase, KitBaseElmtSecuRepository $kitBaseElmtSecuRepository): Response
     {
-        $agent = $this->userRepository->findAgentByToken($token);
+        $agent = $this->userRepository->findAgentByUsername($token);
         $kitbase->setElmts($kitBaseElmtSecuRepository->findValidByMere($kitbase->getId()));
         return $this->render('user_category/client/secu/kitbase/kitbase_details.html.twig',[
             'kitbase' => $kitbase,
@@ -551,7 +560,7 @@ class BoutiqueController extends AbstractController
      */
     public function detailssecu($token, ProduitSecu $product, ProduitSecuFavoriRepository $produitFavoriRepository): Response
     {
-        $agent = $this->userRepository->findAgentByToken($token);
+        $agent = $this->userRepository->findAgentByUsername($token);
         $user = (object) $this->getUser();
         if($this->isGranted('ROLE_CLIENT')){
             $produitFavori = $produitFavoriRepository->findProduitFavori($product->getId(), $user->getId());
@@ -578,7 +587,7 @@ class BoutiqueController extends AbstractController
     {
         $user = (object)$this->getUser();
         $secteurId = $this->session->get('secteurId');
-        $agent = $this->userRepository->findAgentByToken($token);
+        $agent = $this->userRepository->findAgentByUsername($token);
         $error = null;
         $page = $request->query->get('page', 1);
         $limit = 6;

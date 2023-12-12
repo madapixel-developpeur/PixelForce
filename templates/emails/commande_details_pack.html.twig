@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Commande</title>
+    <style>
+
+    </style>
+</head>
+<body>
+    <div>
+        {% if order.agent.hasPaidSubscription == false %}
+        Inscription et souscription d'un nouveau client <b>{{ prenomClient }}</b> réussi sur la plateforme.<br>
+        {% endif %}
+        {% if order.pack is not null %}
+           Le client {{ prenomClient }} a acheté le pack : <b>{{order.pack.name}}</b> ({{order.pack.description}}) pour un total de <b>{{order.pack.cost|number_format(2, ',', ' ')}} €</b>.<br>
+        {% endif %}
+        <br>
+        Montant total de la commande : {{order.amount|number_format(2, ',', ' ')}} €<br>
+        Green Life Ultimate.<br><br>
+    </div>
+    <div>
+        <img src="cid:logo"  style="width: 100px; height: auto;"/>
+    </div>
+
+</body>
+</html>

@@ -10,8 +10,8 @@
 {% endblock %}
 
 {% block stylesheets %}
-    {{ parent() }}
     {{ encore_entry_link_tags('vuexy_dashboard_ecommerce') }}
+    {{ parent() }}
 {% endblock %}
 
 {% block body %}
@@ -22,24 +22,22 @@
                 <div class="col-xl-4 col-md-6 col-12">
                     <div class="card card-congratulation-medal">
                         <div class="card-body">
-                            <h5>Félicitation 🎉 {{ app.user.prenom }}!</h5>
-                            <p class="card-text font-small-3">Vous avez gagné la médaille d'or</p>
+                            <h5>Félicitation {{ app.user.prenom }}</h5>
+                            <p class="card-text font-small-3"></p>
                             {# {% if (estSecurite or estEcommerce) %} #}
-                            <h3 class="mb-75 mt-2 pt-50">
-                            <a href="#">
-                                {{ chiffreAffaireTotal }} €
-                            </a>                           
+                            <h3 class="mb-75 mt-2 mb-2 pt-50 text-greenlife fs-1">
+                                {{ chiffreAffaireTotal }} €               
                             </h3>
                             {# {% endif %} #}
-                            {% if estSecurite %}
+                            {# {% if estSecurite %}
                             <a role="button" href="{{path('admin_ordersecu_list')}}" class="btn btn-primary">Voir les ventes</a>
                             {% elseif estEcommerce %}
                             <a role="button" href="{{path('agent_order_list')}}" class="btn btn-primary">Voir les ventes</a>
                             {% elseif estDemandeDevis %}
                             <a role="button" href="{{path('agent_demandedevis_list')}}" class="btn btn-primary">Voir les ventes</a>
-                            {% endif %}
+                            {% endif %} #}
                             
-                            <img src="{{asset('assets/vuexy/images/illustration/badge.svg')}}" class="congratulation-medal" alt="Medal Pic" />
+                            <img src="{{asset('assets/img/greenlife/trophee-min.png')}}" class="congratulation-medal" alt="Medal Pic" />
                         </div>
                     </div>
                 </div>
@@ -55,9 +53,11 @@
                             <div class="row">
                                 <div class="col-xl-3 col-sm-6 col-12 mb-2 mb-xl-0">
                                     <div class="d-flex flex-row">
-                                        <div class="avatar bg-light-primary me-2">
+                                        <div class="avatar bg-white me-2 border border-primary">
                                             <div class="avatar-content">
-                                                <a href="{% if estSecurite %}{{path('admin_ordersecu_list')}}{% elseif estEcommerce %}{{path('agent_order_list')}}{% elseif estDemandeDevis %}{{path('agent_demandedevis_list')}}{% else %}#{% endif %}"><i data-feather="trending-up" class="avatar-icon"></i></a>
+                                                <a class="text-greenlife" href="{% if estSecurite %}{{path('admin_ordersecu_list')}}{% elseif estEcommerce %}{{path('agent_order_list')}}{% elseif estDemandeDevis %}{{path('agent_demandedevis_list')}}{% else %}#{% endif %}">
+                                                    <i class="fa-solid fa-chart-line fa-xl"></i>
+                                                </a>
                                             </div>
                                         </div>
                                         <div class="my-auto">
@@ -70,33 +70,14 @@
                                         </div>
                                     </div>
                                 </div>
-                                {#
-                                <div class="col-xl-3 col-sm-6 col-12 mb-2 mb-xl-0">
-                                    <div class="d-flex flex-row">
-                                        <div class="avatar bg-light-info me-2">
-                                            <div class="avatar-content">
-                                                <i data-feather="user" class="avatar-icon"></i>
-                                            </div>
-                                        </div>
-                                        <div class="my-auto">
-                                            <h4 class="fw-bolder mb-0">
-                                                {# {{nbrClients | number_format(0, ',', ' ')}} 
-                                                {% if secteur.id == 9 or secteur.nom == "Pixelsior Buzz Boosters" %}
-                                                    10
-                                                {% else %}
-                                                    {{nbrClients | number_format(0, ',', ' ')}}
-                                                {% endif %}    
-                                            </h4>
-                                            <p class="card-text font-small-3 mb-0">Les clients</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                #}
+                                
                                 <div class="col-xl-3 col-sm-6 col-12 mb-2 mb-sm-0">
                                     <div class="d-flex flex-row">
-                                        <div class="avatar bg-light-danger me-2">
+                                        <div class="avatar bg-white me-2 border border-primary">
                                             <div class="avatar-content">
-                                                <a href="{{path('agent_contact_meeting_list')}}"><i data-feather="box" class="avatar-icon"></i></a>
+                                                <a class="text-greenlife" href="{{path('agent_contact_meeting_list')}}">
+                                                    <i class="fa-regular fa-calendar fa-xl"></i>
+                                                </a>
                                             </div>
                                         </div>
                                         <div class="my-auto">
@@ -108,9 +89,11 @@
                                 {# {% if (estSecurite or estEcommerce) %} #}
                                 <div class="col-xl-3 col-sm-6 col-12">
                                     <div class="d-flex flex-row">
-                                        <div class="avatar bg-light-success me-2">
+                                        <div class="avatar bg-white me-2 border border-primary">
                                             <div class="avatar-content">
-                                                <a href="{% if estSecurite %}{{path('admin_ordersecu_list')}}{% elseif estEcommerce %}{{path('agent_order_list')}}{% elseif estDemandeDevis %}{{path('agent_demandedevis_list')}}{% else %}#{% endif %}"><i data-feather="dollar-sign" class="avatar-icon"></i></a>
+                                                <a class="text-greenlife" href="{% if estSecurite %}{{path('admin_ordersecu_list')}}{% elseif estEcommerce %}{{path('agent_order_list')}}{% elseif estDemandeDevis %}{{path('agent_demandedevis_list')}}{% else %}#{% endif %}">
+                                                    <i class="fa-solid fa-money-bill fa-xl"></i>
+                                                </a>
                                             </div>
                                         </div>
                                         <div class="my-auto">
@@ -132,12 +115,18 @@
             <div class="row match-height">
                 <div class="col-lg-8 col-12">
                     <div class="card card-company-table">
-                        <div class="card-body p-0">
-                            {% if firstFormation == null %}
-                                <div class="alert alert-primary text-center m-5">
+                        {% if firstFormation == null %}
+                        <div class="card-body">
+                            <h5>Formations</h5>
+                            <div class="h-75 d-flex align-items-center justify-content-center">
+                                <div class="text-center w-100">
                                     Il n'y a plus de formation à terminer
                                 </div>
-                            {% else %}
+                            </div>
+                        </div>
+                        {% else %}
+                        <div class="card-body p-0">
+                            
                                 {% if firstFormation.categorieFormation.ordreCatFormation == constant('App\\Entity\\CategorieFormation::ORDRE_LISTE_DE_CONTACT') and nbrAllMyContacts < constant('App\\Entity\\CategorieFormation::CONDITION_LISTE_DE_CONTACT') %}
                                     <h3 class="fw-bolder text-center mt-2">{{ firstFormation.titre}} </h3>    
                                     <div class="alert alert-warning m-5 text-center h2">
@@ -162,9 +151,9 @@
                                         </div>
                                     </div>
                                 {% endif %}
-                            {% endif %}
                             
                         </div>
+                        {% endif %}
                     </div>
                 </div>
     
@@ -175,7 +164,7 @@
                             <a href="{{ path('calendar_index') }}" class="btn btn-primary d-flex justify-content-center align-items-center">Mon Agenda <i data-feather="calendar" class="ms-3"></i></a>
                         </div>
                         <div class="meetup-img-wrapper rounded-top text-center">
-                            <img src="{{asset('assets/vuexy/images/illustration/email.svg')}}" alt="Meeting Pic" height="170" />
+                            <img src="{{asset('assets/img/greenlife/agenda-min.png')}}" alt="Meeting Pic" height="170" />
                         </div>
                         <div class="card-body">
                             {% set day_of_week = { 
@@ -216,38 +205,7 @@
                             {% if upcomingEvents|length == 0 %}
                                 <div class="alert alert-secondary">Aucun évenement à venir.</div>
                             {% endif %}
-                            {# <div class="meetup-header d-flex align-items-center">
-                                <div class="meetup-day">
-                                    <h6 class="mb-0">MARDI</h6>
-                                    <h3 class="mb-0">24</h3>
-                                </div>
-                                <div class="my-auto">
-                                    <h4 class="card-title mb-25">Rencontre de développeurs</h4>
-                                    <p class="card-text mb-0">Rencontrez des développeurs de renommée mondiale</p>
-                                </div>
-                            </div>
-                            <div class="mt-0">
-                                <div class="avatar float-start bg-light-primary rounded me-1">
-                                    <div class="avatar-content">
-                                        <i data-feather="calendar" class="avatar-icon font-medium-3"></i>
-                                    </div>
-                                </div>
-                                <div class="more-info">
-                                    <h6 class="mb-0">Samedi, Mai 25, 2020</h6>
-                                    <small>10:AM to 6:PM</small>
-                                </div>
-                            </div>
-                            <div class="mt-2">
-                                <div class="avatar float-start bg-light-primary rounded me-1">
-                                    <div class="avatar-content">
-                                        <i data-feather="map-pin" class="avatar-icon font-medium-3"></i>
-                                    </div>
-                                </div>
-                                <div class="more-info">
-                                    <h6 class="mb-0">Parc central</h6>
-                                    <small>Manhattan, New York</small>
-                                </div>
-                            </div> #}
+                            
                         </div>
                     </div>
                 </div>
@@ -255,14 +213,13 @@
     
                 <!-- Browser States Card -->
                 <div class="col-lg-12 col-12">
-                    <h6 class="display-6" style="font-size : 20px;">Votre liste de contact :</h6>
                     <div class="card card-company-table pb-5" style="min-height: 300px;">
                         <div class="card-body p-0">
                             <div class="table-responsive">
                                 <table class="table">
                                     <thead>
-                                        <tr class="text-center">
-                                            <th scope="col" class="p-3"></th>
+                                        <tr>
+                                            <th scope="col" class="p-3">Liste des contacts</th>
                                             <th scope="col" class="p-3">Prénoms</th>
                                             <th scope="col" class="p-3">Email</th>
                                             <th scope="col" class="p-3">Téléphone</th>
@@ -271,11 +228,11 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {% if contacts|length < 1 %}
-                                            <div class="d-flex justify-content-center my-2">
+                                        {# {% if contacts|length < 1 %}
+                                            <div class="d-flex justify-content-end p-2 my-2">
                                                 <a href="{{ path('agent_contact_info_add') }}" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> Ajouter un contact</a>
                                             </div>
-                                        {% else %}
+                                        {% else %} #}
                                             {% for contact in contacts %}
                                             {% set information = contact.information %}
                                                 <tr class="text-center">
@@ -293,7 +250,7 @@
 
                                                 </tr>
                                             {% endfor %}
-                                        {% endif %}
+                                        {# {% endif %} #}
                                     </tbody>
                                 </table>
                             </div>
@@ -446,7 +403,7 @@
                                     <form method="get" id="form-annee">
                                         <input name="annee" type="hidden" value="{{annee}}" />
                                     </form>
-                                    <button type="button" class="btn btn-outline-primary btn-sm dropdown-toggle budget-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <button type="button" class="btn btn-outline-secondary btn-sm dropdown-toggle budget-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <span id="anneeSelected">{{annee}}</span>
                                     </button>
                                     <div class="dropdown-menu" id="anneeContainer">
@@ -497,6 +454,7 @@
             var revenueReportChart;
             var $textMutedColor = '#b9b9c3';
             var anneeSelected = $('#anneeSelected');
+            var colorGreenLife = "#a9d82e";
 
 
             $('#anneeContainer .annee-item').click(function (e){
@@ -522,7 +480,7 @@
                 },
                 distributed: true
                 },
-                colors: [window.colors.solid.primary, window.colors.solid.warning],
+                colors: [colorGreenLife, colorGreenLife],
                 series: [
                 {
                     name: 'Revenu',

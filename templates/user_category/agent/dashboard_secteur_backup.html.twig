@@ -26,22 +26,21 @@
                 <div class="col-xl-4 col-md-6 col-12">
                     <div class="card card-congratulation-medal">
                         <div class="card-body">
-                            <h5>Félicitation 🎉 {{ app.user.prenom }}!</h5>
-                            <p class="card-text font-small-3">Vous avez gagné la médaille d'or</p>
-                            {# {% if (estSecurite or estEcommerce) %} #}
-                            <h3 class="mb-75 mt-2 pt-50">
-                                <a href="#">{{statVente.ca | number_format(2, ',', ' ')}} €</a>
+                            <h5>Félicitation {{ app.user.prenom }}</h5>
+                            <p class="card-text font-small-3"></p>
+                            <h3 class="mb-75 mt-2 mb-2 pt-50 text-greenlife fs-1">
+                                {{statVente.ca | number_format(2, ',', ' ')}} €              
                             </h3>
                             {# {% endif %} #}
-                            {% if estSecurite %}
+                            {# {% if estSecurite %}
                             <a role="button" href="{{path('admin_ordersecu_list')}}" class="btn btn-primary">Voir les ventes</a>
                             {% elseif estEcommerce %}
                             <a role="button" href="{{path('admin_order_list')}}" class="btn btn-primary">Voir les ventes</a>
                             {% elseif estDemandeDevis %}
                             <a role="button" href="{{path('agent_demandedevis_list')}}" class="btn btn-primary">Voir les ventes</a>
-                            {% endif %}
+                            {% endif %} #}
                             
-                            <img src="{{asset('assets/vuexy/images/illustration/badge.svg')}}" class="congratulation-medal" alt="Medal Pic" />
+                            <img src="{{asset('assets/img/greenlife/trophee-min.png')}}" class="congratulation-medal" alt="Medal Pic" />
                         </div>
                     </div>
                 </div>
@@ -57,9 +56,11 @@
                             <div class="row">
                                 <div class="col-xl-3 col-sm-6 col-12 mb-2 mb-xl-0">
                                     <div class="d-flex flex-row">
-                                        <div class="avatar bg-light-primary me-2">
+                                        <div class="avatar bg-white me-2 border border-primary">
                                             <div class="avatar-content">
-                                                <a href="{% if estSecurite %}{{path('admin_ordersecu_list')}}{% elseif estEcommerce %}{{path('admin_order_list')}}{% elseif estDemandeDevis %}{{path('agent_demandedevis_list')}}{% else %}#{% endif %}"><i data-feather="trending-up" class="avatar-icon"></i></a>
+                                                <a class="text-greenlife" href="{% if estSecurite %}{{path('admin_ordersecu_list')}}{% elseif estEcommerce %}{{path('admin_order_list')}}{% elseif estDemandeDevis %}{{path('agent_demandedevis_list')}}{% else %}#{% endif %}">
+                                                    <i class="fa-solid fa-chart-line fa-xl"></i>
+                                                </a>
                                             </div>
                                         </div>
                                         <div class="my-auto">
@@ -71,7 +72,7 @@
                                 <div class="col-xl-3 col-sm-6 col-12 mb-2 mb-xl-0">
                                     <div class="d-flex flex-row">
                                         <div class="avatar bg-light-info me-2">
-                                            <div class="avatar-content">
+                                            <div class="avatar bg-white me-2 border border-primary text-greenlife">
                                                 <i data-feather="user" class="avatar-icon"></i>
                                             </div>
                                         </div>
@@ -84,7 +85,7 @@
                                 <div class="col-xl-3 col-sm-6 col-12 mb-2 mb-sm-0">
                                     <div class="d-flex flex-row">
                                         <div class="avatar bg-light-danger me-2">
-                                            <div class="avatar-content">
+                                            <div class="avatar bg-white me-2 border border-primary text-greenlifet">
                                                 <a href="{{path('agent_contact_meeting_list')}}"><i data-feather="box" class="avatar-icon"></i></a>
                                             </div>
                                         </div>
@@ -434,7 +435,7 @@
                                     <form method="get" id="form-annee">
                                         <input name="annee" type="hidden" value="{{annee}}" />
                                     </form>
-                                    <button type="button" class="btn btn-outline-primary btn-sm dropdown-toggle budget-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <button type="button" class="btn btn-outline-secondary btn-sm dropdown-toggle budget-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <span id="anneeSelected">{{annee}}</span>
                                     </button>
                                     <div class="dropdown-menu" id="anneeContainer">
@@ -485,6 +486,7 @@
             var revenueReportChart;
             var $textMutedColor = '#b9b9c3';
             var anneeSelected = $('#anneeSelected');
+            var colorGreenLife = "#a9d82e";
 
 
             $('#anneeContainer .annee-item').click(function (e){
@@ -510,7 +512,7 @@
                 },
                 distributed: true
                 },
-                colors: [window.colors.solid.primary, window.colors.solid.warning],
+                colors: [colorGreenLife, colorGreenLife],
                 series: [
                 {
                     name: 'Revenu',

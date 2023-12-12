@@ -26,5 +26,6 @@ yarn-error.log
 ###< symfony/webpack-encore-bundle ###
 
 /public/files/
+/public/exportOrder.csv
 
 ._**

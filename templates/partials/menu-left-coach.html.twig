@@ -1,10 +1,13 @@
 <li class=" navigation-header"><span data-i18n="User Interface">Espace coach</span><i data-feather="more-horizontal"></i>
 </li>
 
-<li class=" nav-item"><a class="d-flex align-items-center" href="{{ path('coach_dashboard_index') }}"><i data-feather="eye"></i><span class="menu-title text-truncate" data-i18n="Feather">Tableau de bord</span></a></li>
+<li class=" nav-item"><a class="d-flex align-items-center" href="{{ path('coach_dashboard_index') }}"><i class="fa-solid fa-house"></i><span class="menu-title text-truncate" data-i18n="Feather">Tableau de bord</span></a></li>
 <li class=" nav-item"><a class="d-flex align-items-center" href="{{ path('coach_formation_list') }}"><i data-feather="eye"></i><span class="menu-title text-truncate" data-i18n="Feather">Formations</span></a></li>
 <li class=" nav-item"><a class="d-flex align-items-center" href="{{ path('coach_agent_list') }}"><i data-feather="user"></i><span class="menu-title text-truncate" data-i18n="User">Mes Agents</span></a>
-<li class=" nav-item"><a class="d-flex align-items-center" href="{{ path('coach_zoom_list') }}"><i data-feather="video"></i><span class="menu-title text-truncate" data-i18n="User">Réunions</span></a>
+<li class=" nav-item"><a class="d-flex align-items-center" href="{{ path('coach_sales_list') }}"><i data-feather="briefcase"></i><span class="menu-title text-truncate" data-i18n="Email">Ventes</span></a></li>
+<li class=" nav-item"><a class="d-flex align-items-center" href="{{ path('coach_pack_orders_list') }}"><i data-feather="briefcase"></i><span class="menu-title text-truncate" data-i18n="Email">Achats pack</span></a></li>
+
+{# <li class=" nav-item"><a class="d-flex align-items-center" href="{{ path('coach_zoom_list') }}"><i data-feather="video"></i><span class="menu-title text-truncate" data-i18n="User">Réunions</span></a> #}
 {% if app.user.uniqueCoachSecteur.type.id == 1 %}
 <li class=" nav-item"><a class="d-flex align-items-center" href="#"><i data-feather="briefcase"></i><span class="menu-title text-truncate" data-i18n="Components">Catalogue</span></a>
 <ul class="menu-content">

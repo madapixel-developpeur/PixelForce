@@ -324,4 +324,28 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         }
         return null;
     }
+
+    public function findAgentByUsername(String $username): ?User
+    {
+        $result = $this->createQueryBuilder('u')
+            ->where('( u.active > 0 or u.active is NULL ) and lower(u.username) = lower(:username)')
+            ->setParameter('username', $username)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+        
+        if($result && in_array('ROLE_AGENT', $result->getRoles())){
+            return $result;
+        }
+        return null;
+    }
+
+    public function findAllAdmin(){
+        $result = $this->createQueryBuilder('u')
+        ->where("( u.active > 0 or u.active is NULL ) and u.roles like '%ROLE_ADMINISTRATEUR%'")
+        ->getQuery()
+        ->execute();
+        return $result;
+    }
+
 }

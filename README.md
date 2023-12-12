@@ -1,4 +1,4 @@
-# Pixel force
+# Greenlife Ultimate
 ## doctrine/doctrine-bundle
 ```DATABASE_URL="mysql://root:@127.0.0.1:3306/pixelForce?serverVersion=5.7&charset=utf8mb4"```
 #mail
@@ -55,3 +55,151 @@ To Persist data form from pdf :
 mysqldump -u root -p pixelfocedev_bdd > pixelforce.sql
 mysql -u root -p pixelforce < pixelforce.sql
 
+$agentToken = $request->get('agentToken');
+
+
+## Enrironment setup:
+```shell
+# For prod environment
+sudo git clone https://github.com/madapixel-developpeur/PixelForce.git PixelForce-MLM
+sudo chown -R $USER:$USER /var/www/PixelForce-MLM
+cd PixelForce-MLM
+git checkout MLM
+
+git fetch
+git pull
+
+sudo npm install
+npm run watch 
+composer install 
+```
+
+## For Database : 
+Update `.env` file
+```yml
+APP_ENV=dev
+```
+
+Then create database and make migrations
+> Create a `migrations` in the root of the project if not present
+
+```shell
+php bin/console doctrine:database:create
+php bin/console make:migration
+php bin/console doctrine:migrations:migrate
+```
+
+Re-Update `.env` file
+```yml
+APP_ENV=prod
+```
+
+## Template utilisé
+> https://drive.google.com/file/d/12EQ8drDtjMLWqIyFkOEcd2Lss6dmPO2p/view?usp=sharing
+
+## Mise en ligne
+```shell
+sudo nano /etc/apache2/sites-available/pixelforce-greenlifeultimate.conf
+```
+
+Et mettre le contenu suivant
+```xml
+<VirtualHost *:80>
+    ServerName greenlifeultimate.fr
+    ServerAlias greenlifeultimate.fr
+    ServerAdmin webmaster@localhost
+    DocumentRoot /var/www/PixelForce-MLM/public
+    <Directory /var/www/PixelForce-MLM/public>
+        AllowOverride All
+    </Directory>
+</VirtualHost>
+```
+
+```shell
+sudo a2ensite pixelforce-greenlifeultimate
+sudo systemctl reload apache2
+```
+
+Générer le certificat
+```shell
+certbot --apache
+```
+
+## PROD
+```shell
+sudo nano /etc/apache2/sites-available/PixelForce-MLM.conf
+```
+
+Et mettre le contenu suivant
+```xml
+<VirtualHost *:80>
+    ServerName traiteur-artisanal.fr
+    ServerAlias traiteur-artisanal.fr
+    ServerAdmin webmaster@localhost
+    DocumentRoot /var/www/PixelForce-MLM/public
+    <Directory /var/www/PixelForce-MLM/public>
+        AllowOverride All
+    </Directory>
+</VirtualHost>
+
+<VirtualHost *:80>
+   ServerName tobywallet.fr
+   ServerAlias tobywallet.fr
+   Redirect permanent / https://tobywallet.fr/
+</VirtualHost>
+<VirtualHost *:443>
+    ServerName tobywallet.fr
+    ServerAlias tobywallet.fr
+    ServerAdmin webmaster@localhost
+    SSLEngine on
+    SSLCertificateFile /etc/ssl-cert/tobywalletfr/tobywallet_fr_ssl_certificate.cer
+    SSLCertificateKeyFile /etc/ssl-cert/tobywalletfr/tobywallet_fr_private_key.key
+    SSLCACertificateFile /etc/ssl-cert/tobywalletfr/tobywallet_fr_ssl_certificate_INTERMEDIATE.cer
+    DocumentRoot /var/www/tunnel-toby-wallet/public
+    <Directory /var/www/tunnel-toby-wallet/public>
+        AllowOverride All
+    </Directory>
+</VirtualHost>
+```
+
+```shell
+sudo a2ensite PixelForce-MLM
+sudo systemctl reload apache2
+```
+
+# USER
+```sql
+INSERT INTO `user` (
+username,
+roles,
+password,
+nom,
+prenom,
+email,
+adresse,
+telephone,
+created_at,
+account_status,
+stripe_data,
+code_postal
+)
+VALUES
+(
+'Green-life-ultimate',
+'["ROLE_AGENT"]',
+'$2y$13$aVrvQrPS.61AkyKggLZLXupJlyKFeZ2NWFnWVWsarPDXpDaf2RwYe',
+'Kandjy',
+'Elina',
+'elinakandjypro@gmail.com',
+'L''étang neuf 03350 Theneuille',
+'0779542776',
+current_timestamp,
+'Actif',
+'a:0:{}',
+'03350'
+)
+
+-- CONFIG
+INSERT INTO `config` VALUES (1,'TVA',20,1,1),(2,'Frais livraison',4.79,2,1),(3,'Prix min frais de livraison gratuit',35,3,1);
+
+```

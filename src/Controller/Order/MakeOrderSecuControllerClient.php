@@ -79,7 +79,7 @@ class MakeOrderSecuControllerClient extends AbstractController
             $order = new OrderSecu();
             $order->setKitbase($kitbase);
 
-            $agent = $this->userRepository->findAgentByToken($token);
+            $agent = $this->userRepository->findAgentByUsername($token);
             $user = (object) $this->getUser();
             $secteurId = $this->session->get('secteurId');
             $sessionKey = BasketItem::getGroupKeyStatic($agent->getId(), $secteurId);
@@ -104,7 +104,7 @@ class MakeOrderSecuControllerClient extends AbstractController
     public function order($token, Request $request, FormFactoryInterface $formFactory, TypeAbonnementSecuRepository $typeAbonnementSecuRepository, SecteurRepository $secteurRepository): Response
     {
         $secteurId = $this->session->get('secteurId');
-        $agent = $this->userRepository->findAgentByToken($token);
+        $agent = $this->userRepository->findAgentByUsername($token);
         $user = (object) $this->getUser();
         $sessionKey = BasketItem::getGroupKeyStatic($agent->getId(), $secteurId);
         $order = $this->orderSecuService->getOrderSecu($sessionKey);
@@ -171,7 +171,7 @@ class MakeOrderSecuControllerClient extends AbstractController
     public function produitSecuAccomp($token, Request $request, PaginatorInterface $paginator, SearchService $searchService): Response
     {
         $secteurId = $this->session->get('secteurId');
-        $agent = $this->userRepository->findAgentByToken($token);
+        $agent = $this->userRepository->findAgentByUsername($token);
         $error = null;
         $page = $request->query->get('page', 1);
         $limit = 6;
@@ -227,7 +227,7 @@ class MakeOrderSecuControllerClient extends AbstractController
     public function addAcomp($token, ProduitSecuAccomp $product, Request $request): Response
     {
         $secteurId = $this->session->get('secteurId');
-        $agent = $this->userRepository->findAgentByToken($token);
+        $agent = $this->userRepository->findAgentByUsername($token);
         $user = (object) $this->getUser();
         $sessionKey = BasketItem::getGroupKeyStatic($agent->getId(), $secteurId);
         $order = $this->orderSecuService->getOrderSecu($sessionKey);
@@ -261,7 +261,7 @@ class MakeOrderSecuControllerClient extends AbstractController
 
         $error = null;
         $secteurId = $this->session->get('secteurId');
-        $agent = $this->userRepository->findAgentByToken($token);
+        $agent = $this->userRepository->findAgentByUsername($token);
         $user = (object) $this->getUser();
         $sessionKey = BasketItem::getGroupKeyStatic($agent->getId(), $secteurId);
         $order = $this->orderSecuService->getOrderSecu($sessionKey);
@@ -288,7 +288,7 @@ class MakeOrderSecuControllerClient extends AbstractController
     public function updateAcomp($token, ProduitSecuAccomp $product, Request $request)
     {
         $secteurId = $this->session->get('secteurId');
-        $agent = $this->userRepository->findAgentByToken($token);
+        $agent = $this->userRepository->findAgentByUsername($token);
         $user = (object) $this->getUser();
         $sessionKey = BasketItem::getGroupKeyStatic($agent->getId(), $secteurId);
         $order = $this->orderSecuService->getOrderSecu($sessionKey);
@@ -320,7 +320,7 @@ class MakeOrderSecuControllerClient extends AbstractController
     public function removeAcomp($token, int $id, Request $request): Response
     {
         $secteurId = $this->session->get('secteurId');
-        $agent = $this->userRepository->findAgentByToken($token);
+        $agent = $this->userRepository->findAgentByUsername($token);
         $user = (object) $this->getUser();
         $sessionKey = BasketItem::getGroupKeyStatic($agent->getId(), $secteurId);
         $order = $this->orderSecuService->getOrderSecu($sessionKey);
@@ -349,7 +349,7 @@ class MakeOrderSecuControllerClient extends AbstractController
     public function installation($token, Request $request, FormFactoryInterface $formFactory, TypeInstallationSecuRepository $typeInstallationSecuRepository, TvaSecuRepository $tvaSecuRepository): Response
     {
         $secteurId = $this->session->get('secteurId');
-        $agent = $this->userRepository->findAgentByToken($token);
+        $agent = $this->userRepository->findAgentByUsername($token);
         $user = (object) $this->getUser();
         $sessionKey = BasketItem::getGroupKeyStatic($agent->getId(), $secteurId);
         $order = $this->orderSecuService->getOrderSecu($sessionKey);
@@ -454,7 +454,7 @@ class MakeOrderSecuControllerClient extends AbstractController
         $secteurId = $this->session->get('secteurId');
         $secteur = $secteurRepository->find($secteurId);
         $contratSecu = $secteur->getContratSecu();
-        $agent = $this->userRepository->findAgentByToken($token);
+        $agent = $this->userRepository->findAgentByUsername($token);
 
         $sessionKey = BasketItem::getGroupKeyStatic($agent->getId(), $secteurId);
         $order = $this->orderSecuService->getOrderSecu($sessionKey);
@@ -483,7 +483,7 @@ class MakeOrderSecuControllerClient extends AbstractController
     public function payment($token, OrderSecu $order, Request $request, FormFactoryInterface $formFactory, StripeService $stripeService): Response
     {
         $secteurId = $this->session->get('secteurId');
-        $agent = $this->userRepository->findAgentByToken($token);
+        $agent = $this->userRepository->findAgentByUsername($token);
         $user = (object) $this->getUser();
         $sessionKey = BasketItem::getGroupKeyStatic($agent->getId(), $secteurId);
         
@@ -530,7 +530,7 @@ class MakeOrderSecuControllerClient extends AbstractController
     {
         $filesDirectory = $this->getParameter('files_directory_relative');
         $secteurId = $this->session->get('secteurId');
-        $agent = $this->userRepository->findAgentByToken($token);
+        $agent = $this->userRepository->findAgentByUsername($token);
         $user = (object) $this->getUser();
         $sessionKey = BasketItem::getGroupKeyStatic($agent->getId(), $secteurId);
         $order = $this->orderSecuService->getOrderSecu($sessionKey);
@@ -585,7 +585,7 @@ class MakeOrderSecuControllerClient extends AbstractController
     public function generateOrder($token, SecteurRepository $secteurRepository): Response
     {
         $secteurId = $this->session->get('secteurId');
-        $agent = $this->userRepository->findAgentByToken($token);
+        $agent = $this->userRepository->findAgentByUsername($token);
         $user = (object) $this->getUser();
         $sessionKey = BasketItem::getGroupKeyStatic($agent->getId(), $secteurId);
         $order = $this->orderSecuService->getOrderSecu($sessionKey);
@@ -641,7 +641,7 @@ class MakeOrderSecuControllerClient extends AbstractController
     {
         $filesDirectory = $this->getParameter('files_directory_relative');
         $secteurId = $this->session->get('secteurId');
-        $agent = $this->userRepository->findAgentByToken($token);
+        $agent = $this->userRepository->findAgentByUsername($token);
         $user = (object) $this->getUser();
         $sessionKey = BasketItem::getGroupKeyStatic($agent->getId(), $secteurId);
         $order = $this->orderSecuService->getOrderSecu($sessionKey);

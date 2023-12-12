@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facture Green Life Ultimate</title>
+    <style>
+            {# @font-face{
+                font-family: "Helvetica Neue LT 35 Thin";
+                src : url("{{ absolute_url(asset('assets/fonts/HelveticaNeue/Helvetica Neue LT 35 Thin.ttf')) }}");
+            }
+            @font-face{
+                font-family: "Helvetica Neue LT 45 Light";
+                src : url("{{ absolute_url(asset('/assets/fonts/HelveticaNeue/Helvetica Neue LT 45 Light.ttf')) }}");
+            }
+            @font-face{
+                font-family: "Helvetica Neue LT 65 Medium";
+                src : url("{{ absolute_url(asset('/assets/fonts/HelveticaNeue/Helvetica Neue LT 65 Medium.ttf')) }}");
+            }
+            @font-face{
+                font-family: "Helvetica Neue LT 75 Bold";
+                src : url("{{ absolute_url(asset('/assets/fonts/HelveticaNeue/Helvetica Neue LT 75 Bold.ttf')) }}");
+            }
+            @font-face{
+                font-family: "Helvetica Neue LT 85 Heavy";
+                src : url("{{ absolute_url(asset('/assets/fonts/HelveticaNeue/Helvetica Neue LT 85 Heavy.ttf')) }}");
+            }
+            @font-face{
+                font-family: "Helvetica Neue LT 95 Black";
+                src : url("{{ absolute_url(asset('/assets/fonts/HelveticaNeue/Helvetica Neue LT 95 Black.ttf')) }}");
+            } #}
+            
+            :root {
+                --color-white : #f4f6f4;
+                --color-green : #577364;
+            }
+
+            * {
+                box-sizing: border-box;
+                scroll-behavior: smooth;
+                transition: all 250ms ease;
+                padding : 0px;
+                margin : 0px;
+            }
+            body {
+                font-family: 'Helvetica Neue LT 45 Light', sans-serif !important;
+                font-size : 12px;
+            }
+            page {
+                background: white;
+                display: block;
+                margin: 0 auto;
+                padding : 50px 30px;
+                position : relative;
+            }
+            page[size="A4"] {  
+                width: 21cm;
+                height: 29.7cm; 
+            }
+            page[size="A4"][layout="landscape"] {
+                width: 29.7cm;
+                height: 21cm;  
+            }
+            @media print {
+                body, page {
+                    margin: 0;
+                    box-shadow: 0;
+                }
+            }
+
+            h1 {
+                font-family: 'Helvetica Neue LT 95 Black', sans-serif !important;
+                font-size : 22px;
+                font-weight : normal;
+            }
+            h2 {
+                font-family: 'Helvetica Neue LT 75 Bold', sans-serif !important;
+                font-size : 20px;
+                font-weight : normal;
+            }
+            .logo{
+                width : 200px;
+            }
+            .row{
+                clear : both;
+            }
+            .grid{
+                /*display : grid;
+                grid-template-columns : 50% auto;*/
+            }
+            .grid-panel {
+                float: left;
+                width: 47%;
+                padding: 10px;
+            }
+            .my-20{
+                margin-bottom : 20px;
+                margin-top : 20px;
+            }
+            .table{
+                width : 100%;
+                text-align : left;
+            }
+            .table td{
+                border-bottom : 2px solid #EEE;
+            }
+            .table.table--md td, .table.table--md th{
+                padding : 5px 0px;
+            }
+            .table.table--lg td, .table.table--lg th{
+                padding : 5px 0px;
+            }
+            .table .thead--dark th{
+                background-color: black;
+                color : #fff;
+            }
+            .table.table--borderless, .table.table--borderless td, .table.table--borderless th, .table.table--borderless tr{
+                border : none;
+            }
+            .table .row-bordered-black td, .table .row-bordered-black th{
+                border-bottom : 2px solid #000;
+                border-top : 2px solid #000;
+
+            }
+            footer{
+                clear : both;
+                border-top : 2px solid #eee;
+                text-align : center;
+                padding : 15px 0px;
+                font-size : 0.8em;
+                margin-top : 200px;
+                width : 100%;
+            }
+            .text-right{
+                text-align: right;
+            }
+    </style>
+</head>
+<body>
+
+{% set now = date() %}
+    <page> 
+        <div class="row">
+            <div class="grid">
+                <div class="grid-panel">
+                    <img class="logo" src="{{ absolute_url(asset('assets/img/logo/greenlife/greenlife.png')) }}" alt="Logo Aroma forest">
+                </div>
+                <div class="grid-panel">
+                        <h2>Green Life Ultimate</h2>
+                        <p>84 rue Bobillot 75013 Paris</p>
+                </div> 
+            </div>
+        </div>
+        <div class="row">
+            <h1 class="my-20">FACTURE : </h1>
+            <div class="grid">
+                <div class="grid-panel">
+                    <p>{{order.agent.nom}} {{order.agent.prenom}}</p>
+                    <p>{{order.agent.email}}</p>
+                    <p>{{order.agent.telephone}}</p>
+                </div>
+                <div class="grid-panel">
+                    <table class="table table--borderless">
+                         <tr>
+                            <td>Numéro de la Facture :</td>
+                            <td>{{order.id}}</td>
+                        </tr> 
+                        <tr>
+                            <td>Date de la facture :</td>
+                            <td>{{now|date('d-m-Y à H:i:s')}}</td>
+                        </tr>
+                        <tr>
+                            <td>Méthode de paiement :</td>
+                            <td>Carte de crédit</td>
+                        </tr>
+                    </table>
+                </div> 
+            </div>
+        </div>
+        <div class="row">
+            <table class="table table--lg my-20">
+                <thead class="thead--dark">
+                    <tr>
+                        <th>Produit</th>
+                        <th>Prix</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if order.pack is not null %}
+                    <tr>
+                        <td>
+                            <p>{{order.pack.name}}</p>
+                            
+
+                        </td>
+                        <td class="text-right">{{order.pack.cost|number_format(2, ',', ' ')}} €</td>
+                    </tr>
+                    {% endif %}
+                    {% if order.agent.hasPaidSubscription == false %}
+                     <tr>
+                        <td>
+                            <p>Souscription</p>
+                        </td>
+                        <td class="text-right">{{subscriptionAmount|number_format(2, ',', ' ')}} €</td>
+                    </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+            <div class="grid">
+                <div class="grid-panel">
+                   
+                </div>
+                <div class="grid-panel">
+                    <table class="table table--md table--borderless">
+                        <tr>
+                            <th>{% trans %}Sous-total{% endtrans %}</th>
+                            <td class="text-right">{{order.montantSansFraisLivraison|number_format(2, ',', ' ')}} €</td>
+                        </tr>
+                        <tr>
+                            <th>Prix net (sans TVA)</th>
+                            <td class="text-right">{{order.amountHt|number_format(2, ',', ' ')}} €</td>
+                        </tr>
+                        <tr>
+                            <th>TVA ({{order.tva | number_format(0, ',', ' ')}} %)</th>
+                            <td class="text-right">{{order.tvaAmount|number_format(2, ',', ' ')}} €</td>
+                        </tr>
+                        <tr>
+                            <th>{% trans %}Frais de livraison{% endtrans %}</th>
+                            <td class="text-right">{{order.fraisLivraison|number_format(2, ',', ' ')}} €</td>
+                        </tr>
+                        <tr class="row-bordered-black">
+                            <th>Prix total (TVA incluse)</th>
+                            <td class="text-right">{{order.amount|number_format(2, ',', ' ')}} €</td>
+                        </tr>
+                    </table>
+                </div> 
+            </div>
+        </div>
+        <footer>
+            <p>Green Life Ultimate – 84 rue Bobillot 75013 Paris </p>
+            {# <br>
+            <p>NUMÉRO SIREN 902 175 173 - DATE D'IMMATRICULATION AU RCS 10/08/2021 -
+            Société par actions simplifiée au capital de 1000 euros – TVA INTRACOMMUNAUTAIRE FR06902175173 – SIRET 902 175 173 000 19</p> #}
+        </footer>
+    </page>
+
+</body>
+</html>

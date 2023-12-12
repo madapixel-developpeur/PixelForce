@@ -90,6 +90,7 @@ class InscriptionAgentType extends AbstractType
                     new NotNull([],'champ obligatoire'),
                 ]
             ])
+            
 
             ->add('password', RepeatedType::class, [
                 'label' => false,
@@ -124,9 +125,7 @@ class InscriptionAgentType extends AbstractType
                 'attr' => [
                     'placeholder' => 'Numéro de rue'
                 ],
-                'constraints' => [
-                    new NotNull([],'champ obligatoire')
-                ]
+                'required'=>false
             ])
             ->add('ville', TextType::class, [
                 'label' => false,
@@ -137,6 +136,18 @@ class InscriptionAgentType extends AbstractType
                     new NotNull([],'champ obligatoire')
                 ]
             ])
+            ->add('parrain', TextType::class, [
+                'label' => false,
+                'attr' => [
+                    'placeholder' => "Nom d’utilisateur de la personne qui vous a recommandé le service"
+                ],
+                'mapped'=>false,
+                'required'=>false,
+                'constraints' => [
+                    new NotNull([],'champ obligatoire'),
+                ]
+            ])
+            
             ->addEventSubscriber(new SecteurChoiceListListener())
         ;
     }

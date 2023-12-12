@@ -12,7 +12,7 @@
     {% set stripe_defaultButton =  "S'abonner (" ~ planPrice ~ " €)" %}
 
     <div class="container-page">
-        <h1 class="text-center mt-3">Bienvenue sur PixelForce</h1>    
+        <h1 class="text-center mt-3">Bienvenue dans GreenLife Ultimate</h1>    
 
         {% if app.session.get('enabledContent') == true %}
             {% if app.request.get('stripe_checkout') == 'successfully' %}
@@ -21,7 +21,7 @@
                 </div>
             {% endif %}
             
-            <h4 class="text-center mb-3" style="padding: 0 100px">Voici tous les secteurs disponibles sur la plateforme PixelForce. Vous pouvez accéder au secteur qui vous est attribué.</h4>
+            <h4 class="text-center mb-3" style="padding: 0 100px">Votre Hub pour une expérience personnalisée : explorez les secteurs disponibles et accédez à celui qui correspond à vos préférences.</h4>
             <div class="block-list-card-secteur mt-5">
                 <div class="row d-flex justify-content-center">
                     {% for secteur in allSecteurs %}
@@ -30,77 +30,77 @@
                         
                             <div style="min-height: 140px;" class="card-secteur bg-{% if agentSecteur and agentSecteur.statut == true %}primary{% elseif agentSecteur and agentSecteur.statut == false %}warning{% else %}secondary{% endif %} p-3">
 
-                                <h2 class="text-white text-center">{{ secteur.nom }}</h2>
-                                <div class="secteur-info d-none text-center">
-                                    <h5 class="text-white secteur-description">{{ secteur.description }}</h5>
-                                </div>
-                                
+                                    <h2 class="text-white text-center">{{ secteur.nom }}</h2>
+                                    <div class="secteur-info d-none text-center">
+                                        <h5 class="text-white secteur-description">{{ secteur.description }}</h5>
+                                    </div>
+                                    
 
-                                <div class="button-block text-center mt-5">
-                                    {% if agentSecteur is null %}
-                                        <!-- <a href="" class="btn btn-primary" disabled><i class="fa-solid fa-location-arrow"></i> Découvrir</a> -->
-                                    {% elseif agentSecteur and agentSecteur.statut == true %}
-                                        <a href="{{ path('agent_generate_sessionSecteur_before_redirect_to_route_dahsboard', {id: secteur.id}) }}" class="btn btn-success"><i class="fa-solid fa-location-arrow"></i> Accéder </a>
-                                    {% elseif agentSecteur and agentSecteur.statut == false %}
-                                        <a class="btn btn-success"><i class="fa-solid fa-spinner"></i> En attente de validation</a>
-                                    {% endif %}
+                                    <div class="button-block text-center mt-5">
+                                        {% if agentSecteur is null %}
+                                            <!-- <a href="" class="btn btn-primary" disabled><i class="fa-solid fa-location-arrow"></i> Découvrir</a> -->
+                                        {% elseif agentSecteur and agentSecteur.statut == true %}
+                                            <a href="{{ path('agent_generate_sessionSecteur_before_redirect_to_route_dahsboard', {id: secteur.id}) }}" class="btn btn-success"><i class="fa-solid fa-location-arrow"></i> Accéder </a>
+                                        {% elseif agentSecteur and agentSecteur.statut == false %}
+                                            <a class="btn btn-success"><i class="fa-solid fa-spinner"></i> En attente de validation</a>
+                                        {% endif %}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    {% endfor %}
-                </div>
-            </div>
-        {% else %}
-            <div class="row mt-3">
-                <div class="col-12 col-md-6 mx-auto">
-                    <div class="alert alert-warning text-center">
-                        {% if accountStatus == USER_ACCOUNT_STATUS['UNPAID']  %}
-                            {% set agent_accountStatus = USER_ACCOUNT_STATUS['UNPAID'] %}
-                            <h5 class="text-warning"> Veuillez procéder au paiement pour activer votre compte </h5>
-                        {% elseif expiredAccount %}
-                            {% set agent_accountStatus = USER_ACCOUNT_STATUS['EXPIRED'] %}
-                            Votre essaie de 14 jours sur PixelForce est expirée, veuillez procéder au paiement pour reactiver votre compte
-                            <span class="mt-2">...Ou contacter le responsable pour plus d'informations</span>
-                        {% endif %}
-
-                         <div class="alert alert-secondary mt-3">
-                            {% set agent = app.user %}
-                            {% set agentSecteurs = repoAgentSecteur.findBy({'agent' : agent}) %}
-                            <i class="fa-solid fa-circle-info me-1"></i> 
-                            Vous avez choisi le(s) secteur(s) suivant(s) : <span class="fw-bolder"> {{ agent.allSecteursOfUser(agentSecteurs) }}</span>. 
-                            Vous pouvez vous abonner pour seulement  <span class="fw-bolder">{{ planPrice }} euro/mois</span>.
-                        </div>
+                        {% endfor %}
                     </div>
-
-                    <!-- Stripe form -->
-                    <form  method="post" id="subscription-payment-form">
-                        <div id="card-errors" role="alert"></div>
-                        <div id="card-elements"></div>
-        
-                        <div class="w-100 text-center">
-                            <button id="card-button-submit" class="btn btn-primary mt-3"><i class="fa-solid fa-cart-shopping me-1"></i> <span class="label-button">{{ stripe_defaultButton }}</span> <span class="loader-submit"></span></button>
-                        </div>
-                    </form>
                 </div>
-            </div>
+            {% else %}
+                <div class="row mt-3">
+                    <div class="col-12 col-md-6 mx-auto">
+                        <div class="alert alert-warning text-center">
+                            {% if accountStatus == USER_ACCOUNT_STATUS['UNPAID']  %}
+                                {% set agent_accountStatus = USER_ACCOUNT_STATUS['UNPAID'] %}
+                                <h5 class="text-warning"> Veuillez procéder au paiement pour activer votre compte </h5>
+                            {% elseif expiredAccount %}
+                                {% set agent_accountStatus = USER_ACCOUNT_STATUS['EXPIRED'] %}
+                                Votre essaie de 14 jours sur Green Life Ultimate est expirée, veuillez procéder au paiement pour reactiver votre compte
+                                <span class="mt-2">...Ou contacter le responsable pour plus d'informations</span>
+                            {% endif %}
 
-          
-            <input type="hidden" id="agent_accountStatus" value="{{ agent_accountStatus }}">
-            <input type="hidden" id="sessionAgentId" value="{{ agent.id }}">
-            <input type="hidden" id="planSubscriptionId" value="{{ plan.id }}">
-            <input type="hidden" id="stripe_stripePriceId" value="{{ plan.stripePriceId }}">
-            <input type="hidden" id="stripe_stripePriceName" value="{{ plan.stripePriceName }}">
-            <input type="hidden" id="stripe_stripeToken" value="{{ stripe_publishable_key }}">
-            <input type="hidden" id="stripe_clientSecret" value="{{ stripeIntentSecret }}">
-            <input type="hidden" id="stripe_url_stripeSubscription" value="{{ path('agent_stripe_subscription_plan_account_execute') }}">
-            <input type="hidden" id="stripe_urlSuccessTransaction" value="{{ path('agent_home') }}">
-		    <input type="hidden" id="stripe_urlErrorTransaction" value="{{ path('agent_home') }}">
-            <input type="hidden" id="stripe_defaultButton" value="{{ stripe_defaultButton }}">
+                            <div class="alert alert-secondary mt-3">
+                                {% set agent = app.user %}
+                                {% set agentSecteurs = repoAgentSecteur.findBy({'agent' : agent}) %}
+                                <i class="fa-solid fa-circle-info me-1"></i> 
+                                Vous avez choisi le(s) secteur(s) suivant(s) : <span class="fw-bolder"> {{ agent.allSecteursOfUser(agentSecteurs) }}</span>. 
+                                Vous pouvez vous abonner pour seulement  <span class="fw-bolder">{{ planPrice }} euro/mois</span>.
+                            </div>
+                        </div>
+
+                        <!-- Stripe form -->
+                        <form  method="post" id="subscription-payment-form">
+                            <div id="card-errors" role="alert"></div>
+                            <div id="card-elements"></div>
             
-            <input type="hidden" id="stripe_nameHolder" value="{{ agent.prenom }}">
-            <input type="hidden" id="stripe_emailHolder" value="{{ agent.email }}">
-            <input type="hidden" id="stripe_PostalCodeHolder" value="{{ agent.codePostal }}">     
-        {% endif %}
+                            <div class="w-100 text-center">
+                                <button id="card-button-submit" class="btn btn-primary mt-3"><i class="fa-solid fa-cart-shopping me-1"></i> <span class="label-button">{{ stripe_defaultButton }}</span> <span class="loader-submit"></span></button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            
+                <input type="hidden" id="agent_accountStatus" value="{{ agent_accountStatus }}">
+                <input type="hidden" id="sessionAgentId" value="{{ agent.id }}">
+                <input type="hidden" id="planSubscriptionId" value="{{ plan.id }}">
+                <input type="hidden" id="stripe_stripePriceId" value="{{ plan.stripePriceId }}">
+                <input type="hidden" id="stripe_stripePriceName" value="{{ plan.stripePriceName }}">
+                <input type="hidden" id="stripe_stripeToken" value="{{ stripe_publishable_key }}">
+                <input type="hidden" id="stripe_clientSecret" value="{{ stripeIntentSecret }}">
+                <input type="hidden" id="stripe_url_stripeSubscription" value="{{ path('agent_stripe_subscription_plan_account_execute') }}">
+                <input type="hidden" id="stripe_urlSuccessTransaction" value="{{ path('agent_home') }}">
+                <input type="hidden" id="stripe_urlErrorTransaction" value="{{ path('agent_home') }}">
+                <input type="hidden" id="stripe_defaultButton" value="{{ stripe_defaultButton }}">
+                
+                <input type="hidden" id="stripe_nameHolder" value="{{ agent.prenom }}">
+                <input type="hidden" id="stripe_emailHolder" value="{{ agent.email }}">
+                <input type="hidden" id="stripe_PostalCodeHolder" value="{{ agent.codePostal }}">     
+            {% endif %}
 
     </div>
 {% endblock %}

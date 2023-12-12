@@ -1,0 +1,224 @@
+{% extends 'base_anonymous.html.twig' %}
+
+{% block title %}
+	Pack | Paiement
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+<!-- BEGIN: Content-->
+    <div class="app-content content client ecommerce-application">
+        <div class="content-overlay"></div>
+        <div class="header-navbar-shadow"></div>
+        <div class="content-wrapper container-xxl p-0">
+            <div class="content-header row">
+                <div class="content-header-left col-md-9 col-12 mb-2">
+                    <div class="row breadcrumbs-top">
+                        <div class="col-12">
+                            <h4 class="content-header-title float-start mb-0">Achat {{pack is null ? 'Abonnement' : pack.name ~ ' + Abonnement'}} à GreenLife <br> <small>{{totalAmount|format_currency('EUR')}}</small></h4>
+                            
+                            <div class="breadcrumb-wrapper pt-2">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="{{path('agent_home')}}">Accueil</a>
+                                    </li>
+                                    <li class="breadcrumb-item"><a href="{{path('client_pack_index')}}">Liste des packs</a>
+                                    </li>
+                                    <li class="breadcrumb-item active"><a href="#">Paiement</a>
+                                    </li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="content-body">
+                <div class="bs-stepper checkout-tab-steps">
+                    <!-- Wizard starts -->
+                    <div class="bs-stepper-header">                        <div class="step active" data-target="#step-payment" role="tab" id="step-payment-trigger">
+                            <button type="button" class="step-trigger">
+                                <span class="bs-stepper-box">
+                                    <i data-feather="credit-card" class="font-medium-3"></i>
+                                </span>
+                                <span class="bs-stepper-label">
+                                    <span class="bs-stepper-title">Paiement</span>
+                                    <span class="bs-stepper-subtitle">Fournir les informations nécessaires</span>
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Wizard ends -->
+                    <div class="bs-stepper-content">
+                        <div class="block block--rounded">
+                            <h1 class="block__text block__text--center mt-2" >Montant total : {{ (pack is null ? 0 : pack.cost) | format_currency('EUR')}} + {{subscription.amount | format_currency('EUR')}}/{{subscription.interval}}</h1>
+                            <p class="text-center">
+                                Finaliser votre abonnement en fournissant les informations nécessaires ci-dessous
+                            </p>
+                                
+                                {{ form_start(form, {'attr': {'class': 'my-form', 'id': 'pack_pay_form'}}) }}
+                                    {% if error %}
+                                    <div class="alert alert-danger" role="alert">
+                                        <div class="alert-body">
+                                            {{error}}
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                    
+                                    <div class="my-form-widget">
+                                        {{form_label(form.fullname)}}
+                                        {{form_widget(form.fullname)}}
+                                        {{form_errors(form.fullname)}}
+                                    </div>
+                                    <div class="my-form-widget">
+                                        <label for="pack_pay_form_carte" class="form-label">Numéro de carte</label>
+                                        <div id="pack_pay_form_carte" class="form-control">
+                                        </div>
+                                        <div id="pack_pay_form_carte_error" class="invalid-feedback d-block"></div> 
+                                    </div>
+                                    <div class="my-form-widget">
+                                        <label for="pack_pay_form_dateExpiration" class="form-label">Date d'expiration</label>
+                                        <div id="pack_pay_form_dateExpiration" class="form-control">
+                                        </div>
+                                        <div id="pack_pay_form_dateExpiration_error" class="invalid-feedback d-block"></div> 
+                                    </div>
+
+                                    <div class="my-form-widget">
+                                        <label for="pack_pay_form_codeSecurite" class="form-label">Code de sécurité (il s’agit des 3 derniers chiffres au dos de la carte)</label>
+                                        <div id="pack_pay_form_codeSecurite" class="form-control">
+                                        </div>
+                                        <div id="pack_pay_form_codeSecurite_error" class="invalid-feedback d-block"></div> 
+                                    </div>
+
+                                    <div class="my-form-widget">
+                                        <p>
+                                            <small>
+                                                GreenLife utilise des protocoles de sécurité pour garantir la confidentialité de paiement.
+                                            </small>
+                                            </br>
+                                            {% if fraisLivraison != 0 %} <b>+ {{fraisLivraison|format_currency('EUR')}} de Frais de livraison </b>{% endif %}
+                                        </p>
+                                    </div>
+                                    {{form_widget(form.token)}}
+                                    <div class="btn-wrap">
+                                        <button class="btn btn-primary" type="submit"><i data-feather="send"></i>Payer {{(totalAmount) | format_currency('EUR')}}</button>
+                                    </div>
+                                {{ form_end(form) }}
+                        </div>
+                    </div>
+                </div>
+                
+                    
+                    <!-- Checkout Place order Ends -->
+                </div>
+                    
+            </div>
+        </div>
+    </div>
+    <!-- END: Content-->
+{% endblock %}
+{% block javascripts %}
+{{ parent() }}
+<script src="https://js.stripe.com/v3/"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var clientSecret = '{{ stripeIntentSecret }}';
+        var form = document.getElementById('pack_pay_form');
+        var stripe = Stripe('{{ stripe_public_key }}');
+        var elements = stripe.elements();
+
+        var cardNumberElement = document.getElementById('pack_pay_form_carte');
+        var cardNumberErrorElement = document.getElementById('pack_pay_form_carte_error');
+        var cardNumber = elements.create('cardNumber');
+        
+        cardNumber.mount('#pack_pay_form_carte');
+        cardNumber.addEventListener('change', function(event) {
+            if (event.error) {
+            cardNumberErrorElement.textContent = event.error.message;
+            cardNumberElement.classList.add('is-invalid');
+            } else {
+            cardNumberErrorElement.textContent = '';
+            cardNumberElement.classList.remove('is-invalid');
+            }
+        });
+
+        var cardExpiryElement = document.getElementById('pack_pay_form_dateExpiration');
+        var cardExpiryErrorElement = document.getElementById('pack_pay_form_dateExpiration_error');
+        var cardExpiry = elements.create('cardExpiry');
+        
+        cardExpiry.mount('#pack_pay_form_dateExpiration');
+        cardExpiry.addEventListener('change', function(event) {
+            if (event.error) {
+            cardExpiryErrorElement.textContent = event.error.message;
+            cardExpiryElement.classList.add('is-invalid');
+            } else {
+            cardExpiryErrorElement.textContent = '';
+            cardExpiryElement.classList.remove('is-invalid');
+            }
+        });
+
+
+        var cardCvcElement = document.getElementById('pack_pay_form_codeSecurite');
+        var cardCvcErrorElement = document.getElementById('pack_pay_form_codeSecurite_error');
+        var cardCvc = elements.create('cardCvc');
+        
+        cardCvc.mount('#pack_pay_form_codeSecurite');
+        cardCvc.addEventListener('change', function(event) {
+            if (event.error) {
+            cardCvcErrorElement.textContent = event.error.message;
+            cardCvcElement.classList.add('is-invalid');
+            } else {
+            cardCvcErrorElement.textContent = '';
+            cardCvcElement.classList.remove('is-invalid');
+            }
+        });
+        
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+            var options = {
+               
+            };
+            /*stripe.createToken(cardNumber, options).then(function(result) {
+                if (result.error) {
+                    alert(result.error.message);
+                } else {
+                    document.getElementById('{{ form.children.token.vars.id }}').setAttribute('value', result.token.id);
+                    form.submit();
+                }
+            });*/
+            stripe.handleCardPayment(
+                clientSecret,
+                cardNumber
+            ).then(async (result) => {
+                if (result.error) {
+                    alert(result.error.message);
+                }else if('paymentIntent' in result){
+                    // document.getElementById('{{form.children.token.vars.id}}').setAttribute('value', result.paymentIntent.id);
+                    let paymentMethodId = await createPaymentMethod(cardNumber);
+                    document.getElementById('{{form.children.token.vars.id}}').setAttribute('value', paymentMethodId);
+                    form.submit();
+                }
+            }); 
+        }); 
+        async function createPaymentMethod(cardElement) {
+            const result = await stripe.createPaymentMethod({
+                type: 'card',
+                card: cardElement,
+            });
+
+            if (result.error) {
+                return null;
+            } 
+            console.log(result);
+            return result.paymentMethod.id;
+        }
+        
+        
+    });
+  
+ 
+  
+</script>
+{% endblock %}
+

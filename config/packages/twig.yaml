@@ -8,6 +8,7 @@ twig:
         files_directory: '%kernel.project_dir%/public/files'
         files_directory_relative: 'files/'
         stripe_public_key: '%env(STRIPE_PUBLIC_KEY)%'
+        default_sector: '%env(DEFAULT_SECTOR)%'
         configSecteurService: '@util.config'
         secteurRepository: '@App\Repository\SecteurRepository'
     paths:

@@ -77,6 +77,8 @@
 						<th scope="col" class="text-center">Téléphone</th>
 						<th scope="col" class="text-center">Date inscription</th>
 						<th scope="col" class="text-center">Secteur</th>
+						<th scope="col" class="text-center">Packs</th>
+
                         <th scope="col" class="text-center">Etat</th>
 						<th scope="col" class="text-center table-th-notSortable">ACTION</th>
 					</tr>
@@ -95,6 +97,16 @@
                                 {{ agent.allSecteursOfUser(secteurs)|default('-') }}                                
                             </td>
                             <td>
+                                {% if agent.orderPacks | length == 0 %}
+                                    <span>-</span>
+                                {% endif %}
+                                {% for orderPack in agent.orderPacks %}
+                                    {% if orderPack.pack is not null %}
+                                        <div>{{orderPack.pack.name}}</div>
+                                    {% endif %}
+                                {% endfor %}
+                            </td>
+                            <td>
                                 <div class="m-auto {{ agent.active == 1 ? 'bg-success' : (agent.active == -1 ? 'bg-danger' : 'bg-primary') }} rounded-circle caret"><span class="d-none">{{  agent.active }}</span></div>
                             </td>
                             <td style="white-space:nowrap">
@@ -109,9 +121,9 @@
                                     ))
                                 %}
 
-                                <a href="#" class="btn btn-primary chat-choose-canal d-inline ms-1" data-canal="{{ chatCanal|url_encode }}">
+                                {# <a href="#" class="btn btn-primary chat-choose-canal d-inline ms-1" data-canal="{{ chatCanal|url_encode }}">
                                     <i class="fa-brands fa-facebook-messenger"></i>
-                                </a>
+                                </a> #}
                                 <a href="{{ path('admin_agent_view', {'id': agent.id}) }}" class="btn btn-secondary d-inline ms-1">
                                     <i class="fa-solid fa-eye"></i>
                                 </a>

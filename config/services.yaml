@@ -41,5 +41,8 @@ services:
     App\Services\DemandeDevisService:
         arguments:
             $filesDirectory: '%files_directory%'
+    App\EventListener\AccessAgentAreaListener:
+        tags:
+            - { name: kernel.event_listener, event: kernel.request }
 
     util.config: '@App\Services\ConfigSecteurService'

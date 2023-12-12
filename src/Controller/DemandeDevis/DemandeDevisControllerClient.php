@@ -83,7 +83,7 @@ class DemandeDevisControllerClient extends AbstractController
     public function index($token, Request $request, PaginatorInterface $paginator, SearchService $searchService): Response
     {
         $secteurId = $this->session->get('secteurId');
-        $agent = $this->userRepository->findAgentByToken($token);
+        $agent = $this->userRepository->findAgentByUsername($token);
         $page = $request->query->get('page', 1);
         $limit = 5;
         $criteria = [
@@ -144,7 +144,7 @@ class DemandeDevisControllerClient extends AbstractController
         $user = (object)$this->getUser();
         $secteurId = $this->session->get('secteurId');
         $secteur = $this->secteurRepository->find($secteurId);
-        $agent = $this->userRepository->findAgentByToken($token);
+        $agent = $this->userRepository->findAgentByUsername($token);
         $isEdit = false;
         $error = null;
         $dd = new DemandeDevis();
@@ -200,7 +200,7 @@ class DemandeDevisControllerClient extends AbstractController
     {
         $secteurId = $this->session->get('secteurId');
         $secteur = $this->secteurRepository->find($secteurId);
-        $agent = $this->userRepository->findAgentByToken($token);
+        $agent = $this->userRepository->findAgentByUsername($token);
         $allDevis = $this->repoDevis->findBy(['demandeDevis'=> $dd]);
 
         return $this->render('user_category/client/dd/demandedevis/demandedevis_details.html.twig',[

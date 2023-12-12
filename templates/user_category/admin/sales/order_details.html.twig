@@ -1,0 +1,135 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title %}
+	Commande
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+
+<div class="ecommerce-application" role="tabpanel" >
+    {% if error %}
+        <div class="alert alert-primary p-3 text-center" role="alert">
+            <div class="alert-body">
+                {{error}}
+            </div>
+        </div>
+    {% else %}
+    <div id="place-order" class="product-checkout">
+        <h4>Détails de la commande n°{{order.id}}</h4>
+        <!-- Checkout Place Order Left starts -->
+        <div class="checkout-items">
+            {% for item  in order.orderProducts %}
+            <div class="card ecommerce-card">
+                <div class="card-body">
+                    <div class="item-name">
+                        <h6 class="mb-0"><a href="#" class="text-body">{{item.product.nom}}</a></h6>
+                    
+                    </div>
+                    <div class="item-quantity">
+                        <span class="quantity-title">Quantité:</span>
+                        <div class="input-group quantity-counter-wrapper bootstrap-touchspin">
+                            <span class="input-group-btn input-group-prepend bootstrap-touchspin-injected">{{item.qty}}</span>
+                        </div>
+                    </div>
+                    <div class="item-quantity">
+                        <span class="quantity-title">Prix :</span>
+                        <div class="input-group quantity-counter-wrapper bootstrap-touchspin">
+                            <span class="input-group-btn input-group-prepend bootstrap-touchspin-injected"><b>{{item.price | number_format(2, ',', ' ')}} €</b></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <!-- Checkout Place Order Left ends -->
+
+        <!-- Checkout Place Order Right starts -->
+        <div class="checkout-options">
+            <div class="card">
+                <div class="card-body">
+                    <label class="section-label form-label mb-1">Informations sur le client</label>
+                    <hr />
+                    <div class="price-details" style="margin-bottom: 30px;">
+                        <ul class="list-unstyled">
+                            <li class="price-detail">
+                                <div class="detail-title">Nom et prénom(s)</div>
+                                <div class="detail-amt">{{order.user.nom}} {{order.user.prenom}}</div>
+                            </li>
+                            <li class="price-detail">
+                                <div class="detail-title">Nom d'utilisateur</div>
+                                <div class="detail-amt discount-amt">{{order.user.username}}</div>
+                            </li>
+                            <li class="price-detail">
+                                <div class="detail-title">Email</div>
+                                <div class="detail-amt discount-amt">{{order.user.email}}</div>
+                            </li>
+                            
+                        </ul>
+                        
+                    </div>
+                    <label class="section-label form-label mb-1">Informations sur l'agent</label>
+                    <hr />
+                    <div class="price-details" style="margin-bottom: 30px;">
+                        <ul class="list-unstyled">
+                            <li class="price-detail">
+                                <div class="detail-title">Nom et prénom(s)</div>
+                                <div class="detail-amt">{{order.agent.nom}} {{order.agent.prenom}}</div>
+                            </li>
+                            <li class="price-detail">
+                                <div class="detail-title">Nom d'utilisateur</div>
+                                <div class="detail-amt discount-amt">{{order.agent.username}}</div>
+                            </li>
+                            <li class="price-detail">
+                                <div class="detail-title">Email</div>
+                                <div class="detail-amt discount-amt">{{order.agent.email}}</div>
+                            </li>
+                            
+                        </ul>
+                        
+                    </div>
+                    <label class="section-label form-label mb-1">Détails de la commande</label>
+                    <hr />
+                    <div class="price-details">
+                        <ul class="list-unstyled">
+                            <li class="price-detail">
+                                <div class="detail-title">Date</div>
+                                <div class="detail-amt">{{order.orderDate | date("d/m/Y H:i")}}</div>
+                            </li>
+                            <li class="price-detail">
+                                <div class="detail-title">Secteur</div>
+                                <div class="detail-amt">{{order.secteur.nom}}</div>
+                            </li>
+                        </ul>
+                        <hr />
+                        <ul class="list-unstyled">
+                            <li class="price-detail">
+                                <div class="detail-title">Prix net (sans TVA)</div>
+                                <div class="detail-amt discount-amt" id="cart-total-ht">{{order.montantHt|number_format(2, ',', ' ')}} €</div>
+                            </li>
+                            <li class="price-detail">
+                                <div class="detail-title">TVA ({{order.tva | number_format(0, ',', ' ')}} %)</div>
+                                <div class="detail-amt discount-amt" id="cart-tva">{{order.montantTva|number_format(2, ',', ' ')}} €</div>
+                            </li>
+                            <li class="price-detail">
+                                <div class="detail-title detail-total">Prix total (TVA incluse) :</div>
+                                <div class="detail-amt fw-bolder" id="total-cost" >{{order.amount | number_format(2, ',', ' ')}} €</div>
+                            </li>
+                        </ul>
+                        {% if order.invoicePath %}
+                        <a role="button" class="btn btn-primary w-100 btn-next place-order" href="{{path('common_order_download_contrat', {id: order.id})}}"><i class="fa fa-file" aria-hidden="true"></i>&nbsp;Télécharger la facture</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <!-- Checkout Place Order Right ends -->
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+

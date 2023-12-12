@@ -103,7 +103,7 @@ class CheckoutControllerAroma extends AbstractController
     public function payment(string $token, OrderAroma $order, Request $request, FormFactoryInterface $formFactory, StripeService $stripeService): Response
     {
         $secteurId = $this->session->get('secteurId');
-        $agent = $this->userRepository->findAgentByToken($token);
+        $agent = $this->userRepository->findAgentByUsername($token);
         
         $form = $formFactory
             ->createNamedBuilder("payment-form")

@@ -34,6 +34,7 @@
 {#                </div>#}
 {#            </div>#}
 {#        </div>#}
+        
         <h4 class="fw-bolder border-bottom pb-50 mb-1 mt-4">Détails</h4>
         <div class="info-container">
             <ul class="list-unstyled">
@@ -80,9 +81,9 @@
                         ))
                     %}
 
-                    <a href="#" class="btn btn-primary chat-choose-canal me-2" data-canal="{{ chatCanal|url_encode }}">
+                    {# <a href="#" class="btn btn-primary chat-choose-canal me-2" data-canal="{{ chatCanal|url_encode }}">
                         <i class="fa-brands fa-facebook-messenger"> </i> envoyer un message
-                    </a>
+                    </a> #}
                 {% endif %}
                 {% if is_granted('ROLE_ADMINISTRATEUR')  %}
                     <a href="{{ path('admin_agent_edit', {id:user.id}) }}" class="btn btn-primary me-1 d-none" >
@@ -92,6 +93,18 @@
 {#                <a href="javascript:;" class="btn btn-outline-danger suspend-user">Suspendu</a>#}
             </div>
         </div>
+        {% if agent.orderPacks | length != 0 %}
+        <h4 class="fw-bolder border-bottom pb-50 mb-1 mt-4">Packs achetés</h4>
+        <div class="info-container">
+            <ul>
+                {% for orderPack in agent.orderPacks %}
+                    {% if orderPack.pack is not null %}
+                        <li>{{orderPack.pack.name}} ({{orderPack.pack.description}})</li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
     </div>
 </div>
 <!-- /User Card -->

@@ -13,6 +13,8 @@ use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class AuthService 
@@ -31,7 +33,8 @@ class AuthService
         UserPasswordHasherInterface $passwordHasher, 
         ValidatorInterface $validator,
         AccountValidationRepository $accountValidationRepository,
-        MailerService $mailerService
+        MailerService $mailerService,
+        private TokenStorageInterface $tokenStorage
         )
     {
         $this->entityManager = $entityManager;
@@ -100,6 +103,12 @@ class AuthService
             $code .= rand(0, 9);
         }
         return $code;
+    }
+
+    public function autoAuthenticate(User $user)
+    {
+        $token = new UsernamePasswordToken($user, 'main', $user->getRoles());
+        $token = $this->tokenStorage->setToken($token);
     }
 
 }

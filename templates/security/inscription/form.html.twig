@@ -34,8 +34,11 @@
             <div class="col-md-6 col-12">
                 {{ form_row(form.ville) }}
             </div>
+            <div class="col-md-12 col-12">
+                {{ form_row(form.parrain) }}
+            </div>
         </div>
-        <h5 class="mt-4">Choix du secteur</h5>
+        <h5 class="mt-4">Domaine d’activité</h5>
         <div class="row my-3">
             {% for secteurList in form.secteur.children.secteur.children %}
                 <div class="col-12 col-md-4">
@@ -48,9 +51,18 @@
         <h5 class="mb-4">Information sur la connexion</h5>
         {{ form_row(form.username) }}
         {{ form_row(form.password) }}
-        <div class="w-100 text-center">
-{#            <button class="btn btn-primary" type="submit" id="btn-next">Procéder au paiement <i class="fa-solid fa-angles-right"></i></button>#}
-            <button class="btn btn-primary" type="submit" id="btn-next">S’inscrire <i class="fa-solid fa-angles-right"></i></button>
+        <div class="text-center mt-4">
+            <button class="btn btn-primary w-100 font-weight-bold" type="submit" id="btn-next">
+                S’inscrire
+            </button>
+        </div>
+        <div class="mt-4">
+            <p class="text-center">
+                Vous n'avez pas déjà un compte ? 
+                <a class="text-greenlife" href="{{ path('app_login') }}">
+                        Se connecter
+                </a>
+            </p>
         </div>
     {{ form_end(form) }}
 {% endblock %}

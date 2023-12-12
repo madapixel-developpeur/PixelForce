@@ -8,7 +8,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="google-site-verification" content="O5bvNXZxdhGiT5VN5hPxisFh_XZeZCQr4aN4yoy0Ilk" />
-        <title>{% block title %}Authentification!{% endblock %}</title>
+        <title>{% block title %}Se connecter{% endblock %}</title>
         <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
         <link rel="stylesheet" href="/assets/fontawesome-free-6.0.0-web/css/all.css" />
         <link rel="stylesheet" href="{{ asset('/assets/vuexy/css/pages/authentication.css') }}" />
@@ -41,23 +41,22 @@
                 <div class="auth-wrapper auth-cover">
                     <div class="auth-inner row m-0">
                         <!-- Brand logo-->
-                        <a class="brand-logo d-none d-md-inline text-decoration-none w-25" href="/">
-                            {# <img src="{{asset('build/images/draw2.webp')}}" class="img-fluid my-auto" width="40" /> #}
-                            <img src="/assets/img/logo/pixelforce/logo-pixelforce-03.png" class="img-fluid w-25" alt="logo-pixelforce">
-                        </a>
+                        {# <a class="brand-logo d-none d-md-inline text-decoration-none w-25" href="/">
+                            <img src="/assets/img/logo/greenlife/greenlife.png" class="img-fluid w-50" alt="logo-Green Life Ultimate">
+                        </a> #}
                         <!-- /Brand logo-->
 
                         <!-- Left Text-->
                         <div class="d-none d-lg-flex col-lg-8 align-items-center p-5">
-                            <div class="w-100 d-lg-flex align-items-center justify-content-center px-5"><img class="img-fluid" src="{{asset('assets/vuexy/images/pages/login-v2.svg')}}" alt="Login V2" /></div>
+                            <div class="w-100 d-lg-flex align-items-center justify-content-center px-5"><img class="img-fluid" src="{{asset('assets/img/greenlife/green-life-login.webp')}}" alt="Login V2" /></div>
                         </div>
                         <!-- /Left Text-->
                         <!-- Login-->
                         <div class="d-flex col-lg-4 align-items-center auth-bg px-2 p-lg-5">
                             <div class="col-12 col-sm-8 col-md-6 col-lg-12 px-xl-2 mx-auto">
-                                <h2 class="card-title fw-bold mb-1 text-center p-2">
+                                <h2 class="card-title fw-bold mb-1 text-center px-4">
                                     <a href="{{ path('app_dashboard') }}" class="text-center text-muted text-decoration-none">
-                                        <img src="/assets/img/logo/pixelforce/logo-pixelforce-01.png" class="img-fluid w-25 m-2" alt="logo-pixelforce">
+                                        <img src="/assets/img/logo/greenlife/greenlife-v.png" class="img-fluid w-50" alt="logo-Green Life Ultimate">
                                     </a>
                                 </h2>
 
@@ -77,14 +76,19 @@
                                         {% endfor %}
                                         <div class="mb-1">
                                             <label class="form-label" for="login-email">Adresse mail</label>
-                                            <input type="text" class="form-control"  placeholder="Nom d'utilisateur/Email" value="{{ last_username }}" name="email" id="inputMail_users"  required autofocus>
+                                            <input type="text" class="form-control border-0 input-bg" value="{{ last_username }}" name="email" id="inputMail_users"  required autofocus>
                                         </div>
                                         <div class="mb-1">
                                             <div class="d-flex justify-content-between">
                                                 <label class="form-label" for="login-password">Mot de passe</label>
                                             </div>
                                             <div class="input-group input-group-merge form-password-toggle">
-                                                <input class="form-control form-control-merge" id="login-password" type="password" name="password" placeholder="Mot de passe" aria-describedby="login-password" tabindex="2" required/><span class="input-group-text cursor-pointer"><i data-feather="eye"></i></span>
+                                                <input class="form-control form-control-merge border-0 input-bg" id="login-password" type="password" name="password" aria-describedby="login-password" tabindex="2" required/><span class="input-group-text cursor-pointer border-0 input-bg"><i data-feather="eye"></i></span>
+                                            </div>
+                                            <div class="text-end mt-1">
+                                                <a class="text-dark-greenlife" href="{{ path('app_forgetPassword') }}">
+                                                    Mot de passe oublié ?
+                                                </a>
                                             </div>
                                         </div>
                                         <input type="hidden" name="agentToken" value="{{agentToken}}" />
@@ -96,10 +100,19 @@
 
                                         <div class=" text-center mt-4">
                                             <button class="btn btn-primary w-100 font-weight-bold" type="submit">
-                                                S'authentifier
+                                                Se connecter
                                             </button>
                                         </div>
-                                        <div class="row mt-2 justify-content-center d-flex">
+
+                                        <div class="mt-4">
+                                            <p class="text-center">
+                                                Vous n'avez pas encore de compte ? 
+                                                <a class="text-greenlife" href="{% if agentToken %} {{ path('signup_client', {'token': agentToken}) }} {% else %} {{ path('agent_inscription') }} {% endif %}">
+                                                        S'inscrire
+                                                </a>
+                                            </p>
+                                        </div>
+                                        {# <div class="row mt-2 justify-content-center d-flex">
                                             <div class="col-12 col-xl-6 pe-xl-0">
                                                 <div class=" text-center">
                                                     <a class="btn btn-success w-100 font-weight-bold" href="{% if agentToken %} {{ path('signup_client', {'token': agentToken}) }} {% else %} {{ path('agent_inscription') }} {% endif %}">
@@ -114,7 +127,7 @@
                                                     </a>
                                                 </div>
                                             </div>
-                                        </div>                                    
+                                        </div> #}
                                     </form>
                                     
                                     {# <div class="divider my-2">

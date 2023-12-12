@@ -3,6 +3,9 @@
 namespace App\Repository;
 
 use App\Entity\Order;
+use App\Entity\SearchEntity\OrderSearch;
+use App\Entity\Secteur;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -37,6 +40,50 @@ class OrderRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    /**
+     * Permet de filtrer les ventes
+     *
+     * @param OrderSearch $search
+     */
+    public function findOrdersQuery(OrderSearch $search)
+    {
+        $query = $this->createQueryBuilder('o');
+
+        if ($search->getSecteur()) {
+            $query = $query
+                    ->join('o.secteur', 's')
+                    ->andwhere('s.nom LIKE :nomSecteur')
+                    ->setParameter('nomSecteur', '%'.$search->getSecteur()->getNom().'%');
+        }
+
+        return $query->getQuery()
+            ->getResult()
+        ;
+    }
+    /**
+     * Permet de filtrer les ventes
+     *
+     * @param OrderSearch $search
+     */
+    public function findOrdersInListOfSecteurQuery($coachSecteurs)
+    {
+        $query = $this->createQueryBuilder('o');
+
+        $query = $query
+                    ->join('o.secteur', 's');
+                    
+        for($i=0;$i<count($coachSecteurs);$i++){
+            $paramName = "s".$i;
+            $query = $query
+                ->orWhere('s.nom LIKE :'.$paramName)
+                ->setParameter($paramName, '%'.$coachSecteurs[$i]->getSecteur()->getNom().'%');
+        }
+
+        return $query->getQuery()
+            ->getResult()
+        ;
     }
 
 //    /**
