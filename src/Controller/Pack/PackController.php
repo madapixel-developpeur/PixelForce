@@ -116,7 +116,7 @@ class PackController extends AbstractController
     public function app_order_pack_export_to_csv($order_pack_id)
     {
         $orderPack = $this->orderPackRepo->find($order_pack_id);
-        if(!is_null($orderPack->getPack()))$this->orderPackService->sendOrderPackProductsToSogec($orderPack->getPack()->getProducts()->toArray());
+        if(!is_null($orderPack->getPack()))$this->orderPackService->sendOrderPackToSogec($orderPack);
         $this->addFlash('success', 'Exportation CSV vers Sogec effectué');
         return $this->redirectToRoute('agent_home');
     }

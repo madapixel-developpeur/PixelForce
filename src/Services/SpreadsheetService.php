@@ -6,6 +6,7 @@ use SplFileObject;
 use App\Entity\Pack;
 use App\Entity\Order;
 use App\Entity\OrderPack;
+use App\Entity\OrderPackProduct;
 use App\Util\GenericUtil;
 use App\Entity\OrderProduct;
 use App\Entity\PackProduct;
@@ -67,44 +68,58 @@ class SpreadsheetService
 
 
 
-    public function exportPackProduct($data, array $fields, array $headers, array $options = []): ?SplFileObject
+    public function exportOrderPack($data, array $fields, array $headers, array $options = []): ?SplFileObject
     {
-        
+        //$data = $orderPack->getPack()->getProducts()->toArray();
         $file = new SplFileObject(SpreadsheetService::EXPORT_FILE_NAME, "w");
         $file->fputcsv($headers, self::SEPARATOR);
         foreach($data as $obj){
             $row = [];
+            $productsInOrder = [];
+            $isRepeatable = false;
             foreach($fields as $row_field){
                 $value = $row_field ? GenericUtil::getPropertyValue($obj, $row_field) : null;
                 $value = $this->convertStringToNumeric($options, $row_field, $value);   
+                if ($this->isRepeatableByRefProduct($options, $row_field, $value)) {
+                    $productsInOrder = $this->nbrRepeatRowByRefProduct($options, $value, $row_field); 
+                    $isRepeatable = true;
+                    $value = 'refProdToChange';   
+                }
                 $row[] = $value;
+                
+            }
+            $originalRow = $row;
+
+            if ($isRepeatable === true) {  
+                /** @var OrderProduct $product */
+                foreach ($productsInOrder as $productOrder) {
+                    for ($i=0; $i < count($row); $i++) { 
+                        $row[$i] === OrderPack::TO_CHANGE['refProd'] && $row[$i] =  $productOrder->getProduct()->getId();
+                        $row[$i] === OrderPack::TO_CHANGE['quantity'] && $row[$i] =  $productOrder->getQty();
+                        $row[$i] === OrderPack::TO_CHANGE['amount'] && $row[$i] =  number_format($productOrder->getPrice(), 2, self::DECIMAL_SEPARATOR, '') ;
+                    }
+
+                    $file->fputcsv($row, self::SEPARATOR);
+                    $row = $originalRow;
+                }                 
+                $productsInOrder = 0;
+                $isRepeatable = false;
             }
             // for ($i=0; $i < count($row); $i++) { 
             //     if ($row[$i] instanceof PackProduct) {
             //         $row[$i] = $row[$i]->getName();
             //     }
             // }
-            $file->fputcsv($row, self::SEPARATOR);
-        }
-        return $file;
-    }
-    public function exportOrderPack($data, array $fields, array $headers, array $options = []): ?SplFileObject
-    {
-        $file = new SplFileObject(SpreadsheetService::EXPORT_FILE_NAME, "w");
-        $file->fputcsv($headers, self::SEPARATOR);
-        foreach($data as $obj){
-            $row = [];
-            foreach($fields as $row_field){
-                $value = $row_field ? GenericUtil::getPropertyValue($obj, $row_field) : null;
-                $value = $this->convertStringToNumeric($options, $row_field, $value);   
-                $row[] = $value;
+            else{
+                // for ($i=0; $i < count($row); $i++) { 
+                //     if (is_array($row[$i]) &&  $row[$i][0] instanceof OrderPackProduct) {
+                //         $row[$i] = $row[$i][0]->getProduct()->getId();
+                //     }
+                // }
+                // try{
+                $file->fputcsv($row, self::SEPARATOR);
+                // }catch(\Exception $ex){dd($row);}
             }
-            for ($i=0; $i < count($row); $i++) { 
-                if ($row[$i] instanceof Pack) {
-                    $row[$i] = $row[$i]->getName();
-                }
-            }
-            $file->fputcsv($row, self::SEPARATOR);
         }
         return $file;
     }
@@ -134,7 +149,7 @@ class SpreadsheetService
     {
         $keys_options = array_keys($options);
         
-        if (!empty($options) && in_array('repeat_row', $keys_options) && $options['repeat_row']['field'] === $row_field && count($productsInOrder) > 1 ) {
+        if (!empty($options) && in_array('repeat_row', $keys_options) && $options['repeat_row']['field'] === $row_field ) {
             return true;
         }else{
             return false;

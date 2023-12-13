@@ -99,7 +99,7 @@ class OrderPackService
     }
 
 
-    public function exportOrderPackProductsToCsv(array $orderPackProducts){
+    public function exportOrderPackToCsv(OrderPack $orderPack){
          $headers = [
             "N° produit", "Nom du produit", "Prix Unitaire", "Quantité commandée", "Prix Total" 
         ];
@@ -111,12 +111,39 @@ class OrderPackService
         $options = [
             'convert_string_to_numeric' => ['fields' => ['product.prix', 'price']]
         ];
-       return $this->spreadsheetService->exportPackProduct($orderPackProducts, $fields, $headers, $options);
+
+        $headers = [
+            "N° commande", "Identifiant client", "Mode d'expédition", "Code point relais", "Type point relais", "Lot acheminement",
+            "Distribution sort", "Version Plan de tri", "Date d’expédition prévue (départ entrepôt)", "Civilité du client livré", "Nom du client livré",
+            "Prénom du client livré", "Raison Sociale du client livré", "Contact du client de livraison", "Adresse 1 livraison", "Adresse 2 livraison",
+            "Adresse 3 livraison", "Adresse 4 livraison", "Code postal livraison", "Ville livraison", "Code pays livraison", "Pays livraison", "Tél fixe livraison",
+            "Port livraison", "Fax livraison", "Email livraison", "Nom et Prénom du client facturé", "Adresse 1 facturation", "Adresse 2 facturation", 
+            "Adresse 3 facturation", "Adresse 4 facturation", "Code postal facturation", "Ville facturation", "Code pays facturation", "Pays facturation",
+            "Contact facturation", "Tél facturation", "Port facturation", "Fax facturation", "Email facturation", "Référence article", "Quantité commandée",
+            "Numéro commande B2B ", "Référence fournisseur", "Prise de rendez-vous obligatoire", "Commentaires livraison", "Prix de vente de l'article"
+        ];
+        $fields = [
+            "id", "agent.id", "ModeExpedition", null, null, null,
+            null, null, null, null, "agent.nom",
+            "agent.prenom", null, null, "agent.adresse", "agent.numeroRue", // deliveryAddress3 => Adresse 1 livraison (correct)
+            "agent.adresse", null, "agent.codePostal", "agent.ville", null, null, null,
+            null, null, null, null, null, null, // billingAddress3 => Adresse 1 facturation (correct)
+            null, null, null, null, null, null,
+            null, null, null, null, null, "productsInOrder", "orderProductsQuantity",
+            null, null, null, null, "itemsAmount"
+        ];
+        $options = [
+            'convert_string_to_numeric' => ['fields' => ['itemsAmount']],
+            'repeat_row' => ['field' => 'productsInOrder']
+        ];
+        // dd($orderPack->getProductsInOrder());
+        //$orderPackProducts = $orderPack->getPack()->getProducts()->toArray()
+       return $this->spreadsheetService->exportOrderPack([$orderPack], $fields, $headers, $options);
     }
 
-    public function sendOrderPackProductsToSogec(array $orderPackProducts){
+    public function sendOrderPackToSogec(OrderPack $orderPack){
         $remotePath = $_ENV['FTP_FOLDER_PATH']."/".ToolKit::generateFileName("csv") ;       
-        $file = $this->exportOrderPackProductsToCsv($orderPackProducts);
+        $file = $this->exportOrderPackToCsv($orderPack);
         ToolKit::uploadFileViaSftp($_ENV['FTP_SERVER_NAME'],$_ENV['FTP_SERVER_PORT'],$_ENV['FTP_USER_NAME'],$_ENV['FTP_USER_PASSWORD'],$file,$remotePath);
     }
     

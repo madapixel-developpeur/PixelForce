@@ -42,6 +42,11 @@ class OrderPack
         "Payée" => self::PAIED,
         "Livrée" => self::VALIDATED
     ];
+    // const TO_CHANGE = [
+    //     "quantity" => "quantityToChange",
+    //     "amount" => "amountToChange",
+    //     "refProd" => "refProdToChange" 
+    // ];
     const TO_CHANGE = [
         "quantity" => "quantityToChange",
         "amount" => "amountToChange",
@@ -318,6 +323,15 @@ class OrderPack
 
         return $this;
     }
+    public function getModeExpedition()
+    {
+        return 1;
+    }
+    public function getOrderProductsQuantity()
+    {
+       return $this->getNbrProductInOrder() > 1 ? self::TO_CHANGE['quantity'] : $this->getNbrProductInOrder();
+    }
+
     public function getItemsAmount()
     {
         return $this->getNbrProductInOrder() > 1 ? self::TO_CHANGE['amount']  : $this->amount;
@@ -327,7 +341,7 @@ class OrderPack
        return $this->getOrderProductsArray();
     }
     public function getOrderProductsArray(){
-        return $this->getOrderProducts()->toArray();
+        return $this->getPack()->getProducts()->toArray();
     }
     public function getNbrProductInOrder()
     {

@@ -34,8 +34,9 @@ class AccessAgentAreaListener implements EventSubscriberInterface
         
         // Check if the path matches /agent/* and user doesn't have a paid subscription
         // if (strpos($pathInfo, '/agent/') === 0 && $user!=null && !$user->getHasPaidSubscription()) {
-        if (strpos($pathInfo, '/agent/') === 0){
-            $userInterface = $this->tokenStorage->getToken()->getUser();
+        $token = $this->tokenStorage->getToken();
+        if (isset($token) && strpos($pathInfo, '/agent/') === 0){
+            $userInterface = $token->getUser();
             $user = $this->userRepository->findOneBy(["email"=>$userInterface->getUserIdentifier()]);
             // dd($user);
             if($user!=null && !$user->getHasPaidSubscription()){

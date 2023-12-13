@@ -51,7 +51,7 @@
             <tbody>
             {% for orderPack in orderPacks %}
                 <tr>
-                    <td>{{ orderPack.pack.id }}</td>
+                    <td>{{ orderPack.id }}</td>
                     <td>{{ orderPack.createdAt | date("d/m/Y H:i") }}</td>
                     <td>{{ orderPack.pack.name }}</td>
                     <td>{{ orderPack.pack.description }}</td>
