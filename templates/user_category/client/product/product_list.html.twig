@@ -115,12 +115,12 @@
                                     </a>
                                     {% endif %}
                                     {% if product.produitQteStock != null and product.produitQteStock.qteStock > 0 %}
-                                    {% if is_granted('ROLE_CLIENT') %}
+                                    {# {% if is_granted('ROLE_CLIENT') %} #}
                                     <a href="{{path('client_basket_add_normal', {'token': token, 'id': product.id})}}" class="btn btn-primary btn-cart" >
                                         <i data-feather="shopping-cart"></i>
                                         <span class="add-to-cart">Ajouter au panier</span>
                                     </a>
-                                    {% endif %}
+                                    {# {% endif %} #}
                                     {% else %}
                                     <a href="#" class="btn btn-secondary btn-cart disabled"  >
                                         <span class="add-to-cart">Rupture de stock</span>

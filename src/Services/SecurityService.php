@@ -55,7 +55,7 @@ class SecurityService
             'subject' => "Informations d'authentification",
             'body' => $this->mailService->renderTwig('emails/new_user.html.twig', ['user' => $user])
         ];
-        $this->mailService->sendMail($mail);
+        $this->mailService->mySendMail($mail);
     
         return $user;
     }

@@ -46,6 +46,7 @@ security:
             - { path: ^/anonymous, roles: IS_AUTHENTICATED_ANONYMOUSLY }
             - { path: ^/forgetPassword.*, roles: IS_AUTHENTICATED_ANONYMOUSLY }
             - { path: ^/inscription.*, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+            - { path: ^/client/([^/]+)/basket, roles: IS_AUTHENTICATED_ANONYMOUSLY }
             - { path: ^/client, roles: ROLE_CLIENT }
             - { path: ^/do, roles: ROLE_DOCUMENT_OWNER }
             - { path: ^/dc, roles: IS_AUTHENTICATED_ANONYMOUSLY }

@@ -12,7 +12,7 @@ use App\Entity\Produit;
 use App\Entity\BasketItem;
 use App\Entity\Order;
 use App\Entity\OrderAddress;
-
+use App\Form\AnonymousSignUpType;
 use App\Form\OrderAddressType;
 use App\Form\ProduitFormType;
 use App\Form\ProduitFilterType;
@@ -25,6 +25,7 @@ use App\Services\FileHandler;
 use Exception;
 use App\Services\BasketService;
 use App\Services\OrderService;
+use App\Services\SecurityService;
 use App\Services\StripeService;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -48,7 +49,7 @@ class BasketController extends AbstractController
     private $session;
     private $stripeService;
 
-    public function __construct(EntityManagerInterface $entityManager, ProduitRepository $produitRepository, FileHandler $fileHandler, BasketService $basketService, OrderService $orderService, UserRepository $userRepository, SessionInterface $session, StripeService $stripeService){
+    public function __construct(private SecurityService $securityService, EntityManagerInterface $entityManager, ProduitRepository $produitRepository, FileHandler $fileHandler, BasketService $basketService, OrderService $orderService, UserRepository $userRepository, SessionInterface $session, StripeService $stripeService){
         $this->entityManager = $entityManager;
         $this->produitRepository = $produitRepository;
         $this->fileHandler = $fileHandler;
@@ -71,13 +72,33 @@ class BasketController extends AbstractController
         $error = null;
         $basket = $this->basketService->getBasket($groupKey);
         $totalCost = $this->basketService->getTotalCost($groupKey);
+        
+        $anonymousForm = $this->createForm(AnonymousSignUpType::class);
+        $anonymousForm->handleRequest($request);
+        $error = null;
+        if ($anonymousForm->isSubmitted() && $anonymousForm->isValid()) {
+            try{
+                // Register the anonymous user
+                $user = $this->securityService->generateCredentialsForAnonymous($request->request->all("anonymous_sign_up"));
+                $this->securityService->autoAuthenticate($user);
+                return $this->redirectToRoute("client_order_address", ["token"=>$token]);
+            }
+            catch(\Exception $ex){
+                throw $ex;
+                $error = $ex->getMessage();
+            }
+           
+        }
+
         return $this->render('user_category/client/basket/basket.html.twig', [
             'basket' => $basket,
             'error' => $error,
             'filesDirectory' => $this->getParameter('files_directory_relative'),
             'totalCost' => $totalCost,
             'agent' => $agent,
-            'token' => $token
+            'token' => $token,
+            'anonymousForm' => $anonymousForm->createView(),
+
         ]);
     }
 
