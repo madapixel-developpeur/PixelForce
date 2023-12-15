@@ -11,7 +11,7 @@
 
 {% block body %} 
     <!-- BEGIN: Content-->
-    <div class="app-content content client ecommerce-application pt-5">
+    <div class="app-content content client ecommerce-application pt-4">
         <div class="content-overlay"></div>
         <div class="header-navbar-shadow"></div>
         <div class="content-wrapper container-xxl p-0">
@@ -35,7 +35,7 @@
                 </div>
 
             </div>
-                <div class="content-body pb-4" style="display : grid;grid-template-columns: 2.5fr 0.5fr;column-gap: 2rem;">
+                <div class="content-body ecommerce-layout pb-4">
                     
                     <div class="products">
                         <!-- E-commerce Content Section Starts -->
@@ -77,7 +77,7 @@
                                 </div>
                         {% endif %}
                         {% if productList|length !=0 %}
-                        <section id="ecommerce-products" class="grid-view" style="grid-template-columns: 1fr 1fr 1fr;">
+                        <section id="ecommerce-products" class="grid-view ecommerce-products">
                             {% for product in productList %}
                             <div class="card ecommerce-card">
                                 <div class="item-img text-center">

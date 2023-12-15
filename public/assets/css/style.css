@@ -10,6 +10,52 @@ NOTE:
 PLACE HERE YOUR OWN SCSS CODES AND IF NEEDED, OVERRIDE THE STYLES FROM THE OTHER STYLESHEETS.
 WE WILL RELEASE FUTURE UPDATES SO IN ORDER TO NOT OVERWRITE YOUR STYLES IT'S BETTER LIKE THIS.  */
 
+/*
+* BOUTIQUE EN LIGNEs
+*/
+.ecommerce-layout{
+	display : grid !important;
+	grid-template-columns: 2.5fr 0.5fr !important;
+	column-gap: 2rem;
+}
+.ecommerce-products{
+	grid-template-columns: 1fr 1fr 1fr;
+}
+.navbar-client .nav-item .nav-item-text{
+
+}
+
+/* Styles for small phones (up to 576px) */
+@media only screen and (max-width: 576px) {
+	/* Your styles for small phones go here */
+	.ecommerce-products{
+		grid-template-columns: 1fr;
+	}
+	.ecommerce-layout{
+		grid-template-columns: 1fr !important;
+	}
+	.navbar-client .nav-item .nav-item-text{
+		display: none !important;
+	}
+}
+
+/* Styles for tablets (between 577px and 768px) */
+@media only screen and (min-width: 577px) and (max-width: 768px) {
+	/* Your styles for tablets go here */
+	.ecommerce-products{
+		grid-template-columns: 1fr 1fr;
+	}
+	.ecommerce-layout{
+		grid-template-columns: 2fr 1fr !important;
+	}
+}
+
+/* Styles for larger screens (769px and above) */
+@media only screen and (min-width: 769px) {
+	/* Your styles for larger screens go here */
+}
+
+
 .color-pixelforce{
 	color: #6f64e2 !important;
 }
