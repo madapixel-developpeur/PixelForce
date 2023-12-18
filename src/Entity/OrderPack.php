@@ -125,6 +125,18 @@ class OrderPack
      */
     private $orderProducts;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $statut_duo;
+
+    /**
+     * 
+     * @ORM\ManyToOne(targetEntity=User::class)
+     */
+    private $parrain;
+
+
 
     public function __construct()
     {
@@ -347,5 +359,28 @@ class OrderPack
     {
         return count($this->getOrderProductsArray());
     }
+    public function getStatutDuo(): ?int
+    {
+        return $this->statut_duo;
+    }
+
+    public function setStatutDuo(?int $statut_duo): self
+    {
+        $this->statut_duo = $statut_duo;
+
+        return $this;
+    }
+    public function getParrain(): ?User
+    {
+        return $this->parrain;
+    }
+
+    public function setParrain(?User $parrain): self
+    {
+        $this->parrain = $parrain;
+
+        return $this;
+    }
+
 
 }

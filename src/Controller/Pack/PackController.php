@@ -159,6 +159,8 @@ class PackController extends AbstractController
                 $orderPack->setFraisLivraison($this->configService->calculerFraisDeLivraison($orderPack->getMontantSansFraisLivraison()));
                 $orderPack->setAmount(($orderPack->getMontantSansFraisLivraison() + $orderPack->getFraisLivraison())); 
 
+                $orderPack->setParrain($agent->getParrain());
+                $orderPack->setStatutDuo(0);
 
                 if($pack!=null) $orderPack->setPack($pack);
                 $orderPack->setStatut(OrderPack::CREATED);

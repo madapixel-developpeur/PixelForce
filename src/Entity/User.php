@@ -343,6 +343,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
      */
     private $orderPacks;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $a_pris_bonus_100_premier;
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $num_agent;
+
     public function __construct()
     {
         $this->coachAgents = new ArrayCollection();
@@ -1427,6 +1436,28 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
     public function setHasPaidSubscription(?bool $has_paid_subscription): self
     {
         $this->has_paid_subscription = $has_paid_subscription;
+
+        return $this;
+    }
+    public function getAPrisBonus100Premier(): ?bool
+    {
+        return $this->a_pris_bonus_100_premier;
+    }
+
+    public function setAPrisBonus100Premier(?bool $a_pris_bonus_100_premier): self
+    {
+        $this->a_pris_bonus_100_premier = $a_pris_bonus_100_premier;
+
+        return $this;
+    }
+    public function getNumAgent(): ?int
+    {
+        return $this->num_agent;
+    }
+
+    public function setNumAgent(?int $num_agent): self
+    {
+        $this->num_agent = $num_agent;
 
         return $this;
     }

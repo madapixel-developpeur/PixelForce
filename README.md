@@ -203,3 +203,13 @@ current_timestamp,
 INSERT INTO `config` VALUES (1,'TVA',20,1,1),(2,'Frais livraison',4.79,2,1),(3,'Prix min frais de livraison gratuit',35,3,1);
 
 ```
+
+
+# CHALLENGE DUO
+```sql
+
+INSERT INTO type_bonus(id, nom) VALUES (1, "challenge_duo");
+INSERT INTO bonus(id, pack_min_id, pack_min_val, statut, valeur_bonus, valeur_bonus_100_premier, type_bonus_id) VALUES (1, 1, 197.0, 1, 50.0, 75.0, 1); 
+INSERT INTO bonus(id, pack_min_id, pack_min_val, statut, valeur_bonus, valeur_bonus_100_premier, type_bonus_id) VALUES (2, 2, 497.0, 1, 250.0, 350.0, 1) ;
+INSERT INTO bonus(id, pack_min_id, pack_min_val, statut, valeur_bonus, valeur_bonus_100_premier, type_bonus_id) VALUES (3, 3, 997.0, 1, 500.0, 750.0, 1) ;
+```
