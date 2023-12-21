@@ -165,8 +165,10 @@ class PackController extends AbstractController
                 if($pack!=null) $orderPack->setPack($pack);
                 $orderPack->setStatut(OrderPack::CREATED);
                 $orderPack = $this->orderPackService->saveOrder($orderPack, $stripeToken);
-                if(!is_null($orderPack->getPack()))$this->orderPackService->sendOrderPackProductsToSogec($orderPack->getPack()->getProducts()->toArray());
-        
+                if(!is_null($orderPack->getPack())) {
+                    // Export Order To CSV
+                    $this->orderPackService->exportOrderPackToCsv($orderPack);
+                }
 
                 $this->addFlash('success', 'Paiement effectué');
                 return $this->redirectToRoute('agent_home');

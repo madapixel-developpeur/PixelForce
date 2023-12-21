@@ -73,6 +73,14 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->_em->flush();
     }
 
+    public function countByRole(string $role){
+        $queryBuilder = $this->createQueryBuilder('u')
+                            ->select('COUNT(u.id)')
+                            ->andWhere('u.roles LIKE :role')
+                            ->setParameter('role', '%'.$role.'%');
+        return $queryBuilder->getQuery()->getSingleScalarResult();
+    }
+
     public function findDestinaire($finder, User $currentUser)
     {
         // select * from user inner join agent_secteur on agent_secteur.agent_id=user.id innerjoin secteur on agent_secteur.secteur=secteur.

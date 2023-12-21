@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\OrderPack;
 use App\Entity\SearchEntity\OrderSearch;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
@@ -62,6 +63,28 @@ class OrderPackRepository extends ServiceEntityRepository
         return $query->getQuery()
             ->getResult()
         ;
+    }
+
+    public function findOrdersForChallengeDuo30DaysOf(User $parrain)
+    {
+         // Get the current date
+         $currentDate = new \DateTime();
+
+         // Get the current month and year
+         $currentMonth = $currentDate->format('m'); // Two-digit representation of the month
+         $currentYear = $currentDate->format('Y');  // Four-digit representation of the year
+
+         
+        return $this->createQueryBuilder('e')
+            ->andWhere('e.statut_duo = 0')
+            ->andWhere('e.parrain = :parrain')
+            ->andWhere('MONTH(e.createdAt) = :month')
+            ->andWhere('YEAR(e.createdAt) = :year')
+            ->setParameter('parrain', $parrain)
+            ->setParameter('month', $currentMonth)
+            ->setParameter('year', $currentYear)
+            ->getQuery()
+            ->getResult();
     }
 //    /**
 //     * @return OrderPack[] Returns an array of OrderPack objects

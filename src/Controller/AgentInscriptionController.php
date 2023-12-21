@@ -82,6 +82,11 @@ class AgentInscriptionController extends AbstractController
                 $this->userManager->setUserPasword($user, $request->request->get('inscription_agent')['password']['first'], '', false);
                 $user->setRoles([ User::ROLE_AGENT ]);
                 $user->setActive(1);
+                
+                // Pour savoir que l'agent est le n-ième inscrit
+                $numAgent = $this->userRepository->countByRole(User::ROLE_AGENT);
+                $user->setNumAgent($numAgent);
+                
                 // $user->setAccountStatus(User::ACCOUNT_STATUS['UNPAID']);
                 $user->setAccountStatus(User::ACCOUNT_STATUS['ACTIVE']); // On met temporairement le statut comme ACTIVE
                 $this->entityManager->save($user);

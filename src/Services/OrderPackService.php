@@ -1,12 +1,17 @@
 <?php
 namespace App\Services;
 
+use App\Entity\BonusPack;
 use Exception;
 use App\Entity\User;
 use App\Entity\Devis;
+use App\Entity\HistoriqueChallengeDuo30Days;
 use App\Util\ToolKit;
 use App\Entity\OrderPack;
+use App\Repository\BonusRepository;
+use App\Repository\OrderPackRepository;
 use App\Services\SpreadsheetService;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 use Nucleos\DompdfBundle\Wrapper\DompdfWrapperInterface;
 
@@ -23,7 +28,7 @@ class OrderPackService
     
     
 
-    public function __construct(EntityManagerInterface $entityManager, StripeService $stripeService, MailerService $mailerService, DompdfWrapperInterface $wrapper, FileHandler $fileHandler,  SpreadsheetService $spreadsheetService)
+    public function __construct(private BonusRepository $bonusRepository, private OrderPackRepository $orderPackRepository, EntityManagerInterface $entityManager, StripeService $stripeService, MailerService $mailerService, DompdfWrapperInterface $wrapper, FileHandler $fileHandler,  SpreadsheetService $spreadsheetService)
     {
         $this->entityManager = $entityManager;
         $this->stripeService = $stripeService;
@@ -54,6 +59,10 @@ class OrderPackService
             // $this->mailerService->sendFactureOrderPack($order);
 
             if(!$order->getAgent()->getHasPaidSubscription()) $order->getAgent()->setHasPaidSubscription(true);
+            
+            // Challenge Duo 30 days
+            $this->checkChallenge30Days($order);
+
             $this->entityManager->flush();
             $this->entityManager->commit();
 
@@ -97,8 +106,70 @@ class OrderPackService
         $order->setInvoicePath($pj_filepath);
         $this->entityManager->flush();
     }
+    public function findPackMin($orderPacks){
+        if(count($orderPacks) == 0) return null;
+        $iPackMin = 0;
+        $packCostMin = $orderPacks[$iPackMin]->getPack()->getCost();
+        for($i=0; $i<count($orderPacks); $i++){
+            $packCost = $orderPacks[$iPackMin]->getPack()->getCost();
+            if($packCost < $packCostMin){
+                $iPackMin = $i;
+                $packCostMin = $packCost;
+            }
+        }
+        return $orderPacks[$iPackMin]->getPack();
+    }
+    public function checkChallenge30Days(OrderPack $orderPack){
+        try{
+            // $this->entityManager->beginTransaction();
+            $parrain = $orderPack->getAgent()->getParrain();
+            $orderPacks = $this->orderPackRepository->findOrdersForChallengeDuo30DaysOf($parrain);
+            $packMin = $this->findPackMin($orderPacks);
+            if(!isset($packMin)) return;
 
+            // Get Bonus
+            $bonus = $this->bonusRepository->findOneBy(["packMin"=>$packMin]);
+            if(!isset($bonus)) return;
 
+            if(count($orderPacks)>=2){
+                $bonusAmount = $bonus->getValeurBonus();
+                if( $parrain->getNumAgent() <= 100){
+                    // Si parrain parmi les 100 premiers inscrits
+                    $bonusAmount = $bonus->getValeurBonus100Premier();
+                    $parrain->setAPrisBonus100Premier(true);
+                }
+                $bonusData = new HistoriqueChallengeDuo30Days();
+                $bonusData->setAgent($parrain);
+                $bonusData->setAmount($bonusAmount);
+                for($i=0; $i<count($orderPacks); $i++){
+                    $bonusPack = new BonusPack();
+                    $bonusPack->setPack($orderPacks[$i]->getPack());
+                    $bonusPack->setBonusParent($bonusData);
+                    $this->entityManager->persist($bonusPack);
+
+                    $bonusData->addBonusPack($bonusPack);
+                    
+
+                    // Update statut DUO
+                    $orderPacks[$i]->setStatutDuo(1);
+                    $this->entityManager->persist($orderPacks[$i]);
+                }
+                $this->entityManager->persist($bonusData);
+            }
+
+            // $this->entityManager->flush();
+            // $this->entityManager->commit();
+        } 
+        catch(\Exception $ex){
+            // if($this->entityManager->getConnection()->isTransactionActive()) {
+            //     $this->entityManager->rollback();
+            // }
+            throw $ex;
+        }
+        // finally {
+        //     $this->entityManager->clear();
+        // }
+    }
     public function exportOrderPackToCsv(OrderPack $orderPack){
          $headers = [
             "N° produit", "Nom du produit", "Prix Unitaire", "Quantité commandée", "Prix Total" 
