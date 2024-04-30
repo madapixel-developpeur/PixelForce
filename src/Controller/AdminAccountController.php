@@ -51,7 +51,10 @@ class AdminAccountController extends AbstractController
         $bestStatVente = $statCoachService->getBestStatVente();
         $allStatsVente = $statCoachService->getAllStatVente();
         $revenuAnneeMoisBest = $statAgentService->getRevenuAnneeMois($anneeActuelle, $moisActuel, $bestStatVente['secteur_id'], -1);
-        $bestStatVente['percent'] = $bestStatVente['ca']*100 / $statVente['ca'];
+        $bestStatVente['percent'] = 0;
+        if($statVente['ca'] > 0){
+            $bestStatVente['percent'] = $bestStatVente['ca']*100 / $statVente['ca'];
+        }
 
         return $this->render('user_category/admin/admin_dashboard.html.twig', [
             'statVente' => $statVente,

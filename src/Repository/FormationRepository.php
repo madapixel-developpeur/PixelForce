@@ -183,9 +183,12 @@ class FormationRepository extends ServiceEntityRepository
     public function searchForAgent(?array $criteres, $secteur)
     {
         $queryBuilder = ($this->createQueryBuilder('f'))->where('f.secteur=:secteur')
-            ->setParameter('secteur',$secteur->getId())
-            ->andWhere('f.brouillon=:brouillon')
-            ->setParameter('brouillon', false);
+            ->setParameter('secteur',$secteur->getId());
+        $queryBuilder->andWhere($queryBuilder->expr()->orX(
+                $queryBuilder->expr()->isNull('f.brouillon'),
+                $queryBuilder->expr()->eq('f.brouillon', ':brouillon')
+            ))->setParameter('brouillon', 0)
+        ;
         if(!empty($criteres['titre'])) {
             $queryBuilder->andWhere('f.titre LIKE :titre')
                 ->setParameter('titre', '%'.$criteres['titre'].'%');
@@ -280,12 +283,13 @@ class FormationRepository extends ServiceEntityRepository
     public function findOrderedNonFinishedFormations(Secteur $secteur, User $agent){
         $qb = $this->createQueryBuilder('f');
         $qb->join('f.CategorieFormation', 'cf')
-            ->leftJoin('f.formationAgents', 'fa', Join::WITH, $qb->expr()->eq('fa.agent', ':agent'))
+            ->leftJoin('f.formationAgents', 'fa')
+            // ->andWhere('fa.agent=:agent')
             ->andWhere('f.secteur=:secteur')
             ->andWhere('f.statut=:statusCreated')
             ->andWhere('fa.agent is NULL OR fa.statut != :finishedStatus')
             ->setParameter('secteur',$secteur->getId())
-            ->setParameter('agent', $agent->getId())
+            // ->setParameter('agent', $agent->getId())
             ->setParameter('finishedStatus', Formation::STATUT_TERMINER)
             ->setParameter('statusCreated', Formation::STATUS_CREATED)
             ->addOrderBy('cf.ordreCatFormation')
