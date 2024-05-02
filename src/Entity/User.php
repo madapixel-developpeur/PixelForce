@@ -6,6 +6,7 @@ use App\Repository\UserRepository;
 use App\Services\StripeService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Exception;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -84,6 +85,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @Groups({"chat"})
      */
     private $id;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class)
+     * @ORM\JoinColumn(name="parrain_id", referencedColumnName="id", nullable=true)
+     */
+    private $parrain;
+
+    /**
+     * @ORM\OneToMany(targetEntity=User::class, mappedBy="parrain")
+     */
+    private $fils;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
@@ -347,6 +359,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->subscriptionPlanAgentAccounts = new ArrayCollection();
         $this->orderDigitals = new ArrayCollection();
         $this->devisCompanies = new ArrayCollection();
+        $this->fils = new ArrayCollection();
 
 
     }
@@ -1394,4 +1407,207 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    /**
+     * @return Collection<int, LiveChatVideo>
+     */
+    public function getLiveChatVideosFromUserA(): Collection
+    {
+        return $this->liveChatVideosFromUserA;
+    }
+
+    public function addLiveChatVideosFromUserA(LiveChatVideo $liveChatVideosFromUserA): static
+    {
+        if (!$this->liveChatVideosFromUserA->contains($liveChatVideosFromUserA)) {
+            $this->liveChatVideosFromUserA->add($liveChatVideosFromUserA);
+            $liveChatVideosFromUserA->setUserA($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLiveChatVideosFromUserA(LiveChatVideo $liveChatVideosFromUserA): static
+    {
+        if ($this->liveChatVideosFromUserA->removeElement($liveChatVideosFromUserA)) {
+            // set the owning side to null (unless already changed)
+            if ($liveChatVideosFromUserA->getUserA() === $this) {
+                $liveChatVideosFromUserA->setUserA(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, LiveChatVideo>
+     */
+    public function getLiveChatVideosFromUserB(): Collection
+    {
+        return $this->liveChatVideosFromUserB;
+    }
+
+    public function addLiveChatVideosFromUserB(LiveChatVideo $liveChatVideosFromUserB): static
+    {
+        if (!$this->liveChatVideosFromUserB->contains($liveChatVideosFromUserB)) {
+            $this->liveChatVideosFromUserB->add($liveChatVideosFromUserB);
+            $liveChatVideosFromUserB->setUserB($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLiveChatVideosFromUserB(LiveChatVideo $liveChatVideosFromUserB): static
+    {
+        if ($this->liveChatVideosFromUserB->removeElement($liveChatVideosFromUserB)) {
+            // set the owning side to null (unless already changed)
+            if ($liveChatVideosFromUserB->getUserB() === $this) {
+                $liveChatVideosFromUserB->setUserB(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, CalendarEvent>
+     */
+    public function getCalendarEvents(): Collection
+    {
+        return $this->calendarEvents;
+    }
+
+    public function addCalendarEvent(CalendarEvent $calendarEvent): static
+    {
+        if (!$this->calendarEvents->contains($calendarEvent)) {
+            $this->calendarEvents->add($calendarEvent);
+            $calendarEvent->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCalendarEvent(CalendarEvent $calendarEvent): static
+    {
+        if ($this->calendarEvents->removeElement($calendarEvent)) {
+            // set the owning side to null (unless already changed)
+            if ($calendarEvent->getUser() === $this) {
+                $calendarEvent->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Meeting>
+     */
+    public function getMeetings(): Collection
+    {
+        return $this->meetings;
+    }
+
+    public function addMeeting(Meeting $meeting): static
+    {
+        if (!$this->meetings->contains($meeting)) {
+            $this->meetings->add($meeting);
+            $meeting->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMeeting(Meeting $meeting): static
+    {
+        if ($this->meetings->removeElement($meeting)) {
+            // set the owning side to null (unless already changed)
+            if ($meeting->getUser() === $this) {
+                $meeting->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Meeting>
+     */
+    public function getMeetingGuests(): Collection
+    {
+        return $this->meetingGuests;
+    }
+
+    public function addMeetingGuest(Meeting $meetingGuest): static
+    {
+        if (!$this->meetingGuests->contains($meetingGuest)) {
+            $this->meetingGuests->add($meetingGuest);
+            $meetingGuest->setUserToMeet($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMeetingGuest(Meeting $meetingGuest): static
+    {
+        if ($this->meetingGuests->removeElement($meetingGuest)) {
+            // set the owning side to null (unless already changed)
+            if ($meetingGuest->getUserToMeet() === $this) {
+                $meetingGuest->setUserToMeet(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getParrain(): ?self
+    {
+        return $this->parrain;
+    }
+
+    public function setParrain(?self $parrain): static
+    {
+        $this->parrain = $parrain;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, User>
+     */
+    public function getFils(): Collection
+    {
+        return $this->fils;
+    }
+
+    public function addFil(User $fil): static
+    {
+        if (!$this->fils->contains($fil)) {
+            $this->fils->add($fil);
+            $fil->setParrain($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFil(User $fil): static
+    {
+        if ($this->fils->removeElement($fil)) {
+            // set the owning side to null (unless already changed)
+            if ($fil->getParrain() === $this) {
+                $fil->setParrain(null);
+            }
+        }
+
+        return $this;
+    }
+    public function countFils(){
+        return count($this->fils);
+    }
+
+    
+
+    
+   
+
+    
+
 }

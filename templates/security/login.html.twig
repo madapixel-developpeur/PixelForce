@@ -102,7 +102,7 @@
                                         <div class="row mt-2 justify-content-center d-flex">
                                             <div class="col-12 col-xl-6 pe-xl-0">
                                                 <div class=" text-center">
-                                                    <a class="btn btn-success w-100 font-weight-bold" href="{% if agentToken %} {{ path('signup_client', {'token': agentToken}) }} {% else %} {{ path('agent_inscription') }} {% endif %}">
+                                                    <a class="btn btn-success w-100 font-weight-bold" href="{% if agentToken %} {{ path('signup_client', {'token': agentToken}) }} {% else %} {{ path('agent_inscription',{'username':' '}) }} {% endif %}">
                                                         S'inscrire
                                                     </a>
                                                 </div>

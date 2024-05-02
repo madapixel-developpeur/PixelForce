@@ -65,7 +65,7 @@ class AdminCoachController extends AbstractController
         $searchForm->handleRequest($request);
         // dd($this->repoUser->findCoachOrAgentQuery($search, User::ROLE_COACH));
         $coachs = $paginator->paginate(
-            $this->repoUser->findCoachOrAgentQuery($search, User::ROLE_COACH),
+            $this->repoUser->findCoachQuery($search, User::ROLE_COACH),
             $request->query->getInt('page', 1),
             20
         );
@@ -80,15 +80,21 @@ class AdminCoachController extends AbstractController
     /**
      * @Route("/admin/coach/{id}/view", name="admin_coach_view")
      */
-    public function admin_coach_view(User $coach, AgentSecteurService $agentSecteurService)
+    public function admin_coach_view(User $coach,Request $request, AgentSecteurService $agentSecteurService, PaginatorInterface $paginator)
     {
         $coachtSecteurs = $this->repoCoachSecteur->findBy(['coach' => $coach]);
         $secteurs = $agentSecteurService->getSecteurs($coachtSecteurs);
-
+        $result=$this->repoUser->findBy(['parrain'=>$coach->getId()]);
+        $filleuil = $paginator->paginate(
+            $result,
+            $request->query->getInt('page', 1),
+            5
+        );
         return $this->render('user_category/admin/coach/view_coach.html.twig', [
             'coach' => $coach,
             'secteurs' => $secteurs,
-            'coachtSecteurs' => $coachtSecteurs
+            'coachtSecteurs' => $coachtSecteurs,
+            'filleuil'=>$filleuil
         ]);
     }
 

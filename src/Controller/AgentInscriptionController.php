@@ -58,20 +58,22 @@ class AgentInscriptionController extends AbstractController
 
 
     /**
-     * @Route("/inscription/agent/index", name="agent_inscription")
+     * @Route("/inscription/agent/index/{username}", name="agent_inscription")
      */
-    public function inscriptionAgent(Request $request, SecteurRepository $secteurRepository)
+    public function inscriptionAgent(Request $request, SecteurRepository $secteurRepository,String $username)
     {
         $user = new User();
         $form = $this->createForm(InscriptionAgentType::class, $user);
         $form->handleRequest($request);
 
-        if($form->isSubmitted() && $form->isValid()) {
+        if($form->isSubmitted() && $form->isValid()) {       
             $this->userManager->setUserPasword($user, $request->request->get('inscription_agent')['password']['first'], '', false);
             $user->setRoles([ User::ROLE_AGENT ]);
             $user->setActive(1);
             // $user->setAccountStatus(User::ACCOUNT_STATUS['UNPAID']);
             $user->setAccountStatus(User::ACCOUNT_STATUS['ACTIVE']); // On met temporairement le statut comme ACTIVE
+            $parrain=$this->getParainByUsername($username);
+            $user->setParrain($parrain);
             $this->entityManager->save($user);
             $this->session->set('agentId', $user->getId());
             $this->addFlash(
@@ -86,6 +88,19 @@ class AgentInscriptionController extends AbstractController
         ]);
 
     }
+    public function getParainByUsername($username){
+        $parrain =$this->userRepository->findOneBy(['username' => $username]);
+        if($parrain){
+            foreach($parrain->getRoles() as $p){
+                if($p==User::ROLE_COACH){
+                    return $parrain;
+                }
+            }
+            return null;
+        }
+        return $parrain;
+    }
+
 
     /**
      * @Route("/inscription/agent/payement/intent", name="agent_register_payment_intent")

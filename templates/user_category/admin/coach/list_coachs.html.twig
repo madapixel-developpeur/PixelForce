@@ -76,10 +76,13 @@
 					<tr style="white-space:nowrap" >
 						<th scope="col" class="text-center">#</th>
 						<th scope="col" class="text-center">Nom et prénoms</th>
+						<th scope="col" class="text-center">Username</th>
 						<th scope="col" class="text-center">Email</th>
 						<th scope="col" class="text-center">Téléphone</th>
 						<th scope="col" class="text-center">Date inscription</th>
+						<th scope="col" class="text-center">Nombre filleuil</th>
 						<th scope="col" class="text-center">Secteur</th>
+						<th scope="col" class="text-center">Inscription coach</th>
 						<th scope="col" class="text-center">Etat</th>
 						<th scope="col" class="text-center table-th-notSortable">ACTION</th>
 					</tr>
@@ -89,13 +92,18 @@
                         <tr>
                             <td>{{ coach.id }}</td>
                             <td>{{ coach.fullName }}</td>
+                            <td>{{ coach.username }}</td>
                             <td>{{ coach.email }}</td>
                             <td>{{ coach.telephone|default('-') }}</td>
                             <td>{{ coach.createdAt|date('d/m/Y') }}</td>
+                            <td>{{ coach.countFils() }}</td>
                             <td>
                                 {# On récupère les secteurs reliés par l'agent  #}
                                 {% set secteurs = repoCoachSecteur.findBy({'coach' : coach}) %}
                                 {{ coach.allSecteursOfUser(secteurs)|default('-') }}     
+                            </td>
+                            <td>
+                                 <a class="btn btn-success w-100 font-weight-bold" href="{{ path('agent_inscription', {'username': coach.username != "" ? coach.username : ' '}) }}">Cliquez ici <i class="fa fa-sign-in" aria-hidden="true"></i></a>
                             </td>
                             <td>
                                 <div class="m-auto {{ coach.active == 1 ? 'bg-success' : (coach.active == -1 ? 'bg-danger' : 'bg-primary') }} rounded-circle caret"><span class="d-none">{{  coach.active }}</span></div>

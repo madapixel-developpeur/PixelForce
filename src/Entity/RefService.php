@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\RefServiceRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 /**

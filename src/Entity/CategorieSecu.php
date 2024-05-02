@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\CategorieSecuRepository;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JsonSerializable;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -103,6 +104,36 @@ class CategorieSecu implements JsonSerializable
     public function setSecteur(?Secteur $secteur): self
     {
         $this->secteur = $secteur;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ProduitDD>
+     */
+    public function getProduits(): Collection
+    {
+        return $this->produits;
+    }
+
+    public function addProduit(ProduitDD $produit): static
+    {
+        if (!$this->produits->contains($produit)) {
+            $this->produits->add($produit);
+            $produit->setCategorie($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProduit(ProduitDD $produit): static
+    {
+        if ($this->produits->removeElement($produit)) {
+            // set the owning side to null (unless already changed)
+            if ($produit->getCategorie() === $this) {
+                $produit->setCategorie(null);
+            }
+        }
 
         return $this;
     }
