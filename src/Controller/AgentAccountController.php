@@ -30,6 +30,7 @@ use App\Repository\UserRepository;
 use App\Services\Stat\StatAgentService;
 use App\Services\StripeService;
 use App\Services\User\AgentService;
+use App\Entity\SearchEntity\UserSearch;
 
 class AgentAccountController extends AbstractController
 {
@@ -124,6 +125,34 @@ class AgentAccountController extends AbstractController
             'plan' => $planAgentAccount,
         ]);
     }
+     /**
+     * @Route("/agent/add-secteur/{secteur}", name="agent_add_secteur")
+     */
+    public function agent_add_secteur(Secteur $secteur,AgentSecteurRepository $repoSecteurRepository)
+    {
+        $user = $this->getUser();
+       
+        try{
+            //verification si le secteur est déja affilié à  l'utilisateur
+            $asecteur = $repoSecteurRepository->findOneBy(['agent' => $user,'secteur' => $secteur]);
+            if($asecteur){
+                throw new \Exception('Vous êtes déja rattaché à ce secteur');
+            }
+            $asecteur=new AgentSecteur();
+            $asecteur->setAgent($user);
+            $asecteur->setSecteur($secteur);
+            $asecteur->setDateValidation(new \DateTime());
+            $asecteur->setStatut(1);
+            $repoSecteurRepository->add($asecteur);
+        }
+        catch(\Exception $e){
+            $this->addFlash(
+                'warning',
+                $e->getMessage()
+             );
+        }
+        return $this->redirectToRoute("agent_home");
+    }
 
 
     /**
@@ -142,7 +171,7 @@ class AgentAccountController extends AbstractController
     /**
      * @Route("/agent/dashboard/secteur/{id}", name="agent_dashboard_secteur")
      */
-    public function agent_dashboard_secteur( Request $request, PaginatorInterface $paginator, Secteur $secteur, StatAgentService $statAgentService)
+    public function agent_dashboard_secteur( Request $request, PaginatorInterface $paginator, Secteur $secteur, StatAgentService $statAgentService,UserRepository $userRepository)
     {
       
         $agent = (object)$this->getUser();
@@ -151,6 +180,7 @@ class AgentAccountController extends AbstractController
         $formations = $this->repoFormation->findOrderedNonFinishedFormations($secteur, $agent);
         $firstFormation = count($formations) > 0 ?$formations[0] : null;
         
+        
         // On vérifie d'abord si la session avec la clé 'secteurId' est générée ou les contenus sont activés
         $sessionSecteurId =  $this->session->get('secteurId');
         $sessionAccountStatus =  $this->agentService->isActivableContent($agent);
@@ -158,11 +188,12 @@ class AgentAccountController extends AbstractController
             return $this->redirectToRoute('agent_home');
         }
 
-        $contacts = $this->repoContact->findBy(['secteur' => $secteur, 'agent' => $agent]);
-        $contacts = $paginator->paginate(
-            $contacts,
+     
+        
+        $coachs = $paginator->paginate(
+            $userRepository->findCoachBySecteur(new UserSearch(),$secteur),
             $request->query->getInt('page', 1),
-            5
+            20
         );
 
         // Calendar upcoming events :
@@ -183,7 +214,7 @@ class AgentAccountController extends AbstractController
             'secteur' => $secteur,
             'formations' => $formations,
             'firstFormation' => $firstFormation,
-            'contacts' => $contacts,
+            'coachs' => $coachs,
             'CategorieFormation' => CategorieFormation::class,
             'nbrAllMyContacts' => count($this->repoContact->findAll()),
             'repoRelationFormationCategorie' => $this->repoRelationFormationCategorie,
@@ -278,4 +309,6 @@ class AgentAccountController extends AbstractController
             200
         );
     }
+
+   
 }

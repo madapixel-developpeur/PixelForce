@@ -63,6 +63,7 @@ class AgentInscriptionController extends AbstractController
     public function inscriptionAgent(Request $request, SecteurRepository $secteurRepository,String $username)
     {
         $user = new User();
+        $parrain=$this->getParainByUsername($username);
         $form = $this->createForm(InscriptionAgentType::class, $user);
         $form->handleRequest($request);
 
@@ -72,7 +73,7 @@ class AgentInscriptionController extends AbstractController
             $user->setActive(1);
             // $user->setAccountStatus(User::ACCOUNT_STATUS['UNPAID']);
             $user->setAccountStatus(User::ACCOUNT_STATUS['ACTIVE']); // On met temporairement le statut comme ACTIVE
-            $parrain=$this->getParainByUsername($username);
+           
             $user->setParrain($parrain);
             $this->entityManager->save($user);
             $this->session->set('agentId', $user->getId());
@@ -84,7 +85,8 @@ class AgentInscriptionController extends AbstractController
         }
 
             return $this->render('security/inscription/form.html.twig', [
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'parrain'=>$parrain
         ]);
 
     }

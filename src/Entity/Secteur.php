@@ -33,6 +33,20 @@ class Secteur implements JsonSerializable
     private $description;
 
     /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $titre;
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $couverture;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $liens;
+
+    /**
      * @ORM\OneToMany(targetEntity=AgentSecteur::class, mappedBy="secteur")
      */
     private $agentSecteurs;
@@ -372,6 +386,42 @@ class Secteur implements JsonSerializable
         }
 
         $this->contratSecu = $contratSecu;
+
+        return $this;
+    }
+
+    public function getCouverture(): ?string
+    {
+        return $this->couverture;
+    }
+
+    public function setCouverture(?string $couverture): static
+    {
+        $this->couverture = $couverture;
+
+        return $this;
+    }
+
+    public function getLiens(): ?string
+    {
+        return $this->liens;
+    }
+
+    public function setLiens(?string $liens): static
+    {
+        $this->liens = $liens;
+
+        return $this;
+    }
+
+    public function getTitre(): ?string
+    {
+        return $this->titre;
+    }
+
+    public function setTitre(?string $titre): static
+    {
+        $this->titre = $titre;
 
         return $this;
     }

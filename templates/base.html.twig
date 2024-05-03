@@ -29,7 +29,10 @@
         <link rel="stylesheet" type="text/css" href="{{asset('assets/css/style.css')}}">
         <link rel="stylesheet" type="text/css" href="{{asset('app-assets/css/pages/app-invoice.css')}}">
         <link rel="stylesheet" type="text/css" href="{{asset('app-assets/css/pages/app-ecommerce.css')}}">
-
+        <!-- Calendly link widget begin -->
+		<link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
+		<script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript" async></script>
+		<!-- Calendly link widget end -->
 
         {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
         {% block stylesheets %}
@@ -42,7 +45,6 @@
             {{ encore_entry_link_tags('vuexy_dark_layout') }}
             {{ encore_entry_link_tags('vuexy_vertical_menu') }}
             {{ encore_entry_link_tags('vuexy_ext_component_toastr') }}
-
             {{ encore_entry_link_tags('app') }}
             {{ encore_entry_link_tags('base') }}
             {{ encore_entry_link_tags('chat') }}
@@ -84,7 +86,7 @@
         <div class="drag-target"></div> 
 
         {% include 'live/video/liveVideoRapide.html.twig' %}
-        {% include 'live/chat/mini_menu_chat.html.twig'  %}
+        {#{% include 'live/chat/mini_menu_chat.html.twig'  %}#}
         
         {% block javascripts %}
             <script type="application/json" id="live-call-topic">{{ mercure(constant('App\\Services\\LiveVideo::CALL_TOPIC')~(app.user.id|base64_encode))|json_encode(constant('JSON_UNESCAPED_SLASHES') b-or constant('JSON_HEX_TAG'))|raw }}</script>

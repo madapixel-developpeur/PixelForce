@@ -19,14 +19,14 @@
         <section id="dashboard-ecommerce">
             <div class="row match-height">
                 <!-- Medal Card -->
-                <div class="col-xl-4 col-md-6 col-12">
+                <!--<div class="col-xl-4 col-md-6 col-12">
                     <div class="card card-congratulation-medal">
                         <div class="card-body">
-                            <h5>Félicitation 🎉 {{ app.user.prenom }}!</h5>
+                            <h5>Félicitation 🎉 {#{{ app.user.prenom }}#}!</h5>
                             <p class="card-text font-small-3">Vous avez gagné la médaille d'or</p>
                             {# {% if (estSecurite or estEcommerce) %} #}
                             <h3 class="mb-75 mt-2 pt-50">
-                                <a href="#">{{statVente.ca | number_format(2, ',', ' ')}} €</a>
+                                <a href="#">{#{{statVente.ca | number_format(2, ',', ' ')}} #} €</a>
                             </h3>
                             {# {% endif %} #}
                             {% if estSecurite %}
@@ -40,11 +40,11 @@
                             <img src="{{asset('assets/vuexy/images/illustration/badge.svg')}}" class="congratulation-medal" alt="Medal Pic" />
                         </div>
                     </div>
-                </div>
+                </div> -->
                 <!--/ Medal Card -->
     
                 <!-- Statistics Card -->
-                <div class="col-xl-8 col-md-6 col-12">
+                <!--<div class="col-xl-8 col-md-6 col-12">
                     <div class="card card-statistics">
                         <div class="card-header">
                             <h4 class="card-title">Statistiques</h4>
@@ -59,7 +59,7 @@
                                             </div>
                                         </div>
                                         <div class="my-auto">
-                                            <h4 class="fw-bolder mb-0">{{statVente.nbr_ventes | number_format(0, ',', ' ')}}</h4>
+                                            <h4 class="fw-bolder mb-0">{#{{statVente.nbr_ventes | number_format(0, ',', ' ')}}#}</h4>
                                             <p class="card-text font-small-3 mb-0">Ventes</p>
                                         </div>
                                     </div>
@@ -99,7 +99,7 @@
                                             </div>
                                         </div>
                                         <div class="my-auto">
-                                            <h4 class="fw-bolder mb-0">{{statVente.ca | number_format(2, ',', ' ')}} €</h4>
+                                            <h4 class="fw-bolder mb-0">{#{{statVente.ca | number_format(2, ',', ' ')}}#} €</h4>
                                             <p class="card-text font-small-3 mb-0">Revenu</p>
                                         </div>
                                     </div>
@@ -108,12 +108,12 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div>-->
                 <!--/ Statistics Card -->
             </div>
 
             <div class="row match-height">
-                <div class="col-lg-8 col-12">
+                <div class="col-lg-12 col-12">
                     <div class="card card-company-table">
                         <div class="card-body p-0">
                             {% if firstFormation == null %}
@@ -150,9 +150,56 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="col-lg-12 col-12 pt-50 pb-50">
+                    <div class="card card-company-table">
+                        <div class="tm-section blog-area  pt-50 pb-50">
+                            <div class="container position-relative">
+                                <div class="blog-detail row align-items-center">
+                                    <h1 class="bd-section__title bd-section__title-sm text-center">{{secteur.titre}}</h1>
+                                     {% for label, messages in app.flashes %}
+                                                {% for message in messages %}
+                                                    <div class="alert alert-{{label}} my-3" role="alert">
+                                                        <div class="alert-body">
+                                                            {{message}}
+                                                        </div>
+                                                    </div>
+                                                {% endfor %}
+                                     {% endfor %}
+                                    <div class="blog-detail-body  col-md-6">
+                                        
+                                                <div class="d-flex align-items-center justify-content-center mt-1 mb-2">
+                                                    <div class="img d-flex align-items-center justify-content-center">
+                                                        <img src="{{ asset('files/')}}/{{secteur.couverture}}" class="img-thumbnail img-fluid w-100" alt="">
+                                                    </div>
+                                                </div>
+                                       
+       
+                                        
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="blog-detail-content">
+                                            <ul class="list-group">
+                                                <li class="list-group-item">Nom du secteur : 
+                                                <strong>{{secteur.nom}}</strong></li>
+                                            </ul>
+                                            <ul class="list-group">
+                                                <li class="list-group-item">Déscriptions : 
+                                                <strong>{{secteur.description}}</strong></li>
+                                            </ul>
+                                            <ul class="list-group">
+                                                <a target="_blank" href="{{secteur.liens}}"><li class="list-group-item">Liens : <strong>{{secteur.liens}}</strong></li></a>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
     
                 <!-- Developer Meetup Card -->
-                <div class="col-lg-4 col-md-6 col-12">
+                <!--<div class="col-lg-4 col-md-6 col-12">
                     <div class="card card-developer-meetup position-relative">
                         <div class="position-absolute right-0 top-0 m-3">
                             <a href="{{ path('calendar_index') }}" class="btn btn-primary d-flex justify-content-center align-items-center">Mon Agenda <i data-feather="calendar" class="ms-3"></i></a>
@@ -199,7 +246,7 @@
                             {% if upcomingEvents|length == 0 %}
                                 <div class="alert alert-secondary">Aucun évenement à venir.</div>
                             {% endif %}
-                            {# <div class="meetup-header d-flex align-items-center">
+                             <div class="meetup-header d-flex align-items-center">
                                 <div class="meetup-day">
                                     <h6 class="mb-0">MARDI</h6>
                                     <h3 class="mb-0">24</h3>
@@ -230,68 +277,63 @@
                                     <h6 class="mb-0">Parc central</h6>
                                     <small>Manhattan, New York</small>
                                 </div>
-                            </div> #}
+                            </div> 
                         </div>
                     </div>
-                </div>
+                </div>-->
                 <!--/ Developer Meetup Card -->
     
                 <!-- Browser States Card -->
                 <div class="col-lg-12 col-12">
-                    <h6 class="display-6" style="font-size : 20px;">Votre liste de contact :</h6>
+                    <h6 class="display-6" style="font-size : 20px;">rendez-vous avec le coach :</h6>
                     <div class="card card-company-table pb-5" style="min-height: 300px;">
                         <div class="card-body p-0">
                             <div class="table-responsive">
-                                <table class="table">
+                                <table class="table table-striped table-hover text-center sortable">
                                     <thead>
-                                        <tr class="text-center">
-                                            <th scope="col" class="p-3"></th>
-                                            <th scope="col" class="p-3">Prénoms</th>
-                                            <th scope="col" class="p-3">Email</th>
-                                            <th scope="col" class="p-3">Téléphone</th>
-                                            <th scope="col" class="p-3">Adresse</th>
-                                            <th scope="col" class="p-3">Tags</th>
+                                        <tr style="white-space:nowrap" >
+                                            <th scope="col" class="text-center">1</th>
+                                            <th scope="col" class="text-center">Nom et prénoms</th>
+                                            <th scope="col" class="text-center">Username</th>
+                                            <th scope="col" class="text-center">Email</th>
+                                            <th scope="col" class="text-center">Téléphone</th>
+                                            <th scope="col" class="text-center">Date inscription</th>
+                                            <th scope="col" class="text-center">Nombre filleuil</th>
+                                            <th scope="col" class="text-center">Rendez-vous</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {% if contacts|length < 1 %}
-                                            <div class="d-flex justify-content-center my-2">
-                                                <a href="{{ path('agent_contact_info_add') }}" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> Ajouter un contact</a>
-                                            </div>
-                                        {% else %}
-                                            {% for contact in contacts %}
-                                            {% set information = contact.information %}
-                                                <tr class="text-center">
-                                                    <td class="text-center"><i class="fa-solid fa-address-card"></i></td>
-                                                    <td><a href="{{ path('agent_contact_view', {'id': contact.id}) }}" class="text-black"> {{ information.lastname }}</a></td>
-                                                    <td><a href="{{ path('agent_contact_view', {'id': contact.id}) }}" class="text-black" > {{ information.email }}</a></td>
-                                                    <td>{{ information.phone }}</td>
-                                                    <td>{{ information.address }}</td>
-                                                    <td class="justify-content-center d-flex">
-                                                        {% set tags = information.contact.tags.toArray %}
-                                                        {% for tag in tags %}
-                                                            <div class="caret caret-shadow caret-hoverable rounded-3 d-inline-block bg-{{ tag.couleur }}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="{{ tag.libelle }}"></div>
-                                                        {% endfor %}
-                                                    </td>
+                                        {% for coach in coachs %}
+                                            <tr>
+                                                <td>{{ coach.id }}</td>
+                                                <td>{{ coach.fullName }}</td>
+                                                <td>{{ coach.username }}</td>
+                                                <td><a href= "mailto: {{ coach.email }}"> {{ coach.email }} </a></td>
+                                                <td><a href="tel:{{ coach.telephone|default('-') }}">{{ coach.telephone|default('-') }}</a></td>
+                                                <td>{{ coach.createdAt|date('d/m/Y') }}</td>
+                                                <td>{{ coach.countFils() }}</td>
+                                                <td>
+                                                    <a class="btn btn-success w-100 font-weight-bold" href="#" onclick="Calendly.initPopupWidget({url: '{{coach.getLienCalendly()}}'});return false;" >Cliquez ici <i class="fa fa-bookmark" aria-hidden="true"></i></a>
+                                                </td>
+                                                
+                                            </tr>
+                                        {% endfor %}
 
-                                                </tr>
-                                            {% endfor %}
-                                        {% endif %}
                                     </tbody>
                                 </table>
+		                    </div>
+                            <div class="pagination d-flex justify-content-center">
+                                    {{ knp_pagination_render(coachs)}}
                             </div>
-                            {% if contacts|length > 0 %}
-                            <div class="position-absolute bottom-0 start-50 translate-middle-x mb-3">
-                                <a href="{{ path('agent_contact_list') }}" class="btn btn-primary float-bottom">Voir plus <i class="fa-solid fa-circle-arrow-right ms-1"></i></a>
-                            </div>
-                            {% endif %}
                         </div>
                     </div>
                 </div>
+                
+		
                 <!--/ Browser States Card -->
     
                 <!-- Goal Overview Card -->
-                <div class="col-lg-4 col-md-6 col-12">
+                <!--<div class="col-lg-4 col-md-6 col-12">
                     <div class="card">
                         <div class="card-header d-flex justify-content-between align-items-center">
                             <h4 class="card-title">Aperçu des objectifs</h4>
@@ -311,11 +353,11 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div>-->
                 <!--/ Goal Overview Card -->
     
                 <!-- Liste Formation -->
-                <div class="col-lg-8 col-md-6 col-12">
+                <!--<div class="col-lg-8 col-md-6 col-12">
                     <div class="card card-transaction">
                         <div class="card-header">
                             <h4 class="card-title">Analyse clients</h4>
@@ -348,14 +390,16 @@
                             {% endfor %}
                         </div>
                     </div>
-                </div>
+                </div>-->
                 <!--/ Liste Formation -->
             </div>
 
+            
             <div class="row match-height">
                 <div class="col-lg-4 col-12">
                     <div class="row match-height">
                         <!-- Bar Chart - Orders -->
+                        <!--
                         <div class="col-lg-6 col-md-3 col-6">
                             <div class="card">
                                 <div class="card-body pb-50">
@@ -365,9 +409,11 @@
                                 </div>
                             </div>
                         </div>
+                        -->
                         <!--/ Bar Chart - Orders -->
     
                         <!-- Line Chart - Profit -->
+                        <!--
                         <div class="col-lg-6 col-md-3 col-6">
                             <div class="card card-tiny-line-stats">
                                 <div class="card-body pb-50">
@@ -377,9 +423,11 @@
                                 </div>
                             </div>
                         </div>
+                        -->
                         <!--/ Line Chart - Profit -->
     
                         <!-- Earnings Card -->
+                        <!--
                         <div class="col-lg-12 col-md-6 col-12">
                             <div class="card earnings-card">
                                 <div class="card-body">
@@ -399,12 +447,14 @@
                                 </div>
                             </div>
                         </div>
+                        -->
                         <!--/ Earnings Card -->
                     </div>
                 </div>
     
                 <!-- Revenue Report Card -->
                 {# {% if estDemandeDevis %}d-none{% endif %} #}
+                <!--
                 <div class="col-lg-8 col-12 ">
                     <div class="card card-revenue-budget">
                         <div class="row mx-0">
@@ -452,9 +502,10 @@
                         </div>
                     </div>
                 </div>
+                -->
                 <!--/ Revenue Report Card -->
             </div>
-    
+            -->
        
         </section>
 

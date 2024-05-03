@@ -8,9 +8,12 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\TelType;
+use Symfony\Component\Validator\Constraints\NotNull;
 
 class UserType extends AbstractType
 {
@@ -42,6 +45,13 @@ class UserType extends AbstractType
                 'required' => false,
                 'label' => 'Prénom'
             ])
+            ->add('lienCalendly', UrlType::class, [
+                'attr' => [
+                    'placeholder' => 'Liens calendly'
+                ],
+                'required' => false,
+                'label' => 'Liens calendly'
+            ])
             ->add('dateNaissance', DateType::class, [
                 'label' => 'Date de naissance',
                 'widget' => 'single_text',
@@ -52,6 +62,15 @@ class UserType extends AbstractType
             ->add('adresse', TextType::class, [
                 'attr' => [
                     'placeholder' => 'Votre Adresse'
+                ]
+            ])
+            ->add('telephone', TelType::class, [
+                'label' => false,
+                'attr' => [
+                    'placeholder' => 'Numéro téléphone'
+                ],
+                'constraints' => [
+                    new NotNull([],'champ obligatoire')
                 ]
             ])
             ->add('numeroSecurite', TextType::class, [

@@ -21,6 +21,32 @@
                 </div>
             {% endif %}
             
+            <div class="row match-height">
+                <div class="card card-company-table m">
+                    <div class="card-body p-0">
+                        <div class="card-body p-0">
+                            <h3 class="fw-bolder text-center mt-2">Vidéo de formation </h3>
+                                    <div class="border d-flex bg-white">
+                                        <iframe src="https://player.vimeo.com/video/" width="700" height="400" class="m-auto" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+                                    </div>
+                                    <div class="text-center m-2 p-2">
+                                        <div class="row">
+                                            <div class="col">
+                                                <a href="#" class="btn btn-primary fw-bolder mt-4"><i class="fa-solid fa-file me-2"></i> Fiche formation</a>
+                                            </div>
+                                            <div class="col">
+                                                <a href="#" class="btn btn-success fw-bolder mt-4"><i class="fa fa-check"></i> J'ai terminé cette formation</a>
+                                            </div>
+                                            <div class="col">
+                                                <a href="#" class="btn btn-secondary fw-bolder mt-4"><i class="fa-solid fa-list me-2"></i> Liste des formations</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <h4 class="text-center mb-3" style="padding: 0 100px">Voici tous les secteurs disponibles sur la plateforme PixelForce. Vous pouvez accéder au secteur qui vous est attribué.</h4>
             <div class="block-list-card-secteur mt-5">
                 <div class="row d-flex justify-content-center">
@@ -38,7 +64,7 @@
 
                                 <div class="button-block text-center mt-5">
                                     {% if agentSecteur is null %}
-                                        <!-- <a href="" class="btn btn-primary" disabled><i class="fa-solid fa-location-arrow"></i> Découvrir</a> -->
+                                        <a href="{{path('agent_add_secteur',{'secteur':secteur.getId()})}}" class="btn btn-primary" disabled><i class="fa-solid fa-location-arrow"></i> Ajouter</a>
                                     {% elseif agentSecteur and agentSecteur.statut == true %}
                                         <a href="{{ path('agent_generate_sessionSecteur_before_redirect_to_route_dahsboard', {id: secteur.id}) }}" class="btn btn-success"><i class="fa-solid fa-location-arrow"></i> Accéder </a>
                                     {% elseif agentSecteur and agentSecteur.statut == false %}

@@ -23,7 +23,22 @@
 					<div class="row">
 						{{ form_start(formSecteur) }}
 							{{ form_row(formSecteur.nom) }}
+							<div class="mb-3">
+                                {{form_label(formSecteur.titre)}}
+                                {{form_widget(formSecteur.titre,{ 'attr': {'class': 'form-control'} })}}
+                                {{form_errors(formSecteur.titre)}}
+                            </div>
 							{{ form_row(formSecteur.description) }}
+							<div class="mb-3">
+                                {{form_label(formSecteur.liens)}}
+                                {{form_widget(formSecteur.liens,{ 'attr': {'class': 'form-control'} })}}
+                                {{form_errors(formSecteur.liens)}}
+                            </div>
+							<div class="mb-3">
+                                {{form_label(formSecteur.couverture)}}
+                                {{form_widget(formSecteur.couverture,{ 'attr': {'class': 'form-control'} })}}
+                                {{form_errors(formSecteur.couverture)}}
+                            </div>
 							{{ form_row(formSecteur.type) }}
 						
 							<div class="row">

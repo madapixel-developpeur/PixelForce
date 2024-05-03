@@ -36,7 +36,13 @@
             </div>
         </div>
 
+            
+
         <h5 class="mb-4">Information sur la connexion</h5>
+        <div class="mt-1 mb-3">
+            <h6 class="">Nom d'utilisateur du parrain</h6>
+            <input type="text" id="inscription_agent_parrain" name="inscription_agent[parrain]" placeholder="Nom d'utilisateur du parrain" class="form-control" value="{% if (parrain) %} {{parrain.username}} {% else %}""{% endif %}" disabled>        
+        </div>
         {{ form_row(form.username) }}
         {{ form_row(form.password) }}
         <div class="w-100 text-center">

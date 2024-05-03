@@ -270,8 +270,6 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
 
 
-    
-
     /**
      * Permet de filtrer tous les agents du coach
      *
