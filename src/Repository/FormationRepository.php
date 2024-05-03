@@ -280,12 +280,13 @@ class FormationRepository extends ServiceEntityRepository
     public function findOrderedNonFinishedFormations(Secteur $secteur, User $agent){
         $qb = $this->createQueryBuilder('f');
         $qb->join('f.CategorieFormation', 'cf')
-            ->leftJoin('f.formationAgents', 'fa', Join::WITH, $qb->expr()->eq('fa.agent', ':agent'))
+            ->leftJoin('f.formationAgents', 'fa')
+            // ->andWhere('fa.agent=:agent')
             ->andWhere('f.secteur=:secteur')
             ->andWhere('f.statut=:statusCreated')
             ->andWhere('fa.agent is NULL OR fa.statut != :finishedStatus')
             ->setParameter('secteur',$secteur->getId())
-            ->setParameter('agent', $agent->getId())
+            // ->setParameter('agent', $agent->getId())
             ->setParameter('finishedStatus', Formation::STATUT_TERMINER)
             ->setParameter('statusCreated', Formation::STATUS_CREATED)
             ->addOrderBy('cf.ordreCatFormation')
