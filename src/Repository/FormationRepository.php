@@ -183,9 +183,12 @@ class FormationRepository extends ServiceEntityRepository
     public function searchForAgent(?array $criteres, $secteur)
     {
         $queryBuilder = ($this->createQueryBuilder('f'))->where('f.secteur=:secteur')
-            ->setParameter('secteur',$secteur->getId())
-            ->andWhere('f.brouillon=:brouillon')
-            ->setParameter('brouillon', false);
+            ->setParameter('secteur',$secteur->getId());
+        $queryBuilder->andWhere($queryBuilder->expr()->orX(
+                $queryBuilder->expr()->isNull('f.brouillon'),
+                $queryBuilder->expr()->eq('f.brouillon', ':brouillon')
+            ))->setParameter('brouillon', 0)
+        ;
         if(!empty($criteres['titre'])) {
             $queryBuilder->andWhere('f.titre LIKE :titre')
                 ->setParameter('titre', '%'.$criteres['titre'].'%');
