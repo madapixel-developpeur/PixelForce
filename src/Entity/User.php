@@ -1428,6 +1428,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
             'userIdentifer'=>$this->getUserIdentifier(),
             'nom'=>$this->getNom(),
             'prenom'=>$this->getPrenom(),
+            'role' => $this->getRoles()
         ];
         return $vars;
     }
