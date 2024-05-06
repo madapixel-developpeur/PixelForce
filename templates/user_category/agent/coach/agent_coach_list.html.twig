@@ -57,14 +57,8 @@
                         <td>{{ coach.fullName }}</td>
                         <td><a href= "mailto: {{ coach.email }}"> {{ coach.email }} </a></td>
                         <td><a href="tel:{{ coach.telephone|default('-') }}">{{ coach.telephone|default('-') }}</a></td>
-                        <td>
-                            {% set chatCanal =  render(controller(
-                                'App\\Controller\\ChatController::getSingleCanalBy_idUser',
-                                {
-                                    id: coach.id
-                                }
-                                ))
-                            %}
+                        <td>                          
+                            <a class="btn btn-success w-100 font-weight-bold" href="#" {% if coach.getLienCalendly()!= null %}onclick="Calendly.initPopupWidget({url: '{{coach.getLienCalendly()}}'});return false;" {% endif %}>Cliquez <i class="fa fa-bookmark" aria-hidden="true"></i></a>
                         </td>
                     </tr>
                 {% else %}

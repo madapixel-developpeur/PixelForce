@@ -45,6 +45,10 @@ class Secteur implements JsonSerializable
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $liens;
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $videoInfo;
 
     /**
      * @ORM\OneToMany(targetEntity=AgentSecteur::class, mappedBy="secteur")
@@ -422,6 +426,18 @@ class Secteur implements JsonSerializable
     public function setTitre(?string $titre): static
     {
         $this->titre = $titre;
+
+        return $this;
+    }
+
+    public function getVideoInfo(): ?string
+    {
+        return $this->videoInfo;
+    }
+
+    public function setVideoInfo(?string $videoInfo): static
+    {
+        $this->videoInfo = $videoInfo;
 
         return $this;
     }

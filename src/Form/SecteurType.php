@@ -27,6 +27,7 @@ class SecteurType extends AbstractType
             ->add('titre', null, ['attr' => ['placeholder' => 'Titre du secteur']])
             ->add('description', null, ['attr' => ['placeholder' => 'Description du secteur']])
             ->add('liens', null, ['attr' => ['placeholder' => 'liens vers la page du secteur']])
+            ->add('videoInfo', null, ['attr' => ['placeholder' => 'Video d\'Information']])
             ->add('type', EntityType::class, [
                 "label" => "Type",
                 'class'=> TypeSecteur::class,

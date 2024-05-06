@@ -74,7 +74,7 @@ class AgentAccountController extends AbstractController
      * 
      * @Route("/agent/accueil", name="agent_home")
      */
-    public function agent_home(AgentSecteurService $agentSecteurService)
+    public function agent_home(AgentSecteurService $agentSecteurService,FormationRepository $formationRepository)
     {
         /** @var User $agent */
         $agent = $this->getUser();
@@ -83,6 +83,11 @@ class AgentAccountController extends AbstractController
         $this->agentService->setSesssionEnabledContent($agent);
 
         $allSecteurs = $this->repoSecteur->findAllActive();
+        $count =count($allSecteurs)>0?count($allSecteurs)-1:0;
+        $randomSecteurId = mt_rand(0,$count ); // Génère un nombre aléatoire entre 0 et 100
+
+
+        $formations =$formationRepository->findOneBy([], ['id' => 'desc']);
 
         // On vérifie le statut de compte de l'utilisateur 
         $accountStatus = $agent->getAccountStatus();
@@ -110,6 +115,7 @@ class AgentAccountController extends AbstractController
         }
 
         return $this->render('user_category/agent/home_agent.html.twig', [
+            'randomSecteurId'=>$randomSecteurId,
             'allSecteurs' => $allSecteurs,
             'repoAgentSecteur' => $this->repoAgentSecteur,
             'agent' => $this->getUser(),
@@ -123,6 +129,7 @@ class AgentAccountController extends AbstractController
             'USER_ACCOUNT_STATUS' => USER::ACCOUNT_STATUS,
             'repoUser' => $this->repoUser,
             'plan' => $planAgentAccount,
+            'formation'=>$formations
         ]);
     }
      /**
@@ -171,13 +178,14 @@ class AgentAccountController extends AbstractController
     /**
      * @Route("/agent/dashboard/secteur/{id}", name="agent_dashboard_secteur")
      */
-    public function agent_dashboard_secteur( Request $request, PaginatorInterface $paginator, Secteur $secteur, StatAgentService $statAgentService,UserRepository $userRepository)
+    public function agent_dashboard_secteur( Request $request, PaginatorInterface $paginator, Secteur $secteur, StatAgentService $statAgentService,UserRepository $userRepository,FormationRepository $formationRepository)
     {
       
         $agent = (object)$this->getUser();
         $this->agentService->setStartDate($agent);
       
-        $formations = $this->repoFormation->findOrderedNonFinishedFormations($secteur, $agent);
+        //$formations = $this->repoFormation->findOrderedNonFinishedFormations($secteur, $agent);
+        $formations =$formationRepository->findBy(['secteur'=>$secteur->getId()], ['id' => 'desc']);
         $firstFormation = count($formations) > 0 ?$formations[0] : null;
         
         // On vérifie d'abord si la session avec la clé 'secteurId' est générée ou les contenus sont activés
