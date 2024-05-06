@@ -29,6 +29,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     const ROLE_AGENT = 'ROLE_AGENT';
     const ROLE_MADA = 'ROLE_MADA';
     const ROLE_COACH = 'ROLE_COACH';
+    const ROLE_AMBASSADEUR = 'ROLE_AMBASSADEUR';
     const ROLE_ADMINISTRATEUR = 'ROLE_ADMINISTRATEUR';
     const ROLE_CLIENT = 'ROLE_CLIENT';
     const ROLE_DOCUMENT_OWNER = 'ROLE_DOCUMENT_OWNER';
@@ -39,6 +40,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
       self::ROLE_ADMINISTRATEUR => self::ROLE_ADMINISTRATEUR,
       self::ROLE_CLIENT => self::ROLE_CLIENT,
       self::ROLE_DOCUMENT_OWNER => self::ROLE_DOCUMENT_OWNER,
+      self::ROLE_AMBASSADEUR => self::ROLE_AMBASSADEUR,
     ];
     
 

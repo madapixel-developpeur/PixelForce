@@ -1,7 +1,7 @@
 {% extends 'base_admin.html.twig' %}
 
 {% block title %}
-	Liste des coachs
+	Liste des embassadeurs
 {% endblock %}
 
 {% block stylesheets %}
@@ -61,10 +61,10 @@
                 <div class=" w-100 h-100 ps-3 py-3  bg-white border pe-3">
                     <div class="row h-100">
                         <div class="col-6">
-                            <h4 class="my-auto">Liste des coachs</h4>
+                            <h4 class="my-auto">Liste des Ambassadeurs</h4>
                         </div>
                         <div class="col-6 ">
-                            <a href="{{ path('admin_coach_add') }}" class="btn btn-primary btn-sm waves-effect waves-float waves-light fw-bolder d-flex float-end d-flex align-items-center"><i class="fa-solid fa-user-plus me-2"></i> Ajouter</a>
+                            <a href="{{ path('admin_ambassadeur_add') }}" class="btn btn-primary btn-sm waves-effect waves-float waves-light fw-bolder d-flex float-end d-flex align-items-center"><i class="fa-solid fa-user-plus me-2"></i> Ajouter</a>
                         </div>
                     </div>
                 </div>
@@ -80,7 +80,9 @@
 						<th scope="col" class="text-center">Email</th>
 						<th scope="col" class="text-center">Téléphone</th>
 						<th scope="col" class="text-center">Date inscription</th>
+						<th scope="col" class="text-center">Nombre filleuil</th>
 						<th scope="col" class="text-center">Secteur</th>
+						<th scope="col" class="text-center">liens Inscription</th>
 						<th scope="col" class="text-center">Etat</th>
 						<th scope="col" class="text-center table-th-notSortable">ACTION</th>
 					</tr>
@@ -94,10 +96,14 @@
                             <td>{{ coach.email }}</td>
                             <td>{{ coach.telephone|default('-') }}</td>
                             <td>{{ coach.createdAt|date('d/m/Y') }}</td>
+                            <td>{{ coach.countFils() }}</td>
                             <td>
                                 {# On récupère les secteurs reliés par l'agent  #}
                                 {% set secteurs = repoCoachSecteur.findBy({'coach' : coach}) %}
                                 {{ coach.allSecteursOfUser(secteurs)|default('-') }}     
+                            </td>
+                            <td>
+                                 <a class="btn btn-success w-100 font-weight-bold copyLink" href="#" onclick="copyLink('{{ url('agent_inscription', {'username': coach.username != "" ? coach.username : ' '}) }}')">Cliquez ici <i class="fa fa-sign-in" aria-hidden="true"></i></a>
                             </td>
                             <td>
                                 <div class="m-auto {{ coach.active == 1 ? 'bg-success' : (coach.active == -1 ? 'bg-danger' : 'bg-primary') }} rounded-circle caret"><span class="d-none">{{  coach.active }}</span></div>
@@ -113,18 +119,20 @@
                                     }
                                     ))
                                 %}
-
-                                <a href="{{ path('admin_coach_view', {'id': coach.id}) }}" class="btn btn-secondary">
+                                <a href="{{ path('admin_ambassadeur_view', {'id': coach.id}) }}" class="btn btn-secondary">
                                     <i class="fa-solid fa-eye"></i>
                                 </a>
+                                <a href="{{ path('admin_ambassadeur_edit', {'id': coach.id}) }}" class="btn btn-secondary">
+                                    <i class="fa fa-pencil-square" aria-hidden="true"></i>
+                                </a>
                                 {% if coach.active == 1 %}
-                                <form method="post" action="{{path('admin_coach_delete', {id: coach.id})}}" style="display: inline-block;" onsubmit="return confirm('Êtes vous vraiment sûr de bannir ce coach ?')">
+                                <form method="post" action="{{path('admin_ambassadeur_delete', {id: coach.id})}}" style="display: inline-block;" onsubmit="return confirm('Êtes vous vraiment sûr de bannir ce coach ?')">
                                     <input type="hidden" name="_method" value="DELETE">
                                     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ coach.id) }}">
                                     <button class="btn btn-danger"><i class="fas fa-trash-alt"></i></button>
                                 </form>
                                 {% elseif coach.active == -1 %}
-                                    <a href="{{ path('admin_coach_reactiver', {'id': coach.id}) }}" class="btn btn-success">
+                                    <a href="{{ path('admin_ambassadeur_reactiver', {'id': coach.id}) }}" class="btn btn-success">
                                         <i class="fa-solid fa-sync"></i>
                                     </a>
                                 {% endif %}
@@ -145,5 +153,13 @@
 {% block javascripts %}
     {{ parent() }}
     {{ encore_entry_script_tags('datatableJs')}}
+    <script>
+       
+        function copyLink($path) {
+			navigator.clipboard.writeText($path).then(function() {
+				Swal.fire("Lien copié", "Le lien de l'ambassadeur a été copié avec succès.", "success");
+			});
+        }
+    </script>
 {% endblock %}
 

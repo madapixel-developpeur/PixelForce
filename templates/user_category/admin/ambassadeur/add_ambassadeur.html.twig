@@ -1,0 +1,32 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title %}
+	Ajout Ambassadeur
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+	<style>
+		.form-add-coach{
+			padding: 0 10px;
+		}
+
+		@media (min-width: 700px) {
+			.form-add-coach{
+				padding: 0 100px;
+			}
+		}
+	</style>
+{% endblock %}
+
+{% block body %}
+	<div class="my-5">
+		<div class="content-body-form">
+			<a href="{{ path('admin_ambassadeur_list') }}" class="btn btn-secondary"> <i class="fa-solid fa-circle-arrow-left"></i> Retour </a>
+			<h1 class="text-center fw-bold">1- Information générale</h1>
+			<div class="form-add-coach">
+				{{ include ('global/user_form/_user_form.html.twig', {btn_class : 'btn-primary'}) }}
+			</div>
+		</div>
+	</div>
+{% endblock %}

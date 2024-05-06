@@ -91,16 +91,20 @@ class AgentInscriptionController extends AbstractController
 
     }
     public function getParainByUsername($username){
-        $parrain =$this->userRepository->findOneBy(['username' => $username]);
-        if($parrain){
-            foreach($parrain->getRoles() as $p){
-                if($p==User::ROLE_COACH){
-                    return $parrain;
+        if($username != null && $username !=""){
+           
+            $parrain =$this->userRepository->findOneBy(['username' => $username]);
+            if($parrain){
+                foreach($parrain->getRoles() as $p){
+                    if($p==User::ROLE_AMBASSADEUR){
+                        return $parrain;
+                    }
                 }
+                return null;
             }
-            return null;
+            return $parrain;
         }
-        return $parrain;
+        return null;
     }
 
 
@@ -133,7 +137,7 @@ class AgentInscriptionController extends AbstractController
 
             // Gestion exeption
             if (is_null($planAgentAccount)) {
-                return throw new \Exception("Plan d'abonnement null, n'oublie pas de créer des plans d'abonnement pour les agents dans l'espace Admin", 1);
+                throw new \Exception("Plan d'abonnement null, n'oublie pas de créer des plans d'abonnement pour les agents dans l'espace Admin", 1);
             }
 
             $planPrice = $planAgentAccount->getAmount();
