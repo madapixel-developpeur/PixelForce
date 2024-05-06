@@ -35,7 +35,7 @@
                 {{ form_row(form.ville) }}
             </div>
         </div>
-        <h5 class="mt-4">Choix du secteur</h5>
+        {# <h5 class="mt-4">Choix du secteur</h5>
         <div class="row my-3">
             {% for secteurList in form.secteur.children.secteur.children %}
                 <div class="col-12 col-md-4">
@@ -43,7 +43,7 @@
                 </div>
 
             {% endfor %}
-        </div>
+        </div> #}
 
         <h5 class="mb-4">Information sur la connexion</h5>
         {{ form_row(form.username) }}
@@ -57,17 +57,17 @@
 
 {% block javascripts %}
     <script>
-        // Fix required checkbox
-        $(document).ready(function () {
-            $('button#btn-next').click(function() {
-              checked = $("input[type=checkbox]:checked").length;
+        // Fix required checkbox : Verifie qu'il y a au moins une secteur choisie par l'utilisateur
+        // $(document).ready(function () {
+        //     $('button#btn-next').click(function() {
+        //       checked = $("input[type=checkbox]:checked").length;
 
-              if(!checked) {
-                alert("Vous devez choisir au moins un secteur.");
-                return false;
-              }
+        //       if(!checked) {
+        //         alert("Vous devez choisir au moins un secteur.");
+        //         return false;
+        //       }
 
-            });
-        });
+        //     });
+        // });
     </script>
 {% endblock %}
