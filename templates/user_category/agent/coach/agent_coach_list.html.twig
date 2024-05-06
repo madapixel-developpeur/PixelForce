@@ -55,9 +55,9 @@
                     <tr>
                         <td>{{ coach.id }}</td>
                         <td>{{ coach.fullName }}</td>
-                        <td>{{ coach.email }}</td>
-                        <td>{{ coach.telephone }}</td>
-                        <td >
+                        <td><a href= "mailto: {{ coach.email }}"> {{ coach.email }} </a></td>
+                        <td><a href="tel:{{ coach.telephone|default('-') }}">{{ coach.telephone|default('-') }}</a></td>
+                        <td>
                             {% set chatCanal =  render(controller(
                                 'App\\Controller\\ChatController::getSingleCanalBy_idUser',
                                 {
@@ -65,10 +65,6 @@
                                 }
                                 ))
                             %}
-
-                            <a href="#" class="btn btn-primary chat-choose-canal" data-canal="{{ chatCanal|url_encode }}">
-                                <i class="fa-brands fa-facebook-messenger"></i> Envoyer un message
-                            </a>
                         </td>
                     </tr>
                 {% else %}

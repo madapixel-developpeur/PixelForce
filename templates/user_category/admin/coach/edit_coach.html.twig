@@ -25,19 +25,19 @@
 							{{ form_start(formUser) }}
 								<div class="row">
 									<div class="col-md-6">
-										{{ form_row(formUser.nom, { attr: { placeholder : "Nom de l'utilisateur", readonly : true } }) }}
+										{{ form_row(formUser.nom, { attr: { placeholder : "Nom de l'utilisateur" } }) }}
 									</div>
-									<div class="col-md-6">{{ form_row(formUser.prenom, { attr: { placeholder : "Prénom de l'utilisateur", readonly : true }}) }}</div>
+									<div class="col-md-6">{{ form_row(formUser.prenom, { attr: { placeholder : "Prénom de l'utilisateur" }}) }}</div>
 								</div>
-								{{ form_row(formUser.email, { attr: { placeholder : "E-mail de l'utilisateur", readonly : true  }, type : "email" }) }}
-								{{ form_row(formUser.dateNaissance, { attr: { readonly : true } }) }}
-								{{ form_row(formUser.adresse, { attr: { placeholder : "Adresse de l'utilisateur", readonly : true } }) }}
+								{{ form_row(formUser.email, { attr: { placeholder : "E-mail de l'utilisateur" }, type : "email" }) }}
+								{{ form_row(formUser.dateNaissance) }}
+								{{ form_row(formUser.adresse, { attr: { placeholder : "Adresse de l'utilisateur" } }) }}
 								<div class="row">
 									<div class="col-md-6">
-										{{ form_row(formUser.numeroSecurite, { attr: { readonly : true } }) }}
+										{{ form_row(formUser.numeroSecurite) }}
 									</div>
 									<div class="col-md-6">
-										{{ form_row(formUser.rib, { attr: { readonly : true } }) }}
+										{{ form_row(formUser.rib) }}
 									</div>
 								</div>
 								{{ form_rest(formUser)  }}

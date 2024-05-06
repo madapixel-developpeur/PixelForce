@@ -180,7 +180,6 @@ class AgentAccountController extends AbstractController
         $formations = $this->repoFormation->findOrderedNonFinishedFormations($secteur, $agent);
         $firstFormation = count($formations) > 0 ?$formations[0] : null;
         
-        
         // On vérifie d'abord si la session avec la clé 'secteurId' est générée ou les contenus sont activés
         $sessionSecteurId =  $this->session->get('secteurId');
         $sessionAccountStatus =  $this->agentService->isActivableContent($agent);

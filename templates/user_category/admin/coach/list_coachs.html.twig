@@ -117,6 +117,9 @@
                                 <a href="{{ path('admin_coach_view', {'id': coach.id}) }}" class="btn btn-secondary">
                                     <i class="fa-solid fa-eye"></i>
                                 </a>
+                                <a href="{{ path('admin_coach_edit', {'id': coach.id}) }}" class="btn btn-secondary">
+                                    <i class="fa fa-pencil-square" aria-hidden="true"></i>
+                                </a>
                                 {% if coach.active == 1 %}
                                 <form method="post" action="{{path('admin_coach_delete', {id: coach.id})}}" style="display: inline-block;" onsubmit="return confirm('Êtes vous vraiment sûr de bannir ce coach ?')">
                                     <input type="hidden" name="_method" value="DELETE">

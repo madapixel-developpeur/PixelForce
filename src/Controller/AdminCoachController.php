@@ -14,6 +14,7 @@ use App\Form\SecteurType;
 use App\Form\UserLoginType;
 use App\Form\UserSearchType;
 use App\Form\UserSecteurType;
+use App\Services\FileHandler;
 use App\Form\UserType;
 use App\Manager\EntityManager;
 use App\Manager\UserManager;
@@ -40,10 +41,13 @@ class AdminCoachController extends AbstractController
 
     protected $repoCoachSecteur;
 
+    protected $fileHandler;
+
     public function __construct(UserRepository $repoUser,
                                 EntityManager $entityManager,
                                 UserManager $userManager,
                                 CoachAgentRepository $repoCoachAgent,
+                                FileHandler $fileHandler,
                                 SecteurRepository $repoSecteur,
                                 CoachSecteurRepository $repoCoachSecteur)
     {
@@ -53,6 +57,7 @@ class AdminCoachController extends AbstractController
         $this->repoCoachAgent = $repoCoachAgent;
         $this->repoSecteur = $repoSecteur;
         $this->repoCoachSecteur = $repoCoachSecteur;
+        $this->fileHandler = $fileHandler;
     }
 
     /**
@@ -106,12 +111,16 @@ class AdminCoachController extends AbstractController
         $coach = new User();
 
         $formUser = $this->createForm(UserType::class, $coach)
-            ->remove('photo')
             ->add('email')
         ;
        
         $formUser->handleRequest($request);
         if ($formUser->isSubmitted() && $formUser->isValid()) {
+            $imageCouverture = $formUser->get('photo')->getData();
+                if ($imageCouverture) {
+                    $photo = $this->fileHandler->upload($imageCouverture, "images\secteur\photo");
+                    $coach->setPhoto($photo);
+                }
             $coach->setRoles([USER::ROLE_COACH]);
             $coach->setPassword(base64_encode('_dfdkf12132_1321df'));
             
@@ -133,8 +142,8 @@ class AdminCoachController extends AbstractController
     public function admin_coach_edit(Request $request, User $coach)
     {
         $formUser = $this->createForm(UserType::class, $coach)
-            ->remove('photo')
-            ->add('email')
+        ->remove('username')    
+        ->add('email')
         ;
        
         $coachSecteur = $this->repoCoachSecteur->findBy(['coach' => $coach]);
@@ -145,7 +154,13 @@ class AdminCoachController extends AbstractController
         $formSecteur = $this->createForm(CoachSecteurType::class);
 
         $formUser->handleRequest($request);
+        //dd($formUser);
         if ($formUser->isSubmitted() && $formUser->isValid()) {
+            $imageCouverture = $formUser->get('photo')->getData();
+                if ($imageCouverture) {
+                    $photo = $this->fileHandler->upload($imageCouverture, "images\secteur\photo");
+                    $coach->setPhoto($photo);
+                }
             $this->entityManager->save($coach);
             $this->addFlash('success', "Modification du coach avec succès");
             return $this->redirectToRoute('admin_coach_list');    
