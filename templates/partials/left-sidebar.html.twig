@@ -53,6 +53,8 @@
                     {% include 'partials/menu-left-coach.html.twig' %}
                 {% elseif role == constant('App\\Entity\\User::ROLE_ADMINISTRATEUR') %}
                     {% include 'partials/menu-left-admin.html.twig' %}
+                {% elseif role == constant('App\\Entity\\User::ROLE_AMBASSADEUR') %}
+                    {% include 'partials/menu-left-ambassadeur.html.twig' %}
                 {% elseif role == constant('App\\Entity\\User::ROLE_AGENT') %}
                     {% include 'partials/menu-left-agent.html.twig' %}
                 {% elseif role == constant('App\\Entity\\User::ROLE_DOCUMENT_OWNER') %}
