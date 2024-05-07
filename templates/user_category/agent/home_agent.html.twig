@@ -45,8 +45,9 @@
                                 
 
                                 <div class="button-block text-center mt-5">
-                                    {% if agentSecteur is null %}
+                                    {% if agentSecteur is null and secteur.active > 0 %}
                                         <!-- <a href="" class="btn btn-primary" disabled><i class="fa-solid fa-location-arrow"></i> Découvrir</a> -->
+                                        <a href="{{ path('agent_add_sector', {id: secteur.id}) }}" class="btn btn-primary"><i class="fa-solid fa-plus"></i> Ajouter </a>
                                     {% elseif agentSecteur and agentSecteur.statut == true %}
                                         <a href="{{ path('agent_generate_sessionSecteur_before_redirect_to_route_dahsboard', {id: secteur.id}) }}" class="btn btn-success"><i class="fa-solid fa-location-arrow"></i> Accéder </a>
                                     {% elseif agentSecteur and agentSecteur.statut == false %}

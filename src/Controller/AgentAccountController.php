@@ -30,6 +30,7 @@ use App\Repository\UserRepository;
 use App\Services\Stat\StatAgentService;
 use App\Services\StripeService;
 use App\Services\User\AgentService;
+use App\Manager\EntityManager;
 
 class AgentAccountController extends AbstractController
 {
@@ -49,7 +50,8 @@ class AgentAccountController extends AbstractController
     private $repoPlanAgentAccount;
     protected $repoUser;
 
-    public function __construct(SecteurRepository $repoSecteur, AgentSecteurRepository $repoAgentSecteur, FormationRepository $repoFormation,SessionInterface $session, ContactRepository $repoContact, FormationAgentRepository $repoFormationAgent, CategorieFormationRepository $repoCatFormation, RFormationCategorieRepository $repoRelationFormationCategorie, CategorieFormationAgentService $categorieFormationAgentService, CalendarEventRepository $calendarEventRepository, StripeService $stripeService, StripeManager $stripeManager, AgentService $agentService, PlanAgentAccountRepository $repoPlanAgentAccount, UserRepository $repoUser)
+    public function __construct(SecteurRepository $repoSecteur, AgentSecteurRepository $repoAgentSecteur, FormationRepository $repoFormation,SessionInterface $session, ContactRepository $repoContact, FormationAgentRepository $repoFormationAgent, CategorieFormationRepository $repoCatFormation, RFormationCategorieRepository $repoRelationFormationCategorie, CategorieFormationAgentService $categorieFormationAgentService, CalendarEventRepository $calendarEventRepository, StripeService $stripeService, StripeManager $stripeManager, AgentService $agentService, PlanAgentAccountRepository $repoPlanAgentAccount, UserRepository $repoUser,
+    private EntityManager $entityManager)
     {
         $this->repoSecteur = $repoSecteur;
         $this->repoAgentSecteur = $repoAgentSecteur;
@@ -137,6 +139,21 @@ class AgentAccountController extends AbstractController
         $this->session->set('secteurId', $secteur->getId());
         $this->session->set('typeSecteurId', $secteur->getType()->getId());
         return $this->redirectToRoute('agent_dashboard_secteur', ['id' => $secteur->getId()]);
+    }
+
+    /**
+     * @Route("/agent/secteur/{id}/add", name="agent_add_sector")
+     */
+    public function agentAddSector(Secteur $secteur)
+    {
+        $user = $this->getUser();
+        $agentSecteur  = new AgentSecteur();
+        $agentSecteur->setAgent($user);
+        $agentSecteur->setSecteur($secteur);
+        $agentSecteur->setStatut(1);
+        $agentSecteur->setDateValidation(new \DateTime());
+        $this->entityManager->save($agentSecteur);
+        return $this->redirectToRoute('agent_home');
     }
 
     /**
