@@ -326,6 +326,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
      */
     private $devisCompanies;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $ambassadorUsername;
+
     public function __construct()
     {
         $this->coachAgents = new ArrayCollection();
@@ -365,6 +370,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
     public function setEmail(string $email): self
     {
         $this->email = $email;
+
+        return $this;
+    }
+
+    public function getAmbassadorUsername(): ?string
+    {
+        return $this->ambassadorUsername;
+    }
+
+    public function setAmbassadorUsername(string $ambassadorUsername): self
+    {
+        $this->ambassadorUsername = $ambassadorUsername;
 
         return $this;
     }

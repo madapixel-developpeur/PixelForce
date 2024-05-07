@@ -19,6 +19,7 @@ class InscriptionAgentType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $user = $options ["data"];
         $builder
             ->add('nom', TextType::class, [
                 'label' => false,
@@ -131,5 +132,13 @@ class InscriptionAgentType extends AbstractType
             ])
             ->addEventSubscriber(new SecteurChoiceListListener())
         ;
+        // Ajoutez le champ 'ambassador_username' si la valeur est différente de null
+        if ($user->getAmbassadorUsername() !== null) {
+            $builder->add('ambassador_username', TextType::class, [
+                'label' => "Nom d'utilisateur du parrain",
+                'required' => true,
+                'disabled' => true
+            ]);
+        }
     }
 }

@@ -60,11 +60,14 @@ class AgentInscriptionController extends AbstractController
 
 
     /**
-     * @Route("/inscription/agent/index", name="agent_inscription")
+     * @Route("/inscription/agent/index/{ambassador_username?}", name="agent_inscription")
      */
-    public function inscriptionAgent(Request $request, SecteurRepository $secteurRepository)
+    public function inscriptionAgent(Request $request, SecteurRepository $secteurRepository, $ambassador_username = null)
     {
         $user = new User();
+        if($ambassador_username != null){
+            $user->setAmbassadorUsername($ambassador_username);
+        }
         $form = $this->createForm(InscriptionAgentType::class, $user);
         $form->handleRequest($request);
 
