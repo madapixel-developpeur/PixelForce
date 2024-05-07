@@ -197,10 +197,78 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->getResult()
         ;
     }
+    /**
+     * Permet de filtrer les utilisateurs (Coach ou Agent)
+     *
+     * @param UserSearch $search
+     * @param string $role (COACH | AGENT)
+     */
+    public function findCoachQuery(UserSearch $search, string $role)
+    {
+        $query = $this->createQueryBuilder('u');
+        $query = $query
+            ->where('u.roles LIKE :role')
+            ->setParameter('role', "%$role%");
+
+        if($search->getActive()) {
+            $query = $query
+                ->andwhere('u.active = :active')
+                ->setParameter('active', $search->getActive());
+        }
+
+        if ($search->getPrenom()) {
+            $query = $query
+                ->andwhere('u.prenom LIKE :prenom')
+                ->orwhere('u.nom LIKE :prenom')
+                ->setParameter('prenom', '%'.$search->getPrenom().'%');
+        }
+        if ($search->getEmail()) {
+            $query = $query
+                ->andwhere('u.email LIKE :email')
+                ->setParameter('email', '%'.$search->getEmail().'%');
+        }
+        if ($search->getTelephone()) {
+            $query = $query
+                ->andwhere('u.telephone LIKE :telephone')
+                ->setParameter('telephone', '%'.$search->getTelephone().'%');
+        }
+        if ($search->getDateInscriptionMin()) {
+            $query = $query
+                ->andwhere('u.created_at >= :dateInscriptionMin')
+                ->setParameter('dateInscriptionMin', $search->getDateInscriptionMin());
+        }
+        if ($search->getDateInscriptionMax()) {
+            // On ajoute +1day, car la requête ne prend que la date en dessous de la date recherchée
+            $search->getDateInscriptionMax()->add(new DateInterval('P1D'));
+
+            $query = $query
+                ->andwhere('u.created_at <= :dateInscriptionMax')
+                ->setParameter('dateInscriptionMax', $search->getDateInscriptionMax());
+        }
+        if ($search->getSecteur()) {
+            if ($role === User::ROLE_COACH) {
+                $query = $query
+                    ->join('u.coachSecteurs', 'cs')
+                    ->join('cs.secteur', 's')
+                    ->andwhere('s.nom LIKE :nomSecteur')
+                    ->setParameter('nomSecteur', '%'.$search->getSecteur()->getNom().'%');
+            }else if($role === User::ROLE_AGENT){
+                $query = $query
+                    ->join('u.agentSecteurs', 'aSec')
+                    ->join('aSec.secteur', 'tre')
+                    ->andwhere('tre.nom LIKE :nomSecteur')
+                    ->setParameter('nomSecteur', '%'.$search->getSecteur()->getNom().'%')
+                ;
+            }
+        }
 
 
+        return $query->getQuery()
+            ->getResult()
+        ;
+    }
 
-    
+
 
     /**
      * Permet de filtrer tous les agents du coach
@@ -324,4 +392,70 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         }
         return null;
     }
+
+    public function findFilsQuery(int $role)
+    {
+        $query = $this->createQueryBuilder('u');
+        $query = $query
+            ->where('u.roles LIKE :role')
+            ->setParameter('role', "%$role%");
+
+        if($search->getActive()) {
+            $query = $query
+                ->andwhere('u.active = :active')
+                ->setParameter('active', $search->getActive());
+        }
+
+        if ($search->getPrenom()) {
+            $query = $query
+                ->andwhere('u.prenom LIKE :prenom')
+                ->orwhere('u.nom LIKE :prenom')
+                ->setParameter('prenom', '%'.$search->getPrenom().'%');
+        }
+        if ($search->getEmail()) {
+            $query = $query
+                ->andwhere('u.email LIKE :email')
+                ->setParameter('email', '%'.$search->getEmail().'%');
+        }
+        if ($search->getTelephone()) {
+            $query = $query
+                ->andwhere('u.telephone LIKE :telephone')
+                ->setParameter('telephone', '%'.$search->getTelephone().'%');
+        }
+        if ($search->getDateInscriptionMin()) {
+            $query = $query
+                ->andwhere('u.created_at >= :dateInscriptionMin')
+                ->setParameter('dateInscriptionMin', $search->getDateInscriptionMin());
+        }
+        if ($search->getDateInscriptionMax()) {
+            // On ajoute +1day, car la requête ne prend que la date en dessous de la date recherchée
+            $search->getDateInscriptionMax()->add(new DateInterval('P1D'));
+
+            $query = $query
+                ->andwhere('u.created_at <= :dateInscriptionMax')
+                ->setParameter('dateInscriptionMax', $search->getDateInscriptionMax());
+        }
+        if ($search->getSecteur()) {
+            if ($role === User::ROLE_COACH) {
+                $query = $query
+                    ->join('u.coachSecteurs', 'cs')
+                    ->join('cs.secteur', 's')
+                    ->andwhere('s.nom LIKE :nomSecteur')
+                    ->setParameter('nomSecteur', '%'.$search->getSecteur()->getNom().'%');
+            }else if($role === User::ROLE_AGENT){
+                $query = $query
+                    ->join('u.agentSecteurs', 'aSec')
+                    ->join('aSec.secteur', 'tre')
+                    ->andwhere('tre.nom LIKE :nomSecteur')
+                    ->setParameter('nomSecteur', '%'.$search->getSecteur()->getNom().'%')
+                ;
+            }
+        }
+
+
+        return $query->getQuery()
+            ->getResult()
+        ;
+    }
+  
 }

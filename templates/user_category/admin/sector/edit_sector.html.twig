@@ -23,8 +23,20 @@
 					<div class="row">
 						{{ form_start(formSecteur) }}
 							{{ form_row(formSecteur.nom) }}
+							
 							{{ form_row(formSecteur.description) }}
+							<div class="mb-3">
+                                {{form_label(formSecteur.liens)}}
+                                {{form_widget(formSecteur.liens,{ 'attr': {'class': 'form-control'} })}}
+                                {{form_errors(formSecteur.liens)}}
+                            </div>
+							<div class="mb-3">
+                                {{form_label(formSecteur.couverture)}}
+                                {{form_widget(formSecteur.couverture,{ 'attr': {'class': 'form-control'} })}}
+                                {{form_errors(formSecteur.couverture)}}
+                            </div>
 							{{ form_row(formSecteur.type) }}
+						
 						
 							<div class="row">
 								<div class="col-md-12 text-end"><button class="btn btn-success my-4">Enregistrer</button></div>

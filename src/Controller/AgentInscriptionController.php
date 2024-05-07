@@ -68,13 +68,16 @@ class AgentInscriptionController extends AbstractController
         if($ambassador_username != null){
             $user->setAmbassadorUsername($ambassador_username);
         }
+        $parrain=null;
         $form = $this->createForm(InscriptionAgentType::class, $user);
         $form->handleRequest($request);
-
+       try{   
+        $parrain=$this->getParainByUsername($ambassador_username);
         if($form->isSubmitted() && $form->isValid()) {
             $this->userManager->setUserPasword($user, $request->request->get('inscription_agent')['password']['first'], '', false);
             $user->setRoles([ User::ROLE_AGENT ]);
             $user->setActive(1);
+            $user->setParrain($parrain);
             // $user->setAccountStatus(User::ACCOUNT_STATUS['UNPAID']);
             $user->setAccountStatus(User::ACCOUNT_STATUS['ACTIVE']); // On met temporairement le statut comme ACTIVE
             $this->entityManager->save($user);
@@ -86,11 +89,37 @@ class AgentInscriptionController extends AbstractController
             return $this->redirectToRoute('app_login');
         }
 
+       }
+       catch(\Exception $e){
+            $this->addFlash(
+                'danger',
+                $e->getMessage()
+            );
+       }
+       
+        //dd($user);
+
             return $this->render('security/inscription/form.html.twig', [
             'form' => $form->createView()
         ]);
 
     }
+    public function getParainByUsername($username){
+        if($username != null && $username !=""){
+           
+            $parrain =$this->userRepository->findOneBy(['username' => $username]);
+            if($parrain){
+                foreach($parrain->getRoles() as $p){
+                    if($p==User::ROLE_AMBASSADEUR){
+                        return $parrain;
+                    }
+                }
+            }
+            throw new \Exception("Le nom d'utilisateur inscrit en haut n'existe pas ou n'est pas valide.");
+        }
+        return null;
+    }
+
 
     /**
      * @Route("/inscription/agent/api", name="agent_inscription_api")

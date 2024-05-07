@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\AgentSecteurRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -88,5 +89,10 @@ class AgentSecteur
         $this->statut = $statut;
 
         return $this;
+    }
+
+    public function isStatut(): ?bool
+    {
+        return $this->statut;
     }
 }

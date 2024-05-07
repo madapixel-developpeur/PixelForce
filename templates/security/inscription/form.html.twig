@@ -4,6 +4,16 @@
 
 {% block form %}
     <h5 class="my-4">Inscription</h5>
+    <!-- Message alert -->
+        <div class="alert-message">
+            {% for label, messages in app.flashes %}
+                <div class="alert alert-{{label}} text-center">
+                    {% for message in messages %}
+                        {{message | raw}}
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        </div>
     {{ form_start(form) }}
         <div class="row">
             <div class="col-md-6 col-12">

@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\FormationRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -331,5 +332,15 @@ class Formation
 
     public function testStatut(){
         $this->setStatut($this->getBrouillonVal() ? self::STATUS_DRAFT : self::STATUS_CREATED);
+    }
+
+    public function isDebloqueAgent(): ?bool
+    {
+        return $this->debloqueAgent;
+    }
+
+    public function isBrouillon(): ?bool
+    {
+        return $this->brouillon;
     }
 }

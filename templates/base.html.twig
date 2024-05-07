@@ -29,6 +29,10 @@
         <link rel="stylesheet" type="text/css" href="{{asset('assets/css/style.css')}}">
         <link rel="stylesheet" type="text/css" href="{{asset('app-assets/css/pages/app-invoice.css')}}">
         <link rel="stylesheet" type="text/css" href="{{asset('app-assets/css/pages/app-ecommerce.css')}}">
+        <!-- Calendly link widget begin -->
+		<link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
+		<script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript" async></script>
+		<!-- Calendly link widget end -->
 
 
         {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
@@ -117,6 +121,7 @@
             {{ encore_entry_script_tags('chatJS')}}
 
             <script src="{{ asset('assets/bootstrap/js/bootstrap.js')}}" defer></script>
+            <script src="{{ asset('assets/js/sweetallert.js')}}" defer></script>
             <script src="{{ asset('assets/vuexy/vendors/js/calendar/fullcalendar.min.js') }}"></script>
             <script src="{{ asset('assets/vuexy/vendors/js/extensions/moment.min.js') }}"></script>
             <script src="{{ asset('assets/vuexy/vendors/js/forms/select/select2.full.min.js') }}" defer></script>

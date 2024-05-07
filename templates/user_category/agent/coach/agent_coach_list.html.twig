@@ -39,50 +39,51 @@
                 </div>
             </div>
         </div>
-        <div class="table-responsive">
-            <table class="table table-striped table-hover text-center">
-                <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Nom et prénoms</th>
-                    <th scope="col">Email</th>
-                    <td>Téléphone</td>
-                    <th scope="col">ACTION</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for coach in coachs %}
-                    <tr>
-                        <td>{{ coach.id }}</td>
-                        <td>{{ coach.fullName }}</td>
-                        <td>{{ coach.email }}</td>
-                        <td>{{ coach.telephone }}</td>
-                        <td >
-                            {% set chatCanal =  render(controller(
-                                'App\\Controller\\ChatController::getSingleCanalBy_idUser',
-                                {
-                                    id: coach.id
-                                }
-                                ))
-                            %}
+        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover text-center">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Photo</th>
+                                        <th scope="col">Nom et prénoms</th>
+                                        <th scope="col">Email</th>
+                                        <th scope="col">Téléphone</th>
+                                        <th scope="col">ACTION</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody class="align-items-center justify-content-center">
+                                    {% for coach in coachs %}
+                                        
+                                            <tr class="">
+                                                <td>{{ coach.id }}</td>
+                                                <td >
+                                                    <div class="d-flex align-items-center justify-content-center">
+                                                        <div class="img">
+                                                            <img src="{{ asset('files/')}}/{{coach.photo}}" class="img-thumbnail w-25" alt="">
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td>{{ coach.fullName }}</td>
+                                                <td><a href= "mailto: {{ coach.email }}"> {{ coach.email }} </a></td>
+                                                <td><a href="tel:{{ coach.telephone|default('-') }}">{{ coach.telephone|default('-') }}</a></td>
+                                                <td>
+                                                    <a class="btn btn-success w-100 font-weight-bold" href="#" onclick="Calendly.initPopupWidget({url: '{{coach.getLienCalendly()}}'});return false;" >Cliquez <i class="fa fa-bookmark" aria-hidden="true"></i></a>
+                                                </td>    
+                                            </tr>
+                      
+                                    {% else %}
+                                        <tr>
+                                            <td class="text-center" colspan="5">Aucun Coach trouvé</td>
+                                        </tr>
+                                    {% endfor %}
 
-                            {# <a href="#" class="btn btn-primary chat-choose-canal" data-canal="{{ chatCanal|url_encode }}">
-                                <i class="fa-brands fa-facebook-messenger"></i> Envoyer un message
-                            </a> #}
-                        </td>
-                    </tr>
-                {% else %}
-                    <tr>
-                        <td class="text-center" colspan="5">Aucun Coach trouvé</td>
-                    </tr>
-                {% endfor %}
-
-                </tbody>
-            </table>
-        </div>
-
-        <div class="pagination d-flex justify-content-center">
-            {{ knp_pagination_render(coachs)}}
-        </div>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="pagination d-flex justify-content-center">
+                                    {{ knp_pagination_render(coachs)}}
+                            </div>
+                        </div>
     </div>
 {% endblock %}

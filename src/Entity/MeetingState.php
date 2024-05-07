@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\MeetingStateRepository;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JsonSerializable;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -54,5 +55,35 @@ class MeetingState implements JsonSerializable
     {
         $vars = get_object_vars($this);
         return $vars;
+    }
+
+    /**
+     * @return Collection<int, Meeting>
+     */
+    public function getMeetings(): Collection
+    {
+        return $this->meetings;
+    }
+
+    public function addMeeting(Meeting $meeting): static
+    {
+        if (!$this->meetings->contains($meeting)) {
+            $this->meetings->add($meeting);
+            $meeting->setMeetingState($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMeeting(Meeting $meeting): static
+    {
+        if ($this->meetings->removeElement($meeting)) {
+            // set the owning side to null (unless already changed)
+            if ($meeting->getMeetingState() === $this) {
+                $meeting->setMeetingState(null);
+            }
+        }
+
+        return $this;
     }
 }

@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\SecteurRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use JsonSerializable;
 
@@ -13,7 +14,6 @@ use JsonSerializable;
  */
 class Secteur implements JsonSerializable
 {
-    const PBB = 9;
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -31,6 +31,16 @@ class Secteur implements JsonSerializable
      */
     
     private $description;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $couverture;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $liens;
 
     /**
      * @ORM\OneToMany(targetEntity=AgentSecteur::class, mappedBy="secteur")
@@ -372,6 +382,30 @@ class Secteur implements JsonSerializable
         }
 
         $this->contratSecu = $contratSecu;
+
+        return $this;
+    }
+
+    public function getCouverture(): ?string
+    {
+        return $this->couverture;
+    }
+
+    public function setCouverture(?string $couverture): static
+    {
+        $this->couverture = $couverture;
+
+        return $this;
+    }
+
+    public function getLiens(): ?string
+    {
+        return $this->liens;
+    }
+
+    public function setLiens(?string $liens): static
+    {
+        $this->liens = $liens;
 
         return $this;
     }

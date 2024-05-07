@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\CalendarEventLabelRepository;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JsonSerializable;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -88,5 +89,35 @@ class CalendarEventLabel implements JsonSerializable
     {
         $vars = get_object_vars($this);
         return $vars;
+    }
+
+    /**
+     * @return Collection<int, CalendarEvent>
+     */
+    public function getCalendarEvents(): Collection
+    {
+        return $this->calendarEvents;
+    }
+
+    public function addCalendarEvent(CalendarEvent $calendarEvent): static
+    {
+        if (!$this->calendarEvents->contains($calendarEvent)) {
+            $this->calendarEvents->add($calendarEvent);
+            $calendarEvent->setCalendarEventLabel($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCalendarEvent(CalendarEvent $calendarEvent): static
+    {
+        if ($this->calendarEvents->removeElement($calendarEvent)) {
+            // set the owning side to null (unless already changed)
+            if ($calendarEvent->getCalendarEventLabel() === $this) {
+                $calendarEvent->setCalendarEventLabel(null);
+            }
+        }
+
+        return $this;
     }
 }

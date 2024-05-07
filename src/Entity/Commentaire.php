@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Entity\Traits\Timestampable;
 use App\Repository\CommentaireRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 

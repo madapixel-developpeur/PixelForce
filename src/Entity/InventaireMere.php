@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\InventaireMereRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -155,6 +156,18 @@ class InventaireMere
     public function setSecteur(?Secteur $secteur): self
     {
         $this->secteur = $secteur;
+
+        return $this;
+    }
+
+    public function removeInventaireFille(InventaireFille $inventaireFille): static
+    {
+        if ($this->inventaireFilles->removeElement($inventaireFille)) {
+            // set the owning side to null (unless already changed)
+            if ($inventaireFille->getMere() === $this) {
+                $inventaireFille->setMere(null);
+            }
+        }
 
         return $this;
     }

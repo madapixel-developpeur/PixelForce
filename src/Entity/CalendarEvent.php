@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\CalendarEventRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use JsonSerializable;
 /**

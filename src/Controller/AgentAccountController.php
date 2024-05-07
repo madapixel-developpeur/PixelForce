@@ -160,9 +160,10 @@ class AgentAccountController extends AbstractController
     /**
      * @Route("/agent/dashboard/secteur/{id}", name="agent_dashboard_secteur")
      */
-    public function agent_dashboard_secteur( Request $request, PaginatorInterface $paginator, Secteur $secteur, StatAgentService $statAgentService)
+    public function agent_dashboard_secteur( Request $request, PaginatorInterface $paginator, Secteur $secteur, StatAgentService $statAgentService,UserRepository $userRepository)
     {
       
+        //dd($secteur);
         $agent = (object)$this->getUser();
         $this->agentService->setStartDate($agent);
       
@@ -189,7 +190,11 @@ class AgentAccountController extends AbstractController
 
         // Coach
         $userSearch = new UserSearch();
-        $coachs = $this->repoUser->findCoachBySecteur($userSearch, $secteur);
+        $coachs = $paginator->paginate(
+            $userRepository->findCoachBySecteur(new UserSearch(),$secteur),
+            $request->query->getInt('page', 1),
+            20
+        );
 
         //stat
         $anneeActuelle = intval(date('Y'));

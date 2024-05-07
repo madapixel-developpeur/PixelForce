@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\LiveChatVideoRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -173,5 +174,15 @@ class LiveChatVideo
         $this->secteur = $secteur;
 
         return $this;
+    }
+
+    public function isIsSpeedLive(): ?bool
+    {
+        return $this->isSpeedLive;
+    }
+
+    public function isIsInProcess(): ?bool
+    {
+        return $this->isInProcess;
     }
 }
