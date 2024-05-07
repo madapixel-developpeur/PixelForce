@@ -5,6 +5,7 @@ namespace App\Controller;
 
 use App\Entity\AgentSecteur;
 use App\Entity\CategorieFormation;
+use App\Entity\SearchEntity\UserSearch;
 use App\Entity\Secteur;
 use App\Entity\TypeSecteur;
 use App\Entity\User;
@@ -186,6 +187,9 @@ class AgentAccountController extends AbstractController
         $upcomingEvents = $this->calendarEventRepository->findUpcomingEvents($agent);
         $eventsOfTheDay = $this->calendarEventRepository->findEventsOfTheDay($agent);
 
+        // Coach
+        $userSearch = new UserSearch();
+        $coachs = $this->repoUser->findCoachBySecteur($userSearch, $secteur);
 
         //stat
         $anneeActuelle = intval(date('Y'));
@@ -218,6 +222,7 @@ class AgentAccountController extends AbstractController
             'nbrRdv' => $nbrRdv,
             'chiffreAffaireTotal' => $chiffreAffaireTotal,
             'nbVentesTotal' => $nbVentesTotal,
+            "coachs" => $coachs
         ]);
     }
     // public function agent_dashboard_secteur( Request $request, PaginatorInterface $paginator, Secteur $secteur, StatAgentService $statAgentService)
