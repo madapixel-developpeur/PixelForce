@@ -8,7 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use JsonSerializable;
-
+use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity(repositoryClass=SecteurRepository::class)
  */
@@ -401,6 +401,20 @@ class Secteur implements JsonSerializable
     public function getLiens(): ?string
     {
         return $this->liens;
+    }
+    public function getStructuredLiens(): ?string
+    {
+        return $this->ensureHttpPrefix($this->liens);
+    }
+    private function ensureHttpPrefix(string $url): string
+    {
+        // Vérifier si le lien commence par http:// ou https://
+        if (!preg_match("~^(?:f|ht)tps?://~i", $url)) {
+            // Si le lien ne commence pas par http:// ou https://, ajouter le préfixe http://
+            $url = 'http://' . $url;
+        }
+
+        return $url;
     }
 
     public function setLiens(?string $liens): static
