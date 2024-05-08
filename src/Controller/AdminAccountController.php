@@ -11,7 +11,8 @@ use App\Services\Stat\StatCoachService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-
+use Knp\Component\Pager\PaginatorInterface;
+use App\Repository\UserRepository;
 class AdminAccountController extends AbstractController
 {
     private $calendarEventRepository;
@@ -72,6 +73,23 @@ class AdminAccountController extends AbstractController
             'repoSecteur' => $this->repoSecteur,
             'allStatsVente' => $allStatsVente,
             'revenuAnneeMoisBest' => $revenuAnneeMoisBest
+        ]);
+    }
+    /**
+     * @Route("/admin/view", name="admin_view")
+     */
+    public function admin_ambassadeur_view(Request $request,UserRepository $repoUser, PaginatorInterface $paginator)
+    {
+        $ambassadeur = $this->getUser();
+        $result=$repoUser->findBy(['parrain'=>$ambassadeur->getId()]);
+        $filleuil = $paginator->paginate(
+            $result,
+            $request->query->getInt('page', 1),
+            5
+        );
+        return $this->render('user_category/admin/view_admin.html.twig', [
+            'ambassadeur' => $ambassadeur,
+            'filleuil'=>$filleuil
         ]);
     }
 }

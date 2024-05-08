@@ -227,9 +227,29 @@ class AgentAccountController extends AbstractController
             'nbrRdv' => $nbrRdv,
             'chiffreAffaireTotal' => $chiffreAffaireTotal,
             'nbVentesTotal' => $nbVentesTotal,
-            "coachs" => $coachs
+            "coachs" => $coachs,
+            "agent"=> $agent
         ]);
     }
+
+    /**
+     * @Route("/agent/view", name="agent_view")
+     */
+    public function admin_agent_view(Request $request, AgentSecteurService $agentSecteurService,UserRepository $repoUser, PaginatorInterface $paginator)
+    {
+        $ambassadeur = $this->getUser();
+        $result=$this->repoUser->findBy(['parrain'=>$ambassadeur->getId()]);
+        $filleuil = $paginator->paginate(
+            $result,
+            $request->query->getInt('page', 1),
+            5
+        );
+        return $this->render('user_category/agent/view_agent.html.twig', [
+            'ambassadeur' => $ambassadeur,
+            'filleuil'=>$filleuil
+        ]);
+    }
+
     // public function agent_dashboard_secteur( Request $request, PaginatorInterface $paginator, Secteur $secteur, StatAgentService $statAgentService)
     // {
       

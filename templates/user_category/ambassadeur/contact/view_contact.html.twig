@@ -1,0 +1,137 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	Visualisation Contact
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+	<link rel="stylesheet" type="text/css" href="{{ asset('assets/templates/contact/contact.style.css') }}">
+{% endblock %}
+
+{% block body %}
+	<div class="container mt-2">
+		<a href="{{ path('coach_agent_contact_list', {agent: contact.agent.id}) }}" class="btn btn-secondary"> <i class="fa-solid fa-circle-arrow-left"></i> Retour </a>
+
+        <!-- Message alert -->
+        <div class="alert-message">
+            {% for label, messages in app.flashes %}
+                <div class="alert alert-{{label}} text-center">
+                    {% for message in messages %}
+                        {{message | raw}}
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        </div>
+
+		<div class="content-card-user-information mt-3">
+			{% set info = contact.information %}
+			
+			<section class="app-user-view-account">
+				<div class="row">
+					<div class="col-8">
+						<div class="contact-card">
+							<div class="contact-card__name-container">
+								<h6 class="mb-5">{{ contact.information.fullName }}</h6>
+								{% if is_granted('ROLE_AGENT') %}
+									<a href="{{ path('agent_contact_info_edit', {id:contact.information.id}) }}" class="btn btn-primary"><i class="fa fa-edit"></i> Modifier</a>
+								{% endif %}
+							</div>
+							<div class="contact-card__infos-container">
+								<div class="contact-card__info-item">
+									<i class="fa-solid fa-envelope"></i>
+									<span>{{ contact.information.email|default('Aucune adresse email') }}</span>
+								</div>
+								{% if contact.information.phone %}
+								<div class="contact-card__info-item">
+									<i class="fa-solid fa-phone"></i>
+									<span> {{ contact.information.phone }}</span>
+								</div>
+								{% endif %}
+								<div class="contact-card__info-item mt-3">
+									<i class="fa-solid fa-location-dot"></i> <span>{{ contact.information.address|default('(Adresse)') }}</span>
+									<ul>
+										{% if contact.information.rue %}
+											<li><span class="fw-bolder">rue :</span> {{ contact.information.rue }}</li>
+										{% endif %}
+										{% if contact.information.codePostal %}
+											<li><span class="fw-bolder">Code postal :</span> {{ contact.information.codePostal }}</li>
+										{% endif %}
+										{% if contact.information.ville %}
+											<li><span class="fw-bolder">Ville :</span> {{ contact.information.ville }}</li>
+										{% endif %}
+									</ul>
+								</div>
+							
+								<div class="contact-card__info-item">
+									<i class="fa-solid fa-house-chimney"></i>
+									<span> {{ contact.information.typeLogement.nom|default('(Type logement)') }}</span>
+									<ul>
+										{% if contact.information.compositionFoyer %}
+											<li><span class="fw-bolder">Composition foyer :</span> {{ contact.information.compositionFoyer }}</li>
+										{% endif %}
+										{% if contact.information.nbrPersonne %}
+											<li><span class="fw-bolder">Nombre personnes :</span> {{ contact.information.nbrPersonne }}</li>
+										{% endif %}
+									</ul>
+								</div>
+							
+							</div>
+						</div>
+
+						<!-- /User Card -->
+
+
+						{# <h4 class="text-primary">Information agent</h4>
+						<p><span class="fw-bolder">Nom</span>: {{ info.firstname }}</p>
+						<p><span class="fw-bolder">Prénom</span>: {{ info.lastname }}</p>
+						<p><span class="fw-bolder">Email</span>:  {{ info.email }}</p>
+						<p><span class="fw-bolder">Téléphone</span>:  {{ info.phone }}</p> #}
+
+						
+						<div class="tags-wrapper">
+							<h3 class="tags-title">Etiquettes :</h3>
+							{% for tag in tags %}
+								<div class="row px-3 mt-2">
+									<div class="col-1 bg-white py-2 border border-end-0 text-center">
+										<div class="caret caret-shadow caret-hoverable rounded-3 d-inline-block bg-{{ tag.couleur }}"></div>
+									</div>
+									<div class="col-11 bg-white border border-start-0 py-2 d-flex align-items-center">
+										{{ tag.libelle|capitalize }}
+									</div>
+								</div>
+							{% else %}
+								<div class="bg-white border p-2 text-center">
+									Aucune étiquette disponible.
+								</div>
+							{% endfor %}
+						</div>
+					</div>
+					<div class="col-4">
+						<div class="note">
+							<div class="note-header">
+								Notes
+							</div>
+							<div class="note-content">
+								{% if contact.note != null %}
+									{{contact.note| raw }}
+								{% else %}
+									<div class="note-blank-alert">Aucune note pour ce contact</div>
+								{% endif %}
+							</div>
+						</div>
+						{# <h3 class="text-primary">Note</h3>
+						{{ form_start(formNote) }}
+						{{ form_row(formNote.note) }}
+						<button class="btn btn-success mt-3" >Enregistrer note <i class="fa-solid fa-floppy-disk ms-2"></i></button>
+						{{ form_end(formNote) }} #}
+					</div>
+				</div>
+			</section>
+		</div>
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}

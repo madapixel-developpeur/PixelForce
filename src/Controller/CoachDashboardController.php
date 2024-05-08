@@ -12,6 +12,7 @@ use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Repository\UserRepository;
 
 /**
  * @Route("/coach/dashboard")
@@ -72,6 +73,23 @@ class CoachDashboardController extends AbstractController
             'anneeActuelle' => $anneeActuelle,
             'nbrRdv' => $nbrRdv,
             'nbrAgents' => $nbrAgents
+        ]);
+    }
+    /**
+     * @Route("/view", name="coach_view")
+     */
+    public function admin_agent_view(Request $request,UserRepository $repoUser, PaginatorInterface $paginator)
+    {
+        $ambassadeur = $this->getUser();
+        $result=$repoUser->findBy(['parrain'=>$ambassadeur->getId()]);
+        $filleuil = $paginator->paginate(
+            $result,
+            $request->query->getInt('page', 1),
+            5
+        );
+        return $this->render('user_category/coach/view_coach.html.twig', [
+            'ambassadeur' => $ambassadeur,
+            'filleuil'=>$filleuil
         ]);
     }
 

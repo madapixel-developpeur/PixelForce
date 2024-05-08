@@ -1,0 +1,105 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	Liste des catégories
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %} 
+    <div class="block block--bordered block--rounded">
+        <h1 class="block__text block__text--center mt-2" >Options de filtre :</h1>
+        <div class="filter-wrap">
+            {% if error %}
+                <div class="alert alert-danger" role="alert">
+                    <div class="alert-body">
+                        {{error}}
+                    </div>
+                </div>
+            {% endif %}
+            {{ form_start(form, {'attr': {'class': 'filter-form', 'id': 'category-filter-form'}}) }}
+                
+                <div class="my-form-widget">
+                    {{form_label(form.nom)}}
+                    {{form_widget(form.nom)}}
+                    {{form_errors(form.nom)}}
+                </div>
+                <div class="my-form-widget">
+                    {{form_label(form.description)}}
+                    {{form_widget(form.description)}}
+                    {{form_errors(form.description)}}
+                </div>
+                <div class="btn-wrap">
+                    <button class="btn btn-primary" type="submit"><i data-feather="filter"></i>Filtrer</button>
+                </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+    <div class="block block--bordered block--rounded">
+        {% for label, message in app.flashes %}
+            <div class="alert alert-{{label}} p-3 text-center" role="alert">
+                <div class="alert-body">
+                    {{message}}
+                </div>
+            </div>
+        {% endfor %}
+        <div class="block__header mb-1" >
+            <h1 class="block__title">Liste des catégories :</h1>
+            <div class="fab-btn-wrap">
+                <a  href="{{path('admin_categorysecu_new')}}" class="btn btn-primary btn--rounded fab-btn"><i data-feather="plus"></i>Nouvelle catégorie</a>
+            </div>
+        </div>
+        {% if categoryList|length ==0 %}
+                <div class="alert alert-primary p-3 text-center" role="alert">
+                    <div class="alert-body">
+                        Aucune catégorie disponible pour le moment.
+                    </div>
+                </div>
+        {% endif %}
+        {% if categoryList|length !=0 %}
+        <div class="table-responsive mb-1">
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Nom</th>
+                        <th>Description</th>
+                        <th></th>
+                        <th></th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for category in categoryList %}
+                    <tr>
+                        <td>{{category.id}}</td>
+                        <td>{{category.nom}}</td>
+                        <td>{{category.description}}</td>
+                        <td class="col-action col-action--edit">
+                            <a href="{{path('admin_categorysecu_edit', {'id': category.id})}}">
+                                <i data-feather="edit"></i>
+                            </a>
+                            
+                        </td>
+                        <td class="col-action col-action--remove">
+                            <a href="{{path('admin_categorysecu_delete', {'id': category.id})}}">
+                                <i data-feather="trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="d-flex justify-content-center scale-up-center">
+            {{ knp_pagination_render(categoryList) }}
+        <div>
+        {% endif %}
+    </div>
+
+{% endblock %}
+
+
+

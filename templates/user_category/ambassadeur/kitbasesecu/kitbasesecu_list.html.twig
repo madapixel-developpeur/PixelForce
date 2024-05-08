@@ -1,0 +1,126 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	Les kits de base
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %} 
+    
+    <div class="block block--bordered block--rounded">
+        <h1 class="block__text block__text--center mt-2" >Options de filtre :</h1>
+        <div class="filter-wrap">
+            {{ form_start(form, {'attr': {'class': 'filter-form'}}) }}
+                
+                <div class="my-form-widget">
+                    {{form_label(form.nom)}}
+                    {{form_widget(form.nom)}}
+                    {{form_errors(form.nom)}}
+                </div>
+                <div class="my-form-widget">
+                    {{form_label(form.description)}}
+                    {{form_widget(form.description)}}
+                    {{form_errors(form.description)}}
+                </div>
+                <div class="my-form-widget">
+                    {{form_label(form.prixMin)}}
+                    {{form_widget(form.prixMin)}}
+                    {{form_errors(form.prixMin)}}
+                </div>
+                <div class="my-form-widget">
+                    {{form_label(form.prixMax)}}
+                    {{form_widget(form.prixMax)}}
+                    {{form_errors(form.prixMax)}}
+                </div>
+                <div class="my-form-widget">
+                    {{form_label(form.sort)}}
+                    {{form_widget(form.sort)}}
+                    {{form_errors(form.sort)}}
+                </div>
+                <div class="my-form-widget">
+                    {{form_label(form.direction)}}
+                    {{form_widget(form.direction)}}
+                    {{form_errors(form.direction)}}
+                </div>
+                <div class="btn-wrap">
+                    <button class="btn btn-primary" type="submit"><i data-feather="filter"></i>Filtrer</button>
+                </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+    <div class="block block--bordered block--rounded">
+        <div class="block__header mb-1" >
+            <h1 class="block__title">Liste des kits :</h1>
+            <div class="fab-btn-wrap">
+                <a  href="{{path('admin_kitbasesecu_new')}}" class="btn btn-primary btn--rounded fab-btn"><i data-feather="plus"></i>Nouveau kit</a>
+            </div>
+        </div>
+        {% if kitbaseList|length ==0 %}
+                <div class="alert alert-primary p-3 text-center" role="alert">
+                    <div class="alert-body">
+                        Aucun kit de base disponible pour le moment.
+                    </div>
+                </div>
+        {% endif %}
+        {% if kitbaseList|length !=0 %}
+        <div class="table-responsive mb-1">
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Nom</th>
+                        <th>Description</th>
+                        <th>Prix</th>
+                        <th>Image</th>
+                        <th></th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for kitbase in kitbaseList %}
+                    <tr>
+                        <td>{{kitbase.id}}</td>
+                        <td>{{kitbase.nom}}</td>
+                        <td>
+                            {% if kitbase.description %} 
+                                {{kitbase.description | raw}} 
+                            {% endif %}
+                        </td>
+                        <td>{{kitbase.prix | number_format(2, ',', ' ')}} €</td>
+                        <td>
+                            {% if kitbase.image != null %}
+                                <img class="img-fluid card-img-top ecommerce-card-img" src="{{ asset( filesDirectory ~ kitbase.image) }}" alt="Image pour {{kitbase.nom}}" />
+                            {% endif %}
+                        </td>
+                        
+                        <td class="col-action col-action--edit">
+                            <a href="{{path('admin_kitbasesecu_fiche', {'id': kitbase.id})}}">
+                                 <i data-feather="eye"></i>
+                            </a>
+                        </td>
+                    
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            
+        </div>
+        <div class="d-flex justify-content-center scale-up-center">
+            {{ knp_pagination_render(kitbaseList) }}
+        <div>
+        {% endif %}
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">        
+        
+    </script>
+{% endblock %}
+

@@ -307,7 +307,7 @@
                 </div> #}
                 <!--/ Browser States Card -->
                 <!-- Browser States Card -->
-                <div class="col-lg-12 col-12">
+                <div class="col-lg-8 col-8">
                     <div class="card card-company-table pb-5" style="min-height: 300px;">
                         <div class="card-body p-0">
                             <div class="row p-5 align-items-center">
@@ -327,6 +327,17 @@
                         </div>
                     </div>
                 </div>
+                <div class="card text-center col-lg-4 col-4 align-items-center">
+                    
+                    <div class="card-body m-5">
+                        <h5 class="card-title">Copier mon liens ici</h5>
+                        <p class="card-text">Pour inviter d'autres personnes à se joindre à vous via ce lien, veuillez cliquer ici.</p>
+                         <a class="btn btn-primary w-100 font-weight-bold" href="#" onclick="copyLink('{{ url('agent_inscription', {'ambassador_username': agent.username != "" ? agent.username : ' '}) }}') " >Prendre rdv </a>
+                    </div>
+                    
+                </div>
+                 
+                
                 <!--/ Browser States Card -->
                 <!-- Browser States Card -->
                 <div class="col-lg-12 col-12">
@@ -650,6 +661,14 @@
 
             
         });
+    </script>
+    <script>
+       
+        function copyLink($path) {
+			navigator.clipboard.writeText($path).then(function() {
+				Swal.fire("Lien copié", "Le lien de l'ambassadeur a été copié avec succès.", "success");
+			});
+        }
     </script>
     
 {% endblock %}

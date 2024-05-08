@@ -1,0 +1,184 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	Formulaire inventaire
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+{# <td>
+    <div class="form-check">
+        <input type="checkbox" id="inventaire_mere_inventaireFilles___name___realCheck" name="inventaire_mere[inventaireFilles][__name__][realCheck]" class="mycheck form-check-input">
+        <label class="form-check-label" for="inventaire_mere_inventaireFilles___name___realCheck"></label>
+    </div>
+</td> #}
+{% set prototype = '
+    <td>
+        <div class="d-flex align-items-center">
+            <input type="text" id="inventaire_mere_inventaireFilles___name___produitlib" name="inventaire_mere[inventaireFilles][__name__][produitlib]" required="required" readonly="readonly" class="form-control">
+            <button class="btn btn-popup mx-1 waves-effect waves-float waves-light" onclick="openPopup(\'' ~ path('admin_product_popup') ~ '\', \'inventaire_mere_inventaireFilles___name___produitlib;inventaire_mere_inventaireFilles___name___produit\', \'nom;id\')" type="button">...</button>
+        </div>
+
+    </td>
+    <td><input type="number" id="inventaire_mere_inventaireFilles___name___qte" name="inventaire_mere[inventaireFilles][__name__][qte]" required="required" class="form-control"></td>  
+    <td>
+        <div class="d-none"><input type="number" id="inventaire_mere_inventaireFilles___name___produit" name="inventaire_mere[inventaireFilles][__name__][produit]" class="form-control"></div>  
+        <div class="btn-wrap">
+            <button class="btn btn-danger remove-item waves-effect waves-float waves-light" type="button"><i class="fa fa-times" aria-hidden="true"></i></button>
+        </div>
+    </td> 
+    
+    <input type="hidden" id="inventaire_mere_inventaireFilles___name___check" name="inventaire_mere[inventaireFilles][__name__][check]" required="required" value="1">
+
+' %}
+
+{# {% form_theme form 'form/_my_table_form.html.twig' %} #}
+
+{% block body %} 
+    {{form_start(form)}}
+    <div class="block block--bordered block--rounded">
+        <h1 class="block__text block__text--center mt-2" >Formulaire Inventaire :</h1>            
+        {% if error %}
+        <div class="alert alert-danger" role="alert">
+            <div class="alert-body">
+                {{error}}
+            </div>
+        </div>
+        {% endif %}
+        {% if success %}
+        <div class="alert alert-success" role="alert">
+            <div class="alert-body">
+                {{success}}
+            </div>
+        </div>
+        {% endif %}
+        <div class="col-md-6 col-sm-12">
+        
+            <div class="my-form-widget">
+                {{form_label(form.dateInventaire)}}
+                {{form_widget(form.dateInventaire)}}
+                {{form_errors(form.dateInventaire)}}
+            </div> 
+            <div class="my-form-widget">
+                {{form_label(form.description)}}
+                {{form_widget(form.description)}}
+                {{form_errors(form.description)}}
+            </div> 
+        </div>       
+    </div>
+    <div class="block block--bordered block--rounded">
+        <div class="block__header mb-1" >
+            <h1 class="block__title">Détails :</h1>
+            <div class="fab-btn-wrap">
+                {# <a  href="/admin/product/new" class="btn btn-primary btn--rounded fab-btn"><i data-feather="plus"></i>Nouveau produit</a> #}
+            </div>
+        </div>
+        
+        
+        <div class="table-responsive mb-1">
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        {# <th>
+                            <div class="form-check">
+                                <input type="checkbox" id="checkall" name="checkall" class="form-check-input">
+                                <label class="form-check-label" for="checkall"></label>
+                            </div>
+                        </th> #}
+                        <th>Produit</th>
+                        <th>Quantité</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="fille-list"
+                    data-prototype="{{ prototype }}"
+                    data-widget-tags="{{ '<tr></tr>'|e }}"
+                    data-widget-counter="{{ form.inventaireFilles|length }}">
+
+
+                    {% for row in form.inventaireFilles %}
+                    {% set index = loop.index0 %}
+                    <tr>
+                        {# <td>{{form_widget(row.realCheck, {'attr': {'class': 'mycheck'}})}}</td> #}
+                        <td>
+                        <div class="d-flex align-items-center">
+                            {{form_widget(row.produitlib)}}
+                            <button class="btn btn-popup mx-1" onclick="openPopup('{{path('admin_product_popup')}}', 'inventaire_mere_inventaireFilles_{{index}}_produitlib;inventaire_mere_inventaireFilles_{{index}}_produit', 'nom;id')" type="button">...</button>
+                        </div>
+                        {{form_errors(row.produit)}}
+                        
+                        </td>
+                        <td>{{form_widget(row.qte)}}{{form_errors(row.qte)}}</td>  
+                        <td>
+                            <div class="d-none">{{form_widget(row.produit)}}</div>  
+                            <div class="btn-wrap">
+                                <button class="btn btn-danger remove-item" type="button"><i class="fa fa-times" aria-hidden="true"></i></button>
+                            </div>
+                        </td> 
+                        
+                        {{form_widget(row.check)}}
+                    </tr> 
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="d-flex justify-content-end align-items-center">
+            <div class="btn-wrap mx-2">
+                <button class="btn btn-success add-another-collection-widget" type="button"
+                    data-list-selector="#fille-list"><i class="fa fa-plus" aria-hidden="true"></i>&nbsp;Nouvelle ligne</button>
+            </div>
+            <div class="btn-wrap">
+                <button class="btn btn-primary" type="submit" >{% if btnText is defined %} {{btnText}} {% else %} Enregistrer {% endif %}</button>
+            </div>
+        </div>
+        
+    </div>
+    {{form_end(form)}}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">  
+
+        function openPopup(path, opener, popup, queryString = ''){
+            var options = "resizable=yes,scrollbars=yes,location=no,width=1000,height=500,top=0,left=0";
+            window.open(path+'?'+queryString+"&opener="+opener+"&popup="+popup, 'popUpWindow', options).focus();
+        }   
+
+        $(document).ready(function () {
+            function addRemoveItem (item) {
+                item
+                .find('.remove-item')
+                .click(function (e){
+                    item.remove();
+                })
+            }
+
+            $('.add-another-collection-widget').click(function (e) {
+                
+                var list = $($(this).attr('data-list-selector'));
+                var counter = list.data('widget-counter') || list.children().length;
+                var newWidget = list.attr('data-prototype');
+                newWidget = newWidget.replace(/__name__/g, counter);
+                counter++;
+                list.data('widget-counter', counter);
+                var newElem = $(list.attr('data-widget-tags')).html(newWidget);
+                newElem.appendTo(list);
+                addRemoveItem(newElem);
+            });
+
+            $('#fille-list tr')
+            .each(function (index) {
+                addRemoveItem($(this));
+            });
+
+            /*
+            $('#checkall').change(function (e) {
+                $('.mycheck').prop('checked', $(this).is(':checked'));
+            });
+            */
+        });
+    </script>
+{% endblock %}
+

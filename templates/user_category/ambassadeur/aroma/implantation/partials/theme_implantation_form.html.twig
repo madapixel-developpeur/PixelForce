@@ -1,0 +1,39 @@
+{% block _implantation_aroma_form_filles_widget %}
+    {{ form_widget(form)}}
+    <input type="hidden" id="widgets-counter" value="{{form|length}}">
+{% endblock %}
+
+
+{% block _implantation_aroma_form_filles_row %}
+    {{ form_widget(form)}}
+{% endblock %}
+
+{% block _implantation_aroma_form_filles_entry_label %}
+
+{% endblock %}
+
+
+{% block _implantation_aroma_form_filles_entry_widget %}
+    <tr id="{{id}}" class="implantation-elmt-row">
+        <td>
+            <div class="d-flex align-items-center">
+                {{form_widget(form.produitlib,{ 'attr': {'class': 'form-control'} })}}
+                <button class="btn btn-popup mx-1" onclick="openPopup('{{path('admin_aroma_product_popup')}}', '{{id}}_produitlib;{{id}}_produit;{{id}}_prixProduit', 'nom;id;prix')"  type="button">...</button>
+            </div>
+            {{form_errors(form.produit)}}
+            <div class="d-none">{{form_widget(form.produit)}}</div> 
+        </td>
+        {# <td>{{form_widget(form.prixConseilleProduit,{ 'attr': {'class': 'form-control'} })}}{{form_errors(form.prixConseilleProduit)}}</td> #}
+        {{form_widget(form.prixProduit,{ 'attr': {'class': 'row-prix-produit', 'data-parent-id': id} })}}
+        <td>{{form_widget(form.prixProduitFormated,{ 'attr': {'class': 'form-control'} })}}{{form_errors(form.prixProduit)}}{{form_errors(form.prixProduitFormated)}}</td>
+        <td>{{form_widget(form.prix,{ 'attr': {'class': 'form-control'} })}}{{form_errors(form.prix)}}</td>
+        <td>{{form_widget(form.montant,{ 'attr': {'class': 'form-control'} })}}{{form_errors(form.montant)}}</td>
+        <td>{{form_widget(form.qteGratuit,{ 'attr': {'class': 'form-control row-qteGraduit'} })}}{{form_errors(form.qteGratuit)}}</td>
+        {{form_widget(form.statut)}}
+        <td class="col-action p-2">
+            <div class="btn-wrap">
+                <button class="btn btn-danger remove-item delete-row" type="button" data-row-id="{{id}}"><i class="fa fa-times" aria-hidden="true"></i></button>
+            </div>
+        </td>
+    </tr>    
+{% endblock %}

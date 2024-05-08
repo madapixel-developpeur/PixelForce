@@ -327,7 +327,7 @@
 
 
             <!-- Browser States Card -->
-            <div class="col-lg-4 col-md-6 col-12">
+            <div class="col-lg-3 col-md-6 col-12">
                 <div class="card card-browser-states">
                     <div class="card-header">
                         <div>
@@ -400,7 +400,7 @@
             <!--/ Browser States Card -->
 
             <!-- Goal Overview Card -->
-            <div class="col-lg-4 col-md-6 col-12">
+            <div class="col-lg-3 col-md-6 col-12">
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h4 class="card-title">Aperçu des objectifs</h4>
@@ -424,7 +424,7 @@
             <!--/ Goal Overview Card -->
 
             <!-- Transaction Card -->
-            <div class="col-lg-4 col-md-6 col-12">
+            <div class="col-lg-3 col-md-6 col-12">
                 <div class="card card-transaction">
                     <div class="card-header">
                         <h4 class="card-title">Transactions</h4>
@@ -512,6 +512,19 @@
                 </div>
             </div>
             <!--/ Transaction Card -->
+            <!--/ Liens Card -->
+            <div class="col-lg-3 col-md-6 col-12">
+                <div class="card text-center col-lg-12 col-12 align-items-center">
+                    
+                    <div class="card-body m-12">
+                        <h5 class="card-title">Copier mon liens ici</h5>
+                        <p class="card-text">Pour inviter d'autres personnes à se joindre à vous via ce lien, veuillez cliquer ici.</p>
+                         <a class="btn btn-primary w-100 font-weight-bold" href="#" onclick="copyLink('{{ url('agent_inscription', {'ambassador_username':  app.user.username != "" ?  app.user.username : ' '}) }}') " >Prendre rdv </a>
+                    </div>
+                      
+                </div>
+            </div>
+             <!--/ Liens Card -->
         </div>
     </section>
 {% endblock %}

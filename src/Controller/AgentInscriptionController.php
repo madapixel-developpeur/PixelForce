@@ -109,11 +109,7 @@ class AgentInscriptionController extends AbstractController
            
             $parrain =$this->userRepository->findOneBy(['username' => $username]);
             if($parrain){
-                foreach($parrain->getRoles() as $p){
-                    if($p==User::ROLE_AMBASSADEUR){
-                        return $parrain;
-                    }
-                }
+                return $parrain;
             }
             throw new \Exception("Le nom d'utilisateur inscrit en haut n'existe pas ou n'est pas valide.");
         }
