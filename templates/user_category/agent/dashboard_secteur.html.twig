@@ -317,11 +317,11 @@
                                     </div>
                                 </div>
                                 <div class="col-md-8">
-                                    <h3>{{secteur.nom}}</h3>
+                                    <h3>{{secteur.title}}</h3>
                                     <p>
-                                        {{secteur.description}}  
+                                        {{secteur.longDescription | raw}}  
                                     </p>
-                                    <a target="_blank" href="{{secteur.getStructuredLiens()}}" class="">Lien vers {{secteur.nom}}</strong></a>
+                                    {# <a target="_blank" href="{{secteur.liens}}" class="card-link">Lien vers {{secteur.nom}}</strong></a> #}
                                 </div>
                             </div>
                         </div>
@@ -363,7 +363,7 @@
                                                 <td><a href= "mailto: {{ coach.email }}"> {{ coach.email }} </a></td>
                                                 <td><a href="tel:{{ coach.telephone|default('-') }}">{{ coach.telephone|default('-') }}</a></td>
                                                 <td>
-                                                    <a class="btn btn-success w-100 font-weight-bold" href="#" onclick="Calendly.initPopupWidget({url: '{{coach.getLienCalendly()}}'});return false;" >Cliquez <i class="fa fa-bookmark" aria-hidden="true"></i></a>
+                                                    <a class="btn btn-primary w-100 font-weight-bold" href="#" onclick="Calendly.initPopupWidget({url: '{{coach.getLienCalendly()}}'});return false;" >Prendre rdv </a>
                                                 </td>    
                                             </tr>
                       

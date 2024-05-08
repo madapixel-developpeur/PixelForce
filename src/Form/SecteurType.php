@@ -12,6 +12,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Validator\Constraints\File;
+use FOS\CKEditorBundle\Form\Type\CKEditorType;
 
 class SecteurType extends AbstractType
 {
@@ -24,8 +25,25 @@ class SecteurType extends AbstractType
         $types = $this->typeSecteurRepository->findAll();
         $builder
             ->add('nom', null, ['attr' => ['placeholder' => 'Nom du secteur']])
+            ->add('title', null, 
+                [
+                    'attr' => ['placeholder' => 'Titre du secteur'],
+                    'label' => "Titre",
+                ]
+            )
             ->add('description', null, ['attr' => ['placeholder' => 'Description du secteur']])
-            ->add('liens', null, ['attr' => ['placeholder' => 'liens vers la page du secteur']])
+            ->add('longDescription', CKEditorType::class, [
+                'required' => false,
+                'label' => "Longue description",
+                'config' => [
+                    'toolbar' => 'note_contact_toolbar'
+                ]
+            ])
+            ->add('liens', null, 
+                [
+                    'attr' => ['placeholder' => 'liens vers la page du secteur'],
+                ]
+            )
             ->add('type', EntityType::class, [
                 "label" => "Type",
                 'class'=> TypeSecteur::class,
