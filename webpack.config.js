@@ -154,8 +154,8 @@ Encore
             throw env.error;
         }
 
-        options['process.env'].VIMEO_ACCESS_TOKEN = JSON.stringify(env.parsed.VIMEO_ACCESS_TOKEN);
-        options['process.env'].MERCURE_JWT_SECRET_LONG = JSON.stringify(env.parsed.MERCURE_JWT_SECRET_LONG);
+        //options['process.env'].VIMEO_ACCESS_TOKEN = JSON.stringify(env.parsed.VIMEO_ACCESS_TOKEN);
+        //options['process.env'].MERCURE_JWT_SECRET_LONG = JSON.stringify(env.parsed.MERCURE_JWT_SECRET_LONG);
 
     })
 ;
