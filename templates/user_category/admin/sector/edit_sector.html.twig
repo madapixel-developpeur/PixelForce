@@ -23,8 +23,12 @@
 					<div class="row">
 						{{ form_start(formSecteur) }}
 							{{ form_row(formSecteur.nom) }}
+
+							{{ form_row(formSecteur.title) }}
 							
 							{{ form_row(formSecteur.description) }}
+
+							{{ form_row(formSecteur.longDescription) }}
 							<div class="mb-3">
                                 {{form_label(formSecteur.liens)}}
                                 {{form_widget(formSecteur.liens,{ 'attr': {'class': 'form-control'} })}}

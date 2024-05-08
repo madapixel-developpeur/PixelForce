@@ -33,6 +33,17 @@ class Secteur implements JsonSerializable
     private $description;
 
     /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    
+    private $title;
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    
+    private $longDescription;
+
+    /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $couverture;
@@ -131,6 +142,30 @@ class Secteur implements JsonSerializable
     public function setDescription(?string $description): self
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    public function getTitle(): ?string
+    {
+        return $this->title;
+    }
+
+    public function setTitle(?string $title): self
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    public function getLongDescription(): ?string
+    {
+        return $this->longDescription;
+    }
+
+    public function setLongDescription(?string $longDescription): self
+    {
+        $this->longDescription = $longDescription;
 
         return $this;
     }

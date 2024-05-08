@@ -92,7 +92,7 @@
                             <td> 
                                 {# On récupère les secteurs reliés par l'agent  #}
                                 {% set secteurs = repoAgentSecteur.findBy({'agent' : agent}) %}
-                                {{ agent.allSecteursOfUser(secteurs)|default('-') }}                                
+                                {# {{ agent.allSecteursOfUser(secteurs)|default('-') }}                                 #}
                             </td>
                             <td>
                                 <div class="m-auto {{ agent.active == 1 ? 'bg-success' : (agent.active == -1 ? 'bg-danger' : 'bg-primary') }} rounded-circle caret"><span class="d-none">{{  agent.active }}</span></div>
