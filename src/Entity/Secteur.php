@@ -48,6 +48,11 @@ class Secteur implements JsonSerializable
      */
     private $couverture;
 
+     /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $affiche;
+
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
@@ -455,6 +460,18 @@ class Secteur implements JsonSerializable
     public function setLiens(?string $liens): static
     {
         $this->liens = $liens;
+
+        return $this;
+    }
+
+    public function getAffiche(): ?string
+    {
+        return $this->affiche;
+    }
+
+    public function setAffiche(?string $affiche): static
+    {
+        $this->affiche = $affiche;
 
         return $this;
     }

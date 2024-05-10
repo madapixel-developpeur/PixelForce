@@ -33,12 +33,15 @@
             <div class="block-list-card-secteur mt-5">
                 <div class="row d-flex justify-content-center">
                     {% for secteur in allSecteurs %}
-                        <div class="col-4 mb-3">
+                        <div class="col-12 col-md-4 mb-3">
                             {% set agentSecteur = repoAgentSecteur.findOneBy({'secteur' : secteur, 'agent' : agent}) %}
                         
                             <div style="min-height: 140px;" class="card-secteur bg-{% if agentSecteur and agentSecteur.statut == true %}primary{% elseif agentSecteur and agentSecteur.statut == false %}warning{% else %}secondary{% endif %} p-3">
 
                                 <h2 class="text-white text-center">{{ secteur.nom }}</h2>
+                                <div class="d-flex align-items-center justify-content-center ">                  
+                                    <img src="{{ asset('files/')}}/{{secteur.affiche}}" class="img-thumbnail w-50" alt="">
+                                </div>
                                 <div class="secteur-info d-none text-center">
                                     <h5 class="text-white secteur-description">{{ secteur.description }}</h5>
                                 </div>

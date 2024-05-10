@@ -99,6 +99,11 @@ class AdminSecteurController extends AbstractController
                 $photo = $this->fileHandler->upload($imageCouverture, "images\secteur\couverture");
                 $sector->setCouverture($photo);
             }
+            $affiche = $formSecteur->get('affiche')->getData();
+            if ($affiche) {
+                $photo = $this->fileHandler->upload($affiche, "images\secteur\affiche");
+                $sector->setAffiche($photo);
+            }
             $sector->setActive(1);
             $this->entityManager->save($sector);
             
@@ -131,6 +136,11 @@ class AdminSecteurController extends AbstractController
             if ($imageCouverture) {
                 $photo = $this->fileHandler->upload($imageCouverture, "images\secteur\couverture");
                 $sector->setCouverture($photo);
+            }
+            $affiche = $formSecteur->get('affiche')->getData();
+            if ($affiche) {
+                $photo = $this->fileHandler->upload($affiche, "images\secteur\affiche");
+                $sector->setAffiche($photo);
             }
             $this->entityManager->save($sector);
             $this->addFlash('success', "Modification secteur avec succès");

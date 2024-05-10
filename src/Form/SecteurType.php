@@ -71,6 +71,21 @@ class SecteurType extends AbstractType
                     ])
                 ]
             ])
+            ->add('affiche', FileType::class, [
+                "label" => "Affiche",
+                'mapped' => false,
+                "required" => false,
+                'constraints' => [
+                    new File([
+                        // 'maxSize' => '1024k',
+                        'mimeTypes' => [
+                            'image/jpeg',
+                            'image/png',
+                        ],
+                        'mimeTypesMessage' => 'Image invalide. Le format doit être: .jpeg ou .png',
+                    ])
+                ]
+            ])
         ;
     }
 
