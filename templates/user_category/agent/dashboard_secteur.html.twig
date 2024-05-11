@@ -31,6 +31,7 @@
                             </a>                           
                             </h3>
                             {# {% endif %} #}
+                            {% if app.user.canAccessFonct('VENTE', app.session.get('secteurId')) %}
                             {% if estSecurite %}
                             <a role="button" href="{{path('admin_ordersecu_list')}}" class="btn btn-primary">Voir les ventes</a>
                             {% elseif estEcommerce %}
@@ -38,7 +39,7 @@
                             {% elseif estDemandeDevis %}
                             <a role="button" href="{{path('agent_demandedevis_list')}}" class="btn btn-primary">Voir les ventes</a>
                             {% endif %}
-                            
+                            {% endif %}
                             <img src="{{asset('assets/vuexy/images/illustration/badge.svg')}}" class="congratulation-medal" alt="Medal Pic" />
                         </div>
                     </div>
@@ -57,7 +58,7 @@
                                     <div class="d-flex flex-row">
                                         <div class="avatar bg-light-primary me-2">
                                             <div class="avatar-content">
-                                                <a href="{% if estSecurite %}{{path('admin_ordersecu_list')}}{% elseif estEcommerce %}{{path('agent_order_list')}}{% elseif estDemandeDevis %}{{path('agent_demandedevis_list')}}{% else %}#{% endif %}"><i data-feather="trending-up" class="avatar-icon"></i></a>
+                                                <a {% if app.user.canAccessFonct('VENTE', app.session.get('secteurId')) %}href="{% if estSecurite %}{{path('admin_ordersecu_list')}}{% elseif estEcommerce %}{{path('agent_order_list')}}{% elseif estDemandeDevis %}{{path('agent_demandedevis_list')}}{% else %}#{% endif %}"{% endif %}><i data-feather="trending-up" class="avatar-icon"></i></a>
                                             </div>
                                         </div>
                                         <div class="my-auto">
@@ -96,7 +97,7 @@
                                     <div class="d-flex flex-row">
                                         <div class="avatar bg-light-danger me-2">
                                             <div class="avatar-content">
-                                                <a href="{{path('agent_contact_meeting_list')}}"><i data-feather="box" class="avatar-icon"></i></a>
+                                                <a {% if app.user.canAccessFonct('RDV', app.session.get('secteurId')) %}href="{{path('agent_contact_meeting_list')}}"{% endif %}><i data-feather="box" class="avatar-icon"></i></a>
                                             </div>
                                         </div>
                                         <div class="my-auto">
@@ -110,7 +111,7 @@
                                     <div class="d-flex flex-row">
                                         <div class="avatar bg-light-success me-2">
                                             <div class="avatar-content">
-                                                <a href="{% if estSecurite %}{{path('admin_ordersecu_list')}}{% elseif estEcommerce %}{{path('agent_order_list')}}{% elseif estDemandeDevis %}{{path('agent_demandedevis_list')}}{% else %}#{% endif %}"><i data-feather="dollar-sign" class="avatar-icon"></i></a>
+                                                <a {% if app.user.canAccessFonct('VENTE', app.session.get('secteurId')) %}href="{% if estSecurite %}{{path('admin_ordersecu_list')}}{% elseif estEcommerce %}{{path('agent_order_list')}}{% elseif estDemandeDevis %}{{path('agent_demandedevis_list')}}{% else %}#{% endif %}"{% endif %}><i data-feather="dollar-sign" class="avatar-icon"></i></a>
                                             </div>
                                         </div>
                                         <div class="my-auto">
@@ -138,12 +139,12 @@
                                     Il n'y a plus de formation à terminer
                                 </div>
                             {% else %}
-                                {% if firstFormation.categorieFormation.ordreCatFormation == constant('App\\Entity\\CategorieFormation::ORDRE_LISTE_DE_CONTACT') and nbrAllMyContacts < constant('App\\Entity\\CategorieFormation::CONDITION_LISTE_DE_CONTACT') %}
+                                {# {% if firstFormation.categorieFormation.ordreCatFormation == constant('App\\Entity\\CategorieFormation::ORDRE_LISTE_DE_CONTACT') and nbrAllMyContacts < constant('App\\Entity\\CategorieFormation::CONDITION_LISTE_DE_CONTACT') %}
                                     <h3 class="fw-bolder text-center mt-2">{{ firstFormation.titre}} </h3>    
                                     <div class="alert alert-warning m-5 text-center h2">
                                         Pour débloquer cette formation, assurez-vous d’avoir enregistré plus de 100 contacts dans votre liste de prospection.
                                     </div>
-                                {% else %}
+                                {% else %} #}
                                     <h3 class="fw-bolder text-center mt-2">{{ firstFormation.titre}} </h3>
                                     <div class="border d-flex bg-white">
                                         <iframe id="formationVideo" src="https://player.vimeo.com/video/{{ firstFormation.videoId }}?loop=1&byline=0&portrait=0&title=0&muted=1" width="700" height="400" class="m-auto" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen allow="autoplay; encrypted-media"></iframe>
@@ -164,13 +165,13 @@
                                     <form method="get" action="{{ path('agent_formation_terminer', {id:firstFormation.id}) }}" id="formFinishFormation">
                                         <input type="hidden" name="path" value="fromDashboard">
                                     </form>
-                                {% endif %}
+                                {# {% endif %} #}
                             {% endif %}
                             
                         </div>
                     </div>
                 </div>
-    
+                {% if app.user.canAccessFonct('AGENDA', app.session.get('secteurId')) %}
                 <!-- Developer Meetup Card -->
                 <div class="col-lg-4 col-md-6 col-12">
                     <div class="card card-developer-meetup position-relative">
@@ -255,6 +256,7 @@
                     </div>
                 </div>
                 <!--/ Developer Meetup Card -->
+                {% endif %}
     
                 <!-- Browser States Card -->
                 {# <div class="col-lg-12 col-12">
@@ -310,6 +312,7 @@
                 </div> #}
                 <!--/ Browser States Card -->
                 <!-- Browser States Card -->
+                {% if app.user.canAccessFonct('PRODUIT', app.session.get('secteurId')) %}
                 <div class="col-lg-8 col-8">
                     <div class="card card-company-table pb-5" style="min-height: 300px;">
                         <div class="card-body p-0">
@@ -330,6 +333,8 @@
                         </div>
                     </div>
                 </div>
+                {% endif %}
+                {% if app.user.canAccessFonct('RDV', app.session.get('secteurId')) %}
                 <div class="card text-center col-lg-4 col-4 align-items-center">
                     
                     <div class="card-body m-5">
@@ -339,10 +344,12 @@
                     </div>
                     
                 </div>
+                {% endif %}
                  
                 
                 <!--/ Browser States Card -->
                 <!-- Browser States Card -->
+                {% if app.user.canAccessFonct('RDV', app.session.get('secteurId')) %}
                 <div class="col-lg-12 col-12">
                     <div class="card card-company-table p-5" style="min-height: 300px;">
                         <div class="card-head mb-3">
@@ -396,6 +403,7 @@
                         </div>
                     </div>
                 </div>
+                {% endif %}
                 <!--/ Browser States Card -->
     
                 {# <!-- Goal Overview Card -->
