@@ -35,15 +35,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
     const ROLE_CLIENT = 'ROLE_CLIENT';
     const ROLE_DOCUMENT_OWNER = 'ROLE_DOCUMENT_OWNER';
     const ROLES = [
-      self::ROLE_AGENT => self::ROLE_AGENT,
-      self::ROLE_MADA => self::ROLE_MADA,
-      self::ROLE_COACH => self::ROLE_AGENT,
-      self::ROLE_ADMINISTRATEUR => self::ROLE_ADMINISTRATEUR,
-      self::ROLE_CLIENT => self::ROLE_CLIENT,
-      self::ROLE_DOCUMENT_OWNER => self::ROLE_DOCUMENT_OWNER,
-      self::ROLE_AMBASSADEUR => self::ROLE_AMBASSADEUR,
+        self::ROLE_AGENT => self::ROLE_AGENT,
+        self::ROLE_MADA => self::ROLE_MADA,
+        self::ROLE_COACH => self::ROLE_AGENT,
+        self::ROLE_ADMINISTRATEUR => self::ROLE_ADMINISTRATEUR,
+        self::ROLE_CLIENT => self::ROLE_CLIENT,
+        self::ROLE_DOCUMENT_OWNER => self::ROLE_DOCUMENT_OWNER,
+        self::ROLE_AMBASSADEUR => self::ROLE_AMBASSADEUR,
     ];
-    
+
 
     /**
      *  Clés disponibles :
@@ -278,12 +278,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
      */
     private $categorieFormationAgents;
 
-     /**
+    /**
      * @ORM\OneToMany(targetEntity="Meeting", mappedBy="user")
      */
     private $meetings;
 
-     /**
+    /**
      * @ORM\OneToMany(targetEntity="Meeting", mappedBy="userToMeet")
      */
     private $meetingGuests;
@@ -334,7 +334,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $ville;
-    
+
     /*
      * @ORM\OneToMany(targetEntity=DevisCompany::class, mappedBy="agent")
      */
@@ -344,6 +344,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $ambassadorUsername;
+
+    private $accessibleFonctionnalites = [];
 
     public function __construct()
     {
@@ -368,13 +370,27 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
         $this->orderDigitals = new ArrayCollection();
         $this->devisCompanies = new ArrayCollection();
         $this->fils = new ArrayCollection();
-
     }
 
     public function getId(): ?int
     {
         return $this->id;
     }
+
+    public function getAccessibleFonctionnalites($secteurId): ?array
+    {
+        $key = ''. $secteurId;
+        return isset($this->accessibleFonctionnalites[$key]) && $this->accessibleFonctionnalites[$key] ? $this->accessibleFonctionnalites[$key] : null;
+    }
+
+    public function setAccessibleFonctionnalites($secteurId, array $accessibleFonctionnalitesSecteur): self
+    {
+        $key = ''. $secteurId;
+        $this->accessibleFonctionnalites[$key] = $accessibleFonctionnalitesSecteur;
+
+        return $this;
+    }
+    
 
     public function getEmail(): ?string
     {
@@ -431,8 +447,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
     {
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
-//        $roles[] = self::ROLE_AGENT;
-
+        //        $roles[] = self::ROLE_AGENT;
+        $roles[] = 'ROLE_USER';
         return array_unique($roles);
     }
 
@@ -445,13 +461,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
 
     public function getStringRole()
     {
-        switch($this->roles[0]) {
-            case self::ROLE_AGENT: return 'Agent'; break;
-            case self::ROLE_COACH: return 'Coach'; break;
-            case self::ROLE_ADMINISTRATEUR: return 'Administrateur'; break;
-            case self::ROLE_CLIENT: return 'Client'; break;
-            case self::ROLE_DOCUMENT_OWNER: return 'Propriétaire de document'; break;
-            
+        switch ($this->roles[0]) {
+            case self::ROLE_AGENT:
+                return 'Agent';
+                break;
+            case self::ROLE_COACH:
+                return 'Coach';
+                break;
+            case self::ROLE_ADMINISTRATEUR:
+                return 'Administrateur';
+                break;
+            case self::ROLE_CLIENT:
+                return 'Client';
+                break;
+            case self::ROLE_DOCUMENT_OWNER:
+                return 'Propriétaire de document';
+                break;
         }
     }
 
@@ -570,7 +595,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
     public function setPhoto(?string $photo = null, $setNull = false): self
     {
         $this->photo = $photo ? $photo : $this->photo;
-        if($setNull) {
+        if ($setNull) {
             $this->photo = null;
         }
 
@@ -601,9 +626,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
         return $this;
     }
 
-    public function validateSixDigitCode($sixDigitCode):bool
+    public function validateSixDigitCode($sixDigitCode): bool
     {
-        if($this->sixDigitCode === (int) $sixDigitCode) {
+        if ($this->sixDigitCode === (int) $sixDigitCode) {
             return true;
         }
         return false;
@@ -611,7 +636,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
 
     public function validateForgottenPassToken($forgotten_pass)
     {
-        if($this->forgottenPassToken ===  $forgotten_pass) {
+        if ($this->forgottenPassToken ===  $forgotten_pass) {
             return true;
         }
         return false;
@@ -890,7 +915,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
 
     public function fullName()
     {
-        return $this->nom .' '. $this->prenom;
+        return $this->nom . ' ' . $this->prenom;
     }
 
     public function getCreatedAt(): ?\DateTimeInterface
@@ -1036,13 +1061,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
     // }
     public function getFormationStatut(Formation $formation)
     {
-       $formationAgents =  $formation->getFormationAgents();
-       foreach($formationAgents->toArray() as $formationAgent) {
-           if($formationAgent->getAgent()->getId() === $this->getId()) {
-               return $formationAgent->getStatut();
-           }
-       }
-       return Formation::STATUT_DISPONIBLE;
+        $formationAgents =  $formation->getFormationAgents();
+        foreach ($formationAgents->toArray() as $formationAgent) {
+            if ($formationAgent->getAgent()->getId() === $this->getId()) {
+                return $formationAgent->getStatut();
+            }
+        }
+        return Formation::STATUT_DISPONIBLE;
     }
 
     /**
@@ -1056,7 +1081,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
         $mySecteurs = [];
         /** @var AgentSecteur $secteur */
         foreach ($agentSecteurs as $agentSecteur) {
-           $mySecteurs[] = $agentSecteur->getSecteur()->getNom();
+            $mySecteurs[] = $agentSecteur->getSecteur()->getNom();
         }
 
         $joinSecteur = join(', ', $mySecteurs);
@@ -1071,7 +1096,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
         } else {
             $price = self::ACCOUNT_PRICE_MANY_SECTOR;
         }
-        
+
         return $price;
     }
 
@@ -1083,7 +1108,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
         } else {
             $type = StripeService::ACCOUNT_SUBSCRIPTION_TYPE['MANY_SECTOR'];
         }
-        
+
         return $type;
     }
 
@@ -1118,7 +1143,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
 
     public function getSecteurByCoach()
     {
-        if(in_array(self::ROLE_COACH, $this->roles) && $this->coachSecteurs->count() > 0) {
+        if (in_array(self::ROLE_COACH, $this->roles) && $this->coachSecteurs->count() > 0) {
             return $this->coachSecteurs->toArray()[0]->getSecteur();
         }
         return null;
@@ -1128,7 +1153,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
     {
         $agentSecteurs = $this->getAgentSecteurs();
         $secteurs_ids = [];
-        foreach($agentSecteurs->toArray() as $agentSecteur) {
+        foreach ($agentSecteurs->toArray() as $agentSecteur) {
             $secteurs_ids[] = $agentSecteur->getSecteur()->getId();
         }
         return $secteurs_ids;
@@ -1138,7 +1163,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
     {
         $agentSecteurs = $this->getAgentSecteurs();
         $secteurs_ids = [];
-        foreach($agentSecteurs->toArray() as $agentSecteur) {
+        foreach ($agentSecteurs->toArray() as $agentSecteur) {
             $secteurs_ids[] = $agentSecteur->getSecteur();
         }
         return $secteurs_ids;
@@ -1149,7 +1174,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
      */
     public function getAgentSecteurs(): Collection
     {
-        if(in_array(self::ROLE_AGENT, $this->roles)) {
+        if (in_array(self::ROLE_AGENT, $this->roles)) {
             return $this->agentSecteurs;
         }
         $this->agentSecteurs->clear();
@@ -1222,7 +1247,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
 
     public function getUniqueCoachSecteur(): ?Secteur
     {
-        if(count($this->getCoachSecteurs()) == 0) {
+        if (count($this->getCoachSecteurs()) == 0) {
             throw new Exception("Pas de secteur");
         }
         return $this->getCoachSecteurs()[0]->getSecteur();
@@ -1247,7 +1272,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
 
     /**
      * Get the value of plainPassword
-     */ 
+     */
     public function getPlainPassword()
     {
         return $this->plainPassword;
@@ -1257,7 +1282,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
      * Set the value of plainPassword
      *
      * @return  self
-     */ 
+     */
     public function setPlainPassword($plainPassword)
     {
         $this->plainPassword = $plainPassword;
@@ -1468,13 +1493,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
 
         return $this;
     }
-    public function countFils(){
+    public function countFils()
+    {
         return count($this->fils);
     }
 
     public function jsonSerialize()
     {
-       /* $vars = get_object_vars($this);
+        /* $vars = get_object_vars($this);
         unset($vars['password']);
         unset($vars['roles']);
         unset($vars['coachAgents']);
@@ -1499,11 +1525,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
         unset($vars['devisCompanies']);*/
 
         $vars = [
-            'id'=>$this->getId(),
-            'email'=>$this->getEmail(),
-            'userIdentifer'=>$this->getUserIdentifier(),
-            'nom'=>$this->getNom(),
-            'prenom'=>$this->getPrenom(),
+            'id' => $this->getId(),
+            'email' => $this->getEmail(),
+            'userIdentifer' => $this->getUserIdentifier(),
+            'nom' => $this->getNom(),
+            'prenom' => $this->getPrenom(),
             'role' => $this->getRoles()
         ];
         return $vars;
@@ -1657,5 +1683,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
         }
 
         return $this;
+    }
+
+    public function canAccessFonct(string $fonct, $secteurId): bool{
+        return in_array($fonct, $this->getAccessibleFonctionnalites($secteurId) ?? [] );
     }
 }

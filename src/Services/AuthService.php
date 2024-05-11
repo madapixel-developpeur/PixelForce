@@ -6,6 +6,8 @@ use App\Entity\AccountValidation;
 use App\Entity\ForgotPassword;
 use App\Entity\User;
 use App\Repository\AccountValidationRepository;
+use App\Repository\AgentSecteurRepository;
+use App\Repository\CategorieFormationRepository;
 use App\Repository\ForgotPasswordRepository;
 use App\Repository\UserRepository;
 use DateInterval;
@@ -31,8 +33,9 @@ class AuthService
         UserPasswordHasherInterface $passwordHasher, 
         ValidatorInterface $validator,
         AccountValidationRepository $accountValidationRepository,
-        MailerService $mailerService
-        )
+        MailerService $mailerService,
+        private CategorieFormationRepository $categorieFormationRepository,
+        private AgentSecteurRepository $agentSecteurRepository)
     {
         $this->entityManager = $entityManager;
         $this->userRepository = $userRepository;
@@ -40,6 +43,14 @@ class AuthService
         $this->validator = $validator;
         $this->accountValidationRepository = $accountValidationRepository;
         $this->mailerService = $mailerService;
+    }
+
+    public function getAccessibleFonctionnalites(User $user, $secteurId){
+        if(!$user->getAccessibleFonctionnalites($secteurId)){
+            $agentSecteur = $this->agentSecteurRepository->findOneBy(["agent" => $user, "secteur" => $secteurId]);
+            if($agentSecteur) $user->setAccessibleFonctionnalites($secteurId, $this->categorieFormationRepository->getAccessibleFonctionnalites($agentSecteur->getCurrentFormationRank()));
+        }
+        return $user->getAccessibleFonctionnalites($secteurId);
     }
 
     public function checkNewAccount(User $user): User

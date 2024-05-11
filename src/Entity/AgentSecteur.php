@@ -38,6 +38,11 @@ class AgentSecteur
      */
     private $statut;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $currentFormationRank;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -94,5 +99,17 @@ class AgentSecteur
     public function isStatut(): ?bool
     {
         return $this->statut;
+    }
+
+    public function getCurrentFormationRank(): ?int
+    {
+        return $this->currentFormationRank;
+    }
+
+    public function setCurrentFormationRank(int $currentFormationRank): self
+    {
+        $this->currentFormationRank = $currentFormationRank;
+
+        return $this;
     }
 }

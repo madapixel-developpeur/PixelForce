@@ -71,12 +71,30 @@ class CategorieFormation
      */
     private $rFormationCategories;
 
+    /**
+     * @ORM\Column(type="json", nullable=true)
+     */
+    private $fonctionnalites = [];
+
     public function __construct()
     {
         $this->formations = new ArrayCollection();
         $this->statut = 1;
         $this->categorieFormationAgents = new ArrayCollection();
         $this->rFormationCategories = new ArrayCollection();
+    }
+
+    public function getFonctionnalites(): array
+    {
+        $fonctionnalites = $this->fonctionnalites ?? [];
+        return array_unique($fonctionnalites);
+    }
+
+    public function setFonctionnalites(array $fonctionnalites): self
+    {
+        $this->fonctionnalites = $fonctionnalites;
+
+        return $this;
     }
 
     public function getId(): ?int

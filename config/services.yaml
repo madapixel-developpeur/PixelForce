@@ -43,3 +43,4 @@ services:
             $filesDirectory: '%files_directory%'
 
     util.config: '@App\Services\ConfigSecteurService'
+    util.auth: '@App\Services\AuthService'
