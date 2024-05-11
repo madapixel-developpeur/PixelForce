@@ -7,6 +7,7 @@ use App\Entity\CategorieFormationAgent;
 use App\Entity\Formation;
 use App\Entity\FormationAgent;
 use App\Manager\EntityManager;
+use App\Repository\AgentSecteurRepository;
 use App\Repository\CategorieFormationAgentRepository;
 use App\Repository\CategorieFormationRepository;
 use App\Repository\ContactRepository;
@@ -69,7 +70,7 @@ class AgentFormationController extends AbstractController
     /** @var CategorieFormationAgentRepository $repoCategorieAgent */
     protected $repoCategorieAgent;
 
-    public function __construct(EntityManager $entityManager, SecteurRepository $secteurRepository, PaginatorInterface $paginator, FormationRepository $formationRepository, FormationAgentRepository $formationAgentRepository, MailerService $mailerService, RFormationCategorieRepository $repoRelationFormationCategorie, CategorieFormationAgentService $categorieFormationAgentService, SessionInterface $sessionInterface, CategorieFormationRepository $repoCatFormation, ContactRepository $repoContact, CategorieFormationAgentRepository $repoCategorieAgent)
+    public function __construct(EntityManager $entityManager, SecteurRepository $secteurRepository, PaginatorInterface $paginator, FormationRepository $formationRepository, FormationAgentRepository $formationAgentRepository, MailerService $mailerService, RFormationCategorieRepository $repoRelationFormationCategorie, CategorieFormationAgentService $categorieFormationAgentService, SessionInterface $sessionInterface, CategorieFormationRepository $repoCatFormation, ContactRepository $repoContact, CategorieFormationAgentRepository $repoCategorieAgent, private AgentSecteurRepository $agentSecteurRepository)
     {
         $this->paginator = $paginator;
         $this->formationRepository = $formationRepository;
@@ -200,6 +201,7 @@ class AgentFormationController extends AbstractController
         try{
             $agent = $this->getUser();
             $coach = $formation->getCoach();
+            $agentSecteur = $this->agentSecteurRepository->findOneBy(["agent" => $agent, "secteur" => $formation->getSecteur()]);
             $result = $this->formationAgentRepository->findBy(['agent' => $agent, 'formation' => $formation]);
             $formationAgent = null;
             if(count($result) > 0){
@@ -211,6 +213,15 @@ class AgentFormationController extends AbstractController
             }
             $formationAgent->setStatut(Formation::STATUT_TERMINER);
             $entityManagerInterface->persist($formationAgent);
+            $formationRank = $formation->getCategorieFormation()->getOrdreCatFormation();
+            if(count($this->formationRepository->getNextFormationsByCategorieAndSecteur($formation->getSecteur(), $formation->getCategorieFormation(), $formation->getId())) == 0){
+                $formationRank ++;
+            }
+
+            if($agentSecteur->getCurrentFormationRank() < $formationRank){
+                $agentSecteur->setCurrentFormationRank($formationRank);
+                $entityManagerInterface->persist($agentSecteur);
+            }
             $entityManagerInterface->flush();
             $this->mailerService->sendMailAfterDoneFormation($agent, $coach, $formation);
             $this->addFlash('success', '<h2 class="text-secondary text-center"> 🎉 Félicitations! Vous venez de terminer la formation : '.$formation->getTitre().' 🎉</h2>');

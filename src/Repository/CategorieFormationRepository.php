@@ -101,7 +101,7 @@ class CategorieFormationRepository extends ServiceEntityRepository
         if(!$rank) return [];
         $result = $this->createQueryBuilder('cf')
         ->select('')
-        ->where('cf.orderCatFormation < :rank ')
+        ->where('cf.ordreCatFormation < :rank ')
         ->setParameter(':rank', $rank)
         ->getQuery()
         ->getResult();

@@ -222,6 +222,27 @@ class FormationRepository extends ServiceEntityRepository
         return $queryBuilder->getQuery();
     }
 
+    public function getNextFormationsByCategorieAndSecteur($secteur, $categorie, $formationId)
+    {
+       $qb = $this->createQueryBuilder('f');
+
+        return $qb->andWhere('f.CategorieFormation = :categorie')
+        ->andWhere('f.secteur = :secteur')
+        ->andWhere('f.id > :formationId')
+        ->andWhere($qb->expr()->orX(
+            $qb->expr()->isNull('f.brouillon'),
+            $qb->expr()->eq('f.brouillon', ':brouillon')
+        ))->setParameter('brouillon', 0)
+        ->andWhere('f.statut = :statusCreated')
+            ->setParameter('statusCreated', Formation::STATUS_CREATED)
+        ->setParameter('categorie', $categorie)
+        ->setParameter('secteur', $secteur)
+        ->setParameter('formationId', $formationId)
+        ->orderBy('f.id', 'ASC')
+        ->getQuery()
+        ->getResult();
+    }
+
 
     public function findFormationsAgent(?array $criteres, $secteur)
     {
