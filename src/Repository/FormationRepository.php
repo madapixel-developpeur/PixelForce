@@ -307,6 +307,7 @@ class FormationRepository extends ServiceEntityRepository
             ->leftJoin('f.formationAgents', 'fa', \Doctrine\ORM\Query\Expr\Join::WITH, 'fa.agent=:agent')
             ->andWhere('f.secteur=:secteur')
             ->andWhere('f.statut=:statusCreated')
+            ->andWhere('f.brouillon is NULL or f.brouillon =0')
             ->andWhere('fa.agent is NULL OR fa.statut != :finishedStatus')
             ->setParameter('secteur',$secteur->getId())
             ->setParameter('agent', $agent->getId())
