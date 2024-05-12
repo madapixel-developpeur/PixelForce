@@ -169,4 +169,18 @@ class OrderControllerAdmin extends AbstractController
 
     }
 
+    /**
+     * @Route("/digital/details/{id}", name="agent_order_details_digital")
+     */
+    public function detailsDigital(int $id, Request $request): Response
+    {
+        $error = null;
+        return $this->render('user_category/agent/order/order_details_digital.html.twig',[
+            'error' => $error,
+            'order' => $this->statAgentService->getOrderById($id),
+            'filesDirectory' => $this->getParameter('files_directory_relative')
+        ]);
+
+    }
+
 }
