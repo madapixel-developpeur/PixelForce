@@ -115,7 +115,7 @@ class StatAgentService
         $response = $this->client->request(
             'GET',
             $pbb_ws_url.'/api/order/search',
-            ['json' => $params]
+            ['query' => $params]
         );
         $content = json_decode($response->getContent(), true);
         return $content;

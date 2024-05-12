@@ -148,8 +148,10 @@ class OrderControllerAdmin extends AbstractController
         if(!$filter) $filter = [];
         // $filter['ibiId'] = $user->getId();
         $filter['ibiId'] = 1;
-
-        $result = $this->statAgentService->getOrders(['filter' => $filter, 'page' => $page]);
+        if(isset($filter['dateMin']) && $filter['dateMin'])  $filter['dateMin'] = $filter['dateMin']->format('Y-m-d');
+        if(isset($filter['dateMax']) && $filter['dateMax'])  $filter['dateMax'] = $filter['dateMax']->format('Y-m-d');
+        $filter['page'] = $page;
+        $result = $this->statAgentService->getOrders($filter);
 
         $orderList = $paginator->paginate(
             $result['items'],
