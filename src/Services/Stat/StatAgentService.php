@@ -110,5 +110,15 @@ class StatAgentService
         return $result[0];
     }
 
+    public function getOrders($params){
+        $pbb_ws_url = $this->parameterBag->get('pbb_ws_url');
+        $response = $this->client->request(
+            'GET',
+            $pbb_ws_url.'/api/order/search',
+            ['json' => $params]
+        );
+        $content = json_decode($response->getContent(), true);
+        return $content;
+    }
     
 }
