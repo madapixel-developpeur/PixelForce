@@ -131,4 +131,13 @@ class StatAgentService
         return $content;
     }
     
+    public function getPbbStat($pbb_id){
+        $pbb_ws_url = $this->parameterBag->get('pbb_ws_url');
+        $response = $this->client->request(
+            'GET',
+            $pbb_ws_url.'/api/pbb_stat/'.$pbb_id
+        );
+        $content = json_decode($response->getContent(), true);
+        return $content;
+    }
 }

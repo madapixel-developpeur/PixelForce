@@ -177,6 +177,12 @@ class AgentAccountController extends AbstractController
             return $this->redirectToRoute('agent_home');
         }
 
+        $statDigital = null;
+        if($sessionSecteurId == $this->getParameter('secteur_digital_id')){
+            // $statDigital = $statAgentService->getPbbStat($agent->getId());
+            $statDigital = $statAgentService->getPbbStat(1);
+        }
+
         $contacts = $this->repoContact->findBy(['secteur' => $secteur, 'agent' => $agent]);
         $contacts = $paginator->paginate(
             $contacts,
@@ -228,7 +234,8 @@ class AgentAccountController extends AbstractController
             'chiffreAffaireTotal' => $chiffreAffaireTotal,
             'nbVentesTotal' => $nbVentesTotal,
             "coachs" => $coachs,
-            "agent"=> $agent
+            "agent"=> $agent,
+            'statDigital' => $statDigital
         ]);
     }
 

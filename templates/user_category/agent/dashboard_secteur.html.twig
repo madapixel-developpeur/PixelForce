@@ -27,7 +27,7 @@
                             {# {% if (estSecurite or estEcommerce) %} #}
                             <h3 class="mb-75 mt-2 pt-50">
                             <a href="#">
-                                {{ chiffreAffaireTotal }} €
+                                {{ (statDigital ? statDigital.totalAmount : chiffreAffaireTotal ) | number_format(2, ',', ' ')}} €  
                             </a>                           
                             </h3>
                             {# {% endif %} #}
@@ -64,7 +64,7 @@
                                         <div class="my-auto">
 
                                             <h4 class="fw-bolder mb-0">
-                                                {{nbVentesTotal}}
+                                                {{(statDigital ? statDigital.orderCount : nbVentesTotal) | number_format(0, ',', ' ')}}
                                             </h4>
                                             
                                             <p class="card-text font-small-3 mb-0">Ventes</p>
@@ -116,7 +116,7 @@
                                         </div>
                                         <div class="my-auto">
                                             <h4 class="fw-bolder mb-0">
-                                                {{ chiffreAffaireTotal }} €  
+                                                {{ (statDigital ? statDigital.totalAmount : chiffreAffaireTotal ) | number_format(2, ',', ' ')}} €  
                                             </h4>
                                             <p class="card-text font-small-3 mb-0">Revenu</p>
                                         </div>

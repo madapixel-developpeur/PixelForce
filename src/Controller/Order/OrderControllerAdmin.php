@@ -46,6 +46,7 @@ class OrderControllerAdmin extends AbstractController
 
         $user = (object)$this->getUser();
         $secteurId = $this->session->get('secteurId');
+        if($secteurId == $this->getParameter('secteur_digital_id')) return $this->redirectToRoute('agent_order_list_digital');
         $page = $request->query->get('page', 1);
         $limit = 5;
         $criteria = [
