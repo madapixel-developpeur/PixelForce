@@ -223,7 +223,7 @@ class AgentFormationController extends AbstractController
                 $entityManagerInterface->persist($agentSecteur);
             }
             $entityManagerInterface->flush();
-            $this->mailerService->sendMailAfterDoneFormation($agent, $coach, $formation);
+            // $this->mailerService->sendMailAfterDoneFormation($agent, $coach, $formation);
             $this->addFlash('success', '<h2 class="text-secondary text-center"> 🎉 Félicitations! Vous venez de terminer la formation : '.$formation->getTitre().' 🎉</h2>');
         } catch(Exception $ex){
             $this->addFlash('danger', $ex->getMessage());
