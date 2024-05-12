@@ -147,8 +147,8 @@ class OrderControllerAdmin extends AbstractController
         $form->handleRequest($request);
         $filter = $form->getData();
         if(!$filter) $filter = [];
-        // $filter['ibiId'] = $user->getId();
-        $filter['ibiId'] = 1;
+        $filter['ibiId'] = $user->getId();
+        // $filter['ibiId'] = 1;
         if(isset($filter['dateMin']) && $filter['dateMin'])  $filter['dateMin'] = $filter['dateMin']->format('Y-m-d');
         if(isset($filter['dateMax']) && $filter['dateMax'])  $filter['dateMax'] = $filter['dateMax']->format('Y-m-d');
         $filter['page'] = $page;
