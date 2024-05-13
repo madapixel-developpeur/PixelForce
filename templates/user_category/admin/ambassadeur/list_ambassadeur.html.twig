@@ -1,7 +1,7 @@
 {% extends 'base_admin.html.twig' %}
 
 {% block title %}
-	Liste des embassadeurs
+	Liste des ambassadeurs
 {% endblock %}
 
 {% block stylesheets %}
@@ -80,7 +80,7 @@
 						<th scope="col" class="text-center">Email</th>
 						<th scope="col" class="text-center">Téléphone</th>
 						<th scope="col" class="text-center">Date inscription</th>
-						<th scope="col" class="text-center">Nombre filleuil</th>
+						<th scope="col" class="text-center">Nombre filleul</th>
 						<th scope="col" class="text-center">Secteur</th>
 						<th scope="col" class="text-center">liens Inscription</th>
 						<th scope="col" class="text-center">Etat</th>
@@ -157,7 +157,7 @@
        
         function copyLink($path) {
 			navigator.clipboard.writeText($path).then(function() {
-				Swal.fire("Lien copié", "Le lien de l'ambassadeur a été copié avec succès.", "success");
+				Swal.fire("Lien copié", "Votre lien d'affiliation a été copié avec succès.", "success");
 			});
         }
     </script>

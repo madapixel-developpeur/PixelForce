@@ -3,6 +3,7 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use App\Repository\CalendarEventRepository;
 use App\Repository\SecteurRepository;
 use App\Services\Stat\StatAdminService;
@@ -82,14 +83,14 @@ class AdminAccountController extends AbstractController
     {
         $ambassadeur = $this->getUser();
         $result=$repoUser->findBy(['parrain'=>$ambassadeur->getId()]);
-        $filleuil = $paginator->paginate(
+        $filleul = $paginator->paginate(
             $result,
             $request->query->getInt('page', 1),
             5
         );
         return $this->render('user_category/admin/view_admin.html.twig', [
             'ambassadeur' => $ambassadeur,
-            'filleuil'=>$filleuil
+            'filleul'=>$filleul
         ]);
     }
 }

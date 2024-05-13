@@ -246,14 +246,14 @@ class AgentAccountController extends AbstractController
     {
         $ambassadeur = $this->getUser();
         $result=$this->repoUser->findBy(['parrain'=>$ambassadeur->getId()]);
-        $filleuil = $paginator->paginate(
+        $filleul = $paginator->paginate(
             $result,
             $request->query->getInt('page', 1),
             5
         );
         return $this->render('user_category/agent/view_agent.html.twig', [
             'ambassadeur' => $ambassadeur,
-            'filleuil'=>$filleuil
+            'filleul'=>$filleul
         ]);
     }
 

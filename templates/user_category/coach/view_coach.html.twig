@@ -24,7 +24,7 @@
 						<div class="card text-center col-lg-12 col-12 align-items-center">
 							
 							<div class="card-body m-12">
-								<h5 class="card-title">Copier mon liens ici</h5>
+								<h5 class="card-title">Copier mon lien</h5>
 								<p class="card-text">Pour inviter d'autres personnes à se joindre à vous via ce lien, veuillez cliquer ici.</p>
 								<a class="btn btn-primary w-100 font-weight-bold" href="#" onclick="copyLink('{{ url('agent_inscription', {'ambassador_username':  app.user.username != "" ?  app.user.username : ' '}) }}') " >Prendre rdv </a>
 							</div>
@@ -47,7 +47,7 @@
 									</tr>
 								</thead>
 								<tbody>
-									{% for fils in filleuil %}
+									{% for fils in filleul %}
 										<tr>
 											<td>{{ fils.id }}</td>
 											<td>{{ fils.fullName }}</td>
@@ -62,7 +62,7 @@
 							</table>
 						</div>
 						<div class="pagination d-flex justify-content-center">
-							{{ knp_pagination_render(filleuil)}}
+							{{ knp_pagination_render(filleul)}}
 						</div>
 				</div>
 			</section>

@@ -304,11 +304,12 @@ class FormationRepository extends ServiceEntityRepository
     public function findOrderedNonFinishedFormations(Secteur $secteur, User $agent){
         $qb = $this->createQueryBuilder('f');
         $qb->join('f.CategorieFormation', 'cf')
-            ->leftJoin('f.formationAgents', 'fa', \Doctrine\ORM\Query\Expr\Join::WITH, 'fa.agent=:agent')
+            ->leftJoin('f.formationAgents', 'fa')
             ->andWhere('f.secteur=:secteur')
             ->andWhere('f.statut=:statusCreated')
             ->andWhere('f.brouillon is NULL or f.brouillon =0')
-            ->andWhere('fa.agent is NULL OR fa.statut != :finishedStatus')
+            ->andWhere('fa.agent=:agent OR fa.agent IS NULL')
+            ->andWhere('fa.statut != :finishedStatus OR fa.agent IS NULL')
             ->setParameter('secteur',$secteur->getId())
             ->setParameter('agent', $agent->getId())
             ->setParameter('finishedStatus', Formation::STATUT_TERMINER)
@@ -317,6 +318,7 @@ class FormationRepository extends ServiceEntityRepository
             ->addOrderBy('f.id');
         return $qb->getQuery()->getResult();    
     }
+    
 
     /**
      * Permet de recupérer les formations de l'agent en fonction du secteur et de la catégorie

@@ -85,7 +85,7 @@ class AdminAmbassadeurController extends AbstractController
         $coachtSecteurs = $this->repoCoachSecteur->findBy(['coach' => $ambassadeur]);
         $secteurs = $agentSecteurService->getSecteurs($coachtSecteurs);
         $result=$this->repoUser->findBy(['parrain'=>$ambassadeur->getId()]);
-        $filleuil = $paginator->paginate(
+        $filleul = $paginator->paginate(
             $result,
             $request->query->getInt('page', 1),
             5
@@ -94,7 +94,7 @@ class AdminAmbassadeurController extends AbstractController
             'ambassadeur' => $ambassadeur,
             'secteurs' => $secteurs,
             'coachtSecteurs' => $coachtSecteurs,
-            'filleuil'=>$filleuil
+            'filleul'=>$filleul
         ]);
     }
 
