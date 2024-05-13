@@ -167,8 +167,7 @@ class AgentAccountController extends AbstractController
         $agent = (object)$this->getUser();
         $this->agentService->setStartDate($agent);
       
-        $formations = $this->repoFormation->findOrderedNonFinishedFormations($secteur, $agent);
-        $firstFormation = count($formations) > 0 ?$formations[0] : null;
+        $firstFormation = $this->repoFormation->findOrderedNonFinishedFormations($secteur, $agent);
         
         // On vérifie d'abord si la session avec la clé 'secteurId' est générée ou les contenus sont activés
         $sessionSecteurId =  $this->session->get('secteurId');
@@ -216,7 +215,6 @@ class AgentAccountController extends AbstractController
         $nbVentesTotal = count($pbb_summary['orders']) + ($statVente != null ? $statVente['nbr_ventes'] : 0);
         return $this->render('user_category/agent/dashboard_secteur.html.twig', [
             'secteur' => $secteur,
-            'formations' => $formations,
             'firstFormation' => $firstFormation,
             'contacts' => $contacts,
             'CategorieFormation' => CategorieFormation::class,
