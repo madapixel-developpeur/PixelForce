@@ -1,0 +1,58 @@
+<section class="app-user-view-account">
+    <div class="row">
+        <!-- User Sidebar -->
+        <div class="col-xl-12 col-lg-12 col-md-12 order-1 order-md-0">
+            <!-- User Card -->
+            <div class="card">
+                <div class="card-body">
+                    <div class="user-avatar-section">
+                        <div class="d-flex align-items-center flex-column">
+                            {# {% if user.avatarName is null %}
+                                <img class="img-fluid rounded mt-3 mb-2" src="user" height="110" width="110" alt="User avatar" />
+                            {% else %}   
+                                <img class="img-fluid rounded mt-3 mb-2" src="{{vich_uploader_asset(user, 'avatarFile')}}" height="110" width="110" alt="User avatar" />
+                            {% endif %} #}
+                            <div class="user-info text-center">
+                                <h4>{{ audit.nomProjet }}</h4>
+                    
+                        </div>
+                    </div>
+                    <h4 class="fw-bolder border-bottom pb-50 mb-1 text-center">Détails</h4>
+                    <div class="info-container">
+                        <ul class="list-unstyled ">
+                            <li class="mb-75">
+                                <span class="fw-bolder me-25">Nom du projet:</span>
+                                <span>{{ audit.nomProjet }}</span>
+                            </li>
+                            <li class="mb-75">
+                                <span class="fw-bolder me-25">Url du site:</span>
+                                <span>{{ audit.urlSite }}</span>
+                            </li>
+                            <li class="mb-75">
+                                <span class="fw-bolder me-25">Description:</span>
+                                <span>{{ audit.description }}</span>
+                            </li>
+                            <li class="mb-75">
+                                <span class="fw-bolder me-25">Date d'ajout:</span>
+                                <span class="badge bg-light-success">{{ audit.DateAjout!=null?audit.DateAjout.format('Y-m-d'):"" }}</span>
+                            </li>
+                            <li class="mb-75">
+                                <span class="fw-bolder me-25">Proprietaire:</span>
+                                 <span>{{ audit.propriétaire.fullName }}</span> 
+                            </li>
+                            
+                            
+    
+                        </ul>
+                        
+                    </div>
+                </div>
+            </div>
+            <!-- /User Card -->
+            
+        </div>
+        <!--/ User Sidebar -->
+
+      
+    </div>
+</section>
