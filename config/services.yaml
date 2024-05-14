@@ -12,6 +12,7 @@ parameters:
     stripe_currency: '%env(STRIPE_CURRENCY)%'
     base_url: '%env(BASE_URL)%'
     pbb_ws_url: '%env(PBB_WS_URL)%'
+    secteur_digital_id: '%env(SECTEUR_DIGITAL_ID)%'
 
 services:
     # default configuration for services in *this* file
@@ -43,3 +44,4 @@ services:
             $filesDirectory: '%files_directory%'
 
     util.config: '@App\Services\ConfigSecteurService'
+    util.auth: '@App\Services\AuthService'

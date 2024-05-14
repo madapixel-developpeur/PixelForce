@@ -110,5 +110,34 @@ class StatAgentService
         return $result[0];
     }
 
+    public function getOrders($params){
+        $pbb_ws_url = $this->parameterBag->get('pbb_ws_url');
+        $response = $this->client->request(
+            'GET',
+            $pbb_ws_url.'/api/order/search',
+            ['query' => $params]
+        );
+        $content = json_decode($response->getContent(), true);
+        return $content;
+    }
+
+    public function getOrderById($id){
+        $pbb_ws_url = $this->parameterBag->get('pbb_ws_url');
+        $response = $this->client->request(
+            'GET',
+            $pbb_ws_url.'/api/order/details/'.$id,
+        );
+        $content = json_decode($response->getContent(), true);
+        return $content;
+    }
     
+    public function getPbbStat($pbb_id){
+        $pbb_ws_url = $this->parameterBag->get('pbb_ws_url');
+        $response = $this->client->request(
+            'GET',
+            $pbb_ws_url.'/api/pbb_stat/'.$pbb_id
+        );
+        $content = json_decode($response->getContent(), true);
+        return $content;
+    }
 }

@@ -97,6 +97,19 @@ class CategorieFormationRepository extends ServiceEntityRepository
         return $result;
     }
 
+    public function getAccessibleFonctionnalites($rank){
+        if(!$rank) return [];
+        $result = $this->createQueryBuilder('cf')
+        ->select('')
+        ->where('cf.ordreCatFormation < :rank ')
+        ->setParameter(':rank', $rank)
+        ->getQuery()
+        ->getResult();
+        return array_reduce($result, function ($carry, $item) {
+            return array_merge($carry, $item->getFonctionnalites());
+        }, []);
+    }
+
 //    /**
 //     * @return CategorieFormation[] Returns an array of CategorieFormation objects
 //     */

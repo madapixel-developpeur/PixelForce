@@ -167,14 +167,19 @@ class AgentAccountController extends AbstractController
         $agent = (object)$this->getUser();
         $this->agentService->setStartDate($agent);
       
-        $formations = $this->repoFormation->findOrderedNonFinishedFormations($secteur, $agent);
-        $firstFormation = count($formations) > 0 ?$formations[0] : null;
+        $firstFormation = $this->repoFormation->findOrderedNonFinishedFormations($secteur, $agent);
         
         // On vérifie d'abord si la session avec la clé 'secteurId' est générée ou les contenus sont activés
         $sessionSecteurId =  $this->session->get('secteurId');
         $sessionAccountStatus =  $this->agentService->isActivableContent($agent);
         if (!$sessionSecteurId || !$sessionAccountStatus) {
             return $this->redirectToRoute('agent_home');
+        }
+
+        $statDigital = null;
+        if($sessionSecteurId == $this->getParameter('secteur_digital_id')){
+            $statDigital = $statAgentService->getPbbStat($agent->getId());
+            // $statDigital = $statAgentService->getPbbStat(1);
         }
 
         $contacts = $this->repoContact->findBy(['secteur' => $secteur, 'agent' => $agent]);
@@ -210,7 +215,6 @@ class AgentAccountController extends AbstractController
         $nbVentesTotal = count($pbb_summary['orders']) + ($statVente != null ? $statVente['nbr_ventes'] : 0);
         return $this->render('user_category/agent/dashboard_secteur.html.twig', [
             'secteur' => $secteur,
-            'formations' => $formations,
             'firstFormation' => $firstFormation,
             'contacts' => $contacts,
             'CategorieFormation' => CategorieFormation::class,
@@ -228,7 +232,8 @@ class AgentAccountController extends AbstractController
             'chiffreAffaireTotal' => $chiffreAffaireTotal,
             'nbVentesTotal' => $nbVentesTotal,
             "coachs" => $coachs,
-            "agent"=> $agent
+            "agent"=> $agent,
+            'statDigital' => $statDigital
         ]);
     }
 
@@ -239,14 +244,14 @@ class AgentAccountController extends AbstractController
     {
         $ambassadeur = $this->getUser();
         $result=$this->repoUser->findBy(['parrain'=>$ambassadeur->getId()]);
-        $filleuil = $paginator->paginate(
+        $filleul = $paginator->paginate(
             $result,
             $request->query->getInt('page', 1),
             5
         );
         return $this->render('user_category/agent/view_agent.html.twig', [
             'ambassadeur' => $ambassadeur,
-            'filleuil'=>$filleuil
+            'filleul'=>$filleul
         ]);
     }
 

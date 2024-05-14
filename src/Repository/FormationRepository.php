@@ -4,11 +4,13 @@ namespace App\Repository;
 
 use App\Entity\CategorieFormation;
 use App\Entity\Formation;
+use App\Entity\FormationAgent;
 use App\Entity\Secteur;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Query\Expr;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
 /**
@@ -222,6 +224,27 @@ class FormationRepository extends ServiceEntityRepository
         return $queryBuilder->getQuery();
     }
 
+    public function getNextFormationsByCategorieAndSecteur($secteur, $categorie, $formationId)
+    {
+       $qb = $this->createQueryBuilder('f');
+
+        return $qb->andWhere('f.CategorieFormation = :categorie')
+        ->andWhere('f.secteur = :secteur')
+        ->andWhere('f.id > :formationId')
+        ->andWhere($qb->expr()->orX(
+            $qb->expr()->isNull('f.brouillon'),
+            $qb->expr()->eq('f.brouillon', ':brouillon')
+        ))->setParameter('brouillon', 0)
+        ->andWhere('f.statut = :statusCreated')
+            ->setParameter('statusCreated', Formation::STATUS_CREATED)
+        ->setParameter('categorie', $categorie)
+        ->setParameter('secteur', $secteur)
+        ->setParameter('formationId', $formationId)
+        ->orderBy('f.id', 'ASC')
+        ->getQuery()
+        ->getResult();
+    }
+
 
     public function findFormationsAgent(?array $criteres, $secteur)
     {
@@ -281,21 +304,26 @@ class FormationRepository extends ServiceEntityRepository
     }
 
     public function findOrderedNonFinishedFormations(Secteur $secteur, User $agent){
-        $qb = $this->createQueryBuilder('f');
-        $qb->join('f.CategorieFormation', 'cf')
-            ->leftJoin('f.formationAgents', 'fa')
-            // ->andWhere('fa.agent=:agent')
-            ->andWhere('f.secteur=:secteur')
-            ->andWhere('f.statut=:statusCreated')
-            ->andWhere('fa.agent is NULL OR fa.statut != :finishedStatus')
-            ->setParameter('secteur',$secteur->getId())
-            // ->setParameter('agent', $agent->getId())
-            ->setParameter('finishedStatus', Formation::STATUT_TERMINER)
-            ->setParameter('statusCreated', Formation::STATUS_CREATED)
-            ->addOrderBy('cf.ordreCatFormation')
-            ->addOrderBy('f.id');
-        return $qb->getQuery()->getResult();    
+        $sql = '
+            SELECT f.id as formationId FROM formation f join categorie_formation cf on f.categorie_formation_id = cf.id
+            left join formation_agent fa ON f.id = fa.formation_id AND fa.agent_id = :agent 
+            WHERE f.secteur_id = :secteur AND f.statut = :statusCreated AND (f.brouillon IS NULL OR f.brouillon =0)
+            AND fa.statut != :finishedStatus OR fa.agent_id IS NULL ORDER BY cf.ordre_cat_formation, f.id LIMIT 1
+        ';   
+        $stmt = $this->getEntityManager()->getConnection()->prepare($sql);
+        $resultSet = $stmt->executeQuery([
+            'agent' => $agent->getId(), 
+            'secteur' => $secteur->getId(), 
+            'statusCreated' => Formation::STATUS_CREATED, 
+            'finishedStatus' => Formation::STATUT_TERMINER
+        ]);
+        $result = $resultSet->fetchAllAssociative();
+        if(count($result) > 0) {
+            return $this->find($result[0]['formationId']);
+        }
+        return null;        
     }
+    
 
     /**
      * Permet de recupérer les formations de l'agent en fonction du secteur et de la catégorie

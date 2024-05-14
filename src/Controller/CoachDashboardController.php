@@ -82,14 +82,14 @@ class CoachDashboardController extends AbstractController
     {
         $ambassadeur = $this->getUser();
         $result=$repoUser->findBy(['parrain'=>$ambassadeur->getId()]);
-        $filleuil = $paginator->paginate(
+        $filleul = $paginator->paginate(
             $result,
             $request->query->getInt('page', 1),
             5
         );
         return $this->render('user_category/coach/view_coach.html.twig', [
             'ambassadeur' => $ambassadeur,
-            'filleuil'=>$filleuil
+            'filleul'=>$filleul
         ]);
     }
 

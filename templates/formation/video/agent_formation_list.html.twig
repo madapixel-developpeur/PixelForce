@@ -61,16 +61,16 @@
                                 <div class="row mt-3">
                                     <div class="col-12  col-md-10">
                                         <p>{{ formation.description|slice(0, 300) }}</p>
-                                        {% if formation.categorieFormation.ordreCatFormation == constant('App\\Entity\\CategorieFormation::ORDRE_LISTE_DE_CONTACT') and nbrAllMyContacts < constant('App\\Entity\\CategorieFormation::CONDITION_LISTE_DE_CONTACT') %}
+                                        {# {% if formation.categorieFormation.ordreCatFormation == constant('App\\Entity\\CategorieFormation::ORDRE_LISTE_DE_CONTACT') and nbrAllMyContacts < constant('App\\Entity\\CategorieFormation::CONDITION_LISTE_DE_CONTACT') %}
                                             <div class="alert alert-warning">
                                                 Pour débloquer cette formation, assurez-vous d’avoir enregistré plus de 100 contacts dans votre liste de prospection.
                                             </div>
-                                        {% endif %}
+                                        {% endif %} #}
                                     </div>
                                     <div class="col-12 col-md-2 text-end">
-                                        {% if formation.categorieFormation.ordreCatFormation == constant('App\\Entity\\CategorieFormation::ORDRE_LISTE_DE_CONTACT') and nbrAllMyContacts < constant('App\\Entity\\CategorieFormation::CONDITION_LISTE_DE_CONTACT') %}
+                                        {# {% if formation.categorieFormation.ordreCatFormation == constant('App\\Entity\\CategorieFormation::ORDRE_LISTE_DE_CONTACT') and nbrAllMyContacts < constant('App\\Entity\\CategorieFormation::CONDITION_LISTE_DE_CONTACT') %} #}
                                             
-                                        {% else %}
+                                        {# {% else %} #}
                                             {% set formationAgentRelation = formationAgentRepository.findOneBy({agent:app.user.id, formation:formation}) %}
                                             {# {% set statut = formationAgentRelation ? formationAgentRelation.statut : constant('App\\Entity\\Formation::STATUT_BLOQUEE') %} #}
                                             {% set statut = formationAgentRelation ? formationAgentRelation.statut : constant('App\\Entity\\Formation::STATUT_DISPONIBLE') %}
@@ -82,7 +82,7 @@
                                             {% elseif statut == constant('App\\Entity\\Formation::STATUT_TERMINER')%}
                                                 <a href="{{ path('agent_formation_fiche', {id:formation.id}) }}" class="btn btn-success btn-sm"><i class="fa fa-check"></i> Formation terminée</a>
                                             {% endif %}
-                                        {% endif %}
+                                        {# {% endif %} #}
                                     </div>
                                 </div>
                             {% endif %}

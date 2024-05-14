@@ -4,14 +4,17 @@ namespace App\Controller\Order;
 
 use App\Entity\Order;
 use App\Form\OrderClientFilterType;
+use App\Form\OrderSearchTypeDigital;
 use App\Repository\OrderRepository;
 use App\Services\OrderService;
 use App\Services\SearchService;
+use App\Services\Stat\StatAgentService;
 use App\Util\Search\MyCriteriaParam;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -27,7 +30,7 @@ class OrderControllerAdmin extends AbstractController
     private $orderService;
     private $session; 
 
-    public function __construct(EntityManagerInterface $entityManager, OrderRepository $orderRepository, OrderService $orderService, SessionInterface $session)
+    public function __construct(EntityManagerInterface $entityManager, OrderRepository $orderRepository, OrderService $orderService, SessionInterface $session, private StatAgentService $statAgentService)
     {
         $this->entityManager = $entityManager;
         $this->orderRepository = $orderRepository;
@@ -43,6 +46,7 @@ class OrderControllerAdmin extends AbstractController
 
         $user = (object)$this->getUser();
         $secteurId = $this->session->get('secteurId');
+        if($secteurId == $this->getParameter('secteur_digital_id')) return $this->redirectToRoute('agent_order_list_digital');
         $page = $request->query->get('page', 1);
         $limit = 5;
         $criteria = [
@@ -123,6 +127,61 @@ class OrderControllerAdmin extends AbstractController
             );
         } 
         return $this->redirectToRoute('agent_order_details', ['id' => $id]);
+    }
+
+
+    /**
+     * @Route("/digital/all", name="agent_order_list_digital")
+     */
+    public function indexDigital(Request $request, PaginatorInterface $paginator, SearchService $searchService): Response
+    {
+
+        $user = (object)$this->getUser();
+        $secteurId = $this->session->get('secteurId');
+        $page = $request->query->get('page', 1);
+        
+        $filter = [];
+
+        $form = $this->createForm(OrderSearchTypeDigital::class, $filter);
+
+        $form->handleRequest($request);
+        $filter = $form->getData();
+        if(!$filter) $filter = [];
+        $filter['ibiId'] = $user->getId();
+        // $filter['ibiId'] = 1;
+        if(isset($filter['dateMin']) && $filter['dateMin'])  $filter['dateMin'] = $filter['dateMin']->format('Y-m-d');
+        if(isset($filter['dateMax']) && $filter['dateMax'])  $filter['dateMax'] = $filter['dateMax']->format('Y-m-d');
+        $filter['page'] = $page;
+        $result = $this->statAgentService->getOrders($filter);
+
+        $orderList = $paginator->paginate(
+            $result['items'],
+            1,
+            $result['itemNumberPerPage']
+        );
+        
+        $orderList->setTotalItemCount($result['total']);
+        $orderList->setCurrentPageNumber($result['currentPageNumber']);
+
+        return $this->render('user_category/agent/order/order_list_digital.html.twig', [
+            'orderList' => $orderList,
+            'form' => $form->createView(),
+        ]);
+
+    }
+
+    /**
+     * @Route("/digital/details/{id}", name="agent_order_details_digital")
+     */
+    public function detailsDigital(int $id, Request $request): Response
+    {
+        $error = null;
+        return $this->render('user_category/agent/order/order_details_digital.html.twig',[
+            'error' => $error,
+            'order' => $this->statAgentService->getOrderById($id),
+            'filesDirectory' => $this->getParameter('files_directory_relative')
+        ]);
+
     }
 
 }
