@@ -11,6 +11,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Solution
 {
+    const STATUS_VERIFIED = 1;
+    const ROLE_UNVERIFIED = 0;
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -70,6 +72,16 @@ class Solution
     {
         return $this->status;
     }
+    public function getStringStatus(): ?string
+    {
+        switch ($this->status) {
+            case self::STATUS_VERIFIED:
+                return "Certifié";
+            case self::ROLE_UNVERIFIED:
+                return "Non Certifié";
+        }
+        return "Status inconnu";
+    }
 
     public function setStatus(int $status): static
     {
@@ -78,12 +90,12 @@ class Solution
         return $this;
     }
 
-    public function getProbleme(): ?Audit
+    public function getProbleme(): ?Probleme
     {
         return $this->probleme;
     }
 
-    public function setProbleme(?Audit $probleme): static
+    public function setProbleme(?Probleme $probleme): static
     {
         $this->probleme = $probleme;
 

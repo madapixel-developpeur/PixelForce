@@ -47,6 +47,17 @@ class Probleme
      */
     private $problemeCategory;
 
+     /**
+     * @ORM\Column(type="datetime",nullable=true)
+     */
+    private $dateAjout;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class)
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=true)
+     */
+    private $auteur;
+    
     /**
      * @ORM\OneToMany(targetEntity=Solution::class, mappedBy="probleme")
      */
@@ -148,6 +159,30 @@ class Probleme
                 $allSolution->setProbleme(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getDateAjout(): ?\DateTimeInterface
+    {
+        return $this->dateAjout;
+    }
+
+    public function setDateAjout(\DateTimeInterface $dateAjout): static
+    {
+        $this->dateAjout = $dateAjout;
+
+        return $this;
+    }
+
+    public function getAuteur(): ?User
+    {
+        return $this->auteur;
+    }
+
+    public function setAuteur(?User $auteur): static
+    {
+        $this->auteur = $auteur;
 
         return $this;
     }

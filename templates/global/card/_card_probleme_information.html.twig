@@ -13,32 +13,32 @@
                                 <img class="img-fluid rounded mt-3 mb-2" src="{{vich_uploader_asset(user, 'avatarFile')}}" height="110" width="110" alt="User avatar" />
                             {% endif %} #}
                             <div class="user-info text-center">
-                                <h4>{{ audit.nomProjet }}</h4>
+                                <h4>{{ probleme.titre }}</h4>
                     
                         </div>
                     </div>
-                    <h4 class="fw-bolder border-bottom pb-50 mb-1 text-center">Détails de l'audit</h4>
+                    <h4 class="fw-bolder border-bottom pb-50 mb-1 text-center">Détails du problème</h4>
                     <div class="info-container">
                         <ul class="list-unstyled ">
                             <li class="mb-75">
-                                <span class="fw-bolder me-25">Nom du projet:</span>
-                                <span>{{ audit.nomProjet }}</span>
+                                <span class="fw-bolder me-25">Titre du probleme:</span>
+                                <span>{{ probleme.titre }}</span>
                             </li>
                             <li class="mb-75">
-                                <span class="fw-bolder me-25">Url du site:</span>
-                                <span>{{ audit.urlSite }}</span>
+                                <span class="fw-bolder me-25">Description</span>
+                                <span>{{ probleme.description }}</span>
                             </li>
                             <li class="mb-75">
-                                <span class="fw-bolder me-25">Description:</span>
-                                <span>{{ audit.description }}</span>
+                                <span class="fw-bolder me-25"> Note du risque:</span>
+                                <span>{{ probleme.noteRisque }}</span>
                             </li>
                             <li class="mb-75">
                                 <span class="fw-bolder me-25">Date d'ajout:</span>
-                                <span class="badge bg-light-success">{{ audit.DateAjout!=null?audit.DateAjout.format('Y-m-d'):"" }}</span>
+                                <span class="badge bg-light-success">{{ probleme.DateAjout!=null?probleme.DateAjout.format('Y-m-d'):"" }}</span>
                             </li>
                             <li class="mb-75">
-                                <span class="fw-bolder me-25">Proprietaire:</span>
-                                 <span>{{ audit.propriétaire != null?audit.propriétaire.fullName:"Néant" }}</span> 
+                                <span class="fw-bolder me-25">Auteur:</span>
+                                 <span>{{ probleme.auteur != null?probleme.auteur.fullName:"Néant" }}</span> 
                             </li>
                             
                             

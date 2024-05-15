@@ -32,20 +32,7 @@
 					<!--/ User Content -->
 				</div>
 				<div class="card">
-						<div class="row mb-3">
-							<div class="col-12  mt-2 mt-md-3">
-								<div class=" w-100 h-100 ps-3 py-3  bg-white border pe-3">
-									<div class="row h-100">
-										<div class="col-6">
-											<h4 class="my-auto">Liste des problèmes potentiels</h4>
-										</div>
-										<div class="col-6 ">
-											<a href="{{ path('probleme_add', {'id': audit.id}) }}" class="btn btn-primary btn-sm waves-effect waves-float waves-light fw-bolder d-flex float-end d-flex align-items-center"><i class="fa-solid fa-user-plus me-2"></i> Ajouter</a>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
+						<h4 class="card-header">Liste des problèmes potentiels</h4>
 						<div class="table-responsive">
 							<table class="table table-striped table-hover text-center sortable">
 								<thead>
@@ -54,24 +41,16 @@
 										<th scope="col" class="text-center">titre</th>
 										<th scope="col" class="text-center">description</th>
 										<th scope="col" class="text-center">note</th>
-										<th scope="col" class="text-center">Action</th>
 									</tr>
 								</thead>
 								<tbody>
 									{% for probleme in audit.allProblemes %}
 										<tr>
 											<td>{{ probleme.id }}</td>
-											<td>{{ probleme.titre }}</td>
+											<td>{{  probleme.titre }}</td>
 											<td>{{ probleme.description}}</td>
 											<td>{{ probleme.noteRisque }}</td>
-											<td style="white-space:nowrap">
-												<a href="{{path('probleme_view',{'id':probleme.id})}}" class="btn btn-secondary">
-													<i class="fa-solid fa-eye"></i>
-												</a>
-												<a href="{{ path('probleme_edit', {'id': probleme.id}) }}" class="btn btn-secondary">
-													<i class="fa fa-pencil-square" aria-hidden="true"></i>
-												</a>		
-											</td>
+											
 										</tr>
 									{% endfor %}
 
