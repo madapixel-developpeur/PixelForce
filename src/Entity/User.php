@@ -347,6 +347,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
 
     private $accessibleFonctionnalites = [];
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $position;
+
     public function __construct()
     {
         $this->coachAgents = new ArrayCollection();
@@ -391,6 +396,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
         return $this;
     }
     
+    public function getPosition(): ?int
+    {
+        return $this->position;
+    }
+
+    public function setPosition(int $position): self
+    {
+        $this->position = $position;
+
+        return $this;
+    }
 
     public function getEmail(): ?string
     {

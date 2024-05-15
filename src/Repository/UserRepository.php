@@ -459,5 +459,26 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->getResult()
         ;
     }
+
+    public function getAgentFilsDirect($agentIds){
+        return $this->createQueryBuilder('u')
+            // ->andWhere("u.roles like '%\"ROLE_AGENT\"%'")
+            ->andWhere('u.parrain IN (:agentIds)')
+            ->setParameter('agentIds', $agentIds)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function getFilsJusqueNiveau($agentId, $niveau=3){
+        $result = [];
+        $params = [$agentId];
+        for ($i = 0; $i < $niveau; $i++) {
+            $fils = $this->getAgentFilsDirect(array_map(function ($item) { $item instanceof User ? $item->getId() : $item;}, $params));
+            $result[] = $fils;
+            $params = $fils;
+        }
+        return $result;
+    }
   
+    
 }
