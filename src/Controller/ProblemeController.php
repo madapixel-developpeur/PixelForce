@@ -78,6 +78,7 @@ class ProblemeController extends AbstractController
         if ($formUser->isSubmitted() && $formUser->isValid()) {
             $probleme->setAudit($audit);
             $probleme->setAuteur($this->getUser());
+            $probleme->setIsActive(Probleme::ACTIVE_YES);
             $probleme->setDateAjout(new \DateTime());
             $this->entityManager->save($probleme);
 
@@ -114,6 +115,17 @@ class ProblemeController extends AbstractController
             'audit' => $probleme->getAudit(),
             'button' => 'Modifier'
         ]);    
+    }
+    /**
+     * @Route("/{id}/delete", name="probleme_delete")
+     */
+    public function admin_probleme_delete( Probleme $probleme)
+    {
+            $probleme->setIsActive(Probleme::ACTIVE_NO);
+            $this->entityManager->save($probleme);
+            $this->addFlash('success', "Suppression Probleme effectuée avec succès");
+            return $this->redirectToRoute('audit_view', ['id' => $probleme->getAudit()->getId()]);    
+           
     }
 
 

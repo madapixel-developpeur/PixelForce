@@ -9,6 +9,12 @@
 {% endblock %}
 
 {% block body %}
+	{% set role = app.user.roles[0]  %}
+	{% if role == constant('App\\Entity\\User::ROLE_AGENT') %}
+		{% set problemes = audit.getActiveProblemes()  %}
+	{% else %}
+		{% set problemes = audit.getAllProblemes()  %}        
+    {% endif %}
 	<div class="mt-2">
 		<a href="{{ path('audit_list') }}" class="btn btn-secondary"> <i class="fa-solid fa-circle-arrow-left"></i> Retour </a>
 
@@ -58,7 +64,9 @@
 									</tr>
 								</thead>
 								<tbody>
-									{% for probleme in audit.allProblemes %}
+									
+
+									{% for probleme in problemes %}
 										<tr>
 											<td>{{ probleme.id }}</td>
 											<td>{{ probleme.titre }}</td>
@@ -71,6 +79,15 @@
 												<a href="{{ path('probleme_edit', {'id': probleme.id}) }}" class="btn btn-secondary">
 													<i class="fa fa-pencil-square" aria-hidden="true"></i>
 												</a>		
+												{% if probleme.isActive == constant('App\\Entity\\Probleme::ACTIVE_YES') %}
+													<a href="{{ path('probleme_delete', {'id':probleme.id}) }}" class="btn btn-secondary">
+													 <i class="fa fa-trash" aria-hidden="true"></i>
+													</a>	
+												{% else %}
+													<a href="{{ path('probleme_delete', {'id': probleme.id}) }}" class="btn btn-secondary">
+													 <i class="fa fa-undo" aria-hidden="true"></i>
+													</a>	
+												{% endif %}			
 											</td>
 										</tr>
 									{% endfor %}

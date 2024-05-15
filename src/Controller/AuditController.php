@@ -104,6 +104,7 @@ class AuditController extends AbstractController
         $formUser->handleRequest($request);
         if ($formUser->isSubmitted() && $formUser->isValid()) {
             $audit->setDateAjout(new \DateTime());
+            $audit->setIsActive(Audit::ACTIVE_YES);
             $audit->setPropriétaire($this->getUser());
             $this->entityManager->save($audit);
 
@@ -138,6 +139,18 @@ class AuditController extends AbstractController
             'formUser' => $formUser->createView(),
             'button' => 'Modifier'
         ]);     
+    }
+
+    /**
+     * @Route("/{id}/delete", name="audit_delete")
+     */
+    public function admin_audit_delete(Request $request, Audit $audit)
+    {
+            $audit->setIsActive(Audit::ACTIVE_NO);
+            $this->entityManager->save($audit);
+            $this->addFlash('success', "Suppression Audit effectuée avec succès");
+            return $this->redirectToRoute('audit_list');    
+           
     }
 
    

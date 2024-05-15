@@ -3,6 +3,7 @@ namespace App\Services;
 
 use Exception;
 use App\Entity\User;
+use App\Entity\Audit;
 use App\Entity\BasketItem;
 use App\Manager\EntityManager;
 use App\Repository\AuditRepository;
@@ -24,7 +25,7 @@ class AuditService
     public function findAudit(User $user){
         $role=$user->getRoles()[0];
         if($role==User::ROLE_AGENT){
-            return $this->auditRepository->findBy(["propriétaire"=>$user]);
+            return $this->auditRepository->findBy(["propriétaire"=>$user,"isActive"=>Audit::ACTIVE_YES]);
         }
         elseif($role==User::ROLE_COACH || $role==User::ROLE_AMBASSADEUR || $role==User::ROLE_ADMINISTRATEUR)
         {

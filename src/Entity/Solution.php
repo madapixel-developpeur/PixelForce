@@ -12,7 +12,10 @@ use Doctrine\ORM\Mapping as ORM;
 class Solution
 {
     const STATUS_VERIFIED = 1;
-    const ROLE_UNVERIFIED = 0;
+    const STATUS_UNVERIFIED = 0;
+
+    const ACTIVE_YES = 1;
+    const ACTIVE_NO = 0;
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -32,6 +35,11 @@ class Solution
      * @ORM\Column(type="integer")
      */
     private $status;
+
+    /**
+     * @ORM\Column(type="integer", options={"default": 1})
+     */
+    private $isActive;
 
     /**
      * @ORM\ManyToOne(targetEntity=Probleme::class)
@@ -77,7 +85,7 @@ class Solution
         switch ($this->status) {
             case self::STATUS_VERIFIED:
                 return "Certifié";
-            case self::ROLE_UNVERIFIED:
+            case self::STATUS_UNVERIFIED:
                 return "Non Certifié";
         }
         return "Status inconnu";
@@ -98,6 +106,18 @@ class Solution
     public function setProbleme(?Probleme $probleme): static
     {
         $this->probleme = $probleme;
+
+        return $this;
+    }
+
+    public function getIsActive(): ?int
+    {
+        return $this->isActive;
+    }
+
+    public function setIsActive(int $isActive): static
+    {
+        $this->isActive = $isActive;
 
         return $this;
     }

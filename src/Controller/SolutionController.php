@@ -73,6 +73,7 @@ class SolutionController extends AbstractController
         if ($formUser->isSubmitted() && $formUser->isValid()) {
             $solution->setProbleme($probleme);
             $solution->setStatus(Solution::STATUS_VERIFIED);
+            $solution->setIsActive(Solution::ACTIVE_YES);
             $this->entityManager->save($solution);
 
             $this->addFlash('success', "Nouvelle solution enregistrée avec succès");
@@ -105,6 +106,18 @@ class SolutionController extends AbstractController
             'probleme' => $solution->getProbleme(),
             'button' => 'Modifier'
         ]);  
+    }
+
+    /**
+     * @Route("/{id}/delete", name="solution_delete")
+     */
+    public function admin_solution_delete( Solution $solution)
+    {
+            $solution->setIsActive(Solution::ACTIVE_NO);
+            $this->entityManager->save($solution);
+            $this->addFlash('success', "Suppression Solution effectuée avec succès");
+            return $this->redirectToRoute('probleme_view', ['id' => $solution->getProbleme()->getId()]);    
+           
     }
    
 }

@@ -5,6 +5,7 @@
 <li class=" nav-item"><a class="d-flex align-items-center" href="{{ path('coach_formation_list') }}"><i data-feather="eye"></i><span class="menu-title text-truncate" data-i18n="Feather">Formations</span></a></li>
 <li class=" nav-item"><a class="d-flex align-items-center" href="{{ path('coach_agent_list') }}"><i data-feather="user"></i><span class="menu-title text-truncate" data-i18n="User">Mes Agents</span></a>
 <li class=" nav-item"><a class="d-flex align-items-center" href="{{ path('coach_view') }}"><i data-feather="user"></i><span class="menu-title text-truncate" data-i18n="User">Filleul</span></a>
+<li class=" nav-item"><a class="d-flex align-items-center" href="{{ path('audit_list') }}"><i data-feather="users"></i><span class="menu-title text-truncate" data-i18n="User">Audit</span></a>
 {# <li class=" nav-item"><a class="d-flex align-items-center" href="{{ path('coach_zoom_list') }}"><i data-feather="video"></i><span class="menu-title text-truncate" data-i18n="User">Réunions</span></a> #}
 {% if app.user.uniqueCoachSecteur.type.id == 1 %}
 <li class=" nav-item"><a class="d-flex align-items-center" href="#"><i data-feather="briefcase"></i><span class="menu-title text-truncate" data-i18n="Components">Catalogue</span></a>

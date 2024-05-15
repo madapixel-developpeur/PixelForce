@@ -9,6 +9,12 @@
 {% endblock %}
 
 {% block body %}
+	{% set role = app.user.roles[0]  %}
+	{% if role == constant('App\\Entity\\User::ROLE_AGENT') %}
+		{% set solutions = probleme.getActiveSolutions()  %}
+	{% else %}
+		{% set solutions = probleme.getAllSolutions()  %}        
+    {% endif %}
 	<div class="mt-2">
 		<a href="{{ path('audit_view', {'id': probleme.audit.id}) }}" class="btn btn-secondary"> <i class="fa-solid fa-circle-arrow-left"></i> Retour </a>
 
@@ -46,6 +52,7 @@
 								</div>
 							</div>
 						</div>
+
 						<div class="table-responsive">
 							<table class="table table-striped table-hover text-center sortable">
 								<thead>
@@ -56,8 +63,9 @@
 										<th scope="col" class="text-center">Action</th>
 									</tr>
 								</thead>
+
 								<tbody>
-									{% for solution in probleme.allSolutions %}
+									{% for solution in solutions %}
 										<tr>
 											<td>{{ solution.id }}</td>
 											<td>{{ solution.titre }}</td>
@@ -68,7 +76,19 @@
 												</a>
 												<a href="{{ path('solution_edit', {'id': solution.id}) }}" class="btn btn-secondary">
 													<i class="fa fa-pencil-square" aria-hidden="true"></i>
-												</a>		
+												</a>	
+
+												{% if solution.isActive == constant('App\\Entity\\Solution::ACTIVE_YES') %}
+													<a href="{{ path('solution_delete', {'id': solution.id}) }}" class="btn btn-secondary">
+													 <i class="fa fa-trash" aria-hidden="true"></i>
+													</a>	
+												{% else %}
+													<a href="{{ path('solution_delete', {'id': solution.id}) }}" class="btn btn-secondary">
+													 <i class="fa fa-undo" aria-hidden="true"></i>
+													</a>	
+												{% endif %}	
+													
+													
 											</td>
 										</tr>
 									{% endfor %}

@@ -12,6 +12,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Probleme
 {
+    const ACTIVE_YES = 1;
+    const ACTIVE_NO = 0;
+    
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -57,11 +60,26 @@ class Probleme
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=true)
      */
     private $auteur;
+
+    /**
+     * @ORM\Column(type="integer", options={"default": 1})
+     */
+    private $isActive;
     
     /**
      * @ORM\OneToMany(targetEntity=Solution::class, mappedBy="probleme")
      */
     private $allSolutions;
+
+    /**
+     * @return Collection|Solution[]
+     */
+    public function getActiveSolution(): Collection
+    {
+        return $this->allSolutions->filter(function(Solution $solution) {
+            return $solution->getIsActive()==Solution::ACTIVE_YES;
+        });
+    }
 
     public function __construct()
     {
@@ -183,6 +201,18 @@ class Probleme
     public function setAuteur(?User $auteur): static
     {
         $this->auteur = $auteur;
+
+        return $this;
+    }
+
+    public function getIsActive(): ?int
+    {
+        return $this->isActive;
+    }
+
+    public function setIsActive(int $isActive): static
+    {
+        $this->isActive = $isActive;
 
         return $this;
     }
