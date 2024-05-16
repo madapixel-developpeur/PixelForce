@@ -144,10 +144,10 @@ class AgentContactMeetingController extends AbstractController
                 
                 $this->addFlash(
                    'success',
-                   'Rendez-vous programmé, veuillez aussi visualiser votre agenda'
+                   "Rendez-vous programmé,Veuillez remplir les informations concernant l'Audit."
                 );
              
-                return $this->redirectToRoute('agent_contact_list');
+                return $this->redirectToRoute('meeting_audit_add',['id'=>$meeting->getId()]);
             } catch(\Exception $ex){
                 $error = $ex->getMessage();
                 if($this->entityManager->getConnection()->isTransactionActive()) {

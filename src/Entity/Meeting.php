@@ -49,6 +49,11 @@ class Meeting implements JsonSerializable
      */
     private $user;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Audit::class)
+     * @ORM\JoinColumn(name="audit_id", referencedColumnName="id", nullable=true)
+     */
+    private $audit;
 
      /**
      * @ORM\ManyToOne(targetEntity="MeetingState", inversedBy="meetings")
@@ -173,6 +178,18 @@ class Meeting implements JsonSerializable
     public function setUserToMeet(?Contact $userToMeet): self
     {
         $this->userToMeet = $userToMeet;
+
+        return $this;
+    }
+
+    public function getAudit(): ?Audit
+    {
+        return $this->audit;
+    }
+
+    public function setAudit(?Audit $audit): static
+    {
+        $this->audit = $audit;
 
         return $this;
     }

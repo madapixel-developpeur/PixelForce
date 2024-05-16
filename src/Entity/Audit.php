@@ -47,12 +47,19 @@ class Audit
      * @ORM\Column(type="integer", options={"default": 1})
      */
     private $isActive;
+    
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class)
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=true)
      */
     private $propriétaire;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Secteur::class)
+     * @ORM\JoinColumn(name="secteur_id", referencedColumnName="id", nullable=true)
+     */
+    private $secteur;
 
     /**
      * @ORM\OneToMany(targetEntity=Probleme::class, mappedBy="audit")
@@ -178,6 +185,18 @@ class Audit
     public function setIsActive(int $isActive): static
     {
         $this->isActive = $isActive;
+
+        return $this;
+    }
+
+    public function getSecteur(): ?Secteur
+    {
+        return $this->secteur;
+    }
+
+    public function setSecteur(?Secteur $secteur): static
+    {
+        $this->secteur = $secteur;
 
         return $this;
     }
