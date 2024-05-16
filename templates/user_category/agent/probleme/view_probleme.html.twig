@@ -1,7 +1,7 @@
 {% extends 'base_admin.html.twig' %}
 
 {% block title %}
-	Visualisation audit
+	Visualisation probleme
 {% endblock %}
 
 {% block stylesheets %}
@@ -11,12 +11,12 @@
 {% block body %}
 	{% set role = app.user.roles[0]  %}
 	{% if role == constant('App\\Entity\\User::ROLE_AGENT') %}
-		{% set problemes = audit.getActiveProblemes()  %}
+		{% set solutions = probleme.getActiveSolutions()  %}
 	{% else %}
-		{% set problemes = audit.getAllProblemes()  %}        
+		{% set solutions = probleme.getAllSolutions()  %}        
     {% endif %}
 	<div class="mt-2">
-		<a href="{{ path('audit_list') }}" class="btn btn-secondary"> <i class="fa-solid fa-circle-arrow-left"></i> Retour </a>
+		<a href="{{ path('audit_view', {'id': probleme.audit.id}) }}" class="btn btn-secondary"> <i class="fa-solid fa-circle-arrow-left"></i> Retour </a>
 
 		<div class="content-card-user-information mt-3">
 			<section class="app-user-view-account">
@@ -28,7 +28,7 @@
 
 					<!-- User Sidebar -->
 					<div class="col-12  col-md-6 order-1 order-md-0">
-						{{ include ('global/card/_card_audit_information.html.twig', {audit :audit}) }}
+						{{ include ('global/card/_card_probleme_information.html.twig', {probleme :probleme}) }}
 					</div>
 					<!--/ User Sidebar -->
 
@@ -43,51 +43,52 @@
 								<div class=" w-100 h-100 ps-3 py-3  bg-white border pe-3">
 									<div class="row h-100">
 										<div class="col-6">
-											<h4 class="my-auto">Liste des problèmes potentiels</h4>
+											<h4 class="my-auto">Liste des solutions potentiels</h4>
 										</div>
 										<div class="col-6 ">
-											<a href="{{ path('probleme_add', {'id': audit.id}) }}" class="btn btn-primary btn-sm waves-effect waves-float waves-light fw-bolder d-flex float-end d-flex align-items-center"><i class="fa-solid fa-user-plus me-2"></i> Ajouter</a>
+											<a href="{{ path('solution_add', {'id': probleme.id}) }}" class="btn btn-primary btn-sm waves-effect waves-float waves-light fw-bolder d-flex float-end d-flex align-items-center"><i class="fa-solid fa-user-plus me-2"></i> Ajouter</a>
 										</div>
 									</div>
 								</div>
 							</div>
 						</div>
+
 						<div class="table-responsive">
 							<table class="table table-striped table-hover text-center sortable">
 								<thead>
 									<tr style="white-space:nowrap" >
 										<th scope="col" class="text-center">#</th>
-										<th scope="col" class="text-center">titre</th>
-										<th scope="col" class="text-center">description</th>
-										<th scope="col" class="text-center">note</th>
+										<th scope="col" class="text-center">Titre</th>
+										<th scope="col" class="text-center">Description</th>
 										<th scope="col" class="text-center">Action</th>
 									</tr>
 								</thead>
-								<tbody>
-									
 
-									{% for probleme in problemes %}
+								<tbody>
+									{% for solution in solutions %}
 										<tr>
-											<td>{{ probleme.id }}</td>
-											<td>{{ probleme.titre }}</td>
-											<td>{{ probleme.description}}</td>
-											<td>{{ probleme.noteRisque }}</td>
+											<td>{{ solution.id }}</td>
+											<td>{{ solution.titre }}</td>
+											<td>{{ solution.description}}</td>
 											<td style="white-space:nowrap">
-												<a href="{{path('probleme_view',{'id':probleme.id})}}" class="btn btn-secondary">
+												<a href="{{path('solution_view',{'id':solution.id})}}" class="btn btn-secondary">
 													<i class="fa-solid fa-eye"></i>
 												</a>
-												<a href="{{ path('probleme_edit', {'id': probleme.id}) }}" class="btn btn-secondary">
+												<a href="{{ path('solution_edit', {'id': solution.id}) }}" class="btn btn-secondary">
 													<i class="fa fa-pencil-square" aria-hidden="true"></i>
-												</a>		
-												{% if probleme.isActive == constant('App\\Entity\\Probleme::ACTIVE_YES') %}
-													<a href="{{ path('probleme_delete', {'id':probleme.id}) }}" class="btn btn-secondary">
+												</a>	
+
+												{% if solution.isActive == constant('App\\Entity\\Solution::ACTIVE_YES') %}
+													<a href="{{ path('solution_delete', {'id': solution.id}) }}" class="btn btn-secondary">
 													 <i class="fa fa-trash" aria-hidden="true"></i>
 													</a>	
 												{% else %}
-													<a href="{{ path('probleme_restore', {'id': probleme.id}) }}" class="btn btn-secondary">
+													<a href="{{ path('solution_restore', {'id': solution.id}) }}" class="btn btn-secondary">
 													 <i class="fa fa-undo" aria-hidden="true"></i>
 													</a>	
-												{% endif %}			
+												{% endif %}	
+													
+													
 											</td>
 										</tr>
 									{% endfor %}

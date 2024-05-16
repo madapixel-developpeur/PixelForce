@@ -1,0 +1,49 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title %}
+	Modification Solution
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+	<style>
+		.form-add-coach{
+			padding: 0 10px;
+		}
+
+		@media (min-width: 700px) {
+			.form-add-coach{
+				padding: 0 100px;
+			}
+		}
+	</style>
+{% endblock %}
+
+{% block body %}
+	<div class="my-5">
+		<div class="content-body-form">
+			<a href="{{ path('probleme_view', {'id': probleme.id}) }}" class="btn btn-secondary"> <i class="fa-solid fa-circle-arrow-left"></i> Retour </a>
+			<h1 class="text-center fw-bold">Modifier la solution </h1>
+			<div class="form-add-coach">
+				<div class="mt-3">
+					{{ form_start(formUser) }}
+						<div class="row">
+							<div class="col-md-12">
+								{{ form_row(formUser.titre) }}
+							</div>
+							<div class="col-md-12">
+								{{ form_row(formUser.description ) }}
+							</div>
+						
+						
+					
+						{{ form_rest(formUser)  }}
+						<div class="row">
+							<div class="col-md-12 text-end"><button class="btn btn-success">{{ button|default('Suivant') }} <i class="fa-solid fa-angles-right ms-2"></i></button></div>
+						</div>
+					{{ form_end(formUser) }}
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

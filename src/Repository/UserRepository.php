@@ -479,6 +479,15 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         }
         return $result;
     }
+    public function countDirectChildren(User $user)
+    {
+        return $this->createQueryBuilder('u')
+        ->select('count(u.id)')
+        ->where('u.parrain = :parrain')
+        ->setParameter('parrain', $user)
+        ->getQuery()
+        ->getSingleScalarResult();
+    }
   
     
 }

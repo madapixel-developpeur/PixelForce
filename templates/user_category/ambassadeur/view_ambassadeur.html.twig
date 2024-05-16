@@ -6,6 +6,7 @@
 
 {% block stylesheets %}
     {{ parent() }}
+	<link rel='stylesheet prefetch' href="{{ asset('app-assets/css/arbre/arbol.css')}}">
 {% endblock %}
 
 {% block body %}
@@ -21,16 +22,75 @@
 					</div>
 					<!--/ User Sidebar -->
 					<div class="col-lg-5 col-5">
-						<div class="card text-center col-lg-12 col-12 align-items-center">
-							
-							<div class="card-body m-12">
-								<h5 class="card-title">Copier le lien d'affiliation</h5>
-								<p class="card-text">Pour inviter d'autres personnes à se joindre à vous, veuillez cliquer ici.</p>
-								<a class="btn btn-primary w-100 font-weight-bold" href="#" onclick="copyLink('{{ url('agent_inscription', {'ambassador_username':  app.user.username != "" ?  app.user.username : ' '}) }}') " >Copier</a>
+						<div class="row">
+							<div class="card text-center col-lg-12 col-12 align-items-center mb-3">
+								
+								<div class="card-body m-12">
+									<h5 class="card-title">Copier le lien d'affiliation</h5>
+									<p class="card-text">Pour inviter d'autres personnes à se joindre à vous, veuillez cliquer ici.</p>
+									<a class="btn btn-primary w-100 font-weight-bold" href="#" onclick="copyLink('{{ url('agent_inscription', {'ambassador_username':  app.user.username != "" ?  app.user.username : ' '}) }}') " >Copier</a>
+								</div>
+								
 							</div>
-							
+						</div>
+						<div class="row">
+								<div class="card card-statistics">
+									<div class="card-header">
+										<h4 class="card-title">Equipe</h4>
+										{# <div class="d-flex align-items-center">
+											<p class="card-text font-small-2 me-25 mb-0">Mis à jour il y a 1 mois</p>
+										</div> #}
+									</div>
+									<div class="card-body statistics-body">
+										<div class="row">
+										
+											<div class="col-xl-6 col-sm-12 col-12 mb-2 mb-xl-0">
+												<div class="d-flex flex-row">
+													<div class="avatar bg-light-info me-2">
+														<div class="avatar-content">
+															<a href="#"><i data-feather="user" class="avatar-icon"></i></a>
+														</div>
+													</div>
+													<div class="my-auto">
+														<h4 class="fw-bolder mb-0">{{ countDirect  }}</h4>
+														<a href="#"><p class="card-text font-small-3 mb-0 text-black">Filleul direct</p></a>
+													</div>
+												</div>
+											</div>
+											<div class="col-xl-6 col-sm-12 col-12 mb-2 mb-xl-0">
+												<div class="d-flex flex-row">
+													<div class="avatar bg-light-info me-2">
+														<div class="avatar-content">
+															<a href="#"><i data-feather="user" class="avatar-icon"></i></a>
+														</div>
+													</div>
+													<div class="my-auto">
+														<h4 class="fw-bolder mb-0">{{ countEquipe  }}</h4>
+														<a href="#"><p class="card-text font-small-3 mb-0 text-black">Equipe directe</p></a>
+													</div>
+												</div>
+											</div>                
+											
+										</div>
+									</div>
+								</div>
+							</div>
+					</div>
+				</div>
+				<div class="row mb-5">
+					<!-- User Sidebar -->
+					<div class="col-12  col-md-12 order-1 order-md-0">
+						<div id="card-arbol" class="card full-height">
+							<div class="card-body position-relative">
+								<div id="full-container">
+									
+									<div id="svgChart" style="overflow: hidden;"></div>
+									<!-- <button class="btn btn-expand" onclick="params.funcs.expandAll()">Expandir árbol <i class="fa fa-sitemap"></i></button> -->
+								</div>
+							</div>
 						</div>
 					</div>
+					<!--/ User Sidebar -->
 				</div>
 				<div class="card">
 						<h4 class="card-header">Liste des utilisateurs par recommandation.</h4>
@@ -74,4 +134,49 @@
 {% block javascripts %}
     {{ parent() }}
 	{{ encore_entry_script_tags('vuexy_app_user_view_js') }}
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js'></script>
+	<script src="{{asset('app-assets/js/arbre/arbol.js')}}"></script>
+	<script>
+		$(document).ready(function() {
+			getDataLineaire();
+		});
+
+		function getDataLineaire(){
+			$.ajax({
+				url: '{{ path('app_agent_data_lineaire') }}',
+				method: 'GET',
+				success: function(response) {
+					let data = response.equipe;
+					showUnilevelGraph(data);
+				},
+				error: function(error) {
+					console.error('AJAX request failed:', error);
+				}
+			});
+		}
+		function showUnilevelGraph(data){
+			var params = {
+				selector: "#svgChart",
+				chartWidth: window.innerWidth-40,
+				chartHeight: window.innerHeight - 40,
+				funcs: {
+				showMySelf: null,
+				expandAll: null,
+				search: null,
+				closeSearchBox: null,
+				clearResult: null,
+				findInTree: null,
+				reflectResults: null,
+				departmentClick: null,
+				back: null,
+				toggleFullScreen: null,
+				locate:null
+				},
+				data: data,
+				pristinaData : data
+
+			}
+			drawOrganizationChart(params);
+		}
+	</script>
 {% endblock %}

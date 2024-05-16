@@ -64,7 +64,7 @@
                             <h4 class="my-auto">Liste de l'audit</h4>
                         </div>
                         <div class="col-6 ">
-                            <a href="{{ path('audit_add') }}" class="btn btn-primary btn-sm waves-effect waves-float waves-light fw-bolder d-flex float-end d-flex align-items-center"><i class="fa-solid fa-user-plus me-2"></i> Ajouter</a>
+                            
                         </div>
                     </div>
                 </div>
@@ -98,16 +98,6 @@
                                 <a href="{{ path('audit_edit', {'id': audit.id}) }}" class="btn btn-secondary">
                                     <i class="fa fa-pencil-square" aria-hidden="true"></i>
                                 </a>
-                                
-                                {% if  audit.isActive == constant('App\\Entity\\Probleme::ACTIVE_YES') %}
-									<a href="{{ path('audit_delete', {'id': audit.id}) }}" class="btn btn-secondary">
-                                    <i class="fa fa-trash" aria-hidden="true"></i>
-                                    </a>	
-								{% else %}
-                                    <a href="{{ path('audit_restore', {'id': audit.id}) }}" class="btn btn-secondary">
-									 <i class="fa fa-undo" aria-hidden="true"></i>
-                                    </a>	
-								{% endif %}	
                                 
                             </td>
                         </tr>

@@ -51,10 +51,46 @@
                     </i>
                 </td>
             <tr>
+            {% if meeting.audit != null %}
+            <tr class="note-row">
+                <th>Audit</th>
+                <td>
+                    <div class="info-container">
+                        <ul class="list-unstyled ">
+                            <li class="mb-75">
+                                <span class="fw-bolder me-25">Nom du projet:</span>
+                                <span>{{ meeting.audit.nomProjet }}</span>
+                            </li>
+                            <li class="mb-75">
+                                <span class="fw-bolder me-25">Url du site:</span>
+                                <span>{{ meeting.audit.urlSite }}</span>
+                            </li>
+                            <li class="mb-75">
+                                <span class="fw-bolder me-25">Description:</span>
+                                <span>{{ meeting.audit.description }}</span>
+                            </li>
+                            <li class="mb-75">
+                                <span class="fw-bolder me-25">Date d'ajout:</span>
+                                <span class="badge bg-light-success">{{ meeting.audit.DateAjout!=null?meeting.audit.DateAjout.format('Y-m-d'):"" }}</span>
+                            </li>
+                            <li class="mb-75">
+                                <span class="fw-bolder me-25">Proprietaire:</span>
+                                 <span>{{ meeting.audit.propriétaire != null?meeting.audit.propriétaire.fullName:"Néant" }}</span> 
+                            </li>
+                            
+                            
+    
+                        </ul>
+                        
+                    </div>
+                </td>
+            <tr>
+            {% endif %}
             <tr class="note-row">
                 <th>Note</th>
                 <td>{{meeting.note|raw}}</td>
             <tr>
+            
             
         </table>
         <div class="meeting-fiche-controls">

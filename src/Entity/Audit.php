@@ -13,6 +13,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Audit
 {
+    const ACTIVE_YES = 1;
+    const ACTIVE_NO = 0;
+    
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -41,15 +44,38 @@ class Audit
     private $description;
 
     /**
+     * @ORM\Column(type="integer", options={"default": 1})
+     */
+    private $isActive;
+    
+
+    /**
      * @ORM\ManyToOne(targetEntity=User::class)
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=true)
      */
     private $propriétaire;
 
     /**
+     * @ORM\ManyToOne(targetEntity=Secteur::class)
+     * @ORM\JoinColumn(name="secteur_id", referencedColumnName="id", nullable=true)
+     */
+    private $secteur;
+
+    /**
      * @ORM\OneToMany(targetEntity=Probleme::class, mappedBy="audit")
      */
     private $allProblemes;
+
+    /**
+     * @return Collection|Probleme[]
+     */
+    public function getActiveProblemes(): Collection
+    {
+        return $this->allProblemes->filter(function(Probleme $probleme) {
+            return $probleme->getIsActive()==Probleme::ACTIVE_YES;
+        });
+    }
+
 
     public function __construct()
     {
@@ -147,6 +173,30 @@ class Audit
     public function setPropriétaire(?User $propriétaire): static
     {
         $this->propriétaire = $propriétaire;
+
+        return $this;
+    }
+
+    public function getIsActive(): ?int
+    {
+        return $this->isActive;
+    }
+
+    public function setIsActive(int $isActive): static
+    {
+        $this->isActive = $isActive;
+
+        return $this;
+    }
+
+    public function getSecteur(): ?Secteur
+    {
+        return $this->secteur;
+    }
+
+    public function setSecteur(?Secteur $secteur): static
+    {
+        $this->secteur = $secteur;
 
         return $this;
     }

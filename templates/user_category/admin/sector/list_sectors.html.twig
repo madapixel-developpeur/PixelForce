@@ -55,6 +55,7 @@
 						<th scope="col" class="text-center">Nom</th>
 						<th scope="col" class="text-center">Description</th>
 						<th scope="col" class="text-center">Type</th>
+						<th scope="col" class="text-center">Google Form</th>
                         <th scope="col" class="text-center">état secteur</th>
 						<th scope="col" class="text-center table-th-notSortable">ACTION</th>
 					</tr>
@@ -65,6 +66,7 @@
                             <td>{{ sector.nom }}</td>
                             <td>{{ sector.description|slice(0, 50) }}...</td>
                             <td>{% if sector.type  %} {{ sector.type.nom }} {% else %} {% endif %}</td>
+                            <td><a href="{{sector.googleForms}}">Cliquez ici <i class="fa fa-address-card" aria-hidden="true"></i></a></td>
                             {# <td>
                                 {% set CoachSecteur = repoCoachSecteur.findBy({'secteur' : sector}) %}                                
                                 {% if CoachSecteur|length > 0  and CoachSecteur[0].coach %}

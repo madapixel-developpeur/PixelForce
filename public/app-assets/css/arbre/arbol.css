@@ -1,0 +1,574 @@
+  body {
+    background-color: #f5f5f5;
+  }
+  
+  .full-container {
+    background-color: red;
+    width: 100%;
+    height: 100%;
+    font-family: 'Roboto', sans-serif;
+  }
+
+
+  /* ########################   DEPARTMENT INFO  ############################*/
+
+  .department-information {
+    font-family: 'Roboto', sans-serif;
+    display:none;
+    box-shadow: 0 0 5px #999999;
+    position: absolute;
+    max-width: 200px;
+    top: 60px;
+    left: 20px;
+    padding: 10px;
+    background-color: white;
+  }
+
+  .department-information .dept-name {
+    color: #26a69a;
+    font-weight: bold;
+  }
+
+  .department-information .dept-description {
+    margin-top: 10px;
+    color: #959b9a;
+    font-size: 13px;
+  }
+
+  .department-information .dept-emp-count {
+    margin-top: 10px;
+    color: #959b9a;
+    font-size: 13px;
+  }
+
+  /* ############################## SEARCHBOX ######################################### */
+
+  .user-search-box {
+    overflow: hidden;
+    position: absolute;
+    right: 0;
+    height: 100%;
+    top: 0;
+    width: 0;
+    background-color: white;
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    border-radius: 0.25rem;
+  }
+
+  ::-webkit-input-placeholder {
+    /* WebKit, Blink, Edge */
+    color: #bcbcc4;
+    opacity: 0.5;
+  }
+
+  :-moz-placeholder {
+    /* Mozilla Firefox 4 to 18 */
+    color: #bcbcc4;
+    opacity: 0.5;
+  }
+
+  ::-moz-placeholder {
+    /* Mozilla Firefox 19+ */
+    color: #bcbcc4;
+    opacity: 0.5;
+  }
+
+  :-ms-input-placeholder {
+    /* Internet Explorer 10-11 */
+    color: #bcbcc4;
+    opacity: 0.5;
+  }
+
+  .user-search-box .input-box {
+    width: 100%;
+    height: 120px;
+    top: 0;
+    background-color: #5b6be8;
+  }
+
+  .user-search-box .close-button-wrapper i {
+    margin: 10px;
+    margin-left: 9%;
+    font-size: 20px;
+    color: white;
+  }
+
+  .user-search-box input {
+    color: white !important;
+    background-color: #6d7beb;
+    border: none;
+    border-radius: 30px;
+    outline: none;
+    height: 34px;
+    width: 200px;
+    font-size: 0.9rem;
+    margin: 0 0 20px 0;
+    padding-left: 20px;
+    box-shadow: none;
+    box-sizing: content-box;
+    transition: all 0.3s;
+  }
+
+  .user-search-box input:focus {
+    border-bottom: none;
+    box-shadow: none;
+  }
+
+  .user-search-box input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  .user-search-box .result-header {
+    background-color: white;
+    font-weight: 500;
+    padding: 12px;
+    color: gray;
+    /* border-bottom: 1px solid #e0e3ff; */
+  }
+
+  .user-search-box .result-list {
+    position: absolute;
+    max-height: 100%;
+    min-width: 100%;
+    overflow: auto;
+  }
+
+  .user-search-box .buffer {
+    width: 100%;
+    height: 400px;
+  }
+
+  .user-search-box .list-item {
+    clear: both;
+    background-color: white;
+    position: relative;
+    background-color: white;
+    width: 100%;
+    height: 100px;
+    border-top: 1px solid #e0e3ff;
+  }
+
+  .user-search-box .list-item a {
+    display: inline;
+    margin: 0;
+  }
+
+  .user-search-box .list-item .image-wrapper {
+    float: left;
+    width: 100px;
+    height: 100px;
+  }
+
+  .user-search-box .list-item .image {
+    width: 70px;
+    height: 70px;
+    margin-left: 15px;
+    margin-top: 15px;
+    border-radius: 5px;
+  }
+
+  .user-search-box .list-item .description {
+    padding: 15px;
+    padding-left: 0px;
+    float: left;
+    width: 160px;
+  }
+
+  .user-search-box .list-item .buttons {
+    padding: 15px;
+    padding-left: 0px;
+    float: right;
+    width: auto;
+  }
+  .user-search-box .list-item .description .name {
+    font-size: 15px;
+    color: #aa1414;
+    font-weight: 900;
+    margin: 0;
+    padding: 0;
+    letter-spacing: 1px;
+  }
+
+  .user-search-box .list-item .description .position-name {
+    color: #59525b;
+    letter-spacing: 1px;
+    font-size: 12px;
+    font-weight: 900;
+    margin: 0;
+    margin-top: 3px;
+    padding: 0;
+  }
+
+  .user-search-box .list-item .description .area {
+    color: #91a4a5;
+    letter-spacing: 1px;
+    font-size: 12px;
+    font-weight: 400;
+    margin: 0;
+    margin-top: 3px;
+    padding: 0;
+  }
+  .user-search-box .list-item .btn-locate{
+    /* margin-top:30px; */
+  }
+
+  .user-search-box .list-item .btn-search-box{
+    font-size:10px;
+  }
+
+  .user-search-box .close-button-wrapper i:hover {
+    color: black;
+    cursor: pointer;
+  }
+
+  .user-search-box .input-wrapper {
+    width: 80%;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .input-wrapper a {
+    position: absolute;
+    top: 23px;
+    right: 16px;
+    color: rgb(142 153 239);
+  }
+
+  .user-search-box .input-bottom-placeholder {
+    margin-top: -16px;
+    color: rgba(255, 255, 255, 0.5);
+    letter-spacing: 1px;
+    padding-left: 6px;
+  }
+
+
+  /* ############################### Tooltip css ########################### */
+
+  .profile-image-wrapper {
+    background-size: 210px;
+    margin: 30px;
+    border-radius: 50%;
+    width: 210px;
+    height: 210px;
+  }
+
+  .customTooltip-wrapper {
+    font-family: 'Roboto', sans-serif;
+    opacity: 0;
+    /* NEW */
+    display: none;
+    position: absolute;
+  }
+
+  .customTooltip {
+    background: white;
+    box-shadow: 0 0 5px #999999;
+    color: #333;
+    position: absolute;
+    font-size: 12px;
+    left: 130px;
+    text-align: center;
+    top: 95px;
+    z-index: 10;
+    text-align: left;
+  }
+
+  .tooltip-hr {
+    width: 70px;
+    background-color: #91a4a5;
+    height: 1px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: -17px;
+    margin-bottom: 25px;
+  }
+
+  .tooltip-desc {
+    padding-left: 10px;
+    margin-top: -20px;
+    margin-left: 20px;
+    overflow: auto;
+  }
+
+  .tooltip-desc .name {
+    color: #962828;
+    font-weight: 900;
+    letter-spacing: 1px;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 2px;
+    text-decoration: none;
+  }
+
+  .tooltip-desc .name:hover {
+    text-decoration: underline;
+  }
+
+  .tooltip-desc .position {
+    color: #59525b;
+    letter-spacing: 1px;
+    font-size: 17px;
+    font-weight: 500;
+    margin-bottom: 2px;
+    margin-top: 0px;
+  }
+
+  .tooltip-desc .area {
+    color: #91a4a5;
+    letter-spacing: 1px;
+    font-size: 16px;
+    font-weight: 400;
+    margin-bottom: 2px;
+    margin-top: 7px;
+  }
+
+  .tooltip-desc .office {
+    color: #91a4a5;
+    line-height: 160%;
+    font-size: 14px;
+    font-weight: 400;
+    margin-bottom: 10px;
+    margin-top: -5px;
+  }
+
+  .tooltip-desc .tags-wrapper .title {
+    display: inline-block;
+    float: left;
+  }
+
+  .tooltip-desc .tags-wrapper .tags {
+    display: inline-block;
+    float: left;
+  }
+
+  .bottom-tooltip-hr {
+    width: 100%;
+    background-color: #58993e;
+    height: 3px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: -17px;
+  }
+
+  .btn-tooltip-department {
+    margin-top: 20px;
+  }
+
+  .btn.disabled {
+    background-color: #DFDFDF !important;
+    box-shadow: none;
+    color: #9F9F9F !important;
+    cursor: default;
+  }
+
+  /*.btn {*/
+  /*  outline: 0;*/
+  /*  text-decoration: none;*/
+  /*  color: #fff;*/
+  /*  background-color: #26a69a;*/
+  /*  text-align: center;*/
+  /*  letter-spacing: .5px;*/
+  /*  color: white;*/
+  /*  border: none;*/
+  /*  border-radius: 0.25rem;*/
+  /*  cursor: pointer;*/
+  /*  font-size: 15px;*/
+  /*  font-family: 'Roboto', sans-serif;*/
+  /*  padding: 0.3rem 1rem;*/
+  /*  transition: all 0.5s;*/
+  /*}*/
+
+  /*.btn:hover {*/
+  /*  box-shadow: 0px 3px 6px #00000029;*/
+  /*  background: #21958a;*/
+  /*  color: white;*/
+  /*}*/
+
+  .btn.disabled:hover {
+    box-shadow: none;
+  }
+
+
+  /* ####################################### TAGS ###################################### */
+
+  .tags {
+    list-style: none;
+    margin-top: -9px;
+    margin-left: 5px;
+    overflow: hidden;
+    padding: 0;
+  }
+
+  .tags-wrapper {
+    font-size: 2.28rem;
+    line-height: 110%;
+    margin: 1.14rem 0 0.912rem 0;
+  }
+
+  .tags-wrapper .title {
+    color: #91a4a5;
+    font-size: 24px;
+  }
+
+  .tags li {
+    float: left;
+  }
+
+  .tag {
+    font-size: 11px;
+    background: #E1ECF4;
+    border-radius: 2px;
+    color: #39739d;
+    display: inline-block;
+    height: 20px;
+    line-height: 20px;
+    padding: 0 5px 0 5px;
+    position: relative;
+    margin: 0 5px 5px 0;
+    text-decoration: none;
+    -webkit-transition: color 0.2s;
+  }
+
+
+  /* #############################   Buttons  ############################################*/
+
+  .btn-search {
+    top: 80px;
+  }
+
+  .btn-fullscreen {
+    top: 20px;
+  }
+
+  .btn-back {
+    top: 20px;
+    left: 20px;
+    display: none;
+  }
+
+  .btn-show-my-self {
+    top: 50px;
+  }
+
+  .btn-action {
+    color: white;
+    background-color: #42b2ff;
+    border: none;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    font-size: 15px;
+    font-family: 'Roboto', sans-serif;
+    padding: 0.3rem 1rem;
+    transition: all 0.5s;
+  }
+
+  .btn-action:focus {
+    outline: 0;
+    background-color: #3691ce;
+  }
+
+  .btn-action:hover {
+    background-color: #0068b0;
+    box-shadow: 0px 3px 6px #00000029;
+  }
+
+  .btn-action i {
+    font-size: 14px;
+  }
+
+  .btn-action .icon {
+    background-color: #0068b0;
+    padding: 3px 6px;
+    border-radius: 0rem 0.25rem 0.25rem 0rem;
+    margin-right: -7px;
+  }
+
+
+  /* ############################################## SVG ################################# */
+
+  .nodeHasChildren {
+    fill: white;
+    stroke: #42b2ff;
+  }
+
+  .nodeDoesNotHaveChildren {
+    fill: white;
+    stroke: #42b2ff;
+  }
+
+  .nodeRepresentsCurrentUser {
+    stroke: #42b2ff;
+    stroke-width: 2;
+  }
+
+  text {
+    fill: dimgray;
+  }
+
+  .link {
+    fill: none;
+    stroke: blue;
+    stroke-width: 1.5px;
+  }
+
+  .node {
+    cursor: pointer;
+  }
+
+  .node-collapse {
+    stroke: grey;
+  }
+
+  .node-collapse-right-rect {
+    fill: #42b2ff;
+    stroke: #42b2ff;
+  }
+
+  .node text {
+    fill: white;
+    font-family: "Segoe UI", Arial, sans-serif;
+    font-size: 10px;
+  }
+
+  .node circle {
+    stroke-width: 1px;
+    stroke: #42b2ff;
+    fill: #42b2ff;
+  }
+
+  .node-group .emp-name {
+    fill: #962828;
+    font-size: 12px;
+    font-weight: 600
+  }
+
+  .node-group .emp-position-name {
+    fill: #59525b;
+    font-size: 11px;
+  }
+
+  .node-group .emp-area {
+    fill: #91a4a5;
+    font-size: 10px;
+  }
+
+  .node-group .emp-count,
+  .node-group .emp-count-icon {
+    fill: #91a4a5;
+    font-size: 12px;
+  }
+
+/*#######   BTNS  ##################*/
+
+.content_buttons {
+  position: absolute;
+  right: 25px;
+  height: 26px;
+}
+
+.close-button-wrapper {
+  display: flex;
+  justify-content: end;
+}
