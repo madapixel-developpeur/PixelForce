@@ -3,35 +3,36 @@
 
 namespace App\Controller;
 
-use App\Entity\AgentSecteur;
-use App\Entity\CategorieFormation;
-use App\Entity\SearchEntity\UserSearch;
+use App\Entity\User;
 use App\Entity\Secteur;
 use App\Entity\TypeSecteur;
-use App\Entity\User;
+use App\Entity\AgentSecteur;
+use App\Manager\EntityManager;
 use App\Manager\StripeManager;
-use App\Repository\AgentSecteurRepository;
-use App\Repository\CategorieFormationRepository;
+use App\Services\StripeService;
+use App\Entity\CategorieFormation;
+use App\Repository\UserRepository;
+use App\Services\User\AgentService;
 use App\Repository\ContactRepository;
-use App\Repository\FormationAgentRepository;
-use App\Repository\FormationRepository;
-use App\Repository\RFormationCategorieRepository;
 use App\Repository\SecteurRepository;
 use App\Services\AgentSecteurService;
-use App\Services\CategorieFormationAgentService;
+use App\Entity\SearchEntity\UserSearch;
+use App\Repository\FormationRepository;
 use App\Services\FormationAgentService;
-use Knp\Component\Pager\PaginatorInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\Routing\Annotation\Route;
-use App\Repository\CalendarEventRepository;
-use App\Repository\PlanAgentAccountRepository;
-use App\Repository\UserRepository;
 use App\Services\Stat\StatAgentService;
-use App\Services\StripeService;
-use App\Services\User\AgentService;
-use App\Manager\EntityManager;
+use App\Repository\AgentSecteurRepository;
+use App\Repository\CalendarEventRepository;
+use Knp\Component\Pager\PaginatorInterface;
+use App\Repository\FormationAgentRepository;
+use Symfony\Component\HttpFoundation\Request;
+use App\Repository\PlanAgentAccountRepository;
+use Symfony\Component\Routing\Annotation\Route;
+use App\Repository\CategorieFormationRepository;
+use App\Services\CategorieFormationAgentService;
+use App\Repository\RFormationCategorieRepository;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class AgentAccountController extends AbstractController
 {
@@ -249,10 +250,25 @@ class AgentAccountController extends AbstractController
             $request->query->getInt('page', 1),
             5
         );
+
+        $countEquipe = $this->agentService->getNumberOfTeam($ambassadeur,1);
+        $countDirect = count($result);
         return $this->render('user_category/agent/view_agent.html.twig', [
             'ambassadeur' => $ambassadeur,
-            'filleul'=>$filleul
+            'filleul'=>$filleul,
+            'countEquipe' =>$countEquipe,
+            'countDirect' =>$countDirect,
         ]);
+    }
+
+       /**
+     * @Route("/agent/filleul-tree", name="app_agent_data_lineaire")
+     */
+    public function getDataUnilevel()
+    {
+        $unilevel = $this->agentService->getUnilevelChildren($this->getUser(),1,true);
+        $data = ['equipe' => $unilevel];
+        return new JsonResponse($data);
     }
 
     // public function agent_dashboard_secteur( Request $request, PaginatorInterface $paginator, Secteur $secteur, StatAgentService $statAgentService)
