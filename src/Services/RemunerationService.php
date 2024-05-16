@@ -24,7 +24,7 @@ class RemunerationService
             "type"=> "position", 
             "position" => 1, 
             "condition"=> "\$user->getPosition() >= 1 || (count(\$filsNiveau[0]) >= 5 && \$caNiveau[0] >= 1000)", 
-            "gain" => " \$niveau == 1 ? ((\$caNiveau[0] - \$amount) < 1000 && !(\$positionBefore >= 1) ? (\$amount - (1000 -  \$caNiveau[0])) : \$amount) * 0.5 * 0.1 : 0 "
+            "gain" => " \$niveau == 1 ? ((\$caNiveau[0] - \$amount) < 1000 && !(\$positionBefore >= 1) ? (\$caNiveau[0] - \$amount) : \$amount) * 0.5 * 0.1 : 0 "
         ],
         [
             "type"=> "position", 
@@ -36,7 +36,7 @@ class RemunerationService
             "type"=> "position", 
             "position" => 3, 
             "condition"=> "\$user->getPosition() >= 3 || ((count(\$filsNiveau[0]) + count(\$filsNiveau[1]) + count(\$filsNiveau[2])) >= 100 )", 
-            "gain" => "(\$niveau == 1 ? ((\$caNiveau[0] - \$amount) < 1000 && !(\$positionBefore >= 1) ? (\$amount - (1000 -  \$caNiveau[0])) : \$amount) : \$amount  ) * 0.5 * 0.05 ",
+            "gain" => "(\$niveau == 1 ? ((\$caNiveau[0] - \$amount) < 1000 && !(\$positionBefore >= 1) ? (\$caNiveau[0] - \$amount) : \$amount) : \$amount  ) * 0.5 * 0.05 ",
         ],
     ];
 
