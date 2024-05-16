@@ -13,6 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\UserRepository;
+use App\Services\User\AgentService;
 
 /**
  * @Route("/ambassadeur/dashboard")
@@ -23,7 +24,9 @@ class AmbassadeurDashboardController extends AbstractController
     private $repoContact;
     private $calendarEventRepository;
 
-    public function __construct(EntityManagerInterface $entityManager, ContactRepository $repoContact, CalendarEventRepository $calendarEventRepository){
+    public function __construct(EntityManagerInterface $entityManager, ContactRepository $repoContact, CalendarEventRepository $calendarEventRepository,
+        private AgentService $agentService
+    ){
         $this->entityManager = $entityManager;
         $this->repoContact = $repoContact;
         $this->calendarEventRepository = $calendarEventRepository;
@@ -87,9 +90,14 @@ class AmbassadeurDashboardController extends AbstractController
             $request->query->getInt('page', 1),
             5
         );
+
+        $countEquipe = $this->agentService->getNumberOfTeam($ambassadeur,1);
+        $countDirect = count($result);
         return $this->render('user_category/ambassadeur/view_ambassadeur.html.twig', [
             'ambassadeur' => $ambassadeur,
-            'filleul'=>$filleul
+            'filleul'=>$filleul,
+            'countEquipe' =>$countEquipe,
+            'countDirect' =>$countDirect,
         ]);
     }
 
