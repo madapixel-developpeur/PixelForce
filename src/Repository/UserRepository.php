@@ -469,13 +469,13 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->getResult();
     }
 
-    public function getFilsJusqueNiveau($agentId, $niveau=3){
+    public function getFilsJusqueNiveau($agentId, $niveau=3, $toId = false){
         $result = [];
         $params = [$agentId];
         for ($i = 0; $i < $niveau; $i++) {
-            $fils = $this->getAgentFilsDirect(array_map(function ($item) { $item instanceof User ? $item->getId() : $item;}, $params));
-            $result[] = $fils;
-            $params = $fils;
+            $fils = $this->getAgentFilsDirect($params);
+            $params = array_map(function ($item){ return $item->getId(); }, $fils);
+            $result[] = $toId ? $params : $fils;
         }
         return $result;
     }

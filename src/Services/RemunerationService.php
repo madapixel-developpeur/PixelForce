@@ -49,31 +49,51 @@ class RemunerationService
         $this->entityManager = $entityManager;
     }
 
+    public function getFilsParrainNiveau($agentId, $niveauLimit=3){
+        $agent = $this->userRepository->find(intval($agentId));
+        $currentUser = $agent->getParrain();
+        $result = [];
+        $currentNiveau = 1;
+        while($currentNiveau <= $niveauLimit && $currentUser){
+            $result[] = [
+                'userId' => $currentUser->getId(),
+                'niveau' => $currentNiveau,
+                'filsIdNiveau' => $this->userRepository->getFilsJusqueNiveau($currentUser->getId(), $niveauLimit, true),
+            ];
+            $currentUser = $currentUser->getParrain();
+            $currentNiveau++;
+        }
+        return $result;
+    }
+
     public function newOrder($orderData){
         try{
             $this->entityManager->beginTransaction();
-            $orderId = intval($orderData["id"]);
-            $auditAgentId = intval($orderData["auditAgentId"]);
-            $userVenteId = intval($orderData["userVenteId"]);
-            $amount = floatval($orderData["amount"]);
+            $orderId = intval($orderData['order']["id"]);
+            $auditAgentId = intval($orderData['order']["auditAgentId"]);
+            $userVenteId = intval($orderData['order']["userVenteId"]);
+            $amount = floatval($orderData['order']["amount"]);
 
             $auditAgent = $this->userRepository->find($auditAgentId);
             $userVente = $auditAgentId == $userVenteId ? $auditAgent : $this->userRepository->find($userVenteId);
 
-            $usersCheck = [];
-            $niveauLimit = 3;
-            $currentUser = $auditAgent->getParrain();
-            $currentNiveau = 1;
-            while($currentNiveau <= $niveauLimit && $currentUser){
-                $usersCheck[] = [
-                    'user' => $currentUser,
-                    'niveau' => $currentNiveau,
-                ];
-                $currentUser = $currentUser->getParrain();
+            $auditAgentIn = false;
+            $venteUserIn = false;
+            $usersCheck =  []; 
+            foreach($orderData['filsParrainNiveau'] as $item){
+                $item['user'] = $this->userRepository->find(intval($item['userId']));
+                $item['niveau'] = intval($item['niveau']);
+                if(!$auditAgentIn) $auditAgentIn = $auditAgent->getId() == $item['user']->getId();
+                if(!$venteUserIn) $venteUserIn = $userVente->getId() == $item['user']->getId();
+                $usersCheck[] = $item;
             }
             
-            $usersCheck[] = ['user' => $auditAgent];
-            if($auditAgentId != $userVenteId){
+            
+            if(!$auditAgentIn){ 
+                $usersCheck[] = ['user' => $auditAgent];
+                if(!$venteUserIn) $venteUserIn = $userVente->getId() == $auditAgent->getId();
+            }
+            if(!$venteUserIn){
                 $usersCheck[] = ['user' => $userVente];
             }
 
@@ -85,8 +105,8 @@ class RemunerationService
                 $caNiveau = null;
                 if(isset($dataCheck['niveau'])){
                     $niveau = $dataCheck['niveau'];
-                    $filsNiveau = $this->userRepository->getFilsJusqueNiveau($user, $niveauLimit);
-                    $caNiveau = $this->getCa($filsNiveau);
+                    $filsNiveau = $dataCheck['filsIdNiveau'];
+                    $caNiveau = array_map(function($item){return floatval($item); }, $dataCheck['caNiveau']);
                 }
 
                 $total = 0;

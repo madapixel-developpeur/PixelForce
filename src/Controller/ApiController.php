@@ -3,6 +3,7 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use App\Services\RemunerationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,6 +21,17 @@ class ApiController extends AbstractController
         try{
             $remunerationService->newOrder($parameters);
             return $this->json('ok');
+        } catch(\Exception $e){
+            return $this->json($e->getMessage(), 500);
+        }
+        
+    }
+
+    #[Route('/fils-parrain-niveau-3/{agentId}', name: 'api_fils_parrain_niveau', methods: ['GET'])]
+    public function parrainNiveauAgent(int $agentId, Request $request, RemunerationService $remunerationService): Response
+    {
+        try{
+            return $this->json($remunerationService->getFilsParrainNiveau($agentId));
         } catch(\Exception $e){
             return $this->json($e->getMessage(), 500);
         }
