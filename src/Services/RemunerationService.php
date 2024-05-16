@@ -160,4 +160,8 @@ class RemunerationService
         $content = json_decode($response->getContent(), true);
         return $content;
     }
+
+    public function getSoldeRemuneration($agent){
+        
+    }
 }

@@ -39,6 +39,27 @@ class UserTransactionRepository extends ServiceEntityRepository
         }
     }
 
+    public function getSolde($user, $secteurIds)
+   {
+       $qb = $this->createQueryBuilder('u')
+       ->select('coalesce(sum(u.amount * (CASE WHEN u.sortie = 1 THEN -1 ELSE 1 END)), 0) as solde')
+       ->leftJoin('u.secteur', 's')
+       ->andWhere('u.status = :statusValid')
+       ->setParameter('statusValid', UserTransaction::STATUS_VALID)
+           ->andWhere('u.user = :user')
+           ->setParameter('user', $user);
+
+    if ($secteurIds) {
+        $qb->andWhere('s.id in (:secteurIds)')
+        ->setParameter('secteurIds', $secteurIds);
+    }
+           
+        $result =   $qb->getQuery()
+           ->getScalarResult()
+       ;
+       return count($result) > 0 ? floatval($result[0]['solde']) : 0;
+   }
+
 //    /**
 //     * @return UserTransaction[] Returns an array of UserTransaction objects
 //     */

@@ -32,6 +32,7 @@ use App\Services\Stat\StatAgentService;
 use App\Services\StripeService;
 use App\Services\User\AgentService;
 use App\Manager\EntityManager;
+use App\Repository\UserTransactionRepository;
 
 class AgentAccountController extends AbstractController
 {
@@ -160,7 +161,7 @@ class AgentAccountController extends AbstractController
     /**
      * @Route("/agent/dashboard/secteur/{id}", name="agent_dashboard_secteur")
      */
-    public function agent_dashboard_secteur( Request $request, PaginatorInterface $paginator, Secteur $secteur, StatAgentService $statAgentService,UserRepository $userRepository)
+    public function agent_dashboard_secteur( Request $request, PaginatorInterface $paginator, Secteur $secteur, StatAgentService $statAgentService,UserRepository $userRepository, UserTransactionRepository $userTransactionRepository)
     {
       
         //dd($secteur);
@@ -210,6 +211,7 @@ class AgentAccountController extends AbstractController
         $revenuAnnee = $statAgentService->getRevenuAnnee($annee, $secteur->getId(), $agent->getId());
         $nbrRdv = $statAgentService->getNbrRdv($agent->getId());
         $pbb_summary = $statAgentService->getPbbSummary($agent->getId(), $agent->getNom());
+        $soldeRemuneration = $userTransactionRepository->getSolde($agent, [$secteur->getId()]);
         //dd($pbb_summary);
         $chiffreAffaireTotal = $pbb_summary['chiffreAffaire'] + ($statVente != null ? $statVente['ca'] : 0);
         $nbVentesTotal = count($pbb_summary['orders']) + ($statVente != null ? $statVente['nbr_ventes'] : 0);
@@ -233,7 +235,8 @@ class AgentAccountController extends AbstractController
             'nbVentesTotal' => $nbVentesTotal,
             "coachs" => $coachs,
             "agent"=> $agent,
-            'statDigital' => $statDigital
+            'statDigital' => $statDigital,
+            'soldeRemuneration' => $soldeRemuneration,
         ]);
     }
 

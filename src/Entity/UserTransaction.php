@@ -56,6 +56,12 @@ class UserTransaction
      */
     private $createdAt;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Secteur::class)
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $secteur;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -105,6 +111,18 @@ class UserTransaction
     public function setUser(?User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getSecteur(): ?Secteur
+    {
+        return $this->secteur;
+    }
+
+    public function setSecteur(?Secteur $secteur): self
+    {
+        $this->secteur = $secteur;
 
         return $this;
     }
