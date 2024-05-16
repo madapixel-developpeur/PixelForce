@@ -11,8 +11,11 @@ use Doctrine\ORM\Mapping as ORM;
 class UserTransaction
 {
     public const TYPE_REMUNERATION = 1;
-    public const STATUS_CREATED = 2;
-    public const STATUS_VALID = 1;
+    public const TYPE_RETRAIT = 2;
+    public const STATUS_CREATED = 1;
+    public const STATUS_VALID = 2;
+
+    public const STATUS_CANCELLED = -1;
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -161,5 +164,14 @@ class UserTransaction
         $this->createdAt = $createdAt;
 
         return $this;
+    }
+
+    public function getStatusRetraitStr(): ?string {
+        if($this->getStatus() === self::STATUS_VALID){
+            return 'Validé';
+        } else if($this->getStatus() === self::STATUS_CANCELLED){
+            return 'Refusé';
+        }
+        return 'En attente';
     }
 }

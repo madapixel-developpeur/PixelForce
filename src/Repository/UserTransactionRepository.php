@@ -44,8 +44,8 @@ class UserTransactionRepository extends ServiceEntityRepository
        $qb = $this->createQueryBuilder('u')
        ->select('coalesce(sum(u.amount * (CASE WHEN u.sortie = 1 THEN -1 ELSE 1 END)), 0) as solde')
        ->leftJoin('u.secteur', 's')
-       ->andWhere('u.status = :statusValid')
-       ->setParameter('statusValid', UserTransaction::STATUS_VALID)
+       ->andWhere('u.status >= :statusCreated')
+       ->setParameter('statusCreated', UserTransaction::STATUS_CREATED)
            ->andWhere('u.user = :user')
            ->setParameter('user', $user);
 

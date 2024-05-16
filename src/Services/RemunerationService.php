@@ -2,6 +2,7 @@
 namespace App\Services;
 
 use App\Entity\UserTransaction;
+use App\Repository\SecteurRepository;
 use App\Repository\UserRepository;
 use App\Repository\UserTransactionRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -40,7 +41,8 @@ class RemunerationService
     ];
 
     public function __construct(UserTransactionRepository $userTransactionRepository, UserRepository $userRepository,
-    HttpClientInterface $client, ParameterBagInterface $parameterBag, EntityManagerInterface $entityManager)
+    HttpClientInterface $client, ParameterBagInterface $parameterBag, EntityManagerInterface $entityManager, 
+        private SecteurRepository $secteurRepository)
     {
         $this->userTransactionRepository = $userTransactionRepository;
         $this->userRepository = $userRepository;
@@ -68,12 +70,14 @@ class RemunerationService
 
     public function newOrder($orderData){
         try{
+            $secteurId = $this->parameterBag->get('secteur_digital_id');
             $this->entityManager->beginTransaction();
             $orderId = intval($orderData['order']["id"]);
             $auditAgentId = intval($orderData['order']["auditAgentId"]);
             $userVenteId = intval($orderData['order']["userVenteId"]);
             $amount = floatval($orderData['order']["amount"]);
 
+            $secteur = $this->secteurRepository->find($secteurId);
             $auditAgent = $this->userRepository->find($auditAgentId);
             $userVente = $auditAgentId == $userVenteId ? $auditAgent : $this->userRepository->find($userVenteId);
 
@@ -131,6 +135,7 @@ class RemunerationService
                     $remuneration->setSortie(false);
                     $remuneration->setType(UserTransaction::TYPE_REMUNERATION);
                     $remuneration->setSourceId($orderId);
+                    $remuneration->setSecteur($secteur);
                     $this->entityManager->persist($remuneration);
                 }
 
@@ -162,6 +167,6 @@ class RemunerationService
     }
 
     public function getSoldeRemuneration($agent){
-        
+
     }
 }
