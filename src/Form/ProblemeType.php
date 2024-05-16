@@ -16,6 +16,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Validator\Constraints\File;
 
 class ProblemeType extends AbstractType
 {
@@ -64,6 +66,17 @@ class ProblemeType extends AbstractType
                     ]),
                 ],
             ])  
+            ->add('fichier', FileType::class, [
+                "label" => "Fichier ",
+                'mapped' => false,
+                "required" => false,
+                'constraints' => [
+                    new File([
+                        // 'maxSize' => '1024k',
+                        'mimeTypesMessage' => 'Image invalide. Le format doit être: .jpeg ou .png',
+                    ])
+                ]
+            ])
         ;
     }
 

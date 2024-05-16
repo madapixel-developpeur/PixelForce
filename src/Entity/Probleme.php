@@ -27,6 +27,11 @@ class Probleme
      */
     private $titre;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $fichier;
+
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -74,7 +79,7 @@ class Probleme
     /**
      * @return Collection|Solution[]
      */
-    public function getActiveSolution(): Collection
+    public function getActiveSolutions(): Collection
     {
         return $this->allSolutions->filter(function(Solution $solution) {
             return $solution->getIsActive()==Solution::ACTIVE_YES;
@@ -213,6 +218,18 @@ class Probleme
     public function setIsActive(int $isActive): static
     {
         $this->isActive = $isActive;
+
+        return $this;
+    }
+
+    public function getFichier(): ?string
+    {
+        return $this->fichier;
+    }
+
+    public function setFichier(string $fichier): static
+    {
+        $this->fichier = $fichier;
 
         return $this;
     }

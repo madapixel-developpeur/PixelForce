@@ -1,7 +1,7 @@
 {% extends 'base_admin.html.twig' %}
 
 {% block title %}
-	Visualisation audit
+	Visualisation probleme
 {% endblock %}
 
 {% block stylesheets %}
@@ -83,7 +83,7 @@
 													 <i class="fa fa-trash" aria-hidden="true"></i>
 													</a>	
 												{% else %}
-													<a href="{{ path('solution_delete', {'id': solution.id}) }}" class="btn btn-secondary">
+													<a href="{{ path('solution_restore', {'id': solution.id}) }}" class="btn btn-secondary">
 													 <i class="fa fa-undo" aria-hidden="true"></i>
 													</a>	
 												{% endif %}	

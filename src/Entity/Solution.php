@@ -32,6 +32,10 @@ class Solution
      */
     private $description;
     /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $fichier;
+    /**
      * @ORM\Column(type="integer")
      */
     private $status;
@@ -118,6 +122,18 @@ class Solution
     public function setIsActive(int $isActive): static
     {
         $this->isActive = $isActive;
+
+        return $this;
+    }
+
+    public function getFichier(): ?string
+    {
+        return $this->fichier;
+    }
+
+    public function setFichier(string $fichier): static
+    {
+        $this->fichier = $fichier;
 
         return $this;
     }

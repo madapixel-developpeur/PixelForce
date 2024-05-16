@@ -8,6 +8,7 @@ use App\Entity\Probleme;
 use App\Entity\Solution;
 use App\Form\SolutionType;
 use App\Manager\UserManager;
+use App\Services\FileHandler;
 use App\Manager\EntityManager;
 use App\Repository\UserRepository;
 use App\Services\AgentSecteurService;
@@ -26,11 +27,13 @@ class SolutionController extends AbstractController
     protected $problemeRepository;
     protected $entityManager;
     protected $userManager;
+    protected $fileHandler;
 
 
     public function __construct(UserRepository $repoUser,
                                 EntityManager $entityManager,
                                 UserManager $userManager,
+                                FileHandler $fileHandler,
                                 ProblemeRepository $problemeRepository
                             )
     {
@@ -38,6 +41,7 @@ class SolutionController extends AbstractController
         $this->entityManager = $entityManager;
         $this->userManager = $userManager;
         $this->problemeRepository = $problemeRepository;
+        $this->fileHandler = $fileHandler;
     }
 
     /**
@@ -74,6 +78,11 @@ class SolutionController extends AbstractController
             $solution->setProbleme($probleme);
             $solution->setStatus(Solution::STATUS_VERIFIED);
             $solution->setIsActive(Solution::ACTIVE_YES);
+            $fichier = $formUser->get('fichier')->getData();
+            if ($fichier) {
+                $fichier_nom = $this->fileHandler->upload($fichier, "solution/fichier");
+                $solution->setFichier($fichier_nom);
+            }
             $this->entityManager->save($solution);
 
             $this->addFlash('success', "Nouvelle solution enregistrée avec succès");
@@ -96,6 +105,11 @@ class SolutionController extends AbstractController
        
         $formUser->handleRequest($request);
         if ($formUser->isSubmitted() && $formUser->isValid()) {
+            $fichier = $formUser->get('fichier')->getData();
+            if ($fichier) {
+                $fichier_nom = $this->fileHandler->upload($fichier, "solution/fichier");
+                $solution->setFichier($fichier_nom);
+            }
             $this->entityManager->save($solution);
             $this->addFlash('success', "Solution mis à jour avec succès");
             return $this->redirectToRoute('probleme_view', ['id' =>  $solution->getProbleme()->getId()]);;    
@@ -118,6 +132,31 @@ class SolutionController extends AbstractController
             $this->addFlash('success', "Suppression Solution effectuée avec succès");
             return $this->redirectToRoute('probleme_view', ['id' => $solution->getProbleme()->getId()]);    
            
+    }
+
+    /**
+     * @Route("/{id}/restore", name="solution_restore")
+     */
+    public function admin_solution_restore( Solution $solution)
+    {
+            $solution->setIsActive(Solution::ACTIVE_YES);
+            $this->entityManager->save($solution);
+            $this->addFlash('success', "Restoration Solution effectuée avec succès");
+            return $this->redirectToRoute('probleme_view', ['id' => $solution->getProbleme()->getId()]);    
+           
+    }
+
+     /**
+     * @Route("/{id}/download", name="solution_download")
+     */
+    public function admin_solution_download( Solution $solution)
+    {
+        if($solution->getFichier()!=null)
+            return $this->fileHandler->downloadFile($solution->getFichier(),$solution->getTitre());      
+        else{
+            $this->addFlash('danger', "aucun fichier detectée");
+            return $this->redirectToRoute('solution_view', ['id' => $solution->getId()]);    
+        }
     }
    
 }

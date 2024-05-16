@@ -104,7 +104,7 @@
                                     <i class="fa fa-trash" aria-hidden="true"></i>
                                     </a>	
 								{% else %}
-                                    <a href="{{ path('audit_delete', {'id': audit.id}) }}" class="btn btn-secondary">
+                                    <a href="{{ path('audit_restore', {'id': audit.id}) }}" class="btn btn-secondary">
 									 <i class="fa fa-undo" aria-hidden="true"></i>
                                     </a>	
 								{% endif %}	

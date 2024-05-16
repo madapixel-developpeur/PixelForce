@@ -152,6 +152,17 @@ class AuditController extends AbstractController
             return $this->redirectToRoute('audit_list');    
            
     }
+    /**
+     * @Route("/{id}/restore", name="audit_restore")
+     */
+    public function admin_restore_delete(Request $request, Audit $audit)
+    {
+            $audit->setIsActive(Audit::ACTIVE_YES);
+            $this->entityManager->save($audit);
+            $this->addFlash('success', "Restoration Audit effectuée avec succès");
+            return $this->redirectToRoute('audit_list');    
+           
+    }
 
    
 }

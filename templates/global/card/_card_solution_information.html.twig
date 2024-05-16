@@ -32,6 +32,10 @@
                                 <span class="fw-bolder me-25">Status</span>
                                 <span>{{ solution.getStringStatus() }}</span>
                             </li>
+                            <li class="mb-75">
+                                <span class="fw-bolder me-25">Telecharger le fichier joint:</span>
+                                 <a href="{{ path('solution_download', {'id': solution.id}) }}"><span>Cliquez ici</span></a>
+                            </li>
                            
                             {# <li class="mb-75">
                                 <span class="fw-bolder me-25">Date d'ajout:</span>

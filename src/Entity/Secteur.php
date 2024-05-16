@@ -57,6 +57,10 @@ class Secteur implements JsonSerializable
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $liens;
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $googleForms;
 
     /**
      * @ORM\OneToMany(targetEntity=AgentSecteur::class, mappedBy="secteur")
@@ -472,6 +476,18 @@ class Secteur implements JsonSerializable
     public function setAffiche(?string $affiche): static
     {
         $this->affiche = $affiche;
+
+        return $this;
+    }
+
+    public function getGoogleForms(): ?string
+    {
+        return $this->googleForms;
+    }
+
+    public function setGoogleForms(?string $googleForms): static
+    {
+        $this->googleForms = $googleForms;
 
         return $this;
     }
