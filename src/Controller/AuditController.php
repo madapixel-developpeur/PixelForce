@@ -121,7 +121,7 @@ class AuditController extends AbstractController
                     "Nouvel Audit Enregistré,veuillez aussi visualiser votre agenda"
                  );    
                  if($googleForm) return $this->redirect($googleForm);  
-                 else return $this->redirectToRoute('agent_contact_list');
+                 else return $this->redirectToRoute('agent_contact_meeting_fiche',['id'=>$meeting->getId()]);
             }
             else {
                 $this->addFlash('success', "Nouvel Audit enregistrée avec succès");

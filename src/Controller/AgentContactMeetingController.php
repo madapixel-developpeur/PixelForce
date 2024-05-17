@@ -166,10 +166,8 @@ class AgentContactMeetingController extends AbstractController
     /**
      * @Route("/agent/contact/meeting/{id}/fiche", name="agent_contact_meeting_fiche")
      */
-    public function agent_contact_meeting_fiche($id)
-    {
-        $meeting = $this->meetingRepository->find($id);
-        
+    public function agent_contact_meeting_fiche(Meeting $meeting)
+    {   
         return $this->render('user_category/agent/meeting/meeting-fiche.html.twig', [
             'meeting' => $meeting
         ]);

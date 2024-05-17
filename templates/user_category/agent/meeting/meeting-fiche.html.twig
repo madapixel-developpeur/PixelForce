@@ -98,6 +98,12 @@
             {# <button class="btn btn-outline-secondary" type="button" onclick="reportMeeting({{meeting.id}})">Rendez-vous après 48h</button> #}
 
             {% if meeting.meetingState.name == "En attente" %}<button class="btn btn-primary" type="button"  onclick="endMeeting({{meeting.id}})">Marquer comme terminé</button>{% endif %}
+            {% if meeting.audit != null  %}
+                {% if meeting.audit.secteur != null  %}
+                <a class="btn btn-primary" href="{{meeting.audit.secteur.googleForms}}" target="_blank" >Acceder aux google Form</a>
+                {% endif %}
+            {% endif %}
+
 
         </div>
     </div>

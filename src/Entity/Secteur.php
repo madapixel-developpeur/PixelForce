@@ -450,6 +450,10 @@ class Secteur implements JsonSerializable
     {
         return $this->ensureHttpPrefix($this->liens);
     }
+    public function getStructuredGoogleForms(): ?string
+    {
+        return $this->ensureHttpPrefix($this->googleForms);
+    }
     private function ensureHttpPrefix(string $url): string
     {
         // Vérifier si le lien commence par http:// ou https://
