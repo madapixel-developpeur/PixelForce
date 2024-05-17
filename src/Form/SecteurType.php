@@ -51,6 +51,13 @@ class SecteurType extends AbstractType
                     'attr' => ['placeholder' => 'liens vers la page du secteur'],
                 ]
             )
+            ->add('googleFormsResponse', null, 
+                [
+                    'required' => false,
+                    'label' => "Reponse du Google Formulaire",
+                    'attr' => ['placeholder' => 'liens vers la page du secteur'],
+                ]
+            )
             ->add('type', EntityType::class, [
                 "label" => "Type",
                 'class'=> TypeSecteur::class,
