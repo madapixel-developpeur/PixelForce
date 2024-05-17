@@ -166,4 +166,15 @@ class AdminSecteurController extends AbstractController
         }
         return $this->redirectToRoute('admin_sector_list');    
     }
+    /**
+     * @Route("/admin/secteur/{id}/reactiver", name="admin_sector_reactiver")
+     */
+    public function admin_sector_reactiver(Secteur $sector, Request $request)
+    {  
+            $sector->setActive(1);
+            $this->entityManager->save($sector);
+
+            $this->addFlash( 'success', 'Secteur restauré');
+        return $this->redirectToRoute('admin_sector_list');    
+    }
 }

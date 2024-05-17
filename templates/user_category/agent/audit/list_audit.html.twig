@@ -100,11 +100,11 @@
                                 </a>
                                 
                                 {% if  audit.isActive == constant('App\\Entity\\Probleme::ACTIVE_YES') %}
-									<a href="{{ path('audit_delete', {'id': audit.id}) }}" class="btn btn-secondary">
+									<a href="{{ path('audit_delete', {'id': audit.id}) }}" class="btn btn-secondary" onclick="confirmation('{{ path('audit_delete', {'id': audit.id}) }}','Êtes-vous sûr(e) de vouloir supprimer cet Audit?')">
                                     <i class="fa fa-trash" aria-hidden="true"></i>
                                     </a>	
 								{% else %}
-                                    <a href="{{ path('audit_restore', {'id': audit.id}) }}" class="btn btn-secondary">
+                                    <a  href="{{ path('audit_restore', {'id': audit.id}) }}" class="btn btn-secondary" onclick="confirmation('{{ path('audit_restore', {'id': audit.id}) }}','Êtes-vous sûr(e) de vouloir restorer cet Audit?')">
 									 <i class="fa fa-undo" aria-hidden="true"></i>
                                     </a>	
 								{% endif %}	

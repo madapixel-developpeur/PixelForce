@@ -66,7 +66,7 @@
                             <td>{{ sector.nom }}</td>
                             <td>{{ sector.description|slice(0, 50) }}...</td>
                             <td>{% if sector.type  %} {{ sector.type.nom }} {% else %} {% endif %}</td>
-                            <td><a href="{{sector.googleForms}}">Cliquez ici <i class="fa fa-address-card" aria-hidden="true"></i></a></td>
+                            <td><a href="{{sector.googleForms}}" target="_blank">Cliquez ici <i class="fa fa-address-card" aria-hidden="true"></i></a></td>
                             {# <td>
                                 {% set CoachSecteur = repoCoachSecteur.findBy({'secteur' : sector}) %}                                
                                 {% if CoachSecteur|length > 0  and CoachSecteur[0].coach %}
@@ -82,11 +82,17 @@
                                 <a href="{{ path('admin_sector_edit', {'id': sector.id}) }}" class="btn btn-success">
                                     <i class="fas fa-edit"></i>
                                 </a>
-                                <form method="post" action="{{path('admin_sector_delete', {id: sector.id})}}" style="display: inline-block;" onsubmit="return confirm('Êtes vous vraiment sûr de supprimer ce secteur ?')">
+                                 {% if sector.active == 1 %}
+                                <form  id="form_{{sector.id}}" method="post" action="{{path('admin_sector_delete', {id: sector.id})}}" style="display: inline-block;" onclick="confirmationForm('form_{{sector.id}}','{{path('admin_sector_delete', {id: sector.id})}}','Êtes-vous sûr(e) de vouloir supprimer ce secteur ?')">
                                     <input type="hidden" name="_method" value="DELETE">
                                     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ sector.id) }}">
                                     <button class="btn btn-danger"><i class="fas fa-trash-alt"></i></button>
                                 </form>  
+                                {% else %}
+                                    <a href="{{ path('admin_sector_reactiver', {'id': sector.id}) }}" class="btn btn-success" onclick="confirmation('{{ path('admin_sector_reactiver', {'id': sector.id}) }}','Êtes vous vraiment sur de vouloir reactiver ce secteur ?')">
+                                        <i class="fa-solid fa-sync"></i>
+                                    </a>
+                                {% endif %}
                             </td>
                         </tr>
 						
