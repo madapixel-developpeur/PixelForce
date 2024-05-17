@@ -4,6 +4,7 @@
 namespace App\Controller;
 
 use App\Entity\Contact;
+use App\Entity\ContactInformation;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\UserRepository;
@@ -103,6 +104,11 @@ class AgentContactMeetingController extends AbstractController
                 $this->meetingService->saveMeeting($meeting, $agent, $userToMeet);
                 $this->meetingService->saveMeetingEvent($meeting, $agent, $meetingCalendarEventLabel);
 
+                $information= $userToMeet->getInformation();
+                $information->setType(ContactInformation::TYPE_AUDIT);
+                $this->entityManager->persist($information);
+                
+                $this->entityManager->flush();
                 $this->entityManager->commit();
 
                 // // Get "En attente" meeting state
