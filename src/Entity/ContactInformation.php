@@ -10,6 +10,17 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class ContactInformation
 {
+    
+    const TYPE_DEFAULT = 1;
+    const TYPE_AUDIT = 2;
+    const TYPE_CLIENT = 3;
+
+    const TYPE_ARRAY_FORM = [
+        self::TYPE_DEFAULT => 'Normal', 
+        self::TYPE_AUDIT => 'Audit', 
+        self::TYPE_CLIENT => 'Client', 
+    ];
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -81,6 +92,13 @@ class ContactInformation
      * @ORM\ManyToOne(targetEntity=TypeLogement::class)
      */
     private $typeLogement;
+
+      /**
+     * @ORM\Column(type="integer",options={"default" : 1})
+     */
+    private $type = self::TYPE_DEFAULT;
+
+    
 
     public function getId(): ?int
     {
@@ -256,6 +274,32 @@ class ContactInformation
     public function fullName()
     {
         return $this->firstname .' '. $this->lastname;
+    }
+
+
+    /**
+     * Get the value of type
+     */ 
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * Set the value of type
+     *
+     * @return  self
+     */ 
+    public function setType($type)
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+
+    public function getStringType(){
+        return self::TYPE_ARRAY_FORM[$this->getType()];
     }
 
 }

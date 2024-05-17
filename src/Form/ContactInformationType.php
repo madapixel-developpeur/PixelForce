@@ -2,18 +2,19 @@
 
 namespace App\Form;
 
-use App\Entity\ContactInformation;
 use App\Entity\TypeLogement;
+use App\Entity\ContactInformation;
+use Symfony\Component\Form\AbstractType;
 use App\Repository\TypeLogementRepository;
 use FOS\CKEditorBundle\Form\Type\CKEditorType;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\IntegerType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 class ContactInformationType extends AbstractType
 {
@@ -106,6 +107,14 @@ class ContactInformationType extends AbstractType
                 'data' => $contact ? $contact->getNote() : '',
                 'config' => [
                     'toolbar' => 'note_contact_toolbar'
+                ]
+            ])
+            ->add('type', ChoiceType::class, [
+                "label" => "Type du contact",
+                'choices' => array_flip(ContactInformation::TYPE_ARRAY_FORM),
+                'required' => true,
+                'attr' => [
+                    'class' => "form-control"
                 ]
             ])
         ;

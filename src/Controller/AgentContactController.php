@@ -3,30 +3,31 @@
 
 namespace App\Controller;
 
-use App\Entity\Contact;
-use App\Entity\ContactInformation;
-use App\Entity\SearchEntity\UserSearch;
 use App\Entity\User;
-use App\Form\ContactInformationType;
+use App\Entity\Contact;
 use App\Form\UserSearchType;
-use App\Manager\ContactManager;
 use App\Manager\EntityManager;
-use App\Repository\ContactInformationRepository;
+use App\Services\ExcelService;
+use App\Manager\ContactManager;
+use App\Services\ContactService;
+use App\Repository\TagRepository;
+use App\Entity\ContactInformation;
+use App\Repository\UserRepository;
+use App\Form\ContactInformationType;
 use App\Repository\ContactRepository;
 use App\Repository\SecteurRepository;
-use App\Repository\TagRepository;
-use App\Repository\UserRepository;
-use App\Services\ContactService;
-use App\Services\ExcelService;
-use FOS\CKEditorBundle\Form\Type\CKEditorType;
+use App\Entity\SearchEntity\UserSearch;
 use Knp\Component\Pager\PaginatorInterface;
-use Nucleos\DompdfBundle\Wrapper\DompdfWrapperInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
+use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Repository\ContactInformationRepository;
+use Nucleos\DompdfBundle\Wrapper\DompdfWrapperInterface;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class AgentContactController extends AbstractController
 {
@@ -68,6 +69,14 @@ class AgentContactController extends AbstractController
                 'label' => false,
                 'attr' => [
                     'placeholder' => 'Adresse'
+                ]
+            ])
+            ->add('type', ChoiceType::class, [
+                "label" => "Type du contact",
+                'choices' => array_flip(ContactInformation::TYPE_ARRAY_FORM),
+                'required' => false,
+                'attr' => [
+                    'class' => "form-control"
                 ]
             ])
         ;

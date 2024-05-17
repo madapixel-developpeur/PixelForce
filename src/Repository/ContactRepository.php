@@ -160,6 +160,11 @@ class ContactRepository extends ServiceEntityRepository
                             ->andWhere('tgs = :tag')
                 ->setParameter('tag', $search->getTag());
         }
+        if ($search->getType()) {
+            $query = $query
+                ->andwhere('ci.type = :type')
+                ->setParameter('type', $search->getType());
+        }
 
         if (isset($_GET['ordre'])) {
             if ($_GET['ordre'] == 'ASC') {

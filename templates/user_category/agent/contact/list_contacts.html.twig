@@ -53,11 +53,15 @@
                 <div class=" col-12 col-sm-2 col-md-2">
                     {{form_row(searchForm.tag)}}
                 </div>
-                <div class="col-6">
+                 <div class="col-2">
+                    <label for="dateInscriptionMin" class="form-label">Type du contact</label>
+                    {{form_widget(searchForm.type)}}
+                </div>
+                <div class="col-5">
                     <label for="dateInscriptionMin" class="form-label">Date d'enregistrement à partir de</label>
                     {{form_widget(searchForm.dateInscriptionMin)}}
                 </div>
-                <div class="col-6">
+                <div class="col-5">
                     <label for="dateInscriptionMax" class="form-label">Date d'enregistrement jusqu'à</label>
                     {{form_widget(searchForm.dateInscriptionMax)}}
                 </div>
@@ -92,6 +96,7 @@
 						<th scope="col">Téléphone</th>
 						<th scope="col">Adresse</th>
 						<th scope="col">Tags</th>
+						<th scope="col">Type</th>
 						<th scope="col">ACTION</th>
 					</tr>
 				</thead>
@@ -110,6 +115,7 @@
                                 {% endfor %}
 
                             </td>
+                            <td>{{ information.stringType }}</td>
                             <td class="d-flex justify-content-center">
                                 <a href="{{ path('agent_contact_view', {'id': contact.id}) }}" class="btn btn-secondary">
                                     <i class="fa-solid fa-eye"></i>
