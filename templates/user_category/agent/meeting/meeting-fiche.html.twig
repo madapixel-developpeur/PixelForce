@@ -34,11 +34,11 @@
             <tr>
             <tr>
                 <th>Téléphone</th>
-                <td> <a href="{{ path('agent_contact_view', { id: meeting.userToMeet.information.contact.id }) }}">{{ meeting.userToMeet.information.phone|default('-') }}</a> </td>
+                <td> <a href="tel:{{ meeting.userToMeet.information.phone}}">{{ meeting.userToMeet.information.phone|default('-') }}</a> </td>
             </tr>
             <tr>
                 <th>Email</th>
-                <td> <a href="{{ path('agent_contact_view', { id: meeting.userToMeet.information.contact.id }) }}">{{ meeting.userToMeet.information.email|default('-') }}</a> </td>
+                <td> <a href="mailto:{{meeting.userToMeet.information.email}}">{{ meeting.userToMeet.information.email|default('-') }}</a> </td>
             </tr>
             <tr>
                 <th>Statut</th>
@@ -77,9 +77,10 @@
                                 <span class="fw-bolder me-25">Proprietaire:</span>
                                  <span>{{ meeting.audit.propriétaire != null?meeting.audit.propriétaire.fullName:"Néant" }}</span> 
                             </li>
+                            <li class="mb-75 text-center ">
+                                 <a class="btn btn-outline-primary m-4" {% if meeting.audit != null  %}href="{{ path('audit_view', { id: meeting.audit.getId() }) }}"{% endif %}>Détail de l'audit</a>
+                            </li>
                             
-                            
-    
                         </ul>
                         
                     </div>
@@ -100,11 +101,9 @@
             {% if meeting.meetingState.name == "En attente" %}<button class="btn btn-primary" type="button"  onclick="endMeeting({{meeting.id}})">Marquer comme terminé</button>{% endif %}
             {% if meeting.audit != null  %}
                 {% if meeting.audit.secteur != null  %}
-                <a class="btn btn-primary" href="{{meeting.audit.secteur.googleForms}}" target="_blank" >Acceder aux google Form</a>
+                <a class="btn btn-outline-warning" href="{{meeting.audit.secteur.googleForms}}" target="_blank" >Acceder aux google Form</a>
                 {% endif %}
             {% endif %}
-
-
         </div>
     </div>
     {% endif %}

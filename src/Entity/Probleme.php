@@ -38,10 +38,7 @@ class Probleme
      */
     private $description;
 
-     /**
-     * @ORM\Column(type="integer")
-     */
-    private $noteRisque;
+     
 
      /**
      * @ORM\ManyToOne(targetEntity=Audit::class)
@@ -49,11 +46,6 @@ class Probleme
      */
     private $audit;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=ProblemeCategory::class)
-     * @ORM\JoinColumn(name="problemeCategory_id", referencedColumnName="id", nullable=true)
-     */
-    private $problemeCategory;
 
      /**
      * @ORM\Column(type="datetime",nullable=true)
@@ -70,25 +62,11 @@ class Probleme
      * @ORM\Column(type="integer", options={"default": 1})
      */
     private $isActive;
-    
-    /**
-     * @ORM\OneToMany(targetEntity=Solution::class, mappedBy="probleme")
-     */
-    private $allSolutions;
 
-    /**
-     * @return Collection|Solution[]
-     */
-    public function getActiveSolutions(): Collection
-    {
-        return $this->allSolutions->filter(function(Solution $solution) {
-            return $solution->getIsActive()==Solution::ACTIVE_YES;
-        });
-    }
+
 
     public function __construct()
     {
-        $this->allSolutions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -120,18 +98,6 @@ class Probleme
         return $this;
     }
 
-    public function getNoteRisque(): ?int
-    {
-        return $this->noteRisque;
-    }
-
-    public function setNoteRisque(int $noteRisque): static
-    {
-        $this->noteRisque = $noteRisque;
-
-        return $this;
-    }
-
     public function getAudit(): ?Audit
     {
         return $this->audit;
@@ -144,47 +110,6 @@ class Probleme
         return $this;
     }
 
-    public function getProblemeCategory(): ?ProblemeCategory
-    {
-        return $this->problemeCategory;
-    }
-
-    public function setProblemeCategory(?ProblemeCategory $problemeCategory): static
-    {
-        $this->problemeCategory = $problemeCategory;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Solution>
-     */
-    public function getAllSolutions(): Collection
-    {
-        return $this->allSolutions;
-    }
-
-    public function addAllSolution(Solution $allSolution): static
-    {
-        if (!$this->allSolutions->contains($allSolution)) {
-            $this->allSolutions->add($allSolution);
-            $allSolution->setProbleme($this);
-        }
-
-        return $this;
-    }
-
-    public function removeAllSolution(Solution $allSolution): static
-    {
-        if ($this->allSolutions->removeElement($allSolution)) {
-            // set the owning side to null (unless already changed)
-            if ($allSolution->getProbleme() === $this) {
-                $allSolution->setProbleme(null);
-            }
-        }
-
-        return $this;
-    }
 
     public function getDateAjout(): ?\DateTimeInterface
     {

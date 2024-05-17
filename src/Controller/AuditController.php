@@ -4,8 +4,8 @@
 namespace App\Controller;
 
 use App\Entity\Audit;
-use App\Form\AuditType;
 use App\Entity\Meeting;
+use App\Form\AuditType;
 use App\Manager\UserManager;
 use App\Manager\EntityManager;
 use App\Services\AuditService;
@@ -18,6 +18,7 @@ use App\Repository\CoachSecteurRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
@@ -35,6 +36,7 @@ class AuditController extends AbstractController
     protected $repoSecteur;
     protected $auditService;
     protected $repoCoachSecteur;
+    protected $session;
 
     public function __construct(UserRepository $repoUser,
                                 EntityManager $entityManager,
@@ -43,6 +45,7 @@ class AuditController extends AbstractController
                                 SecteurRepository $repoSecteur,
                                 AuditRepository $auditRepository,
                                 AuditService $auditService,
+                                SessionInterface $session,
                                 CoachSecteurRepository $repoCoachSecteur)
     {
         $this->repoUser = $repoUser;
@@ -53,6 +56,8 @@ class AuditController extends AbstractController
         $this->auditRepository = $auditRepository;
         $this->repoCoachSecteur = $repoCoachSecteur;
         $this->auditService = $auditService;
+        $this->session = $session;
+
     }
 
     /**
@@ -107,6 +112,11 @@ class AuditController extends AbstractController
        
         $formUser->handleRequest($request);
         if ($formUser->isSubmitted() && $formUser->isValid()) {
+            $secteur_id=$this->session->get('secteurId');
+            $secteur=$this->repoSecteur->findOneBy(['id' => $secteur_id]);
+            if($secteur){
+                $audit->setSecteur($secteur);
+            }
             $audit->setDateAjout(new \DateTime());
             $audit->setIsActive(Audit::ACTIVE_YES);
             $audit->setPropriétaire($this->getUser());
@@ -118,10 +128,9 @@ class AuditController extends AbstractController
                 $googleForm=$audit->getSecteur()->getGoogleForms();
                 $this->addFlash(
                     'success',
-                    "Nouvel Audit Enregistré,veuillez aussi visualiser votre agenda"
+                    "Nouvel Audit Enregistré,veuillez visualiser la fiche de votre rendez-vous"
                  );    
-                 if($googleForm) return $this->redirect($googleForm);  
-                 else return $this->redirectToRoute('agent_contact_meeting_fiche',['id'=>$meeting->getId()]);
+                 return $this->redirectToRoute('agent_contact_meeting_fiche',['id'=>$meeting->getId()]);
             }
             else {
                 $this->addFlash('success', "Nouvel Audit enregistrée avec succès");

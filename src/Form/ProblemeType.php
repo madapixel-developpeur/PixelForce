@@ -26,14 +26,14 @@ class ProblemeType extends AbstractType
         $builder
             ->add('titre', TextType::class, [
                 'required' => false,
-                'label' =>'Titre du problème',
+                'label' =>'Titre de la réponse',
                 'constraints' =>[
                     new NotBlank([
                         'message' => 'Le titre de problème  est obligatoire',
                     ]),
                 ],
                 'attr' => [
-                    'placeholder' => 'Titre du problème',
+                    'placeholder' => 'Titre de la réponse',
                 ]
             ])
             
@@ -48,24 +48,7 @@ class ProblemeType extends AbstractType
                 'attr' => [
                     'placeholder' => 'Description',
                 ]
-            ])   
-            ->add('noteRisque', IntegerType::class, [
-                'required' => false,
-                'label' =>"Note du risque",
-                'attr' => [
-                    'placeholder' => 'Note du risque',
-                ],
-                'constraints' => [
-                    new NotBlank([
-                        'message' => 'Le note du risque est obligatoire',
-                    ]),
-                    new Range([
-                        'min' => 0,
-                        'max' => 10,
-                        'notInRangeMessage' => 'La valeur doit être comprise entre {{ min }} et {{ max }}.',
-                    ]),
-                ],
-            ])  
+            ])    
             ->add('fichier', FileType::class, [
                 "label" => "Fichier ",
                 'mapped' => false,
@@ -79,7 +62,6 @@ class ProblemeType extends AbstractType
             ])
         ;
     }
-
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([

@@ -40,7 +40,12 @@
                                 <span class="fw-bolder me-25">Proprietaire:</span>
                                  <span>{{ audit.propriétaire != null?audit.propriétaire.fullName:"Néant" }}</span> 
                             </li>
-                            
+                            {% if audit.secteur != null  %} 
+                            <li class="mb-75">
+                                <span class="fw-bolder me-25">Google Formulaire:</span>
+                                 <span><a class="bg-light-warning" href="{{audit.secteur.googleForms}}" target="_blank" >Acceder aux google Form</a></span> 
+                            </li>
+                              {% endif %}
                             
     
                         </ul>

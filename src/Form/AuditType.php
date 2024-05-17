@@ -2,18 +2,19 @@
 
 namespace App\Form;
 
+use App\Entity\Tag;
 use App\Entity\Audit;
 use App\Entity\Secteur;
-use App\Entity\Tag;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use App\Repository\SecteurRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
-use App\Repository\SecteurRepository;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 class AuditType extends AbstractType
 {
@@ -23,20 +24,10 @@ class AuditType extends AbstractType
     public function __construct(EntityManagerInterface $entityManager,SecteurRepository $secteurRepository)
     {
         $this->entityManager = $entityManager;
-        $this->secteurRepository = $secteurRepository;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
-    {
-        $secteur = $this->secteurRepository->createQueryBuilder('s')
-        ->Where('s.active = 1')
-        ->orWhere('s.active is null')
-        ->getQuery()->getResult();
-        
-        $choices = [];
-        foreach ($secteur as $direction) {
-            $choices[$direction->getNom()] = $direction;
-        }
+    { 
         $builder
             ->add('nomProjet', TextType::class, [
                 'required' => false,
@@ -52,19 +43,13 @@ class AuditType extends AbstractType
                     'placeholder' => 'Url du site',
                 ]
             ])
-            ->add('description', TextType::class, [
+            ->add('description', TextareaType::class, [
                 'required' => false,
                 'label' => "Description",
                 'attr' => [
                     'placeholder' => 'Description',
                 ]
-            ]) 
-            ->add('secteur', ChoiceType::class, [
-                'label' => 'Choix du secteur',
-                'choices' => $choices,
-                'required' => true,
-                'placeholder' => 'Choisissez une direction',
-            ]);    
+            ])    
         ;
     }
 
