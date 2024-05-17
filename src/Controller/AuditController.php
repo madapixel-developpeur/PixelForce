@@ -3,6 +3,7 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use App\Entity\Audit;
 use App\Entity\Meeting;
 use App\Form\AuditType;
@@ -106,7 +107,7 @@ class AuditController extends AbstractController
 
     function add_audit(Request $request,Meeting $meeting=null) {
         $audit = new Audit();
-
+        $user=$this->getUser();
         $formUser = $this->createForm(AuditType::class, $audit)
         ;
        
@@ -117,6 +118,12 @@ class AuditController extends AbstractController
             if($secteur){
                 $audit->setSecteur($secteur);
             }
+            elseif(count($user->getRoles())>0){
+                if($user->getRoles()[0]==User::ROLE_COACH || $user->getRoles()[0]==User::ROLE_AMBASSADEUR){
+                    $secteurCoach=$this->repoCoachSecteur->findOneBy(['coach' => $user->getId()]);
+                    $audit->setSecteur($secteurCoach->getSecteur());
+                }
+            }
             $audit->setDateAjout(new \DateTime());
             $audit->setIsActive(Audit::ACTIVE_YES);
             $audit->setPropriétaire($this->getUser());
@@ -125,7 +132,6 @@ class AuditController extends AbstractController
             if($meeting!=null) {
                 $meeting->setAudit($audit);
                 $this->entityManager->save($meeting);
-                $googleForm=$audit->getSecteur()->getGoogleForms();
                 $this->addFlash(
                     'success',
                     "Nouvel Audit Enregistré,veuillez visualiser la fiche de votre rendez-vous"

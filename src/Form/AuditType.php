@@ -10,6 +10,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -30,10 +31,13 @@ class AuditType extends AbstractType
     { 
         $builder
             ->add('nomProjet', TextType::class, [
-                'required' => false,
+                'required' => true,
                 'label' =>'Nom du projet',
                 'attr' => [
                     'placeholder' => 'Nom du projet',
+                ],
+                "constraints" => [
+                    new NotBlank(["message" => "Le nom du projet est obligatoire"])
                 ]
             ])
             ->add('urlSite', TextType::class, [
@@ -41,6 +45,9 @@ class AuditType extends AbstractType
                 'label' =>"Url du site",
                 'attr' => [
                     'placeholder' => 'Url du site',
+                ],
+                "constraints" => [
+                    new NotBlank(["message" => "L'url du site est obligatoire"])
                 ]
             ])
             ->add('description', TextareaType::class, [
@@ -48,6 +55,9 @@ class AuditType extends AbstractType
                 'label' => "Description",
                 'attr' => [
                     'placeholder' => 'Description',
+                ],
+                "constraints" => [
+                    new NotBlank(["message" => "La description est obligatoire"])
                 ]
             ])    
         ;
