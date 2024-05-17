@@ -45,3 +45,6 @@ services:
 
     util.config: '@App\Services\ConfigSecteurService'
     util.auth: '@App\Services\AuthService'
+
+    App\Twig\HelperFunction:
+        tags: ['twig.extension']
