@@ -51,6 +51,16 @@
                     </i>
                 </td>
             <tr>
+             <tr>
+                <th>Référence</th>
+                <td> 
+                    {% if meeting.audit != null %}
+                        {{ generateReference(meeting.userToMeet.agent.id,app.user.id,meeting.userToMeet.id,meeting.audit.id) }}
+                    {% else %}
+                       {{ generateReference(meeting.userToMeet.agent.id,app.user.id,meeting.userToMeet.id) }}
+                    {% endif %}
+                </a> </td>
+            </tr>
             {% if meeting.audit != null %}
             <tr class="note-row">
                 <th>Audit</th>
@@ -80,6 +90,7 @@
                             <li class="mb-75 text-center ">
                                  <a class="btn btn-outline-primary m-4" {% if meeting.audit != null  %}href="{{ path('audit_view', { id: meeting.audit.getId() }) }}"{% endif %}>Détail de l'audit</a>
                             </li>
+                           
                             
                         </ul>
                         

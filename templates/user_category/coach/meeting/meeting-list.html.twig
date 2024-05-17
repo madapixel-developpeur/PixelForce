@@ -63,6 +63,7 @@
                         <th>Invité</th>
                         <th>Téléphone</th>
                         <th>Email</th>
+                        <th>Référence</th>
                         <th>Statut</th>
                         <th class="table-th-notSortable"></th>
                     </tr>
@@ -77,6 +78,13 @@
                         <td> <a href="{{ path('coach_agent_contact_view', { id: meeting.userToMeet.information.contact.id }) }}">{{ meeting.userToMeet.information.lastname }} {{ meeting.userToMeet.information.firstname }}</a> </td>
                         <td> <a href="{{ path('coach_agent_contact_view', { id: meeting.userToMeet.information.contact.id }) }}">{{ meeting.userToMeet.information.phone|default('-') }}</a> </td>
                         <td> <a href="{{ path('coach_agent_contact_view', { id: meeting.userToMeet.information.contact.id }) }}">{{ meeting.userToMeet.information.email|default('-') }}</a> </td>
+                        <td> 
+                            {% if meeting.audit != null  %}
+                                {{ generateReference(meeting.userToMeet.agent.id,app.user.id,meeting.userToMeet.id,meeting.audit.id) }}
+                            {% else %}
+                                {{ generateReference(meeting.userToMeet.agent.id,app.user.id,meeting.userToMeet.id) }}
+                            {% endif %}
+                        </td>
                         <td>
                             {% if meeting.meetingState.name == 'Annulé' %}
                                 <span class="text-danger">{{meeting.meetingState.name}}</span>

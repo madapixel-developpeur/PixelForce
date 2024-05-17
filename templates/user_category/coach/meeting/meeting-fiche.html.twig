@@ -44,6 +44,16 @@
                 <th>Statut</th>
                 <td><i>{{meeting.meetingState.name}}</i></td>
             <tr>
+              <tr>
+                <th>Référence</th>
+                <td> 
+                    {% if meeting.audit != null %}
+                        {{ generateReference(meeting.userToMeet.agent.id,app.user.id,meeting.userToMeet.id,meeting.audit.id) }}
+                    {% else %}
+                       {{ generateReference(meeting.userToMeet.agent.id,app.user.id,meeting.userToMeet.id) }}
+                    {% endif %}
+                </a> </td>
+            </tr>
             <tr class="note-row">
                 <th>Note</th>
                 <td>{{meeting.note|raw}}</td>

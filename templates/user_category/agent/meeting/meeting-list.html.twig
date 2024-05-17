@@ -63,6 +63,7 @@
                         <th>Invité</th>
                         <th>Téléphone</th>
                         <th>Email</th>
+                        <th>Référence</th>
                         <th>AUDIT</th>
                         <th>Statut</th>
                         <th class="table-th-notSortable"></th>
@@ -78,6 +79,13 @@
                         <td> <a href="{{ path('agent_contact_view', { id: meeting.userToMeet.information.contact.id }) }}">{{ meeting.userToMeet.information.lastname }} {{ meeting.userToMeet.information.firstname }}</a> </td>
                         <td> <a href="tel:{{meeting.userToMeet.information.phone}}">{{ meeting.userToMeet.information.phone|default('-') }}</a> </td>
                         <td> <a href="mailto:{{meeting.userToMeet.information.email}}">{{ meeting.userToMeet.information.email|default('-') }}</a> </td>
+                        <td> 
+                            {% if meeting.audit != null  %}
+                                {{ generateReference(meeting.userToMeet.agent.id,app.user.id,meeting.userToMeet.id,meeting.audit.id) }}
+                            {% else %}
+                                {{ generateReference(meeting.userToMeet.agent.id,app.user.id,meeting.userToMeet.id) }}
+                            {% endif %}
+                        </td>
                         <td> <a class="btn bg-light-primary" {% if meeting.audit != null  %}href="{{ path('audit_view', { id: meeting.audit.getId() }) }}"{% endif %}>cliquez-ici</a> </td>
                         
                         <td>
