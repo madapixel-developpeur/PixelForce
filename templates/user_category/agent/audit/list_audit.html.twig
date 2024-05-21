@@ -71,7 +71,7 @@
             </div>
 		</div>
         <div class="table-responsive">
-			<table class="table table-striped table-hover text-center sortable">
+			<table class="table table-striped table-hover text-center ">
 				<thead>
 					<tr style="white-space:nowrap" >
 						<th scope="col" class="text-center">#</th>
@@ -84,7 +84,7 @@
 				<tbody>
 					{% for audit in audits %}
                         <tr>
-                            <td>{{ audit.id }}</td>
+                            <td>AUDIT-{{ audit.getId() }}</td>
                             <td>{{ audit.nomProjet }}</td>
                             <td>{{ audit.urlSite }}</td>
                             <td>{{ audit.DateAjout!=null?audit.DateAjout.format('Y-m-d'):"" }}</td>
