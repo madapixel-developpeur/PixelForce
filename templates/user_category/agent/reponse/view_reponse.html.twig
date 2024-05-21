@@ -11,7 +11,7 @@
 {% block body %}
 
 	<div class="mt-2">
-		<a href="{{ path('audit_view', {'id': probleme.audit.id}) }}" class="btn btn-secondary"> <i class="fa-solid fa-circle-arrow-left"></i> Retour </a>
+		<a href="{{ path('audit_view', {'id': reponse.audit.id}) }}" class="btn btn-secondary"> <i class="fa-solid fa-circle-arrow-left"></i> Retour </a>
 
 		<div class="content-card-user-information mt-3">
 			<section class="app-user-view-account">
@@ -23,7 +23,7 @@
 
 					<!-- User Sidebar -->
 					<div class="col-12  col-md-6 order-1 order-md-0">
-						{{ include ('global/card/_card_probleme_information.html.twig', {probleme :probleme}) }}
+						{{ include ('global/card/_card_reponse_information.html.twig', {reponse :reponse}) }}
 					</div>
 					<!--/ User Sidebar -->
 

@@ -99,7 +99,7 @@
                                     <i class="fa fa-pencil-square" aria-hidden="true"></i>
                                 </a>
                                 
-                                {% if  audit.isActive == constant('App\\Entity\\Probleme::ACTIVE_YES') %}
+                                {% if  audit.isActive == constant('App\\Entity\\Reponse::ACTIVE_YES') %}
 									<a href="{{ path('audit_delete', {'id': audit.id}) }}" class="btn btn-secondary" onclick="confirmation('{{ path('audit_delete', {'id': audit.id}) }}','Êtes-vous sûr(e) de vouloir supprimer cet Audit?')">
                                     <i class="fa fa-trash" aria-hidden="true"></i>
                                     </a>	

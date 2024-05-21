@@ -13,7 +13,7 @@
                                 <img class="img-fluid rounded mt-3 mb-2" src="{{vich_uploader_asset(user, 'avatarFile')}}" height="110" width="110" alt="User avatar" />
                             {% endif %} #}
                             <div class="user-info text-center">
-                                <h4>{{ probleme.titre }}</h4>
+                                <h4>Réponse-{{ reponse.id }}</h4>
                     
                         </div>
                     </div>
@@ -22,23 +22,23 @@
                         <ul class="list-unstyled ">
                             <li class="mb-75">
                                 <span class="fw-bolder me-25">Titre du réponse:</span>
-                                <span>{{ probleme.titre }}</span>
+                                <span>{{ reponse.titre }}</span>
                             </li>
                             <li class="mb-75">
                                 <span class="fw-bolder me-25">Description</span>
-                                <span>{{ probleme.description }}</span>
+                                <span>{{ reponse.description }}</span>
                             </li>
                             <li class="mb-75">
                                 <span class="fw-bolder me-25">Date d'ajout:</span>
-                                <span class="badge bg-light-success">{{ probleme.DateAjout!=null?probleme.DateAjout.format('Y-m-d'):"" }}</span>
+                                <span class="badge bg-light-success">{{ reponse.DateAjout!=null?reponse.DateAjout.format('Y-m-d'):"" }}</span>
                             </li>
                             <li class="mb-75">
                                 <span class="fw-bolder me-25">Auteur:</span>
-                                 <span>{{ probleme.auteur != null?probleme.auteur.fullName:"Néant" }}</span> 
+                                 <span>{{ reponse.auteur != null?reponse.auteur.fullName:"Néant" }}</span> 
                             </li>
                             <li class="mb-75">
                                 <span class="fw-bolder me-25">Telecharger le fichier joint:</span>
-                                 <a class="badge bg-light-primary" href="{{ path('probleme_download', {'id': probleme.id}) }}"><span>Cliquez ici</span></a>
+                                 <a class="badge bg-light-primary" href="{{ path('reponse_download', {'id': reponse.id}) }}"><span>Cliquez ici</span></a>
                             </li>
                             
                             

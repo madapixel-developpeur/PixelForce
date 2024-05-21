@@ -1,16 +1,16 @@
 <?php
 namespace App\Entity;
 
-use App\Repository\ProblemeRepository;
+use App\Repository\ReponseRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=ProblemeRepository::class)
+ * @ORM\Entity(repositoryClass=ReponseRepository::class)
  */
-class Probleme
+class Reponse
 {
     const ACTIVE_YES = 1;
     const ACTIVE_NO = 0;

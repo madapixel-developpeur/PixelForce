@@ -62,24 +62,24 @@ class Audit
     private $secteur;
 
     /**
-     * @ORM\OneToMany(targetEntity=Probleme::class, mappedBy="audit")
+     * @ORM\OneToMany(targetEntity=Reponse::class, mappedBy="audit")
      */
-    private $allProblemes;
+    private $allReponses;
 
     /**
-     * @return Collection|Probleme[]
+     * @return Collection|Reponse[]
      */
-    public function getActiveProblemes(): Collection
+    public function getActiveReponses(): Collection
     {
-        return $this->allProblemes->filter(function(Probleme $probleme) {
-            return $probleme->getIsActive()==Probleme::ACTIVE_YES;
+        return $this->allReponses->filter(function(Reponse $probleme) {
+            return $probleme->getIsActive()==Reponse::ACTIVE_YES;
         });
     }
 
 
     public function __construct()
     {
-        $this->allProblemes = new ArrayCollection();
+        $this->allReponses = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -136,29 +136,29 @@ class Audit
     }
 
     /**
-     * @return Collection<int, Probleme>
+     * @return Collection<int, Reponse>
      */
-    public function getAllProblemes(): Collection
+    public function getAllReponses(): Collection
     {
-        return $this->allProblemes;
+        return $this->allReponses;
     }
 
-    public function addAllProbleme(Probleme $allProbleme): static
+    public function addAllReponse(Reponse $allReponse): static
     {
-        if (!$this->allProblemes->contains($allProbleme)) {
-            $this->allProblemes->add($allProbleme);
-            $allProbleme->setAudit($this);
+        if (!$this->allReponses->contains($allReponse)) {
+            $this->allReponses->add($allReponse);
+            $allReponse->setAudit($this);
         }
 
         return $this;
     }
 
-    public function removeAllProbleme(Probleme $allProbleme): static
+    public function removeAllReponse(Reponse $allReponse): static
     {
-        if ($this->allProblemes->removeElement($allProbleme)) {
+        if ($this->allReponses->removeElement($allReponse)) {
             // set the owning side to null (unless already changed)
-            if ($allProbleme->getAudit() === $this) {
-                $allProbleme->setAudit(null);
+            if ($allReponse->getAudit() === $this) {
+                $allReponse->setAudit(null);
             }
         }
 
