@@ -99,13 +99,14 @@
                                 {% set agentSecteur = repoAgentSecteur.findOneBy({'secteur' : mySector, 'agent' : agent}) %}
                                 
                                 {% if agentSecteur.statut == false or agentSecteur.statut is null %}
-                                    <a href="{{ path('coach_agent_secteur_validate', {'agentSecteur': agentSecteur.id, 'pageReloaded': 'true'}) }}" class="ms-1 btn btn-success">
+                                    <a href="{{ path('coach_agent_secteur_validate', {'agentSecteur': agentSecteur.id, 'pageReloaded': 'true'}) }}" class="ms-1 btn btn-success" onclick="confirmation('{{ path('coach_agent_secteur_validate', {'agentSecteur': agentSecteur.id, 'pageReloaded': 'true'}) }}','Êtes-vous sûr(e) de vouloir valider cet Agent?')">
                                         <i class="fa-solid fa-circle-check"></i> Valider
                                     </a>
                                 {% else %}
-                                    <a href="{{ path('coach_agent_secteur_invalidate', {'agentSecteur': agentSecteur.id, 'pageReloaded': 'true'}) }}" class="ms-1 btn btn-danger" onclick="return confirm('Êtes vous vraiment sûr de bloquer cet agent de ce secteur?')">
+                                    <a href="{{ path('coach_agent_secteur_invalidate', {'agentSecteur': agentSecteur.id, 'pageReloaded': 'true'}) }}" class="ms-1 btn btn-danger" onclick="confirmation('{{ path('coach_agent_secteur_invalidate', {'agentSecteur': agentSecteur.id, 'pageReloaded': 'true'}) }}','Êtes-vous sûr(e) de vouloir bloquer cet Agent?')">
                                         <i class="fa-solid fa-circle-minus"></i> Bloquer
                                     </a>
+
                                 {% endif %}
 
                               
