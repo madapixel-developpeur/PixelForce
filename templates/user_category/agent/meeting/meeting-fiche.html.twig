@@ -112,7 +112,7 @@
             {% if meeting.meetingState.name == "En attente" %}<button class="btn btn-primary" type="button"  onclick="endMeeting({{meeting.id}})">Marquer comme terminé</button>{% endif %}
             {% if meeting.audit != null  %}
                 {% if meeting.audit.secteur != null  %}
-                <a class="btn btn-outline-warning" href="{{meeting.audit.secteur.googleForms}}" target="_blank" >Acceder aux google Form</a>
+                <a class="btn btn-outline-warning" href="{{meeting.audit.secteur.googleForms}}" target="_blank" >Accéder aux formulaires </a>
                 {% endif %}
             {% endif %}
         </div>
