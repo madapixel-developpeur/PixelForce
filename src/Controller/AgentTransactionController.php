@@ -3,16 +3,17 @@
 
 namespace App\Controller;
 
-use App\Entity\UserTransaction;
 use App\Form\RetraitFormType;
+use App\Entity\UserTransaction;
 use App\Repository\SecteurRepository;
-use App\Repository\UserTransactionRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Knp\Component\Pager\PaginatorInterface;
+use App\Repository\UserTransactionRepository;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\HttpFoundation\Session\Storage\SessionStorageInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Session\Storage\SessionStorageInterface;
 /**
  * @Route("/agent/transaction")
  */
@@ -24,7 +25,7 @@ class AgentTransactionController extends AbstractController
     /**
      * @Route("/retrait", name="agent_transaction_retrait")
      */
-    public function retrait(Request $request){
+    public function retrait(Request $request,PaginatorInterface $paginator){
         $secteurId =  $this->session->get('secteurId');
         $secteur = $this->secteurRepository->find($secteurId);
         $form = $this->createForm(RetraitFormType::class);
@@ -55,10 +56,15 @@ class AgentTransactionController extends AbstractController
                 $this->addFlash("danger", $e->getMessage());
             }
         }
-
+        $history = $paginator->paginate(
+            $this->userTransactionRepository->getHistory($user, [$secteurId]),
+            $request->query->getInt('page', 1),
+            20
+        );
         return $this->render('user_category/agent/transaction/retrait.html.twig', [
             'form' => $form->createView(),   
-            'solde'  => $userSolde      
+            'solde'  => $userSolde,      
+            'history'  => $history,      
         ]);
     }
 }

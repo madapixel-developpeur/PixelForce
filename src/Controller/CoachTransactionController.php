@@ -3,16 +3,17 @@
 
 namespace App\Controller;
 
-use App\Entity\UserTransaction;
 use App\Form\RetraitFormType;
+use App\Entity\UserTransaction;
 use App\Repository\SecteurRepository;
-use App\Repository\UserTransactionRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Knp\Component\Pager\PaginatorInterface;
+use App\Repository\UserTransactionRepository;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\HttpFoundation\Session\Storage\SessionStorageInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Session\Storage\SessionStorageInterface;
 /**
  * @Route("/coach/transaction")
  */
@@ -24,7 +25,7 @@ class CoachTransactionController extends AbstractController
     /**
      * @Route("/retrait", name="coach_transaction_retrait")
      */
-    public function retrait(Request $request){
+    public function retrait(Request $request,PaginatorInterface $paginator){
         
         $user = (object)$this->getUser();
         $secteur = $user->getUniqueCoachSecteur();
@@ -51,10 +52,16 @@ class CoachTransactionController extends AbstractController
                 $this->addFlash("danger", $e->getMessage());
             }
         }
+        $history = $paginator->paginate(
+            $this->userTransactionRepository->getHistory($user,  [$secteur->getId()]),
+            $request->query->getInt('page', 1),
+            20
+        );
 
         return $this->render('user_category/coach/transaction/retrait.html.twig', [
             'form' => $form->createView(),  
-            'solde'  => $userSolde             
+            'solde'  => $userSolde    ,
+            'history'  => $history,          
         ]);
     }
 }

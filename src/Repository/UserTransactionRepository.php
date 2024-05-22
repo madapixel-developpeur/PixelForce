@@ -61,22 +61,48 @@ class UserTransactionRepository extends ServiceEntityRepository
    }
 
    public function getNumberOfPendingRetrait($user,$secteurIds){
-    $qb = $this->createQueryBuilder('u');
+        $qb = $this->createQueryBuilder('u');
 
-    $qb->select('COUNT(u.id)')
-        ->leftJoin('u.secteur', 's')
-        ->andWhere('u.status = :statusCreated')
-        ->setParameter('statusCreated', UserTransaction::STATUS_CREATED)
-        ->andWhere('u.user = :user')
-        ->setParameter('user', $user);
-    
-    if ($secteurIds) {
-        $qb->andWhere('s.id in (:secteurIds)')
-        ->setParameter('secteurIds', $secteurIds);
+        $qb->select('COUNT(u.id)')
+            ->leftJoin('u.secteur', 's')
+            ->andWhere('u.status = :statusCreated')
+            ->andWhere('u.type = :type')
+            ->setParameter('statusCreated', UserTransaction::STATUS_CREATED)
+            ->setParameter('type', UserTransaction::TYPE_RETRAIT)
+            ->andWhere('u.user = :user')
+            ->setParameter('user', $user);
+        
+        if ($secteurIds) {
+            $qb->andWhere('s.id in (:secteurIds)')
+            ->setParameter('secteurIds', $secteurIds);
+        }
+
+        return (int) $qb->getQuery()->getSingleScalarResult();
+   }
+
+   public function getHistoryQuery($user,$secteurIds){
+        $qb = $this->createQueryBuilder('u');
+
+        $qb->select('u')
+            ->leftJoin('u.secteur', 's')
+            ->andWhere('u.type = :type')
+            ->setParameter('type', UserTransaction::TYPE_RETRAIT)
+            ->andWhere('u.user = :user')
+            ->setParameter('user', $user);
+        
+        if ($secteurIds) {
+            $qb->andWhere('s.id in (:secteurIds)')
+            ->setParameter('secteurIds', $secteurIds);
+        }
+        return $qb ->orderBy('u.createdAt', 'DESC');
     }
 
-    return (int) $qb->getQuery()->getSingleScalarResult();
-   }
+   public function getHistory($user,$secteurIds){
+        $qb = $this->getHistoryQuery($user,$secteurIds);
+        return $qb->getQuery()->getResult();
+    }
+
+   
 
 //    /**
 //     * @return UserTransaction[] Returns an array of UserTransaction objects
