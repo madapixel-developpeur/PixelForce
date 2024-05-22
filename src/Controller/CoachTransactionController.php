@@ -35,6 +35,10 @@ class CoachTransactionController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             try{
                 $data = $form->getData();
+                $countPendintRetrait = $this->userTransactionRepository->getNumberOfPendingRetrait($user, [$secteur->getId()]);
+                if($countPendintRetrait){
+                    throw new \Exception('Une demande de retrait est déjà en cours.');
+                }
                 if($data->getAmount() > $userSolde){
                     throw new \Exception('Solde insuffisant');
                 }
