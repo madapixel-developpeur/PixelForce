@@ -44,10 +44,10 @@ class UserTransactionRepository extends ServiceEntityRepository
        $qb = $this->createQueryBuilder('u')
        ->select('coalesce(sum(u.amount * (CASE WHEN u.sortie = 1 THEN -1 ELSE 1 END)), 0) as solde')
        ->leftJoin('u.secteur', 's')
-       ->andWhere('u.status >= :statusCreated')
+       ->andWhere('u.status > :statusCreated')
        ->setParameter('statusCreated', UserTransaction::STATUS_CREATED)
-           ->andWhere('u.user = :user')
-           ->setParameter('user', $user);
+        ->andWhere('u.user = :user')
+        ->setParameter('user', $user);
 
     if ($secteurIds) {
         $qb->andWhere('s.id in (:secteurIds)')
@@ -58,6 +58,24 @@ class UserTransactionRepository extends ServiceEntityRepository
            ->getScalarResult()
        ;
        return count($result) > 0 ? floatval($result[0]['solde']) : 0;
+   }
+
+   public function getNumberOfPendingRetrait($user,$secteurIds){
+    $qb = $this->createQueryBuilder('u');
+
+    $qb->select('COUNT(u.id)')
+        ->leftJoin('u.secteur', 's')
+        ->andWhere('u.status = :statusCreated')
+        ->setParameter('statusCreated', UserTransaction::STATUS_CREATED)
+        ->andWhere('u.user = :user')
+        ->setParameter('user', $user);
+    
+    if ($secteurIds) {
+        $qb->andWhere('s.id in (:secteurIds)')
+        ->setParameter('secteurIds', $secteurIds);
+    }
+
+    return (int) $qb->getQuery()->getSingleScalarResult();
    }
 
 //    /**

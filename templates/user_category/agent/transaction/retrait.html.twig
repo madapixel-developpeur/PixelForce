@@ -19,6 +19,9 @@
 					{{ form_start(form) }}
 					<div class="row">
 						<div class="col-12">
+							<p class="mb-3">Solde actuel : <span class="h4">  {{ solde }}</span></p>
+						</div>
+						<div class="col-12">
 							<div class="mb-3">
                                 {{form_label(form.amount)}}
                                 {{form_widget(form.amount,{ 'attr': {'class': 'form-control'} })}}

@@ -30,10 +30,11 @@ class CoachTransactionController extends AbstractController
         $secteur = $user->getUniqueCoachSecteur();
         $form = $this->createForm(RetraitFormType::class);
         $form->handleRequest($request);
+        $userSolde = $this->userTransactionRepository->getSolde($user, [$secteur->getId()]);
         if ($form->isSubmitted() && $form->isValid()) {
             try{
                 $data = $form->getData();
-                if($data->getAmount() > $this->userTransactionRepository->getSolde($user, [$secteur->getId()])){
+                if($data->getAmount() > $userSolde){
                     throw new \Exception('Solde insuffisant');
                 }
                 $data->setCreatedAt(new \DateTimeImmutable());
@@ -52,7 +53,8 @@ class CoachTransactionController extends AbstractController
         }
 
         return $this->render('user_category/coach/transaction/retrait.html.twig', [
-            'form' => $form->createView(),          
+            'form' => $form->createView(),  
+            'solde'  => $userSolde             
         ]);
     }
 }

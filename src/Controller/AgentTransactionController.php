@@ -30,10 +30,15 @@ class AgentTransactionController extends AbstractController
         $form = $this->createForm(RetraitFormType::class);
         $user = $this->getUser();
         $form->handleRequest($request);
+        $userSolde = $this->userTransactionRepository->getSolde($user, [$secteurId]);
         if ($form->isSubmitted() && $form->isValid()) {
             try{
+                $countPendintRetrait = $this->userTransactionRepository->getNumberOfPendingRetrait($user, [$secteurId]);
+                if($countPendintRetrait){
+                    throw new \Exception('Une demande de retrait est déjà en cours.');
+                }
                 $data = $form->getData();
-                if($data->getAmount() > $this->userTransactionRepository->getSolde($user, [$secteurId])){
+                if($data->getAmount() > $userSolde){
                     throw new \Exception('Solde insuffisant');
                 }
                 $data->setCreatedAt(new \DateTimeImmutable());
@@ -52,7 +57,8 @@ class AgentTransactionController extends AbstractController
         }
 
         return $this->render('user_category/agent/transaction/retrait.html.twig', [
-            'form' => $form->createView(),          
+            'form' => $form->createView(),   
+            'solde'  => $userSolde      
         ]);
     }
 }
