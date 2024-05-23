@@ -12,6 +12,7 @@
 {% block stylesheets %}
     {{ parent() }}
     {{ encore_entry_link_tags('vuexy_dashboard_ecommerce') }}
+    <link rel="stylesheet" href="{{asset('assets/css/stepper.css')}}">
 {% endblock %}
 
 {% block body %}
@@ -151,6 +152,36 @@
                     </div>
                 </div>
                 <!--/ Statistics Card -->
+            </div>
+            <div class="">
+                <div class="card card-statistics">
+                    <div class="card-header">
+                        <h4 class="card-title">Progression</h4>
+                    </div>
+                    <div class="card-body statistics-body">
+                        <div class="steps d-flex flex-wrap flex-sm-nowrap justify-content-between padding-top-2x padding-bottom-1x">
+                            <div class="step completed">
+                                <div class="step-icon-wrap">
+                                <div class="step-icon"><i class="fa fa-check"></i></div>
+                                </div>
+                                <h4 class="step-title">Confirmed Order</h4>
+                            </div>
+                            <div class="step completed">
+                                <div class="step-icon-wrap">
+                                <div class="step-icon"><i class="pe-7s-config"></i></div>
+                                </div>
+                                <h4 class="step-title">Processing Order</h4>
+                            </div>
+                            <div class="step current">
+                                <div class="step-icon-wrap">
+                                <div class="step-icon"><i class="pe-7s-medal"></i></div>
+                                </div>
+                                <h4 class="step-title">Quality Check</h4>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="row match-height">
