@@ -219,7 +219,7 @@ class AgentAccountController extends AbstractController
 
 
         $positionSteps = [
-            ['position' => 1, 'label' => 'Avoir au moins 5 filleuls directs et au moins 1000 € de CA'],
+            ['position' => 1, 'label' => 'Avoir au moins 5 filleuls directs avec au moins 1000 € de CA au total'],
             ['position' => 2, 'label' => 'Avoir au moins 25 membres dans son équipe'],
             ['position' => 3, 'label' => 'Avoir au moins 100 membres dans son équipe'],
         ];
