@@ -14,25 +14,30 @@
         <div class="filter-wrap">
             
             {{ form_start(form, {'attr': {'class': 'filter-form', 'id': 'product-filter-form'}}) }}
-                <div class="my-form-widget">
-                    {{form_label(form.status)}}
-                    {{form_widget(form.status)}}
-                    {{form_errors(form.status)}}
+                <div class="col-12 col-md-3">
+                        {{form_label(form.status)}}
+                        {{form_widget(form.status)}}
+                        {{form_errors(form.status)}}
                 </div>
-                <div class="my-form-widget">
-                    {{form_label(form.dateMin)}}
-                    {{form_widget(form.dateMin)}}
-                    {{form_errors(form.dateMin)}}
+                <div class="col-12 col-md-2">
+                        {{form_label(form.dateMin)}}
+                        {{form_widget(form.dateMin)}}
+                        {{form_errors(form.dateMin)}}
                 </div>
-                <div class="my-form-widget">
-                    {{form_label(form.dateMax)}}
-                    {{form_widget(form.dateMax)}}
-                    {{form_errors(form.dateMax)}}
+                <div class="col-12 col-md-2">
+                        {{form_label(form.dateMax)}}
+                        {{form_widget(form.dateMax)}}
+                        {{form_errors(form.dateMax)}}
                 </div>
-                <div class="my-form-widget">
-                    {{form_label(form.clientName)}}
-                    {{form_widget(form.clientName)}}
-                    {{form_errors(form.clientName)}}
+                <div class="col-12 col-md-2">
+                        {{form_label(form.clientName)}}
+                        {{form_widget(form.clientName)}}
+                        {{form_errors(form.clientName)}}
+                </div>
+                <div class="col-12  col-md-2">
+                        {{form_label(form.referenceVente)}}
+                        {{form_widget(form.referenceVente)}}
+                        {{form_errors(form.referenceVente)}}
                 </div>
                 
                 <div class="btn-wrap">
@@ -62,6 +67,7 @@
                         <th>Client</th>
                         <th>Pack - (service)</th>
                         <th>Montant</th>
+                        <th>Référence</th>
                         <th>Statut</th>
                         <th></th>
                     </tr>
@@ -73,6 +79,7 @@
                         <td>{{order.infoClient.firstName}} {{order.infoClient.lastName}}</td>
                         <td>{{order.package.name}} - ({{order.package.service}})</td>
                         <td class="text-right">{{order.amount | number_format(2, ',', ' ') }}</td>
+                        <td> <a href="{{ path('agent_order_list_digital',{'referenceVente' : order.infoClient.referenceVente }) }}">{{order.infoClient.referenceVente}}</a></td>
                         <td>{{order.statusStr}}</td>
                         <td class="col-action ">
                             <a href="{{path('agent_order_details_digital', {'id': order.id})}}">

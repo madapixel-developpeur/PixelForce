@@ -58,6 +58,13 @@ class OrderSearchTypeDigital extends AbstractType
                     'Payé' => 1,
                 ]
             ])
+            ->add('referenceVente', TextType::class, [
+                'required' => false,
+                'label' => 'Référence',
+                'attr' => [
+                    'class' => 'form-control'
+                ]
+            ])
         ;
     }
 

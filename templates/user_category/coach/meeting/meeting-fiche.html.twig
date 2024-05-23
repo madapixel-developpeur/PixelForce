@@ -48,9 +48,9 @@
                 <th>Référence</th>
                 <td> 
                     {% if meeting.audit != null %}
-                        {{ generateReference(meeting.userToMeet.agent.id,app.user.id,meeting.userToMeet.id,meeting.audit.id) }}
+                        <a href="{{ path('agent_order_list_digital',{'referenceVente' :  generateReference(meeting.userToMeet.agent.id,app.user.id,meeting.userToMeet.id,meeting.audit.id)   }) }}"> {{ generateReference(meeting.userToMeet.agent.id,app.user.id,meeting.userToMeet.id,meeting.audit.id) }}   <i class="fa fa-eye"></i></a>
                     {% else %}
-                       {{ generateReference(meeting.userToMeet.agent.id,app.user.id,meeting.userToMeet.id) }}
+                        <a href="{{ path('agent_order_list_digital',{'referenceVente' :  generateReference(meeting.userToMeet.agent.id,app.user.id,meeting.userToMeet.id)   }) }}">{{ generateReference(meeting.userToMeet.agent.id,app.user.id,meeting.userToMeet.id) }}  <i class="fa fa-eye"></i></a>
                     {% endif %}
                 </a> </td>
             </tr>

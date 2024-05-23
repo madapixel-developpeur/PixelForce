@@ -395,7 +395,7 @@
                                         {{secteur.longDescription | raw}}  
                                     </p>
                                     <h5>
-                                        Référence : {{ generateReference(app.user.id,app.user.id) }}
+                                       Référence : <a href="{{ path('agent_order_list_digital',{'referenceVente' : generateReference(app.user.id,app.user.id) }) }}">  {{ generateReference(app.user.id,app.user.id) }} <i class="fa fa-eye"></i></a>
                                     </h5>
                                     {# <a target="_blank" href="{{secteur.liens}}" class="card-link">Lien vers {{secteur.nom}}</strong></a> #}
                                 </div>
