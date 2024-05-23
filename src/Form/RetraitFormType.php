@@ -5,11 +5,12 @@ namespace App\Form;
 
 use App\Entity\UserTransaction;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Positive;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class RetraitFormType extends AbstractType
 {
@@ -26,6 +27,15 @@ class RetraitFormType extends AbstractType
                 'constraints' => [
                     new NotBlank(["message" => "Montant obligatoire"]),
                     new Positive(["message" => "Montant invalide"])
+                ]
+            ])
+            ->add('rib', TextType::class, [
+                'label' => 'RIB',
+                'attr' => [
+                    'placeholder' => 'Votre RIB'
+                ],
+                'constraints' => [
+                    new NotNull([],'champ obligatoire')
                 ]
             ])
         ;

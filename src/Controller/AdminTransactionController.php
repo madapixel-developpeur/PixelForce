@@ -60,7 +60,8 @@ class AdminTransactionController extends AbstractController
             ['prop' => 'status'],
             ['prop' => 'dateMin', 'col' => 'createdAt', 'op' => '>='],
             ['prop' => 'dateMax', 'col' => 'createdAt', 'op' => '<='],
-            ['prop' => 'userName', 'col' => "concat(concat(coalesce(u.prenom, ''), ' '), u.nom)", 'alias' => null, 'op' => 'LIKE']
+            ['prop' => 'userName', 'col' => "concat(concat(coalesce(u.prenom, ''), ' '), u.nom)", 'alias' => null, 'op' => 'LIKE'],
+            ['prop' => 'rib', 'op' => 'LIKE']
         ];
 
         $filter = [];

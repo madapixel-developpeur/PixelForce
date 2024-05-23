@@ -57,6 +57,10 @@ class RetraitFilterType extends AbstractType
             ],
             "required" => false
         ])
+        ->add('rib', TextType::class, [
+            "label" => "RIB",
+            "required" => false
+        ])
         ;
 
     }

@@ -23,6 +23,11 @@
 							</div>
 							<div class="col-12">
 								<div class="mb-3">
+									{{form_label(form.rib)}}
+									{{form_widget(form.rib,{ 'attr': {'class': 'form-control'} })}}
+									{{form_errors(form.rib)}}
+								</div>
+								<div class="mb-3">
 									{{form_label(form.amount)}}
 									{{form_widget(form.amount,{ 'attr': {'class': 'form-control'} })}}
 									{{form_errors(form.amount)}}
@@ -59,6 +64,7 @@
 							<th scope="col" class="text-center">#</th>
 							<th scope="col" class="text-center">Date</th>
 							<th scope="col" class="text-center">Montant</th>
+							<th scope="col" class="text-center">RIB</th>
 							<th scope="col" class="text-center table-th-notSortable">Statut</th>
 						</tr>
 					</thead>
@@ -68,6 +74,7 @@
 							 	<td>{{item.id }}</td>
 							 	<td>{{item.createdAt | date("d/m/Y H:i")}}</td>
 								<td class="text-right">{{item.amount | number_format(2, ',', ' ') }} €</td>
+								<td>{{item.rib }}</td>
 								<td>{{item.statusRetraitStr}}</td>
 							</tr>
 						{% endfor %}
@@ -81,4 +88,8 @@
 			</div>
         </div>
 	</div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('datatableJs')}}
 {% endblock %}

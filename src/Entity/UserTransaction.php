@@ -66,6 +66,12 @@ class UserTransaction
      */
     private $secteur;
 
+
+     /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $rib;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -174,5 +180,25 @@ class UserTransaction
             return 'Refusé';
         }
         return 'En attente';
+    }
+
+    /**
+     * Get the value of rib
+     */ 
+    public function getRib()
+    {
+        return $this->rib;
+    }
+
+    /**
+     * Set the value of rib
+     *
+     * @return  self
+     */ 
+    public function setRib($rib)
+    {
+        $this->rib = $rib;
+
+        return $this;
     }
 }

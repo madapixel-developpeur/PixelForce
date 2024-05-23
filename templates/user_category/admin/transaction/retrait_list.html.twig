@@ -15,21 +15,21 @@
             
             {{ form_start(form, {'attr': {'class': 'filter-form', 'id': 'product-filter-form'}}) }}
                 <div class="row">
-                <div class="col-12 col-md-3">
+                <div class="col-12 col-md-2">
                 <div class="my-form-widget">
                     {{form_label(form.status)}}
                     {{form_widget(form.status)}}
                     {{form_errors(form.status)}}
                 </div>
                 </div>
-                <div class="col-12 col-md-3">
+                <div class="col-12 col-md-2">
                 <div class="my-form-widget">
                     {{form_label(form.dateMin)}}
                     {{form_widget(form.dateMin)}}
                     {{form_errors(form.dateMin)}}
                 </div>
                 </div>
-                <div class="col-12 col-md-3">
+                <div class="col-12 col-md-2">
                 <div class="my-form-widget">
                     {{form_label(form.dateMax)}}
                     {{form_widget(form.dateMax)}}
@@ -41,6 +41,13 @@
                     {{form_label(form.userName)}}
                     {{form_widget(form.userName)}}
                     {{form_errors(form.userName)}}
+                </div>
+                </div>
+                <div class="col-12 col-md-3">
+                <div class="my-form-widget">
+                    {{form_label(form.rib)}}
+                    {{form_widget(form.rib)}}
+                    {{form_errors(form.rib)}}
                 </div>
                 </div>
                 <div class="col-12 col-md-3">
@@ -85,6 +92,7 @@
                         <th>Utilisateur</th>
                         <th>Secteur</th>
                         <th>Montant</th>
+                        <th>RIB</th>
                         <th>Statut</th>
                         <th></th>
                     </tr>
@@ -96,6 +104,7 @@
                         <td>{{item.user.prenom}} {{item.user.nom}} ({{item.user.stringRole}})</td>
                         <td>{{item.secteur.nom}}</td>
                         <td class="text-right">{{item.amount | number_format(2, ',', ' ') }} €</td>
+                        <td>{{item.rib}}</td>
                         <td>{{item.statusRetraitStr}}</td>
                         <td class="col-action d-flex align-items-center justify-content-center">
                         {% if item.status == constant('App\\Entity\\UserTransaction::STATUS_CREATED') %}
