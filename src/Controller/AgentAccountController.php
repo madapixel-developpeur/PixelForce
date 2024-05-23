@@ -162,7 +162,7 @@ class AgentAccountController extends AbstractController
     /**
      * @Route("/agent/dashboard/secteur/{id}", name="agent_dashboard_secteur")
      */
-    public function agent_dashboard_secteur( Request $request, PaginatorInterface $paginator, Secteur $secteur, StatAgentService $statAgentService,UserRepository $userRepository, UserTransactionRepository $userTransactionRepository)
+    public function agent_dashboard_secteur( Request $request, PaginatorInterface $paginator, Secteur $secteur, StatAgentService $statAgentService,UserRepository $userRepository, UserTransactionRepository $userTransactionRepository, CategorieFormationRepository $categorieFormationRepository)
     {
       
         //dd($secteur);
@@ -216,6 +216,16 @@ class AgentAccountController extends AbstractController
         //dd($pbb_summary);
         $chiffreAffaireTotal = $pbb_summary['chiffreAffaire'] + ($statVente != null ? $statVente['ca'] : 0);
         $nbVentesTotal = count($pbb_summary['orders']) + ($statVente != null ? $statVente['nbr_ventes'] : 0);
+
+
+        $positionSteps = [
+            ['position' => 1, 'label' => 'Avoir au moins 5 filleuls directs et au moins 1000 € de CA'],
+            ['position' => 2, 'label' => 'Avoir au moins 25 membres dans son équipe'],
+            ['position' => 3, 'label' => 'Avoir au moins 100 membres dans son équipe'],
+        ];
+
+        $formationCategoriesOrdered = $categorieFormationRepository->getValidCategoriesOrdered();
+
         return $this->render('user_category/agent/dashboard_secteur.html.twig', [
             'secteur' => $secteur,
             'firstFormation' => $firstFormation,
@@ -238,6 +248,8 @@ class AgentAccountController extends AbstractController
             "agent"=> $agent,
             'statDigital' => $statDigital,
             'soldeRemuneration' => $soldeRemuneration,
+            'positionSteps' => $positionSteps,
+            'formationCategoriesOrdered' => $formationCategoriesOrdered
         ]);
     }
 

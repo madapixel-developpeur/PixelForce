@@ -4,6 +4,8 @@ namespace App\Repository;
 
 use App\Entity\CategorieFormation;
 use App\Entity\SearchEntity\CategorieFormationSearch;
+use App\Util\Search\Constants;
+use App\Util\Status;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -95,6 +97,18 @@ class CategorieFormationRepository extends ServiceEntityRepository
     
         $result = $qb->getQuery()->getOneOrNullResult();
         return $result;
+    }
+
+    public function getValidCategoriesOrdered()
+    {
+        return $this->createQueryBuilder('cf')
+            ->select('cf')
+            ->andwhere('cf.statut = :statut')
+            ->setParameter('statut', Status::VALID)
+            ->addOrderBy('cf.ordreCatFormation','ASC')
+            ->getQuery()
+            ->getResult()
+        ;
     }
 
     public function getAccessibleFonctionnalites($rank){

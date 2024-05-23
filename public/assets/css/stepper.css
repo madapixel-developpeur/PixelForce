@@ -13,8 +13,7 @@
     text-align: center
 }
 
-.steps .step.completed .step-icon-wrap::before,
-.steps .step.current .step-icon-wrap::before {
+.steps .step .step-icon-wrap::before {
     display: block;
     position: absolute;
     top: 50%;
@@ -27,13 +26,13 @@
     z-index: 1
 }
 
-.steps .step .step-icon-wrap::before {
+/* .steps .step .step-icon-wrap::before {
     left: 0
 }
 
 .steps .step .step-icon-wrap::after {
     right: 0
-}
+} */
 
 .steps .step .step-icon {
     display: inline-block;
@@ -65,12 +64,21 @@
     display: none
 }
 
-.steps .step.completed .step-icon-wrap::before,
+.steps .step.completed .step-icon-wrap::before {
+    background-color: #88C90D;
+}
+
 .steps .step.current .step-icon-wrap::before {
     background-color: #0da9ef
 }
 
 .steps .step.completed .step-icon {
+    border-color: #88C90D;
+    background-color: #88C90D;
+    color: #fff
+}
+
+.steps .step.current .step-icon {
     border-color: #0da9ef;
     background-color: #0da9ef;
     color: #fff
@@ -106,4 +114,20 @@
     .flex-xl-nowrap .step .step-icon-wrap::after {
         display: none
     }
+}
+
+.steps.formation-progression .step .step-icon-wrap {
+    height: 30px;
+}
+
+.steps.formation-progression .step .step-icon {
+    width: 30px;
+    height: 30px;
+    font-size: 14px;
+    line-height: 29px;
+}
+
+.steps.formation-progression .step .step-title {
+    font-size: 10px;
+    font-weight: 400;
 }
