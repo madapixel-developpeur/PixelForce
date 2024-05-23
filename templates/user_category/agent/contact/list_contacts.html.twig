@@ -117,7 +117,7 @@
 
                             </td>
                             <td>{{ information.stringType }}</td>
-                            <td>{{ generateReference(contact.agent.id,app.user.id,contact.id) }}</td>
+                            <td><a href="{{ path('agent_order_list_digital',{'referenceVente' : generateReference(contact.agent.id,app.user.id,contact.id)  }) }}"> {{ generateReference(contact.agent.id,app.user.id,contact.id) }} <i class="fa fa-eye"></i> </a></td>
                             <td class="d-flex justify-content-center">
                                 <a href="{{ path('agent_contact_view', {'id': contact.id}) }}" class="btn btn-secondary">
                                     <i class="fa-solid fa-eye"></i>
