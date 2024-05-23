@@ -29,7 +29,7 @@ class CoachTransactionController extends AbstractController
         
         $user = (object)$this->getUser();
         $secteur = $user->getUniqueCoachSecteur();
-        $form = $this->createForm(RetraitFormType::class);
+        $form = $this->createForm(RetraitFormType::class,null,[ 'rib' => $user->getRib() ]);
         $form->handleRequest($request);
         $userSolde = $this->userTransactionRepository->getSolde($user, [$secteur->getId()]);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -50,8 +50,10 @@ class CoachTransactionController extends AbstractController
                 $data->setStatus(UserTransaction::STATUS_CREATED);
                 $this->entityManager->persist($data);
                 $this->entityManager->flush();
-
                 $this->addFlash("success", "Retrait effectué avec succès");
+                if(strcasecmp($data->getRib(), $user->getRib()) != 0){
+                    return $this->redirectToRoute('coach_change_rib',['newRib'=>$data->getRib()]);  
+                }
             } catch(\Exception $e){
                 $this->addFlash("danger", $e->getMessage());
             }
@@ -66,6 +68,28 @@ class CoachTransactionController extends AbstractController
             'form' => $form->createView(),  
             'solde'  => $userSolde    ,
             'history'  => $history,          
+        ]);
+    }
+
+    /**
+     * @Route("/changer-rib/{newRib}", name="coach_change_rib")
+    */
+    public function changeRibBasedOnLastTransaction(Request $request,$newRib){
+        $user = (object)$this->getUser();
+        $oldRib = $user->getRib();
+        if ($request->getMethod() === Request::METHOD_POST) {
+            $decision = $request->request->get('decision');
+            if($decision == "1"){
+                $user->setRib($newRib);
+                $this->entityManager->persist($user);
+                $this->entityManager->flush();
+                $this->addFlash("success", "RIB changé avec succès");
+            }
+            return $this->redirectToRoute('coach_transaction_retrait');  
+        }
+        return $this->render('user_category/coach/transaction/change-rib-confirmation.html.twig',[
+            'newRib' => $newRib,  
+            'oldRib'  => $oldRib,
         ]);
     }
 }
