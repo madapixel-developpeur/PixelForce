@@ -88,7 +88,7 @@
                                  <span>{{ meeting.audit.propriétaire != null?meeting.audit.propriétaire.fullName:"Néant" }}</span> 
                             </li>
                             <li class="mb-75 text-center ">
-                                 <a class="btn btn-outline-primary m-4" {% if meeting.audit != null  %}href="{{ path('audit_view', { id: meeting.audit.getId() }) }}"{% endif %}>Détail de l'audit</a>
+                                 <a class="btn btn-outline-primary m-4" {% if meeting.audit != null  %}href="{{ path('meeting_audit_view', { 'id': meeting.getId() }) }}"{% endif %}>Détail de l'audit</a>
                             </li>
                            
                             
@@ -97,6 +97,11 @@
                     </div>
                 </td>
             <tr>
+            {% else %}
+            <tr>
+                <th class="pt-4">Audit</th>
+                <td><a class="btn btn-outline-success m-2" href="{{ path('meeting_audit_add', { id: meeting.getId() }) }}">Ajouter un audit</a></td>
+            </tr>
             {% endif %}
             <tr class="note-row">
                 <th>Note</th>

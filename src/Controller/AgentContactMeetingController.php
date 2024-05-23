@@ -150,10 +150,10 @@ class AgentContactMeetingController extends AbstractController
                 
                 $this->addFlash(
                    'success',
-                   "Rendez-vous programmé,Veuillez remplir les informations concernant l'Audit."
+                   "Votre rendez-vous a été programmé."
                 );
              
-                return $this->redirectToRoute('meeting_audit_add',['id'=>$meeting->getId()]);
+                return $this->redirectToRoute('agent_contact_meeting_fiche',['id'=>$meeting->getId()]);
             } catch(\Exception $ex){
                 $error = $ex->getMessage();
                 if($this->entityManager->getConnection()->isTransactionActive()) {
@@ -173,9 +173,20 @@ class AgentContactMeetingController extends AbstractController
      * @Route("/agent/contact/meeting/{id}/fiche", name="agent_contact_meeting_fiche")
      */
     public function agent_contact_meeting_fiche(Meeting $meeting)
-    {   
+    {  
         return $this->render('user_category/agent/meeting/meeting-fiche.html.twig', [
             'meeting' => $meeting
+        ]);
+    }
+    /**
+     * @Route("/agent/contact/meeting/audit/{id}/fiche", name="meeting_audit_view")
+     */
+    public function audit_view(Meeting $meeting)
+    {
+        
+        return $this->render('user_category/agent/audit/view_audit.html.twig', [
+            'audit' =>$meeting->getAudit(),
+            'meeting'=>$meeting
         ]);
     }
 

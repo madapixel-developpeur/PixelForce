@@ -86,7 +86,8 @@ class AuditController extends AbstractController
     {
         
         return $this->render('user_category/agent/audit/view_audit.html.twig', [
-            'audit' =>$audit
+            'audit' =>$audit,
+            'meeting'=>null
         ]);
     }
 

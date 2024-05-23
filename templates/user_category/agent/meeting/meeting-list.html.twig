@@ -86,7 +86,13 @@
                                 {{ generateReference(meeting.userToMeet.agent.id,app.user.id,meeting.userToMeet.id) }}
                             {% endif %}
                         </td>
-                        <td> <a class="btn bg-light-primary" {% if meeting.audit != null  %}href="{{ path('audit_view', { id: meeting.audit.getId() }) }}"{% endif %}>cliquez-ici</a> </td>
+                        <td> 
+                            {% if meeting.audit != null  %}
+                                <a class="btn btn-outline-primary " {% if meeting.audit != null  %}href="{{ path('meeting_audit_view', { 'id': meeting.getId() }) }}"{% endif %}>Détail</a>
+                            {% else %}
+                                <a class="btn btn-outline-success m-2" href="{{ path('meeting_audit_add', { id: meeting.getId() }) }}">Ajouter</a>
+                            {% endif %}
+                        </td>
                         
                         <td>
                             {% if meeting.meetingState.name == 'Annulé' %}
