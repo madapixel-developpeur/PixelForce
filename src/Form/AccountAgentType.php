@@ -82,6 +82,15 @@ class AccountAgentType extends AbstractType
                 'disabled' => true,
                 'required' => false,
             ])
+            ->add('rib', TextType::class, [
+                'label' => 'RIB',
+                'attr' => [
+                    'placeholder' => 'Votre RIB'
+                ],
+                'constraints' => [
+                    new NotNull([],'champ obligatoire')
+                ]
+            ])
         ;
     }
 }
