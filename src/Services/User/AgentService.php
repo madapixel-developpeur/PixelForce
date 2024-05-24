@@ -157,7 +157,7 @@ class AgentService
     }
 
 
-    public function getUnilevelChildren(User $user,int $currentLevel,bool $currentLoggedUser = false){
+    public function getUnilevelChildren(User $user,int $currentLevel,bool $currentLoggedUser = false, $limit=null){
         $data = [];
         $data['ID'] = $user->getId();
         $data['name'] = $user->getNom().' ' .($user->getPrenom()??'');
@@ -167,12 +167,14 @@ class AgentService
         $data['isLoggedUser'] = $currentLoggedUser;
         $data['positionName'] = $user->getUsername();
         
+        $limitEnv = $_ENV['LIMIT_NIVEAU_EQUIPE_LINEAIRE'];
+        if(!($limit && $limit <= $limitEnv)) $limit = $limitEnv;
         
         $children = $this->repoUser->findBy(['parrain'=>$user->getId()]);
-        if($currentLevel  <= $_ENV['LIMIT_NIVEAU_EQUIPE_LINEAIRE']){
+        if($currentLevel  <= $limit){
             foreach ($children as $child) {
                 $data['countChildren'] = count($children);
-                $data['children'][] = $this->getUnilevelChildren($child,$currentLevel+1,false);
+                $data['children'][] = $this->getUnilevelChildren($child,$currentLevel+1,false,$limit);
             }   
          }
         return $data;
