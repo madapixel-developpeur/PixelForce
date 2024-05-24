@@ -218,12 +218,6 @@ class AgentAccountController extends AbstractController
         $nbVentesTotal = count($pbb_summary['orders']) + ($statVente != null ? $statVente['nbr_ventes'] : 0);
 
 
-        $positionSteps = [
-            ['position' => 1, 'label' => 'Avoir au moins 5 filleuls directs avec au moins 1000 € de CA au total'],
-            ['position' => 2, 'label' => 'Avoir au moins 25 membres dans son équipe'],
-            ['position' => 3, 'label' => 'Avoir au moins 100 membres dans son équipe'],
-        ];
-
         $formationCategoriesOrdered = $categorieFormationRepository->getValidCategoriesOrdered();
 
         return $this->render('user_category/agent/dashboard_secteur.html.twig', [
@@ -248,7 +242,6 @@ class AgentAccountController extends AbstractController
             "agent"=> $agent,
             'statDigital' => $statDigital,
             'soldeRemuneration' => $soldeRemuneration,
-            'positionSteps' => $positionSteps,
             'formationCategoriesOrdered' => $formationCategoriesOrdered
         ]);
     }

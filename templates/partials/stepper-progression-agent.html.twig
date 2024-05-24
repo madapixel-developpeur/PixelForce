@@ -1,0 +1,16 @@
+<div class="mt-1 steps d-flex flex-wrap flex-sm-nowrap justify-content-between padding-top-2x padding-bottom-1x">
+    {% set isCompletedBefore = true %}
+    {% set positionSteps = remunerationService.getPositionSteps() %}
+    {% for step in positionSteps %}
+    {% set isLastStep = (loop.index == positionSteps|length) %}
+    {% set isCompleted = (step.position <= app.user.position) %}
+    {% set isCurrent = (isCompletedBefore and not isCompleted) %}
+    <div class="step {% if isCompleted %} completed {% endif %} {% if isCurrent %} current {% endif %}">
+        <div class="step-icon-wrap">
+        <div class="step-icon">{% if isCompleted and not isLastStep %}<i class="fa fa-check"></i>{% else %}{{step.position}}{% endif %}</div>
+        </div>
+        <h4 class="step-title">{{step.label}}</h4>
+    </div>
+    {% set isCompletedBefore = isCompleted %}
+    {% endfor %}
+</div>

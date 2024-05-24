@@ -17,6 +17,12 @@ class RemunerationService
     private $parameterBag;
     private $entityManager;
 
+    private const POSTION_STEPS = [
+        ['position' => 1, 'label' => 'Avoir au moins 5 filleuls directs avec au moins 1000 € de CA au total'],
+        ['position' => 2, 'label' => 'Avoir au moins 25 membres dans son équipe'],
+        ['position' => 3, 'label' => 'Avoir au moins 100 membres dans son équipe'],
+    ];
+
     public const CONDITIONS = [
         ["type"=> "vente", "condition"=> "\$userVenteId == \$user->getId()", "gain" => "\$amount * 0.5 * 0.2"],
         ["type"=> "audit", "condition"=> "\$auditAgentId == \$user->getId()", "gain" => "\$amount * 0.5 * 0.1"],
@@ -168,5 +174,9 @@ class RemunerationService
 
     public function getSoldeRemuneration($agent){
 
+    }
+
+    public static function getPositionSteps(){
+        return self::POSTION_STEPS;
     }
 }

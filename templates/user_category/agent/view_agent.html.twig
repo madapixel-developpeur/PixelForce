@@ -7,6 +7,7 @@
 {% block stylesheets %}
     {{ parent() }}
 	<link rel='stylesheet prefetch' href="{{ asset('app-assets/css/arbre/arbol.css')}}">
+	<link rel="stylesheet" href="{{asset('assets/css/stepper.css')}}">
 {% endblock %}
 
 {% block body %}
@@ -77,6 +78,15 @@
 					</div>
 					<!--/ User Sidebar -->
 				</div>
+
+				<div class="card card-statistics">
+                    <div class="card-header">
+                        <h4 class="card-title">Progression</h4>
+                    </div>
+                    <div class="card-body statistics-body">
+                        {% include 'partials/stepper-progression-agent.html.twig' %}
+                    </div>
+                </div>
 
 				<div class="row mb-5">
 					<!-- User Sidebar -->

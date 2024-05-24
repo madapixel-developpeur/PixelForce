@@ -10,6 +10,7 @@ twig:
         stripe_public_key: '%env(STRIPE_PUBLIC_KEY)%'
         configSecteurService: '@util.config'
         secteurRepository: '@App\Repository\SecteurRepository'
+        remunerationService: '@App\Services\RemunerationService'
         video_information_vimeo_src: '%env(VIDEO_INFORMATION_VIMEO_SRC)%'
         authService: '@util.auth'
         secteurDigitalId: '%env(SECTEUR_DIGITAL_ID)%'
