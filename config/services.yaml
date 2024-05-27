@@ -48,3 +48,8 @@ services:
 
     App\Twig\HelperFunction:
         tags: ['twig.extension']
+    
+     # Configuration du contrôleur d'erreur personnalisé
+    App\Controller\ErrorController:
+        tags: ['controller.service_arguments']
+
