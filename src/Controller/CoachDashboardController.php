@@ -79,6 +79,7 @@ class CoachDashboardController extends AbstractController
             'nbrRdv' => $nbrRdv,
             'nbrAgents' => $nbrAgents,
             'soldeRemuneration' => $soldeRemuneration,
+            'formations'=>null,
         ]);
     }
     /**
