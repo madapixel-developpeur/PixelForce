@@ -79,7 +79,10 @@
                         <td>{{order.infoClient.firstName}} {{order.infoClient.lastName}}</td>
                         <td>{{order.package.name}} - ({{order.package.service}})</td>
                         <td class="text-right">{{order.amount | number_format(2, ',', ' ') }}</td>
-                        <td> <a href="{{ path('agent_order_list_digital',{'referenceVente' : order.infoClient.referenceVente }) }}">{{order.infoClient.referenceVente}}</a></td>
+                        <td>
+                            <a href="{{ path('agent_order_list_digital',{'referenceVente' : order.infoClient.referenceVente }) }}">{{order.infoClient.referenceVente}}</a>
+                            {# <a class="p-2" href="#" onclick="copyLink('{{ url('agent_order_list_digital',{'referenceVente' : order.infoClient.referenceVente }) }}','Liens de la référence {{  order.infoClient.referenceVente }} copié avec succès') "><i class="fa-solid fa-copy"></i></a>  #}
+                        </td>
                         <td>{{order.statusStr}}</td>
                         <td class="col-action ">
                             <a href="{{path('agent_order_details_digital', {'id': order.id})}}">

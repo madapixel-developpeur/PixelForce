@@ -117,7 +117,10 @@
 
                             </td>
                             <td>{{ information.stringType }}</td>
-                            <td><a href="{{ path('agent_order_list_digital',{'referenceVente' : generateReference(contact.agent.id,app.user.id,contact.id)  }) }}"> {{ generateReference(contact.agent.id,app.user.id,contact.id) }} <i class="fa fa-eye"></i> </a></td>
+                            <td>
+                            <a href="{{ path('agent_order_list_digital',{'referenceVente' : generateReference(contact.agent.id,app.user.id,contact.id)  }) }}"> {{ generateReference(contact.agent.id,app.user.id,contact.id) }} </a>
+                            <a class="p-2" href="#" onclick="copyLink('{{ url('agent_order_list_digital',{'referenceVente' :  generateReference(contact.agent.id,app.user.id,contact.id) }) }}','Liens de la référence {{  generateReference(contact.agent.id,app.user.id,contact.id) }} copié avec succès') "><i class="fa-solid fa-copy"></i></a> 
+                            </td>
                             <td class="d-flex justify-content-center">
                                 <a href="{{ path('agent_contact_view', {'id': contact.id}) }}" class="btn btn-secondary">
                                     <i class="fa-solid fa-eye"></i>

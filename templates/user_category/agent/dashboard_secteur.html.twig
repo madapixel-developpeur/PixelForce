@@ -379,8 +379,10 @@
                                         {{secteur.longDescription | raw}}  
                                     </p>
                                     <h5>
-                                       Référence : <a href="{{ path('agent_order_list_digital',{'referenceVente' : generateReference(app.user.id,app.user.id) }) }}">  {{ generateReference(app.user.id,app.user.id) }} <i class="fa fa-eye"></i></a>
+                                       Référence : <a href="{{ path('agent_order_list_digital',{'referenceVente' : generateReference(app.user.id,app.user.id) }) }}">  {{ generateReference(app.user.id,app.user.id) }} </a>
+                                       <a class="p-2" href="#" onclick="copyLink('{{ url('agent_order_list_digital',{'referenceVente' : generateReference(app.user.id,app.user.id) }) }}','Liens de la référence {{ generateReference(app.user.id,app.user.id) }} copié avec succès') "><i class="fa-solid fa-copy"></i></a> 
                                     </h5>
+
                                     {# <a target="_blank" href="{{secteur.liens}}" class="card-link">Lien vers {{secteur.nom}}</strong></a> #}
                                 </div>
                             </div>
@@ -729,12 +731,6 @@
         });
     </script>
     <script>
-       
-        function copyLink($path) {
-			navigator.clipboard.writeText($path).then(function() {
-				Swal.fire("Lien copié", "Votre lien d'affiliation a été copié avec succès.", "success");
-			});
-        }
     </script>
     {% if firstFormation %}
     <script type="text/javascript">

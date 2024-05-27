@@ -1,6 +1,6 @@
-function copyLink($path) {
+function copyLink($path,text="Votre lien d'affiliation a été copié avec succès.") {
     navigator.clipboard.writeText($path).then(function() {
-        Swal.fire("Lien copié", "Votre lien d'affiliation a été copié avec succès.", "success");
+        Swal.fire("Lien copié",text, "success");
     });
 }
 
