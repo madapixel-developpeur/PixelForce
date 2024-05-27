@@ -20,6 +20,8 @@ class Formation
     const STATUT_BLOQUEE = 'bloquee';
     const STATUT_DISPONIBLE = 'disponible';
     const STATUT_TERMINER = 'terminer';
+
+    const TYPE_QUIZ = 2;
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -97,10 +99,22 @@ class Formation
      */
     private $statut;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $type;
+
+
+    /**
+     * @ORM\OneToMany(targetEntity=FormationQuizItem::class, mappedBy="formation")
+     */
+    private $formationQuizItems;
+
     public function __construct()
     {
         $this->medias = new ArrayCollection();
         $this->formationAgents = new ArrayCollection();
+        $this->formationQuizItems = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -342,5 +356,48 @@ class Formation
     public function isBrouillon(): ?bool
     {
         return $this->brouillon;
+    }
+
+
+    public function getType(): ?int
+    {
+        return $this->type;
+    }
+
+    public function setType(?int $type): self
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, FormationQuizItem>
+     */
+    public function getFormationQuizItems(): Collection
+    {
+        return $this->formationQuizItems;
+    }
+
+    public function addFormationQuizItem(FormationQuizItem $formationQuizItem): self
+    {
+        if (!$this->formationQuizItems->contains($formationQuizItem)) {
+            $this->formationQuizItems[] = $formationQuizItem;
+            $formationQuizItem->setFormation($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFormationQuizItem(FormationQuizItem $formationQuizItem): self
+    {
+        if ($this->formationQuizItems->removeElement($formationQuizItem)) {
+            // set the owning side to null (unless already changed)
+            if ($formationQuizItem->getFormation() === $this) {
+                $formationQuizItem->setFormation(null);
+            }
+        }
+
+        return $this;
     }
 }
