@@ -19,6 +19,7 @@
 				<div class="row">
 					<!-- User Sidebar -->
 					<div class="col-12 col-md-7 order-1 order-md-0">
+						{% set detailAgentCoach = true %}
 						{{ include ('global/card/_card_user_information.html.twig', {user : agent, secteurs: secteurs}) }}
 					</div>
 					<!--/ User Sidebar -->

@@ -20,6 +20,7 @@ use App\Repository\SecteurRepository;
 use App\Services\AgentSecteurService;
 use App\Entity\SearchEntity\UserSearch;
 use App\Repository\FormationRepository;
+use App\Services\Stat\StatAgentService;
 use App\Repository\CoachAgentRepository;
 use App\Repository\AgentSecteurRepository;
 use App\Repository\CoachSecteurRepository;
@@ -167,13 +168,13 @@ class CoachAgentController extends AbstractController
     /**
      * @Route("/coach/agent/{id}/secteur/view", name="coach_agent_view")
      */
-    public function coach_agent_view(User $agent,  AgentSecteurService $agentSecteurService, CategorieFormationRepository $categorieFormationRepository)
+    public function coach_agent_view(User $agent,  AgentSecteurService $agentSecteurService, CategorieFormationRepository $categorieFormationRepository,StatAgentService $statAgentService)
     {
         $mySector = $this->repoCoachSecteur->findOneBy(['coach' => $this->getUser()])->getSecteur();
         $agentSecteur = $this->repoAgentSecteur->findOneBy(['secteur' => $mySector, 'agent' => $agent]);
         $agentSecteurs = $this->repoAgentSecteur->findBy(['agent' => $agent]);
         $secteurs = $agentSecteurService->getSecteurs($agentSecteurs);
-
+      
         $positionSteps = [
             ['position' => 1, 'label' => 'Avoir au moins 5 filleuls directs et au moins 1000 € de CA'],
             ['position' => 2, 'label' => 'Avoir au moins 25 membres dans son équipe'],
@@ -184,6 +185,16 @@ class CoachAgentController extends AbstractController
         
         $firstFormation = $this->repoFormation->findOrderedNonFinishedFormations($mySector, $agent);
 
+        $chiffreAffaireTotal = 0;
+        if($mySector->getId() == $this->getParameter('secteur_digital_id')){
+            $chiffreAffaireTotal = $statAgentService->getPbbStat($agent->getId())['totalAmount'];
+        }
+        else{
+            $statVente = $statAgentService->getStatVente($agent->getId(), $mySector->getId(), $mySector->getType()->getId());
+            $pbb_summary = $statAgentService->getPbbSummary($agent->getId(), $agent->getNom());
+            $chiffreAffaireTotal = $pbb_summary['chiffreAffaire'] + ($statVente != null ? $statVente['ca'] : 0);
+        }
+
         return $this->render('user_category/coach/agent/view_agent.html.twig', [
             'agent' => $agent,
             'agentSecteur' => $agentSecteur,
@@ -192,6 +203,7 @@ class CoachAgentController extends AbstractController
             'positionSteps' => $positionSteps,
             'formationCategoriesOrdered' => $formationCategoriesOrdered,
             'firstFormation' => $firstFormation,
+            'chiffreAffaireTotal' => $chiffreAffaireTotal
         ]);
     }
 
