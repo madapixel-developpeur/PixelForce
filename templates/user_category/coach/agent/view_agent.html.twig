@@ -6,7 +6,10 @@
 
 {% block stylesheets %}
     {{ parent() }}
+    {{ encore_entry_link_tags('vuexy_dashboard_ecommerce') }}
+    <link rel="stylesheet" href="{{asset('assets/css/stepper.css')}}">
 {% endblock %}
+
 
 {% block body %}
 	<div class="mt-2">
@@ -83,6 +86,34 @@
 					</div>
 					<!--/ User Content -->
 				</div>
+				<div class="">
+                <div class="card card-statistics">
+                    <div class="card-header">
+                        <h4 class="card-title">Progression</h4>
+                    </div>
+                    <div class="card-body statistics-body">
+                        <h4 class="text-center">Position</h4>
+                        {% include 'partials/stepper-progression-agent.html.twig' %}
+                        
+                        <h4 class="text-center mt-2">Formation</h4>
+                        <div class="mt-1 steps formation-progression d-flex flex-wrap flex-sm-nowrap justify-content-between padding-top-2x padding-bottom-1x">
+                            {% set isCompletedBefore = true %}
+                            {% for step in formationCategoriesOrdered %}
+                            {% set isCompleted = (not firstFormation or (firstFormation and step.ordreCatFormation < firstFormation.CategorieFormation.ordreCatFormation)) %}
+                            {% set isCurrent = (isCompletedBefore and not isCompleted) %}
+                            <div class="step {% if isCompleted %} completed {% endif %} {% if isCurrent %} current {% endif %}">
+                                <div class="step-icon-wrap">
+                                <div class="step-icon">{% if isCompleted %}<i class="fa fa-check"></i>{% else %}{{loop.index}}{% endif %}</div>
+                                </div>
+                                <h4 class="step-title">{{step.nom}}</h4>
+                            </div>
+                            {% set isCompletedBefore = isCompleted %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
 			</section>
 		</div>
 	</div>
