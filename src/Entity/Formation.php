@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\FormationRepository;
+use App\Util\Status;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -20,6 +21,7 @@ class Formation
     const STATUT_BLOQUEE = 'bloquee';
     const STATUT_DISPONIBLE = 'disponible';
     const STATUT_TERMINER = 'terminer';
+    const STATUT_IN_PROGRESS = 'inprogress';
 
     const TYPE_QUIZ = 2;
     /**
@@ -399,5 +401,16 @@ class Formation
         }
 
         return $this;
+    }
+
+    public function getValidFormationQuizItems()
+    {
+        $result = [];
+        foreach ($this->getFormationQuizItems() as $formationQuizItem) {
+            if($formationQuizItem->getStatut() === Status::VALID){
+                $result[] = $formationQuizItem;
+            }
+        }
+        return $result;
     }
 }

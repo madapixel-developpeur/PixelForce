@@ -272,4 +272,14 @@ class AgentFormationController extends AbstractController
         
     // }
 
+    /**
+     * @Route("/agent/quiz/{id}/commencer", name="agent_quiz_begin", options={"expose"=true})
+     * @IsGranted("ROLE_AGENT")
+     */
+    public function quiz_begin(Formation $quiz, Request $request)
+    {
+       return $this->render('formation/quiz/agent_quiz_begin.html.twig', [
+           'quiz' => $quiz,
+       ]);
+    }
 }

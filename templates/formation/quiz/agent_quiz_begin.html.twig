@@ -1,0 +1,84 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Quiz {% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+	<style>
+		
+	</style>
+{% endblock %}
+
+{% block body %}
+	<div class="container my-5">
+		<div class="content-body-form">
+			<div class="row">
+
+						<h1 class="fw-bolder text-center mb-5">QUIZ: {{quiz.titre}} </h1>
+                        <div class="col-12">
+                        <div class="mb-3">
+                            <label><b>Catégorie:</b></label>
+                            <p>{{quiz.CategorieFormation.nom}}</p>
+                        </div>
+                        {% if quiz.description %}
+                        <div class="mb-3">
+									<label><b>Description:</b></label>
+                                    <p>{{quiz.description}}</p>
+                            </div>
+                        {% endif %}
+                        </div>
+							
+								
+						
+							</div>
+						
+			</div>
+            <h3 class="mt-3">Questions</h3>
+            <div class="mt-2">
+            {% for item in quiz.validFormationQuizItems %}
+            <div class="mb-2">
+                <h4 class="mt-3">{{loop.index }} - {{item.question}}</h4>
+                {% for choice in item.validFormationQuizItemChoices %}
+                <div class="form-check">
+                    <input class="form-check-input my-custom-choice" type="{% if item.multipleChoix %}checkbox{% else %}radio{% endif %}" name="{% if item.multipleChoix %} choice-{{item.id}}-{{choice.id}} {% else %} choice-{{item.id}} {% endif %}" data-item-id="{{item.id}}"  data-choice-id="{{choice.id}}">
+                    <label class="form-check-label" >
+                        {{choice.choix}}
+                    </label>
+                    </div>
+                {% endfor %}
+
+            </div>
+            
+            {% endfor %}
+            </div>
+            <div class="row">
+                <form method="post" id="form-send">
+                <input  type="hidden" name="quizResult" id="quizResult">
+                <div class="col-md-12 text-end"><button class="btn btn-success my-4" type="submit">Envoyer</button></div>
+                </form>
+            </div>
+            
+			
+        </div>
+	</div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    {# $(this).sumbit(); #}
+    <script>
+        $(document).ready(function (){
+            $('#form-send').submit(function (event) {
+                event.preventDefault();
+                const result = {};
+                $('.my-custom-choice:checked').each(function (){
+                    const choiceId = $(this).data('choiceId');
+                    const itemId = $(this).data('itemId');
+                    if(!result[itemId]) result[itemId] = [];
+                    result[itemId].push(choiceId);
+                })
+                $('#quizResult').val(JSON.stringify(result));
+                console.log(result);
+            })
+        })
+    </script>
+{% endblock %}
