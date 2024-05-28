@@ -4,7 +4,9 @@
 namespace App\Controller;
 
 use App\Entity\Formation;
+use App\Entity\FormationQuizItem;
 use App\Form\QuizFormType;
+use App\Form\QuizItemFormType;
 use App\Repository\FormationQuizItemRepository;
 use App\Util\Status;
 use Doctrine\ORM\EntityManagerInterface;
@@ -57,4 +59,29 @@ class CoachQuizController extends AbstractController
             'items' => $items
         ]);
    }
+
+   /**
+     * @Route("/{id}/item/add", name="coach_quiz_item_add")
+     */
+    public function quiz_item_add(Formation $formation, Request $request)
+    {
+         $item = new FormationQuizItem();
+         $item->setFormation($formation);
+         $form = $this->createForm(QuizItemFormType::class, $item);
+         $form->handleRequest($request);
+         if($form->isSubmitted() && $form->isValid()) {
+             try{
+                 $item->setStatut(Status::VALID);
+                 $this->entityManager->persist($item);
+                 $this->entityManager->flush();
+                 $this->addFlash('success', 'Question ajoutée avec succès');
+             } catch(\Exception $e){
+                 $this->addFlash('danger', $e->getMessage());
+             }
+         }
+ 
+         return $this->render('formation/quiz/coach_add_quiz_item.html.twig', [
+             'form' => $form->createView(),
+         ]);
+    }
 }
