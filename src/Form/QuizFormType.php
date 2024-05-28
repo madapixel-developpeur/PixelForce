@@ -10,6 +10,7 @@ use Doctrine\ORM\EntityRepository;
 use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -19,6 +20,7 @@ class QuizFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        
         $builder
             ->add('titre', TextType::class, [
                 'label' => 'Titre',
@@ -28,15 +30,11 @@ class QuizFormType extends AbstractType
                     new NotBlank(["message" => "Titre obligatoire"]),
                 ]
             ])
-            ->add('description', CKEditorType::class, [
-                'config' => [
-                    'uiColor' => '#cccccc',
-                ],
-                'required' => true,
+            ->add('description', TextareaType::class, [
+                'label' => 'Description',
             ])
             ->add('CategorieFormation', EntityType::class, [
-                'placeholder' => 'Catégorie',
-                'label' => false,
+                'label' => 'Catégorie',
                 'class' => CategorieFormation::class,
                 'choice_label' => 'nom',
                 'query_builder' => function (EntityRepository $er) {
@@ -48,6 +46,9 @@ class QuizFormType extends AbstractType
                 },
             ])
         ;
+        // if( $options['isEdit'] ) {
+        //     $builder
+        // }
     }
 
     public function configureOptions(OptionsResolver $resolver): void
@@ -55,6 +56,8 @@ class QuizFormType extends AbstractType
         $resolver->setDefaults([
             'data_class' => Formation::class,
             'method' => 'POST',
+            // 'isEdit' => false,
+            // 'choices' => [],
         ]);
         
     }

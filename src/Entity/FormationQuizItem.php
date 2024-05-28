@@ -3,6 +3,9 @@
 namespace App\Entity;
 
 use App\Repository\FormationQuizItemRepository;
+use App\Util\Status;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -37,6 +40,16 @@ class FormationQuizItem
      * @ORM\JoinColumn(nullable=false)
      */
     private $formation;
+
+    /**
+     * @ORM\OneToMany(targetEntity=FormationQuizItemChoice::class, mappedBy="formationQuizItem")
+     */
+    private $formationQuizItemChoices;
+
+    public function __construct()
+    {
+        $this->formationQuizItemChoices = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -89,5 +102,46 @@ class FormationQuizItem
         $this->formation = $formation;
 
         return $this;
+    }
+
+    /**
+     * @return Collection<int, FormationQuizItemChoice>
+     */
+    public function getFormationQuizItemChoices(): Collection
+    {
+        return $this->formationQuizItemChoices;
+    }
+
+    public function addFormationQuizItemChoice(FormationQuizItemChoice $formationQuizItemChoice): self
+    {
+        if (!$this->formationQuizItemChoices->contains($formationQuizItemChoice)) {
+            $this->formationQuizItemChoices[] = $formationQuizItemChoice;
+            $formationQuizItemChoice->setFormationQuizItem($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFormationQuizItemChoice(FormationQuizItemChoice $formationQuizItemChoice): self
+    {
+        if ($this->formationQuizItemChoices->removeElement($formationQuizItemChoice)) {
+            // set the owning side to null (unless already changed)
+            if ($formationQuizItemChoice->getFormationQuizItem() === $this) {
+                $formationQuizItemChoice->setFormationQuizItem(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getValidFormationQuizItemChoices()
+    {
+        $result = [];
+        foreach ($this->getFormationQuizItemChoices() as $formationQuizItemChoice) {
+            if($formationQuizItemChoice->getStatut() === Status::VALID){
+                $result[] = $formationQuizItemChoice;
+            }
+        }
+        return $result;
     }
 }

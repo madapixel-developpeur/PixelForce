@@ -1,0 +1,102 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Quiz {% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+	<style>
+		
+	</style>
+{% endblock %}
+
+{% block body %}
+	<div class="container my-5">
+		<div class="content-body-form">
+			<div class="row">
+
+						<h1 class="fw-bolder text-center mb-5">Quiz </h1>
+							
+							<div class="col-12">
+								<div class="mb-3">
+									<label><b>Titre:</b></label>
+									<p>{{quiz.titre}}</p>
+								</div>
+								<div class="mb-3">
+									<label><b>Description:</b></label>
+									<p>{{quiz.description ?? '--'}}</p>
+								</div>
+								<div class="mb-3">
+                                    <label><b>Catégorie:</b></label>
+									<p>{{quiz.CategorieFormation.nom}}</p>
+								</div>
+						
+							</div>
+						
+			</div>
+            <div class="d-flex align-items-center justify-content-between mt-3">
+                <h3>Questions</h3>
+                <a role="button" class="btn btn-success my-4" href="{{path('coach_quiz_item_add', {'id': quiz.id})}}"><i class="fa fa-plus"></i>&nbsp;Ajouter</a>
+            </div>
+            <div class="table-responsive">
+				<table class="table table-striped table-hover text-center sortable">
+					<thead>
+						<tr style="white-space:nowrap" >
+							<th scope="col" class="text-center">#</th>
+							<th scope="col" class="text-center">Question</th>
+							<th scope="col" class="text-center">Choix multiple</th>
+                            <th scope="col" class="text-center">Choix</th>
+                            <th scope="col" class="text-center">Actions</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for item in items %}
+							<tr>
+							 	<td>{{loop.index }}</td>
+							 	<td>{{item.question}}</td>
+								<td>{{item.multipleChoix ? 'Oui' : 'Non' }}</td>
+                                <td class="text-start">
+                                    <div>
+                                        {% for choice in item.validFormationQuizItemChoices %}
+                                            <div>{% if choice.vrai %} <i class="fa fa-check"></i> {% else %} <i class="fa fa-times"></i> {% endif %} &nbsp; {{choice.choix}}</div>
+                                        {% endfor %}
+                                    </div>
+                                </td>
+                                <td >
+                                    <div class="d-flex align-items-center justify-content-center">
+                                    <a class="btn btn-sm btn-primary" role="button" href="{{path('coach_quiz_item_details', {'id': item.id})}}">
+                                        <i class="fa fa-eye"></i>
+                                    </a>
+                                    <a class="btn btn-sm btn-warning ms-2" role="button" href="{{path('coach_quiz_item_edit', {'id': item.id})}}">
+                                        <i class="fa fa-edit"></i>
+                                    </a>
+                                    <form action="{{path('coach_quiz_item_delete', {'id': item.id})}}" method="post">
+                                        <button class="btn btn-sm btn-danger ms-2" type="submit">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    </form>
+                                    </div>
+                                </td>
+							</tr>
+						{% endfor %}
+
+					</tbody>
+				</table>
+			</div>
+            <div class="d-flex align-items-center justify-content-end mt-3">
+                
+                <a class="btn btn-warning ms-2" role="button" href="{{path('coach_quiz_edit', {'id': quiz.id})}}">
+                    <i class="fa fa-edit"></i>&nbsp;Modifier
+                </a>
+                <form action="{{path('coach_quiz_delete', {'id': quiz.id})}}" method="post">
+                    <button class="btn btn-danger ms-2" type="submit">
+                        <i class="fa fa-trash"></i>&nbsp;Supprimer
+                    </button>
+                </form>
+            </div>
+			
+        </div>
+	</div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}

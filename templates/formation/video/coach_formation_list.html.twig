@@ -73,14 +73,19 @@
                     {% for formation in formations %}
                         {% if formation.categorieFormation ==  categorie %}
                             <hr class="my-5" style="height: 2px;">
-                            <h5 class="text-primary">{{ formation.titre }} {% if formation.brouillon %}<small class="text-danger">[ brouillon ]</small>{% endif %}</h5>
+                            {% set isQuiz = formation.type == constant('App\\Entity\\Formation::TYPE_QUIZ') %}
+                            <h5 class="{{isQuiz ? 'text-warning': 'text-primary'}}">{{isQuiz ? 'QUIZ: ': ''}} {{ formation.titre }} {% if formation.brouillon %}<small class="text-danger">[ brouillon ]</small>{% endif %}</h5>
                             <div class="row mt-3">
                                 <div class="col-12  col-md-10">
                                     <p>{{ formation.description|slice(0, 300) }}</p>
                                 </div>
                                 <div class="col-12 col-md-2 text-end">
                                 {% if is_granted('ROLE_COACH') %}
+                                    {% if isQuiz %}
+                                    <a href="{{ path('coach_quiz_details', {id:formation.id}) }}" class="btn btn-warning btn-sm"><i class="fa fa-chevron-right"></i> Fiche quiz</a>
+                                    {% else %}
                                     <a href="{{ path('coach_formation_fiche', {id:formation.id}) }}" class="btn btn-primary btn-sm"><i class="fa fa-chevron-right"></i> Fiche formation</a>
+                                    {% endif %}
                                 {% endif %}
                                 {# {% if agent %}
                                     {% set statut = agent.formationStatut(formation) %}

@@ -32,6 +32,12 @@ class FormationQuizItemChoice
      */
     private $statut;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=FormationQuizItem::class, inversedBy="formationQuizItemChoices")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $formationQuizItem;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -69,6 +75,18 @@ class FormationQuizItemChoice
     public function setStatut(int $statut): self
     {
         $this->statut = $statut;
+
+        return $this;
+    }
+
+    public function getFormationQuizItem(): ?FormationQuizItem
+    {
+        return $this->formationQuizItem;
+    }
+
+    public function setFormationQuizItem(?FormationQuizItem $formationQuizItem): self
+    {
+        $this->formationQuizItem = $formationQuizItem;
 
         return $this;
     }

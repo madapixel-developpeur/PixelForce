@@ -119,8 +119,9 @@ class FormationRepository extends ServiceEntityRepository
                 ->andWhere('u.nom LIKE :nom')
                 ->setParameter('nom', '%'.$criteres['auteur'].'%');
         }
+        $queryBuilder->addOrderBy('f.type', 'ASC');
         if(isset($criteres['trie']) && !empty($criteres['trie'])) {
-            $queryBuilder->orderBy('f.'.$criteres['trie'], $criteres['ordre']);
+            $queryBuilder->addOrderBy('f.'.$criteres['trie'], $criteres['ordre']);
         }
 
 
