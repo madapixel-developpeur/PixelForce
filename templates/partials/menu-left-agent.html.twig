@@ -49,7 +49,6 @@
         {% else %}
             <li class=" nav-item {% if not app.user.canAccessFonct('VENTE', app.session.get('secteurId')) %}disabled{% endif %}"><a class="d-flex align-items-center" href="{{path('admin_ordersecu_list')}}"><i data-feather="eye"></i><span class="menu-title text-truncate" data-i18n="Calendar">Ventes</span></a></li>
         {% endif %}
-        <li class=" nav-item "><a class="d-flex align-items-center" href="{{path('agent_transaction_retrait')}}"><i data-feather="dollar-sign"></i><span class="menu-title text-truncate" data-i18n="Calendar">Retrait</span></a></li>
         
         {# <li class=" nav-item"><a class="d-flex align-items-center" href="{{ path('live_video_list') }}"><i data-feather="calendar"></i><span class="menu-title text-truncate" data-i18n="Calendar">Réunions</span></a></li> #}
     {% else %}
