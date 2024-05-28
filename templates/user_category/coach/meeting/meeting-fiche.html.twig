@@ -6,6 +6,7 @@
 {% endblock %}
 
 {% block body %}
+
     {% if meeting == null %}
         <div class="alert alert-danger" role="alert">
             <div class="alert-body">
@@ -14,6 +15,7 @@
         </div>
     {% else %}
     <div class="block block--bordered block--rounded">
+        <a href="{{path('coach_contact_meeting_list')}}" class="btn btn-secondary mb-3 w-25"> <i class="fa-solid fa-circle-arrow-left"></i> Retour </a>
         <h1 class="block__text block__text--center mt-2" >Fiche du rendez-vous n° {{meeting.id}} :</h1>
         <table class="table table-bordered meeting-fiche">
             <tr>
@@ -47,11 +49,19 @@
               <tr>
                 <th>Référence</th>
                 <td> 
-                    {% if meeting.audit != null %}
-                        <a href="{{ path('agent_order_list_digital',{'referenceVente' :  generateReference(meeting.userToMeet.agent.id,app.user.id,meeting.userToMeet.id,meeting.audit.id)   }) }}"> {{ generateReference(meeting.userToMeet.agent.id,app.user.id,meeting.userToMeet.id,meeting.audit.id) }}   <i class="fa fa-eye"></i></a>
+                    {% if meeting.audit != null  %}
+                        <div class="d-flex justify-content-start">
+                            <a class="btn btn-outline-primary w-50" href="{{ path('agent_order_list_digital',{'referenceVente' : generateReference(meeting.userToMeet.agent.id,app.user.id,meeting.userToMeet.id,meeting.audit.id)  }) }}"> {{ generateReference(meeting.userToMeet.agent.id,app.user.id,meeting.userToMeet.id,meeting.audit.id) }} </a>
+                            <a class="p-2" href="#" onclick="copyLink('{{ url('agent_order_list_digital',{'referenceVente' :  generateReference(meeting.userToMeet.agent.id,app.user.id,meeting.userToMeet.id,meeting.audit.id) }) }}','Liens de la référence {{  generateReference(meeting.userToMeet.agent.id,app.user.id,meeting.userToMeet.id,meeting.audit.id) }} copié avec succès') "><i class="fa-solid fa-copy"></i></a> 
+                        </div>
                     {% else %}
-                        <a href="{{ path('agent_order_list_digital',{'referenceVente' :  generateReference(meeting.userToMeet.agent.id,app.user.id,meeting.userToMeet.id)   }) }}">{{ generateReference(meeting.userToMeet.agent.id,app.user.id,meeting.userToMeet.id) }}  <i class="fa fa-eye"></i></a>
+                        <div class="d-flex justify-content-start">
+                            <a class="btn btn-outline-primary w-50" href="{{ path('agent_order_list_digital',{'referenceVente' : generateReference(meeting.userToMeet.agent.id,app.user.id,meeting.userToMeet.id)  }) }}"> {{ generateReference(meeting.userToMeet.agent.id,app.user.id,meeting.userToMeet.id) }} </a>
+                            <a class="p-2" href="#" onclick="copyLink('{{ url('agent_order_list_digital',{'referenceVente' :  generateReference(meeting.userToMeet.agent.id,app.user.id,meeting.userToMeet.id) }) }}','Liens de la référence {{  generateReference(meeting.userToMeet.agent.id,app.user.id,meeting.userToMeet.id) }} copié avec succès') "><i class="fa-solid fa-copy"></i></a>
+                        </div>
                     {% endif %}
+
+                   
                 </a> </td>
             </tr>
             <tr class="note-row">
