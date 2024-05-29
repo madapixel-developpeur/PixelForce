@@ -166,6 +166,7 @@ class FormationRepository extends ServiceEntityRepository
                 ->andWhere('u.nom LIKE :nom')
                 ->setParameter('nom', '%'.$criteres['auteur'].'%');
         }
+        $queryBuilder->addOrderBy('f.type', 'ASC');
         if(!empty($criteres['trie'])) {
             $queryBuilder->orderBy('f.'.$criteres['trie'], $criteres['ordre']);
         }
@@ -208,6 +209,7 @@ class FormationRepository extends ServiceEntityRepository
                 ->andWhere('u.nom LIKE :nom')
                 ->setParameter('nom', '%'.$criteres['auteur'].'%');
         }
+        $queryBuilder->addOrderBy('f.type', 'ASC');
         if(!empty($criteres['trie'])) {
             $queryBuilder->orderBy('f.'.$criteres['trie'], $criteres['ordre']);
         }
@@ -312,7 +314,7 @@ class FormationRepository extends ServiceEntityRepository
             SELECT f.id as formationId FROM formation f join categorie_formation cf on f.categorie_formation_id = cf.id
             left join formation_agent fa ON f.id = fa.formation_id AND fa.agent_id = :agent 
             WHERE f.secteur_id = :secteur AND f.statut = :statusCreated AND (f.brouillon IS NULL OR f.brouillon =0)
-            AND cf.order_cat_formation >= :formationRank
+            AND cf.ordre_cat_formation >= :formationRank
             AND (fa.statut != :finishedStatus OR fa.agent_id IS NULL) ORDER BY cf.ordre_cat_formation, f.type, f.id LIMIT 1
         ';   
         $stmt = $this->getEntityManager()->getConnection()->prepare($sql);

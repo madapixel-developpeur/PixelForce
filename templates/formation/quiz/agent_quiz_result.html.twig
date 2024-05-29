@@ -27,7 +27,7 @@
                             </div>
                         {% endif %}
                         <div class="mb-3">
-                            <label><b>Dernière résultat:</b></label>
+                            <label><b>Dernier résultat:</b></label>
                             <p>{{result.lastResultScore | number_format(2, ',', ' ')}} %</p>
                         </div>
                         <div class="mb-3">
@@ -77,6 +77,17 @@
             </div>
             
             {% endfor %}
+            </div>
+            <div class="d-flex align-items-center mt-3">
+                
+                <a class="btn btn-primary me-2" role="button" href="{{path('agent_quiz_begin', {'id': result.formation.id})}}">
+                    <i class="fa fa-repeat"></i>&nbsp;Réessayer
+                </a>
+                
+                <a class="btn btn-success me-2" role="button" href="{{path('agent_dashboard_secteur', {'id': result.formation.secteur.id})}}">
+                    Suivant&nbsp;<i class="fa fa-arrow-right"></i>
+                </a>
+                
             </div>
             
             
