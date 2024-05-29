@@ -42,7 +42,7 @@
         {% if statut == constant('App\\Entity\\Formation::STATUT_TERMINER') %}
             <a href="#" class="btn btn-success"><i class="fa fa-check"></i> Vous avez déjà terminé cette formation</a>
         {% else %}
-            <a href="{{ path('agent_formation_terminer', {id:formation.id}) }}" class="btn btn-success"><i class="fa fa-check"></i> J'ai terminé cette formation</a>    
+            {# <a href="{{ path('agent_formation_terminer', {id:formation.id}) }}" class="btn btn-success"><i class="fa fa-check"></i> J'ai terminé cette formation</a>     #}
         {% endif %}
     </div>
 </div>

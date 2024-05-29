@@ -242,7 +242,8 @@ class AgentAccountController extends AbstractController
             "agent"=> $agent,
             'statDigital' => $statDigital,
             'soldeRemuneration' => $soldeRemuneration,
-            'formationCategoriesOrdered' => $formationCategoriesOrdered
+            'formationCategoriesOrdered' => $formationCategoriesOrdered,
+            'repoFormationAgent' => $this->repoFormationAgent,
         ]);
     }
 

@@ -196,6 +196,57 @@
                                         Pour débloquer cette formation, assurez-vous d’avoir enregistré plus de 100 contacts dans votre liste de prospection.
                                     </div>
                                 {% else %} #}
+                                    {% set isQuiz = firstFormation.type == constant('App\\Entity\\Formation::TYPE_QUIZ') %}
+                                    
+                                    {% if isQuiz %}
+                                    {% set formationAgentRelation = repoFormationAgent.findOneBy({agent:app.user.id, formation:firstFormation}) %}
+                                    {% set statut = formationAgentRelation ? formationAgentRelation.statut : constant('App\\Entity\\Formation::STATUT_DISPONIBLE') %}
+                                    <h3 class="fw-bolder text-center mt-2">QUIZ: {{ firstFormation.titre}} </h3>
+                                    <div class="border bg-white px-3 py-3" style="min-height: 150px;">
+                                        {% if firstFormation.description %}
+                                        <p class="text-center">{{ firstFormation.description }}</p>
+                                        {% endif %}
+                                        
+                                        {% if formationAgentRelation %}
+                                        <div class="d-flex align-items-center justify-content-around mb-2">
+                                        <p><b>Dernièr résultat:</b> {{formationAgentRelation.lastResultScore | number_format(2, ',', ' ')}} %</p>
+                                        <p><b>Résultat maximum:</b> {{formationAgentRelation.maxResultScore | number_format(2, ',', ' ')}} %</p>
+                                            
+                                            <p><b>Statut:</b>&nbsp;
+                                            {% if formationAgentRelation.statut == constant('App\\Entity\\Formation::STATUT_TERMINER') %}
+                                            <b class="text-success">RÉUSSI</b>
+                                            {% else %}
+                                            <b class="text-danger">ÉCHOUÉ</b>
+                                            {% endif %}
+                                            </p>
+                                        </div>                                  
+                                        {% endif %}
+                                        <div class="text-center"><i class="fa fa-question-circle fa-3x"></i></div>
+                                    </div>
+                                    
+                                    <div class="text-center m-2 p-2">
+                                        <div class="row">
+                                             {% if statut == constant('App\\Entity\\Formation::STATUT_DISPONIBLE')%}
+                                            <div class="col">
+                                                <a href="{{ path('agent_quiz_begin', {id:firstFormation.id}) }}" class="btn btn-primary fw-bolder mt-4">Commencer</a>
+                                            </div>
+                                            <div class="col">
+                                                
+                                            </div>
+                                            {% elseif statut == constant('App\\Entity\\Formation::STATUT_IN_PROGRESS') or statut == constant('App\\Entity\\Formation::STATUT_TERMINER') %}
+                                            <div class="col">
+                                                <a href="{{ path('agent_quiz_begin', {id:firstFormation.id}) }}" class="btn btn-primary fw-bolder mt-4"><i class="fa fa-repeat"></i> Réessayer</a>
+                                            </div>
+                                            <div class="col">
+                                                <a href="{{ path('agent_quiz_result', {id:formationAgentRelation.id}) }}" class="btn btn-success fw-bolder mt-4"><i class="fa fa-chevron-right"></i> Voir le dérnier résultat</a>
+                                            </div>
+                                            {% endif %}
+                                            <div class="col">
+                                                <a href="{{ path('agent_formation_list') }}" class="btn btn-secondary fw-bolder mt-4"><i class="fa-solid fa-list me-2"></i> Liste des formations</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% else %}
                                     <h3 class="fw-bolder text-center mt-2">{{ firstFormation.titre}} </h3>
                                     <div class="border d-flex bg-white">
                                         <iframe id="formationVideo" src="https://player.vimeo.com/video/{{ firstFormation.videoId }}?loop=0&byline=0&portrait=0&title=0&muted=1" width="700" height="400" class="m-auto" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen allow="autoplay; encrypted-media"></iframe>
@@ -206,16 +257,18 @@
                                                 <a href="{{ path('agent_formation_fiche', {id:firstFormation.id}) }}" class="btn btn-primary fw-bolder mt-4"><i class="fa-solid fa-file me-2"></i> Fiche formation</a>
                                             </div>
                                             <div class="col">
-                                                <a href="{{ path('agent_formation_terminer', {id:firstFormation.id, path: 'fromDashboard'}) }}" class="btn btn-success fw-bolder mt-4"><i class="fa fa-check"></i> J'ai terminé cette formation</a>
+                                                {# <a href="{{ path('agent_formation_terminer', {id:firstFormation.id, path: 'fromDashboard'}) }}" class="btn btn-success fw-bolder mt-4"><i class="fa fa-check"></i> J'ai terminé cette formation</a> #}
                                             </div>
                                             <div class="col">
                                                 <a href="{{ path('agent_formation_list') }}" class="btn btn-secondary fw-bolder mt-4"><i class="fa-solid fa-list me-2"></i> Liste des formations</a>
                                             </div>
                                         </div>
                                     </div>
+                                    {% endif %}
                                     <form method="get" action="{{ path('agent_formation_terminer', {id:firstFormation.id}) }}" id="formFinishFormation">
                                         <input type="hidden" name="path" value="fromDashboard">
                                     </form>
+                                    
                                 {# {% endif %} #}
                             {% endif %}
                             

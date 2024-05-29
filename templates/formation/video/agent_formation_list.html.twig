@@ -60,12 +60,15 @@
                                 {% set formationAgentRelation = formationAgentRepository.findOneBy({agent:app.user.id, formation:formation}) %}
                                 {# {% set statut = formationAgentRelation ? formationAgentRelation.statut : constant('App\\Entity\\Formation::STATUT_BLOQUEE') %} #}
                                 {% set statut = formationAgentRelation ? formationAgentRelation.statut : constant('App\\Entity\\Formation::STATUT_DISPONIBLE') %}
+                                {% if formation.categorieFormation.ordreCatFormation > (agentSecteur.currentFormationRank ?? 1)  %}
+                                {% set statut = constant('App\\Entity\\Formation::STATUT_BLOQUEE') %}
+                                {% endif %}
                                 <hr class="my-5" style="height: 2px;">
                                 <h5 class="{{isQuiz ? 'text-warning': 'text-primary'}}">{{isQuiz ? 'QUIZ: ': ''}}{{ formation.titre }} {% if formation.brouillon %}<small class="text-danger">[ brouillon ]</small>{% endif %}</h5>
                                 <div class="row mt-3">
                                     <div class="col-12  col-md-8">
-                                        <p>{{ formation.description|slice(0, 300) }}</p>
-                                        {% if formationAgentRelation and isQuiz %}
+                                        <p>{{ (formation.description??'')|slice(0, 300) }}</p>
+                                        {% if formationAgentRelation and isQuiz and statut != constant('App\\Entity\\Formation::STATUT_BLOQUEE') %}
                                         <p><b>Dernièr résultat:</b> {{formationAgentRelation.lastResultScore | number_format(2, ',', ' ')}} %</p>
                                         <p><b>Résultat maximum:</b> {{formationAgentRelation.maxResultScore | number_format(2, ',', ' ')}} %</p>
                                             
@@ -91,7 +94,8 @@
                                             
                                             {% if isQuiz %}
                                                 {% if statut == constant('App\\Entity\\Formation::STATUT_BLOQUEE') %}
-                                                    <button type="button" class="btn btn-sm btn-danger" data-trigger="hover" data-bs-toggle="popover" data-bs-placement="left" title="Information de déblocage" data-bs-content="{{formation.DescriptionDeblocage}}"><i class="fa fa-lock"></i> Quiz bloqué</button>
+                                                    {# title="Information de déblocage" data-bs-content="{{formation.DescriptionDeblocage}}" data-trigger="hover" data-bs-toggle="popover" data-bs-placement="left" #}
+                                                    <button type="button" class="btn btn-sm btn-danger" ><i class="fa fa-lock"></i> Quiz bloqué</button>
                                                 {% elseif statut == constant('App\\Entity\\Formation::STATUT_DISPONIBLE')%}
                                                     <a href="{{ path('agent_quiz_begin', {id:formation.id}) }}" class="btn btn-primary btn-sm"><i class="fa fa-chevron-right"></i> Commencer</a>
                                                 {% elseif statut == constant('App\\Entity\\Formation::STATUT_IN_PROGRESS') or statut == constant('App\\Entity\\Formation::STATUT_TERMINER') %}
@@ -100,7 +104,7 @@
                                                 {% endif %}
                                             {% else %}
                                                 {% if statut == constant('App\\Entity\\Formation::STATUT_BLOQUEE') %}
-                                                    <button type="button" class="btn btn-sm btn-danger" data-trigger="hover" data-bs-toggle="popover" data-bs-placement="left" title="Information de déblocage" data-bs-content="{{formation.DescriptionDeblocage}}"><i class="fa fa-lock"></i> Formation bloquée</button>
+                                                    <button type="button" class="btn btn-sm btn-danger"><i class="fa fa-lock"></i> Formation bloquée</button>
                                                 {% elseif statut == constant('App\\Entity\\Formation::STATUT_DISPONIBLE')%}
                                                     <a href="{{ path('agent_formation_fiche', {id:formation.id}) }}" class="btn btn-primary btn-sm"><i class="fa fa-chevron-right"></i> Fiche formation</a>
                                                 {% elseif statut == constant('App\\Entity\\Formation::STATUT_TERMINER')%}

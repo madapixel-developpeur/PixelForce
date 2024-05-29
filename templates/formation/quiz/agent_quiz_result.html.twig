@@ -83,11 +83,11 @@
                 <a class="btn btn-primary me-2" role="button" href="{{path('agent_quiz_begin', {'id': result.formation.id})}}">
                     <i class="fa fa-repeat"></i>&nbsp;Réessayer
                 </a>
-                
+                {% if result.statut == constant('App\\Entity\\Formation::STATUT_TERMINER') %}
                 <a class="btn btn-success me-2" role="button" href="{{path('agent_dashboard_secteur', {'id': result.formation.secteur.id})}}">
                     Suivant&nbsp;<i class="fa fa-arrow-right"></i>
                 </a>
-                
+                {% endif %}
             </div>
             
             

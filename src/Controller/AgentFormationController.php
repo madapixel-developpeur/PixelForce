@@ -103,7 +103,7 @@ class AgentFormationController extends AbstractController
             $criteres = $request->query->get('q');
             $criteres = $criteres ? $criteres : [];
             $formations = $this->formationRepository->searchForAgent($criteres, $secteur);
-           
+            $agentSecteur = $this->agentSecteurRepository->findOneBy(["agent" => $agent, "secteur" => $secteur]);
             $formations = $this->paginator->paginate(
                 $formations,
                 $request->query->getInt('page', 1),
@@ -117,6 +117,7 @@ class AgentFormationController extends AbstractController
                 'formationAgentRepository' => $this->formationAgentRepository,
                 'categories' => $this->repoCatFormation->findBy(['statut' => 1]),
                 'nbrAllMyContacts' => count($this->repoContact->findAll()),
+                'agentSecteur' => $agentSecteur
             ]);
         }
 
