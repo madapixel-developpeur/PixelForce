@@ -192,37 +192,58 @@ class AgentFormationController extends AbstractController
     //    ]);
     // }
 
-    /**
-     * @Route("/agent/formation/terminer/{id}", name="agent_formation_terminer", options={"expose"=true})
-     * @IsGranted("ROLE_AGENT")
-     */
-    public function coach_formation_terminer(Formation $formation, Request $request, EntityManagerInterface $entityManagerInterface)
-    {
-        try{
-            $agent = $this->getUser();
-            $coach = $formation->getCoach();
-            $agentSecteur = $this->agentSecteurRepository->findOneBy(["agent" => $agent, "secteur" => $formation->getSecteur()]);
-            $result = $this->formationAgentRepository->findBy(['agent' => $agent, 'formation' => $formation]);
-            $formationAgent = null;
-            if(count($result) > 0){
-                $formationAgent = $result[0];
-            } else{
-                $formationAgent = new FormationAgent();
-                $formationAgent->setAgent($agent);
-                $formationAgent->setFormation($formation);
+    private function terminer_formation(Formation $formation, $quizData=[]){
+        $agent = $this->getUser();
+        $coach = $formation->getCoach();
+        $agentSecteur = $this->agentSecteurRepository->findOneBy(["agent" => $agent, "secteur" => $formation->getSecteur()]);
+        $result = $this->formationAgentRepository->findBy(['agent' => $agent, 'formation' => $formation]);
+        $formationAgent = null;
+        if(count($result) > 0){
+            $formationAgent = $result[0];
+        } else{
+            $formationAgent = new FormationAgent();
+            $formationAgent->setAgent($agent);
+            $formationAgent->setFormation($formation);
+        }
+        $formationAgent->setStatut(Formation::STATUT_TERMINER);
+        if($formation->getType() == Formation::TYPE_QUIZ){
+            $score = isset($quizData['score']) ? $quizData['score'] : 0;
+            $snapshot = isset($quizData['snapshot']) ? $quizData['snapshot'] : 0;
+            $formationAgent->setLastResultScore($score);
+            $formationAgent->setLastResultSnapshot($snapshot);
+            if($formationAgent->getMaxResultScore() === null || $score >= $formationAgent->getMaxResultScore()){
+                $formationAgent->setMaxResultScore($score);
+                $formationAgent->setMaxResultSnapshot($snapshot);
+            } 
+            if($formationAgent->getMaxResultScore() < 50){
+                $formationAgent->setStatut(Formation::STATUT_IN_PROGRESS);
             }
-            $formationAgent->setStatut(Formation::STATUT_TERMINER);
-            $entityManagerInterface->persist($formationAgent);
+        }
+        
+        $this->entityManager->persist($formationAgent);
+        if($formationAgent->getStatut() === Formation::STATUT_TERMINER){
             $formationRank = $formation->getCategorieFormation()->getOrdreCatFormation();
-            if(count($this->formationRepository->getNextFormationsByCategorieAndSecteur($formation->getSecteur(), $formation->getCategorieFormation(), $formation->getId())) == 0){
+            if(count($this->formationRepository->getNextFormationsByCategorieAndSecteur($formation->getSecteur(), $formation->getCategorieFormation(), $formation->getId(), $formation->getType())) == 0){
                 $formationRank ++;
             }
 
             if($agentSecteur->getCurrentFormationRank() < $formationRank){
                 $agentSecteur->setCurrentFormationRank($formationRank);
-                $entityManagerInterface->persist($agentSecteur);
+                $this->entityManager->persist($agentSecteur);
             }
-            $entityManagerInterface->flush();
+        }
+        
+        $this->entityManager->flush();
+        return $formationAgent;
+    }
+    /**
+     * @Route("/agent/formation/terminer/{id}", name="agent_formation_terminer", options={"expose"=true})
+     * @IsGranted("ROLE_AGENT")
+     */
+    public function coach_formation_terminer(Formation $formation, Request $request)
+    {
+        try{
+            $this->terminer_formation($formation);
             // $this->mailerService->sendMailAfterDoneFormation($agent, $coach, $formation);
             $this->addFlash('success', '<h2 class="text-secondary text-center"> 🎉 Félicitations! Vous venez de terminer la formation : '.$formation->getTitre().' 🎉</h2>');
         } catch(Exception $ex){
@@ -278,8 +299,74 @@ class AgentFormationController extends AbstractController
      */
     public function quiz_begin(Formation $quiz, Request $request)
     {
+        if ($request->isMethod('POST')) {
+            try{
+
+            
+                // Handle the POST request
+                $result = $request->get('quizResult');
+                $result = $result ? json_decode($result, true) : [];
+                $countItem = 0;
+                $countItemTrue = 0;
+                $snapshot = [
+                    'titre' => $quiz->getTitre(),
+                    'description' => $quiz->getDescription(),
+                    'categorie' => $quiz->getCategorieFormation()?->getNom()??'',
+                    'items' => []
+                ];
+                foreach ($quiz->getValidFormationQuizItems() as $item) {
+                    $itemResult = isset($result[$item->getId()]) ? $result[$item->getId()] : [];
+                    $choices = $item->getValidFormationQuizItemChoices();
+                    $wrongCount = 0;
+                    $itemSnapshot = [
+                        'question' => $item->getQuestion(),
+                        'multipleChoix' => $item->isMultipleChoix(),
+                        'choices' => [],
+                        'result' => true,
+                        'wrongCount' => 0
+                    ];
+                    foreach ($choices as $choice) {
+                        $checked = in_array($choice->getId(), $itemResult);
+                        if($checked !== ($choice->isVrai()??false)) $wrongCount++;
+                        $itemSnapshot['choices'][] = [
+                            'choix' => $choice->getChoix(),
+                            'vrai' => $choice->isVrai(),
+                            'checked' => $checked
+                        ];
+                    }
+                    $countItem++;
+                    if($wrongCount > 0){
+                        $itemSnapshot['result'] = false;
+                        $itemSnapshot['wrongCount'] = $wrongCount;
+                    } else {
+                        $countItemTrue++;
+                    }
+                    $snapshot['items'][] = $itemSnapshot;
+                    
+                }
+                $score = $countItemTrue * 100./$countItem;
+
+                $formationAgent = $this->terminer_formation($quiz, ['score' => $score, 'snapshot' => $snapshot]);
+                $this->addFlash('success', '<h2 class="text-secondary text-center"> 🎉 Félicitations! Vous venez de terminer le quiz : '.$quiz->getTitre().' 🎉</h2>');
+                return $this->redirectToRoute('agent_quiz_result', ['id' => $formationAgent->getId()]);
+            } catch(Exception $ex){
+                $this->addFlash('danger', $ex->getMessage());
+            }
+        }
        return $this->render('formation/quiz/agent_quiz_begin.html.twig', [
            'quiz' => $quiz,
+       ]);
+    }
+
+    /**
+     * @Route("/agent/quiz/{id}/result", name="agent_quiz_result", options={"expose"=true})
+     * @IsGranted("ROLE_AGENT")
+     */
+    public function quiz_result(FormationAgent $result, Request $request)
+    {
+        
+       return $this->render('formation/quiz/agent_quiz_result.html.twig', [
+           'result' => $result,
        ]);
     }
 }

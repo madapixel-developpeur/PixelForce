@@ -23,7 +23,7 @@ class FormationRepository extends ServiceEntityRepository
 {
     protected $repoFormationAgent;
 
-    public function __construct(ManagerRegistry $registry, FormationAgentRepository $repoFormationAgent)
+    public function __construct(ManagerRegistry $registry, FormationAgentRepository $repoFormationAgent, private AgentSecteurRepository $agentSecteurRepository)
     {
         parent::__construct($registry, Formation::class);
         $this->repoFormationAgent = $repoFormationAgent;
@@ -225,13 +225,13 @@ class FormationRepository extends ServiceEntityRepository
         return $queryBuilder->getQuery();
     }
 
-    public function getNextFormationsByCategorieAndSecteur($secteur, $categorie, $formationId)
+    public function getNextFormationsByCategorieAndSecteur($secteur, $categorie, $formationId, $formationType)
     {
        $qb = $this->createQueryBuilder('f');
 
         return $qb->andWhere('f.CategorieFormation = :categorie')
         ->andWhere('f.secteur = :secteur')
-        ->andWhere('f.id > :formationId')
+        ->andWhere('f.id > :formationId or coalesce(f.type, 1) > :formationType')
         ->andWhere($qb->expr()->orX(
             $qb->expr()->isNull('f.brouillon'),
             $qb->expr()->eq('f.brouillon', ':brouillon')
@@ -241,7 +241,9 @@ class FormationRepository extends ServiceEntityRepository
         ->setParameter('categorie', $categorie)
         ->setParameter('secteur', $secteur)
         ->setParameter('formationId', $formationId)
-        ->orderBy('f.id', 'ASC')
+        ->setParameter('formationType', $formationType??1)
+        ->addOrderBy('f.type', 'ASC')
+        ->addOrderBy('f.id', 'ASC')
         ->getQuery()
         ->getResult();
     }
@@ -305,18 +307,21 @@ class FormationRepository extends ServiceEntityRepository
     }
 
     public function findOrderedNonFinishedFormations(Secteur $secteur, User $agent){
+        $agentSecteur = $this->agentSecteurRepository->findOneBy(["agent" => $agent, "secteur" => $secteur]);
         $sql = '
             SELECT f.id as formationId FROM formation f join categorie_formation cf on f.categorie_formation_id = cf.id
             left join formation_agent fa ON f.id = fa.formation_id AND fa.agent_id = :agent 
             WHERE f.secteur_id = :secteur AND f.statut = :statusCreated AND (f.brouillon IS NULL OR f.brouillon =0)
-            AND fa.statut != :finishedStatus OR fa.agent_id IS NULL ORDER BY cf.ordre_cat_formation, f.id LIMIT 1
+            AND cf.order_cat_formation >= :formationRank
+            AND (fa.statut != :finishedStatus OR fa.agent_id IS NULL) ORDER BY cf.ordre_cat_formation, f.type, f.id LIMIT 1
         ';   
         $stmt = $this->getEntityManager()->getConnection()->prepare($sql);
         $resultSet = $stmt->executeQuery([
             'agent' => $agent->getId(), 
             'secteur' => $secteur->getId(), 
             'statusCreated' => Formation::STATUS_CREATED, 
-            'finishedStatus' => Formation::STATUT_TERMINER
+            'finishedStatus' => Formation::STATUT_TERMINER,
+            'formationRank' => $agentSecteur?->getCurrentFormationRank()??0,
         ]);
         $result = $resultSet->fetchAllAssociative();
         if(count($result) > 0) {
