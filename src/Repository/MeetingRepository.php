@@ -82,13 +82,19 @@ class MeetingRepository extends ServiceEntityRepository
      * @param MeetingSearch $search
      * @return Query
      */
-    public function findMeetingByUser(MeetingSearch $search, User $user,Contact $contact = null)
+    public function findMeetingByUser(MeetingSearch $search, User $user,Contact $contact = null,Array $options = null )
     {
         $query = $this->createQueryBuilder('m');
-        $query = $query
-            ->andwhere('m.user = :user')
-            ->setParameter('user', $user)
-        ;
+        if($options && isset($options['secteur'])){
+            $query = $query
+            ->andwhere('m.secteur = :secteur')
+            ->setParameter('secteur',$options['secteur']);   
+        }else{
+            $query = $query
+                ->andwhere('m.user = :user')
+                ->setParameter('user', $user)
+            ;
+        }
 
         if ($search->getTitle()) {
             $query = $query

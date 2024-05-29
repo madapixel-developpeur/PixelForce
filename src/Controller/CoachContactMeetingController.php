@@ -37,7 +37,8 @@ class CoachContactMeetingController extends AbstractController
     private $meetingStateRepository;
     private $meetingRepository;
 
-    public function __construct(EntityManagerInterface $entityManager, MeetingRepository $meetingRepository ,MeetingStateRepository $meetingStateRepository)
+    public function __construct(EntityManagerInterface $entityManager, MeetingRepository $meetingRepository ,MeetingStateRepository $meetingStateRepository,
+        private CoachSecteurRepository $repoCoachSecteur)
     {
         $this->entityManager = $entityManager;
         $this->meetingStateRepository = $meetingStateRepository;
@@ -62,14 +63,17 @@ class CoachContactMeetingController extends AbstractController
     public function coach_contact_meeting_list(Request $request,PaginatorInterface $paginator,User $agent= null,Contact $contact = null)
     {
         $coach = $this->getUser();
+        $options = [];
         if($agent){
             $coach = $agent;
+        }else{
+            $options['secteur'] = $coach->getSecteurByCoach();
         }
         $search = new MeetingSearch();
         $searchForm = $this->createForm(MeetingSearchType::class, $search);
         $searchForm->handleRequest($request);
         $meetings = $paginator->paginate(
-            $this->meetingRepository->findMeetingByUser($search, $coach,$contact),
+            $this->meetingRepository->findMeetingByUser($search, $coach,$contact,$options),
             $request->query->getInt('page', 1),
             20
         );

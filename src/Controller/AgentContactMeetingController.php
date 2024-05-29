@@ -91,16 +91,16 @@ class AgentContactMeetingController extends AbstractController
                 
                 $this->entityManager->beginTransaction();
 
-                foreach ($allCoachSecteur as $coachSecteur) {
-                    $coach = $coachSecteur->getCoach();
-                    if($coach!=null) {
-                        $meetingCoach = $meeting->clone($coach);
-                        $this->meetingService->saveMeeting($meetingCoach, $coach, $userToMeet);
-                        $this->meetingService->saveMeetingEvent($meetingCoach, $coach, $meetingCalendarEventLabel);
-                    }
+                // foreach ($allCoachSecteur as $coachSecteur) {
+                //     $coach = $coachSecteur->getCoach();
+                //     if($coach!=null) {
+                //         $meetingCoach = $meeting->clone($coach);
+                //         $this->meetingService->saveMeeting($meetingCoach, $coach, $userToMeet);
+                //         $this->meetingService->saveMeetingEvent($meetingCoach, $coach, $meetingCalendarEventLabel);
+                //     }
                    
-                }
-
+                // }
+                $meeting->setSecteur($secteur);
                 $this->meetingService->saveMeeting($meeting, $agent, $userToMeet);
                 $this->meetingService->saveMeetingEvent($meeting, $agent, $meetingCalendarEventLabel);
 

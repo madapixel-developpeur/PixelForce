@@ -67,6 +67,12 @@ class Meeting implements JsonSerializable
      */
     private $userToMeet;
 
+    /**
+        * @ORM\ManyToOne(targetEntity=Secteur::class, inversedBy="agentSecteurs",fetch="EAGER")
+    */
+    private $secteur;
+
+
     public function getId(): ?int
     {
         return $this->id;
@@ -190,6 +196,26 @@ class Meeting implements JsonSerializable
     public function setAudit(?Audit $audit): static
     {
         $this->audit = $audit;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of secteur
+     */ 
+    public function getSecteur()
+    {
+        return $this->secteur;
+    }
+
+    /**
+     * Set the value of secteur
+     *
+     * @return  self
+     */ 
+    public function setSecteur($secteur)
+    {
+        $this->secteur = $secteur;
 
         return $this;
     }
