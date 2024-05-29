@@ -273,9 +273,15 @@ class AgentAccountController extends AbstractController
        /**
      * @Route("/agent/filleul-tree", name="app_agent_data_lineaire")
      */
-    public function getDataUnilevel()
+    public function getDataUnilevel(Request $request)
     {
-        $user = (object)$this->getUser();
+        $idAgent = $request->get('agentId');
+        if($idAgent){
+            $user = $this->repoUser->findOneBy(['id' => $idAgent]);
+        }
+        else{
+            $user = (object)$this->getUser();
+        }
         if(in_array('ROLE_AGENT', $user->getRoles())) {
             $limit = ($user->getPosition()??0) + 1;
         }
