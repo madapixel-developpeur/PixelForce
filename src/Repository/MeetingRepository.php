@@ -2,12 +2,13 @@
 
 namespace App\Repository;
 
-use App\Entity\Meeting;
-use App\Entity\SearchEntity\MeetingSearch;
-use App\Entity\User;
 use DateInterval;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Entity\User;
+use App\Entity\Contact;
+use App\Entity\Meeting;
 use Doctrine\Persistence\ManagerRegistry;
+use App\Entity\SearchEntity\MeetingSearch;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @extends ServiceEntityRepository<Meeting>
@@ -81,7 +82,7 @@ class MeetingRepository extends ServiceEntityRepository
      * @param MeetingSearch $search
      * @return Query
      */
-    public function findMeetingByUser(MeetingSearch $search, User $user)
+    public function findMeetingByUser(MeetingSearch $search, User $user,Contact $contact = null)
     {
         $query = $this->createQueryBuilder('m');
         $query = $query
@@ -112,6 +113,13 @@ class MeetingRepository extends ServiceEntityRepository
                 ->join('m.meetingState', 'ms')
                 ->andwhere('ms.name LIKE :status')
                 ->setParameter('status', $search->getStatus());
+        }
+
+       
+        if($contact){
+            $query = $query
+                ->andwhere('m.userToMeet = :userToMeet')
+                ->setParameter('userToMeet', $contact);
         }
 
         return $query

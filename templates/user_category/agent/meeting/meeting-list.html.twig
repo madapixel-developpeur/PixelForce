@@ -41,7 +41,7 @@
     </div>
      <div class="block block--bordered block--rounded">
         <div class="block__header mb-1" >
-            <h1 class="block__title">Liste des rendez-vous :</h1>
+            <p> {% if contact is defined and contact is not null %}<span class="h5 block__title">Liste de rendez-vous </span ><span class="h5">({{ contact.information.fullName }}): </span >{% else %}<span class="h5 block__title"> Liste de rendez-vous :</span > {% endif %}</p>
             
         </div>
         {% if meetings|length ==0 %}

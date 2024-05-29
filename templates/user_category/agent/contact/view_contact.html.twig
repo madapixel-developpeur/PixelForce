@@ -80,6 +80,18 @@
 										{% endif %}
 									</ul>
 								</div>
+
+								<div class="contact-card__info-item row">
+								
+									<div class="col-12 ">
+										<span ><i class="fa-solid fa-quote-left"></i>  Référence :</span>
+										<a class="btn btn-outline-primary" href="{{ path('agent_order_list_digital',{'referenceVente' : generateReference(contact.agent.id,app.user.id,contact.id)  }) }}"> {{ generateReference(contact.agent.id,app.user.id,contact.id) }} </a>
+                            			<a class="p-2" href="#" onclick="copyLink('{{ url('agent_order_list_digital',{'referenceVente' :  generateReference(contact.agent.id,app.user.id,contact.id) }) }}','Liens de la référence {{  generateReference(contact.agent.id,app.user.id,contact.id) }} copié avec succès') "><i class="fa-solid fa-copy"></i></a> 
+									</div>
+									<div class="col-12 mt-4">
+									<a href="{{path('agent_contact_meeting_list',{'contact': contact.id })}}" class="btn btn-outline-primary"><i class="fa fa-eye"></i> Voir rendez-vous</a>
+									</div>
+								</div>
 							
 							</div>
 						</div>

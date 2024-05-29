@@ -191,23 +191,24 @@ class AgentContactMeetingController extends AbstractController
     }
 
      /**
-     * @Route("/agent/contact/meeting/list", name="agent_contact_meeting_list")
+     * @Route("/agent/contact/meeting/list/{contact}", name="agent_contact_meeting_list")
      */
-    public function agent_contact_meeting_list(Request $request, PaginatorInterface $paginator)
+    public function agent_contact_meeting_list(Request $request, PaginatorInterface $paginator,Contact $contact = null)
     {
         $agent = $this->getUser();
         $search = new MeetingSearch();
         $searchForm = $this->createForm(MeetingSearchType::class, $search);
         $searchForm->handleRequest($request);
         $meetings = $paginator->paginate(
-            $this->meetingRepository->findMeetingByUser($search, $agent),
+            $this->meetingRepository->findMeetingByUser($search, $agent,$contact),
             $request->query->getInt('page', 1),
             20
         );
         
         return $this->render('user_category/agent/meeting/meeting-list.html.twig', [
             'meetings' => $meetings,
-            'searchForm' => $searchForm->createView()
+            'searchForm' => $searchForm->createView(),
+            'contact' => $contact
         ]);
     }
 
