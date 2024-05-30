@@ -89,10 +89,11 @@ class CoachContactMeetingController extends AbstractController
      */
     public function audit_view(Meeting $meeting)
     {
-        
+        $previousUrl = $this->generateUrl('coach_contact_meeting_list', ['agent' => $meeting->getUser()->getId(),'contact'=> $meeting->getUserToMeet()->getId() ]);
         return $this->render('user_category/agent/audit/view_audit.html.twig', [
-            'audit' =>$meeting->getAudit(),
-            'meeting'=>$meeting
+            'audit' => $meeting->getAudit(),
+            'meeting'=> $meeting,
+            'previousUrl'=> $previousUrl, 
         ]);
     }
 }

@@ -18,6 +18,8 @@
 	<div class="mt-2">
 		{% if meeting == null %}
 		<a href="{{ path('audit_list') }}" class="btn btn-secondary"> <i class="fa-solid fa-circle-arrow-left"></i> Retour </a>
+		{% elseif previousUrl is defined %}
+		<a href="{{  previousUrl }}" class="btn btn-secondary"> <i class="fa-solid fa-circle-arrow-left"></i> Retour </a>
 		{% else %}
 		<a href="{{ path('agent_contact_meeting_fiche',{'id':meeting.getId()}) }}" class="btn btn-secondary"> <i class="fa-solid fa-circle-arrow-left"></i> Retour </a>
 		{% endif %}
