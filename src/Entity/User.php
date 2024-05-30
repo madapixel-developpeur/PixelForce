@@ -44,6 +44,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
         self::ROLE_AMBASSADEUR => self::ROLE_AMBASSADEUR,
     ];
 
+    const INACTIVE_STATE = -1 ;
+
 
     /**
      *  Clés disponibles :
