@@ -19,44 +19,10 @@
     <div class="mt-3">
         <section id="dashboard-ecommerce">
             <div class="row match-height">
-                <!-- Medal Card -->
-                <div class="col-xl-4 col-md-6 col-12">
-                    <div class="card card-congratulation-medal">
-                        <div class="card-body">
-                            <h5>Félicitation 🎉 {{ app.user.prenom }}!</h5>
-                            <p class="card-text font-small-3">
-                            {% if app.user.canAccessFonct('RDV', app.session.get('secteurId')) %}
-                                Pour inviter d'autres personnes à se joindre à vous, <br/>
-                                veuillez cliquer 
-                                <a class="w-100 font-weight-bold" href="#" onclick="copyLink('{{ url('agent_inscription', {'ambassador_username': agent.username != "" ? agent.username : ' '}) }}') " > 
-                                    ici 
-                                </a>.
-                            {% endif %}
-                            </p>
-                            {# {% if (estSecurite or estEcommerce) %} #}
-                            <h3 class="mb-75 mt-2 pt-50">
-                            <a href="#">
-                                {{ (statDigital ? statDigital.totalAmount : chiffreAffaireTotal ) | number_format(2, ',', ' ')}} €  
-                            </a>                           
-                            </h3>
-                            {# {% endif %} #}
-                            {% if app.user.canAccessFonct('VENTE', app.session.get('secteurId')) %}
-                            {% if estSecurite %}
-                            <a role="button" href="{{path('admin_ordersecu_list')}}" class="btn btn-primary">Voir les ventes</a>
-                            {% elseif estEcommerce %}
-                            <a role="button" href="{{path('agent_order_list')}}" class="btn btn-primary">Voir les ventes</a>
-                            {% elseif estDemandeDevis %}
-                            <a role="button" href="{{path('agent_demandedevis_list')}}" class="btn btn-primary">Voir les ventes</a>
-                            {% endif %}
-                            {% endif %}
-                            <img src="{{asset('assets/vuexy/images/illustration/badge.svg')}}" class="congratulation-medal" alt="Medal Pic" />
-                        </div>
-                    </div>
-                </div>
-                <!--/ Medal Card -->
+               
     
                 <!-- Statistics Card -->
-                <div class="col-xl-8 col-md-6 col-12">
+                <div class="col-xl-12 col-md-6 col-12">
                     <div class="card card-statistics">
                         <div class="card-header">
                             <h4 class="card-title">Statistiques</h4>
@@ -67,7 +33,7 @@
                                     <div class="d-flex flex-row">
                                         <div class="avatar bg-light-primary me-2">
                                             <div class="avatar-content">
-                                                <a {% if app.user.canAccessFonct('VENTE', app.session.get('secteurId')) %}href="{% if estSecurite %}{{path('admin_ordersecu_list')}}{% elseif estEcommerce %}{% if app.session.get('secteurId') == secteurDigitalId  %}{{path('agent_order_list_digital')}}{% else %}{{path('agent_order_list')}}{% endif %}{% elseif estDemandeDevis %}{{path('agent_demandedevis_list')}}{% else %}#{% endif %}"{% endif %}><i data-feather="trending-up" class="avatar-icon"></i></a>
+                                              <i data-feather="trending-up" class="avatar-icon"></i>
                                             </div>
                                         </div>
                                         <div class="my-auto">
@@ -416,7 +382,7 @@
                 </div> #}
                 <!--/ Browser States Card -->
                 <!-- Browser States Card -->
-                {% if app.user.canAccessFonct('PRODUIT', app.session.get('secteurId')) %}
+                {# {% if app.user.canAccessFonct('PRODUIT', app.session.get('secteurId')) %}
                 <div class="col-lg-12 col-md-12">
                     <div class="card card-company-table pb-5" style="min-height: 300px;">
                         <div class="card-body p-0">
@@ -436,13 +402,12 @@
                                        <a class="p-2" href="#" onclick="copyLink('{{ url('agent_order_list_digital',{'referenceVente' : generateReference(app.user.id,app.user.id) }) }}','Liens de la référence {{ generateReference(app.user.id,app.user.id) }} copié avec succès') "><i class="fa-solid fa-copy"></i></a> 
                                     </h5>
 
-                                    {# <a target="_blank" href="{{secteur.liens}}" class="card-link">Lien vers {{secteur.nom}}</strong></a> #}
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                {% endif %}
+                {% endif %} #}
                 {% if app.user.canAccessFonct('RDV', app.session.get('secteurId')) %}
                 {# <div class="card text-center col-lg-12 col-md-12 align-items-center">
                     
