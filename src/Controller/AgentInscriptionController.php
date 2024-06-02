@@ -4,22 +4,23 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Entity\AgentSecteur;
-use App\Entity\PlanAgentAccount;
 use App\Entity\Secteur;
-use App\Form\InscriptionAgentType;
+use App\Entity\AgentSecteur;
+use App\Manager\UserManager;
 use App\Manager\EntityManager;
 use App\Manager\StripeManager;
-use App\Manager\UserManager;
-use App\Repository\AgentSecteurRepository;
-use App\Repository\PlanAgentAccountRepository;
-use App\Repository\SecteurRepository;
-use App\Repository\UserRepository;
 use App\Services\StripeService;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Entity\PlanAgentAccount;
+use App\Form\InscriptionAgentType;
+use App\Repository\UserRepository;
+use App\Services\User\AgentService;
+use App\Repository\SecteurRepository;
+use App\Repository\AgentSecteurRepository;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use App\Repository\PlanAgentAccountRepository;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class AgentInscriptionController extends AbstractController
 {
@@ -46,7 +47,8 @@ class AgentInscriptionController extends AbstractController
     /** @var PlanAgentAccountRepository $repoPlanAgentAccount */
     protected $repoPlanAgentAccount;
     private $secteurRepository;
-    public function __construct(EntityManager $entityManager, UserManager $userManager, StripeManager $stripeManager, SessionInterface $session, UserRepository $userRepository, AgentSecteurRepository $repoAgentSecteur, PlanAgentAccountRepository $repoPlanAgentAccount, SecteurRepository $secteurRepository)
+    private $agentService;
+    public function __construct(EntityManager $entityManager, UserManager $userManager, StripeManager $stripeManager, SessionInterface $session, UserRepository $userRepository, AgentSecteurRepository $repoAgentSecteur, PlanAgentAccountRepository $repoPlanAgentAccount, SecteurRepository $secteurRepository,AgentService $agentService)
     {
         $this->entityManager = $entityManager;
         $this->userManager = $userManager;
@@ -56,6 +58,7 @@ class AgentInscriptionController extends AbstractController
         $this->repoAgentSecteur = $repoAgentSecteur;
         $this->repoPlanAgentAccount = $repoPlanAgentAccount;
         $this->secteurRepository = $secteurRepository;
+        $this->agentService = $agentService;
     }
 
 
@@ -74,30 +77,12 @@ class AgentInscriptionController extends AbstractController
         try{   
            $parrain=$this->getParainByUsername($ambassador_username);
            if($form->isSubmitted() && $form->isValid()) {
-                $this->entityManager->beginTransaction();
                 
                 $this->userManager->setUserPasword($user, $request->request->get('inscription_agent')['password']['first'], '', false);
                 $user->setRoles([ User::ROLE_AGENT ]);
                 $user->setActive(1);
                 $user->setParrain($parrain);
-                // $user->setAccountStatus(User::ACCOUNT_STATUS['UNPAID']);
-                $user->setAccountStatus(User::ACCOUNT_STATUS['ACTIVE']); // On met temporairement le statut comme ACTIVE
-                $this->entityManager->save($user);
-                
-                $this->session->set('agentId', $user->getId());
-                
-                /*  secteur par defaut */
-                $metherSecteur = $this->secteurRepository->findOneBy(['id' => $_ENV['SECTEUR_METHER_ID']]);
-                $agentSecteur  = new AgentSecteur();
-                $agentSecteur->setAgent($user);
-                $agentSecteur->setSecteur($metherSecteur);
-                $agentSecteur->setStatut(1);
-                $agentSecteur->setDateValidation(new \DateTime());
-                $this->entityManager->save($agentSecteur);
-                
-
-                $this->entityManager->flush();
-                $this->entityManager->commit();
+                $this->agentService->saveAgent($user);
                 $this->addFlash(
                     'success',
                     'Votre inscription sur '.$_ENV['PLATFORME_NAME'].' a été effectuée avec succès'
@@ -106,17 +91,12 @@ class AgentInscriptionController extends AbstractController
             }
         }
         catch(\Exception $e){
-            if($this->entityManager->getConnection()->isTransactionActive()) {
-                $this->entityManager->rollback();
-            }
             $this->addFlash(
                 'danger',
                 $e->getMessage()
             );
-        } finally {
-            $this->entityManager->clear();
-        }
-            return $this->render('security/inscription/form.html.twig', [
+        } 
+        return $this->render('security/inscription/form.html.twig', [
             'form' => $form->createView()
         ]);
 
@@ -299,5 +279,44 @@ class AgentInscriptionController extends AbstractController
         return $this->json([
             'stripe_subscription_plan' => 'successfully'
         ]);
+    }
+
+      /**
+     * @Route("/agent/inscription/back-office/{ambassador_username?}", name="agent_inscription_backoffice")
+     */
+    public function inscriptionAgentBackOffice(Request $request, SecteurRepository $secteurRepository, $ambassador_username = null)
+    {
+        $user = new User();
+        if($ambassador_username != null){
+            $user->setAmbassadorUsername($this->getUser()->getUsername());
+        }
+        $parrain=null;
+        $form = $this->createForm(InscriptionAgentType::class, $user);
+        $form->handleRequest($request);
+        try{   
+           $parrain = $this->getUser();
+           if($form->isSubmitted() && $form->isValid()) {
+                
+                $this->userManager->setUserPasword($user, $request->request->get('inscription_agent')['password']['first'], '', false);
+                $user->setRoles([ User::ROLE_AGENT ]);
+                $user->setActive(1);
+                $user->setParrain($parrain);
+                $this->agentService->saveAgent($user);
+                $this->addFlash(
+                    'success',
+                    'Inscription effectuée avec succès'
+                );
+            }
+        }
+        catch(\Exception $e){
+            $this->addFlash(
+                'danger',
+                $e->getMessage()
+            );
+        } 
+        return $this->render('user_category/agent/inscription/form.html.twig', [
+            'form' => $form->createView()
+        ]);
+
     }
 }

@@ -3,10 +3,12 @@
 namespace App\Services\User;
 
 use App\Entity\User;
+use App\Entity\AgentSecteur;
 use App\Manager\EntityManager;
 use App\Manager\StripeManager;
 use App\Services\StripeService;
 use App\Repository\UserRepository;
+use App\Repository\SecteurRepository;
 use App\Services\DirectoryManagement;
 use phpDocumentor\Reflection\Types\This;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -23,7 +25,8 @@ class AgentService
     public function __construct(EntityManager $em, SessionInterface $session, StripeService $stripeService, StripeManager $stripeManager,
         private  UserRepository $repoUser,
         private DirectoryManagement $directoryManagement,
-        private UrlGeneratorInterface $urlGenerator
+        private UrlGeneratorInterface $urlGenerator,
+        private SecteurRepository $secteurRepository
     )
     {
         $this->em = $em;
@@ -191,4 +194,35 @@ class AgentService
 
     }
 
+
+    public function saveAgent(User $agent){
+        try{   
+            $this->em->beginTransaction();
+
+            
+            $agent->setAccountStatus(User::ACCOUNT_STATUS['ACTIVE']); // On met temporairement le statut comme ACTIVE
+            $this->em->save($agent);
+            
+            $this->session->set('agentId', $agent->getId());
+            
+            /*  secteur par defaut */
+            $metherSecteur = $this->secteurRepository->findOneBy(['id' => $_ENV['SECTEUR_METHER_ID']]);
+            $agentSecteur  = new AgentSecteur();
+            $agentSecteur->setAgent($agent);
+            $agentSecteur->setSecteur($metherSecteur);
+            $agentSecteur->setStatut(1);
+            $agentSecteur->setDateValidation(new \DateTime());
+            $this->em->save($agentSecteur);
+            
+
+            $this->em->flush();
+            $this->em->commit();
+        }catch(\Exception $e){
+            if($this->em->getConnection()->isTransactionActive()) {
+                $this->em->rollback();
+            }
+        } finally {
+            $this->em->clear();
+        }
+    }
 }
