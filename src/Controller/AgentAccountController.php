@@ -113,21 +113,8 @@ class AgentAccountController extends AbstractController
             $stripe_publishable_key = $_ENV['STRIPE_PUBLIC_KEY'];
         }
 
-        return $this->render('user_category/agent/home_agent.html.twig', [
-            'allSecteurs' => $allSecteurs,
-            'repoAgentSecteur' => $this->repoAgentSecteur,
-            'agent' => $this->getUser(),
-            'agentSecteurService' => $agentSecteurService,
-            'sessionAgentId' => $agent->getId(),
-            'stripeIntentSecret' => $stripeIntentSecret,
-            'stripe_publishable_key' => $stripe_publishable_key,
-            'planPrice' => $planPrice,
-            'expiredAccount' => $expiredAccount,
-            'accountStatus' => $accountStatus,
-            'USER_ACCOUNT_STATUS' => USER::ACCOUNT_STATUS,
-            'repoUser' => $this->repoUser,
-            'plan' => $planAgentAccount,
-        ]);
+
+        return $this->redirectToRoute('agent_generate_sessionSecteur_before_redirect_to_route_dahsboard',['id' => $_ENV['SECTEUR_METHER_ID']]);    
     }
 
 
