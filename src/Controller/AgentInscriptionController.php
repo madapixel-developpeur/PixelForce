@@ -71,34 +71,51 @@ class AgentInscriptionController extends AbstractController
         $parrain=null;
         $form = $this->createForm(InscriptionAgentType::class, $user);
         $form->handleRequest($request);
-       try{   
-        $parrain=$this->getParainByUsername($ambassador_username);
-        if($form->isSubmitted() && $form->isValid()) {
-            $this->userManager->setUserPasword($user, $request->request->get('inscription_agent')['password']['first'], '', false);
-            $user->setRoles([ User::ROLE_AGENT ]);
-            $user->setActive(1);
-            $user->setParrain($parrain);
-            // $user->setAccountStatus(User::ACCOUNT_STATUS['UNPAID']);
-            $user->setAccountStatus(User::ACCOUNT_STATUS['ACTIVE']); // On met temporairement le statut comme ACTIVE
-            $this->entityManager->save($user);
-            $this->session->set('agentId', $user->getId());
-            $this->addFlash(
-               'success',
-               'Votre inscription sur Pixelforce a été effectuée avec succès'
-            );
-            return $this->redirectToRoute('app_login');
-        }
+        try{   
+           $parrain=$this->getParainByUsername($ambassador_username);
+           if($form->isSubmitted() && $form->isValid()) {
+                $this->entityManager->beginTransaction();
+                
+                $this->userManager->setUserPasword($user, $request->request->get('inscription_agent')['password']['first'], '', false);
+                $user->setRoles([ User::ROLE_AGENT ]);
+                $user->setActive(1);
+                $user->setParrain($parrain);
+                // $user->setAccountStatus(User::ACCOUNT_STATUS['UNPAID']);
+                $user->setAccountStatus(User::ACCOUNT_STATUS['ACTIVE']); // On met temporairement le statut comme ACTIVE
+                $this->entityManager->save($user);
+                
+                $this->session->set('agentId', $user->getId());
+                
+                /*  secteur par defaut */
+                $metherSecteur = $this->secteurRepository->findOneBy(['id' => $_ENV['SECTEUR_METHER_ID']]);
+                $agentSecteur  = new AgentSecteur();
+                $agentSecteur->setAgent($user);
+                $agentSecteur->setSecteur($metherSecteur);
+                $agentSecteur->setStatut(1);
+                $agentSecteur->setDateValidation(new \DateTime());
+                $this->entityManager->save($agentSecteur);
+                
 
-       }
-       catch(\Exception $e){
+                $this->entityManager->flush();
+                $this->entityManager->commit();
+                $this->addFlash(
+                    'success',
+                    'Votre inscription sur '.$_ENV['PLATFORME_NAME'].' a été effectuée avec succès'
+                );
+                return $this->redirectToRoute('app_login');
+            }
+        }
+        catch(\Exception $e){
+            if($this->entityManager->getConnection()->isTransactionActive()) {
+                $this->entityManager->rollback();
+            }
             $this->addFlash(
                 'danger',
                 $e->getMessage()
             );
-       }
-       
-        //dd($user);
-
+        } finally {
+            $this->entityManager->clear();
+        }
             return $this->render('security/inscription/form.html.twig', [
             'form' => $form->createView()
         ]);

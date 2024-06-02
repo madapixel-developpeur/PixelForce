@@ -1,0 +1,1 @@
+loremINSERT INTO `secteur` (`id`, `type_id`, `nom`, `description`, `active`, `couverture`, `liens`, `long_description`, `title`, `affiche`, `google_forms`, `google_forms_response`) VALUES (NULL, '1', 'Mether', 'Plateforme avec des services digitales', '1', '', '', '<p>Lorem</p>', 'lorem', NULL, NULL, NULL);
