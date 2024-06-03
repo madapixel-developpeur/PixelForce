@@ -48,6 +48,9 @@
     var diagonal = d3.svg.diagonal()
       .projection(function(d) {
         // debugger;
+        if(d.type == 0){
+          return [d.x + 130 / 2, d.y + attrs.nodeHeight / 2];
+        }
         return [d.x + attrs.nodeWidth / 2, d.y + attrs.nodeHeight / 2];
       });
 
@@ -84,9 +87,10 @@
     }
 
     expand(attrs.root);
-    if (attrs.root.children) {
-      attrs.root.children.forEach(collapse);
-    }
+    // checkpoint
+    // if (attrs.root.children) {
+    //   attrs.root.children.forEach(collapse);
+    // }
 
     update(attrs.root);
 
@@ -281,8 +285,8 @@
         .attr("text-anchor", "left")
 
       .text(function(d) {
-        if (d.children) return d.children.length;
-        if (d._children) return d._children.length;
+        if (d.children && d.children.length >0) return d.children.length -1;
+        if (d._children && d._children.length >0) return d._children.length -1;
         return;
       })
 
@@ -307,6 +311,7 @@
         .attr("xlink:href", function(v) {
           return v.imageUrl;
         })
+        
 
       // Transition nodes to their new position.
       var nodeUpdate = node.transition()
@@ -317,7 +322,10 @@
 
       //todo replace with attrs object
       nodeUpdate.select("rect")
-        .attr("width", attrs.nodeWidth)
+        .attr("width",function(d) {
+          if(d.type == 0) return 75;
+          return 230;
+        })
         .attr("height", attrs.nodeHeight)
         .attr('rx', 3)
         .attr("stroke", function(d){
@@ -474,28 +482,32 @@
       }
 
       function tooltipHoverHandler(d) {
-
-        var content = tooltipContent(d);
-        tooltip.html(content);
-
-        tooltip.transition()
-          .duration(200).style("opacity", "1").style('display', 'block');
-        d3.select(this).attr('cursor', 'pointer').attr("stroke-width", 0);
-
-        var y = d3.event.pageY;
-        var x = d3.event.pageX;
-
-        //restrict tooltip to fit in borders
-        if (y < 220) {
-          y += 220 - y;
-          x += 130;
+        if(d.type == 0){
+          window.location.href = d.inscription;
         }
-
-        if(y>attrs.height-100){
-          y-= 100-(attrs.height-y);
+        else{
+          var content = tooltipContent(d);
+          tooltip.html(content);
+  
+          tooltip.transition()
+            .duration(200).style("opacity", "1").style('display', 'block');
+          d3.select(this).attr('cursor', 'pointer').attr("stroke-width", 0);
+  
+          var y = d3.event.pageY;
+          var x = d3.event.pageX;
+  
+          //restrict tooltip to fit in borders
+          if (y < 220) {
+            y += 220 - y;
+            x += 130;
+          }
+  
+          if(y>attrs.height-100){
+            y-= 100-(attrs.height-y);
+          }
+          tooltip.style('top', (y - 100) + 'px')
+          .style('left', (x - 470) + 'px');
         }
-        tooltip.style('top', (y - 100) + 'px')
-        .style('left', (x - 470) + 'px');
       }
 
       function tooltipOutHandler() {

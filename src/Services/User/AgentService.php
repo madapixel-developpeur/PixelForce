@@ -4,8 +4,10 @@ namespace App\Services\User;
 
 use App\Entity\User;
 use App\Entity\AgentSecteur;
+use App\Services\MailService;
 use App\Manager\EntityManager;
 use App\Manager\StripeManager;
+use App\Services\MailerService;
 use App\Services\StripeService;
 use App\Repository\UserRepository;
 use App\Repository\SecteurRepository;
@@ -26,7 +28,8 @@ class AgentService
         private  UserRepository $repoUser,
         private DirectoryManagement $directoryManagement,
         private UrlGeneratorInterface $urlGenerator,
-        private SecteurRepository $secteurRepository
+        private SecteurRepository $secteurRepository,
+        private MailerService $mailerService,
     )
     {
         $this->em = $em;
@@ -159,6 +162,22 @@ class AgentService
         return '/assets/vuexy/images/portrait/small/avatar-s-11.jpg';
     }
 
+    public function getDefaultChildren(User $user){
+        $data = [];
+        $data['ID'] = '';
+        $data['name'] ="";
+        $data['imageUrl'] = '/assets/img/utilitaire/plus-icons.png';
+        $data['area'] = '';
+        $data['office'] = "Admin";
+        $data['isLoggedUser'] = false;
+        $data['positionName'] = "";
+        $data['parrainId'] = $user->getId();
+        $data['inscription'] = $this->urlGenerator->generate('agent_inscription_backoffice', ['ambassador_username' => $user->getUsername()]);
+        $data['type'] = 0;
+        
+        return $data;
+    }
+
 
     public function getUnilevelChildren(User $user,int $currentLevel,bool $currentLoggedUser = false, $limit=null){
         $data = [];
@@ -169,17 +188,15 @@ class AgentService
         $data['office'] = in_array("ROLE_ADMIN", $user->getRoles()) ? "Admin" : "User";
         $data['isLoggedUser'] = $currentLoggedUser;
         $data['positionName'] = $user->getUsername();
+        $data['type'] = 2;
         
         $limitEnv = $_ENV['LIMIT_NIVEAU_EQUIPE_LINEAIRE'];
-        if(!($limit && $limit <= $limitEnv)) $limit = $limitEnv;
-        
         $children = $this->repoUser->findBy(['parrain'=>$user->getId()]);
-        if($currentLevel  <= $limit){
-            foreach ($children as $child) {
-                $data['countChildren'] = count($children);
-                $data['children'][] = $this->getUnilevelChildren($child,$currentLevel+1,false,$limit);
-            }   
-         }
+        foreach ($children as $child) {
+            $data['countChildren'] = count($children);
+            $data['children'][] = $this->getUnilevelChildren($child,$currentLevel+1,false,$limit);
+        }   
+        $data['children'][] = $this->getDefaultChildren($user);
         return $data;
     }
 
@@ -195,14 +212,11 @@ class AgentService
     }
 
 
-    public function saveAgent(User $agent){
-        try{   
-            $this->em->beginTransaction();
-
-            
+    public function saveAgent(User $agent,$password){
+        try{        
+            $this->em->beginTransaction();    
             $agent->setAccountStatus(User::ACCOUNT_STATUS['ACTIVE']); // On met temporairement le statut comme ACTIVE
-            $this->em->save($agent);
-            
+            $this->em->persist($agent);
             $this->session->set('agentId', $agent->getId());
             
             /*  secteur par defaut */
@@ -212,15 +226,20 @@ class AgentService
             $agentSecteur->setSecteur($metherSecteur);
             $agentSecteur->setStatut(1);
             $agentSecteur->setDateValidation(new \DateTime());
-            $this->em->save($agentSecteur);
+            $this->em->persist($agentSecteur);  
             
-
+            /* Send mail */
+            $data = [];
+            $data['password'] = $password;
+            $data['url_platform'] = $_ENV["PLATFORM_URL"];
+            $this->mailerService->sendWelcomeMail($agent,$data);
             $this->em->flush();
             $this->em->commit();
         }catch(\Exception $e){
             if($this->em->getConnection()->isTransactionActive()) {
                 $this->em->rollback();
             }
+            throw $e;
         } finally {
             $this->em->clear();
         }

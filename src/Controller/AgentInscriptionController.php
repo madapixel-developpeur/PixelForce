@@ -77,12 +77,11 @@ class AgentInscriptionController extends AbstractController
         try{   
            $parrain=$this->getParainByUsername($ambassador_username);
            if($form->isSubmitted() && $form->isValid()) {
-                
                 $this->userManager->setUserPasword($user, $request->request->get('inscription_agent')['password']['first'], '', false);
                 $user->setRoles([ User::ROLE_AGENT ]);
                 $user->setActive(1);
                 $user->setParrain($parrain);
-                $this->agentService->saveAgent($user);
+                $this->agentService->saveAgent($user,$request->request->get('inscription_agent')['password']['first']);
                 $this->addFlash(
                     'success',
                     'Votre inscription sur '.$_ENV['PLATFORME_NAME'].' a été effectuée avec succès'
@@ -287,25 +286,29 @@ class AgentInscriptionController extends AbstractController
     public function inscriptionAgentBackOffice(Request $request, SecteurRepository $secteurRepository, $ambassador_username = null)
     {
         $user = new User();
+        $parrain = $this->getUser();
         if($ambassador_username != null){
-            $user->setAmbassadorUsername($this->getUser()->getUsername());
+            $user->setAmbassadorUsername($ambassador_username);
+            $parrain=$this->getParainByUsername($ambassador_username);
         }
-        $parrain=null;
         $form = $this->createForm(InscriptionAgentType::class, $user);
         $form->handleRequest($request);
         try{   
-           $parrain = $this->getUser();
-           if($form->isSubmitted() && $form->isValid()) {
+            if($form->isSubmitted() && $form->isValid()) {
                 
                 $this->userManager->setUserPasword($user, $request->request->get('inscription_agent')['password']['first'], '', false);
                 $user->setRoles([ User::ROLE_AGENT ]);
                 $user->setActive(1);
                 $user->setParrain($parrain);
-                $this->agentService->saveAgent($user);
+                $this->agentService->saveAgent($user,$request->request->get('inscription_agent')['password']['first']);
                 $this->addFlash(
                     'success',
                     'Inscription effectuée avec succès'
                 );
+                if(!is_null($ambassador_username))
+                {
+                    return $this->redirectToRoute('agent_view');
+                }
             }
         }
         catch(\Exception $e){

@@ -384,4 +384,23 @@ class MailerService
 
     }
 
+    public function sendWelcomeMail($recipient,$data)
+    {
+        try {
+            $this->sendMail([
+                'subject' => 'Bienvenue',
+                'to' => [
+                    $recipient->getEmail()
+                ],
+                'template' => 'inscription/welcome.html.twig',
+                'template_vars' => [
+                    'user' => $recipient,
+                    'data' => $data,
+                ]
+            ]);       
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
+
 }
