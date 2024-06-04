@@ -111,6 +111,7 @@
             
         </table>
         <div class="meeting-fiche-controls">
+            <a class="btn btn-outline-warning m-2" href="{{ path('agent_contact_meeting_edit', { id: meeting.getId() }) }}">Modifier le rendez-vous</a>
             {% if meeting.meetingState.name == "En attente" %}<button class="btn btn-outline-danger" type="button" onclick="cancelMeeting({{meeting.id}})">Annuler le rendez-vous</button>{% endif %}
             {# <button class="btn btn-outline-secondary" type="button" onclick="reportMeeting({{meeting.id}})">Rendez-vous après 48h</button> #}
 

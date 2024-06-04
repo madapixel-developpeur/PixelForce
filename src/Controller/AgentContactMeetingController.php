@@ -165,7 +165,50 @@ class AgentContactMeetingController extends AbstractController
         return $this->render('user_category/agent/meeting/meeting-form.html.twig', [
             'userToMeet' => $userToMeet,
             'form' => $form->createView(),
-            'error' => $error
+            'error' => $error,
+            'button'=>'Prendre rendez-vous'
+        ]);
+    }
+    /**
+     * @Route("/agent/contact/meeting/{id}/edit", name="agent_contact_meeting_edit")
+     */
+    public function agent_contact_meeting_edit(Meeting $meeting, Request $request)
+    {
+     
+        // $meeting->setStart(new \Datetime());
+        // $meeting->setEnd((new \Datetime())->add(new DateInterval('PT1H')));
+        $error = null;
+        $form = $this->createForm(MeetingType::class, $meeting);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            try{
+
+                $meetingCalendarEventLabel = $this->calendarEventLabelRepository->findOneBy(["value"=>"meeting"]);
+                if($meetingCalendarEventLabel == null) throw new \Exception('Calendar event "meeting" is missing in the database.');
+                
+                $this->entityManager->beginTransaction();
+                $this->meetingService->updateMeeting($meeting);
+                $this->entityManager->flush();
+                $this->entityManager->commit();
+                $this->addFlash(
+                   'success',
+                   "Votre rendez-vous a été mis à jour."
+                );
+             
+                return $this->redirectToRoute('agent_contact_meeting_fiche',['id'=>$meeting->getId()]);
+            } catch(\Exception $ex){
+                $error = $ex->getMessage();
+                if($this->entityManager->getConnection()->isTransactionActive()) {
+                    $this->entityManager->rollback();
+                }
+            }
+        }
+        return $this->render('user_category/agent/meeting/meeting-form.html.twig', [
+            'userToMeet' => $meeting->getUserToMeet(),
+            'form' => $form->createView(),
+            'error' => $error,
+            'button'=>'Modifier le rendez-vous'
         ]);
     }
 

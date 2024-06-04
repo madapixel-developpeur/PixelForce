@@ -42,10 +42,14 @@ class MeetingService
         $meeting->setUserToMeet($userToMeet);
         $this->entityManager->persist($meeting);
         $this->entityManager->flush();
-
-
-
     }
+    public function updateMeeting(Meeting $meeting, $meetingState = null){
+        if($meetingState == null) $meetingState = $this->meetingStateRepository->find(1); // En attente par défaut
+        $meeting->setMeetingState($meetingState);
+        $this->entityManager->persist($meeting);
+        $this->entityManager->flush();
+    }
+
     public function saveMeetingEvent(Meeting $meeting, User $user, $meetingCalendarEventLabel = null){
         if($meetingCalendarEventLabel == null) $meetingCalendarEventLabel = $this->calendarEventLabelRepository->findOneBy(["value"=>"meeting"]);
         if($meetingCalendarEventLabel == null) throw new \Exception('Calendar event "meeting" is missing in the database.');
