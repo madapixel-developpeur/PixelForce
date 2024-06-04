@@ -2,15 +2,19 @@
 
 namespace App\Entity;
 
-use App\Repository\ContactInformationRepository;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\ProspectRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * @ORM\Entity(repositoryClass=ContactInformationRepository::class)
+ * @ORM\Entity(repositoryClass=ProspectRepository::class)
  */
-class ContactInformation
+class Prospect
 {
-    
+
+      
     const TYPE_DEFAULT = 1;
     const TYPE_AUDIT = 2;
     const TYPE_CLIENT = 3;
@@ -27,6 +31,13 @@ class ContactInformation
      */
     private $id;
 
+
+      /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="contact")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $agent;
+    
     /**
      * @ORM\Column(type="string", length=255)
      */
@@ -51,13 +62,8 @@ class ContactInformation
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $address;
-
-    /**
-     * @ORM\OneToOne(targetEntity=Contact::class, mappedBy="information", cascade={"persist", "remove"})
-     */
-    private $contact;
-
-    /**
+   
+      /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $rue;
@@ -78,25 +84,20 @@ class ContactInformation
     private $ville;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
-    private $compositionFoyer;
+    private $note;
 
+   
     /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $nbrPersonne;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=TypeLogement::class)
-     */
-    private $typeLogement;
-
-      /**
      * @ORM\Column(type="integer",options={"default" : 1})
      */
     private $type = self::TYPE_DEFAULT;
 
+        /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $created_at;
     
 
     public function getId(): ?int
@@ -164,39 +165,6 @@ class ContactInformation
         return $this;
     }
 
-    public function getContact(): ?Contact
-    {
-        return $this->contact;
-    }
-
-    public function setContact(?Contact $contact): self
-    {
-        // unset the owning side of the relation if necessary
-        if ($contact === null && $this->contact !== null) {
-            $this->contact->setInformation(null);
-        }
-
-        // set the owning side of the relation if necessary
-        if ($contact !== null && $contact->getInformation() !== $this) {
-            $contact->setInformation($this);
-        }
-
-        $this->contact = $contact;
-
-        return $this;
-    }
-
-    public function getRue(): ?string
-    {
-        return $this->rue;
-    }
-
-    public function setRue(?string $rue): self
-    {
-        $this->rue = $rue;
-
-        return $this;
-    }
 
     public function getNumero(): ?string
     {
@@ -234,42 +202,6 @@ class ContactInformation
         return $this;
     }
 
-    public function getCompositionFoyer(): ?string
-    {
-        return $this->compositionFoyer;
-    }
-
-    public function setCompositionFoyer(?string $compositionFoyer): self
-    {
-        $this->compositionFoyer = $compositionFoyer;
-
-        return $this;
-    }
-
-    public function getNbrPersonne(): ?int
-    {
-        return $this->nbrPersonne;
-    }
-
-    public function setNbrPersonne(?int $nbrPersonne): self
-    {
-        $this->nbrPersonne = $nbrPersonne;
-
-        return $this;
-    }
-
-    public function getTypeLogement(): ?TypeLogement
-    {
-        return $this->typeLogement;
-    }
-
-    public function setTypeLogement(?TypeLogement $typeLogement): self
-    {
-        $this->typeLogement = $typeLogement;
-
-        return $this;
-    }
-
     public function fullName()
     {
         return $this->firstname .' '. $this->lastname;
@@ -301,4 +233,84 @@ class ContactInformation
         return self::TYPE_ARRAY_FORM[$this->getType()];
     }
 
+
+    /**
+     * Get the value of created_at
+     */ 
+    public function getCreated_at()
+    {
+        return $this->created_at;
+    }
+
+    /**
+     * Set the value of created_at
+     *
+     * @return  self
+     */ 
+    public function setCreated_at($created_at)
+    {
+        $this->created_at = $created_at;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of agent
+     */ 
+    public function getAgent()
+    {
+        return $this->agent;
+    }
+
+    /**
+     * Set the value of agent
+     *
+     * @return  self
+     */ 
+    public function setAgent($agent)
+    {
+        $this->agent = $agent;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of note
+     */ 
+    public function getNote()
+    {
+        return $this->note;
+    }
+
+    /**
+     * Set the value of note
+     *
+     * @return  self
+     */ 
+    public function setNote($note)
+    {
+        $this->note = $note;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of rue
+     */ 
+    public function getRue()
+    {
+        return $this->rue;
+    }
+
+    /**
+     * Set the value of rue
+     *
+     * @return  self
+     */ 
+    public function setRue($rue)
+    {
+        $this->rue = $rue;
+
+        return $this;
+    }
 }

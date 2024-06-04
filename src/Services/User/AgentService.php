@@ -202,7 +202,7 @@ class AgentService
 
     public function getNumberOfTeam(User $user,int $currentLevel){
         $equipe = 0;
-        if($currentLevel  > $_ENV['LIMIT_NIVEAU_EQUIPE_LINEAIRE']) return 0;
+        // if($currentLevel  > $_ENV['LIMIT_NIVEAU_EQUIPE_LINEAIRE']) return 0;
         $children = $this->repoUser->findBy(['parrain'=>$user->getId()]);
         foreach ($children as $child) {
            $equipe +=  $this->getNumberOfTeam($child,$currentLevel+1)+1;
