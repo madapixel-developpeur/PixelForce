@@ -50,10 +50,11 @@ class EvenementFormType extends AbstractType
         ->add('filePath', FileType::class, [
             "label" => "Fichier ",
             'mapped' => false,
-            "required" => false,
+            "required" => $options['isCreation'],
             'constraints' => [
                 new File([
                     // 'maxSize' => '1024k',
+                    'mimeTypes' => ['image/jpeg', 'image/png', 'image/gif'],
                     'mimeTypesMessage' => 'Image invalide. Le format doit être: .jpeg ou .png',
                 ])
             ]
@@ -65,6 +66,7 @@ class EvenementFormType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Evenement::class,
+            'isCreation' => false,
         ]);
     }
 }

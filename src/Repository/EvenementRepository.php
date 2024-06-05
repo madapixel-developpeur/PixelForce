@@ -21,6 +21,14 @@ class EvenementRepository extends ServiceEntityRepository
         parent::__construct($registry, Evenement::class);
     }
 
+    public function getLatestEvent(){
+        return $this->createQueryBuilder('e')
+        ->orderBy('e.createdAt', 'DESC') // Order by createdAt in descending order
+        ->setMaxResults(1) // Limit the results to the most recent entry
+        ->getQuery()
+        ->getOneOrNullResult(); 
+    }
+
 //    /**
 //     * @return Evenement[] Returns an array of Evenement objects
 //     */

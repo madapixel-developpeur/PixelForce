@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use DateTime;
 use App\Entity\Evenement;
 use App\Services\FileHandler;
 use App\Manager\EntityManager;
@@ -48,10 +49,11 @@ class CoachEvenementController extends AbstractController
     public function add(Request $request): Response
     {
         $evenement = new Evenement();
-        $form = $this->createForm(EvenementFormType::class, $evenement);
+        $form = $this->createForm(EvenementFormType::class, $evenement,[ 'isCreation' =>true]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $evenement->setCoach($this->getUser());
+            $evenement->setCreatedAt(new DateTime());
             $fichier = $form->get('filePath')->getData();
             if ($fichier) {
                 $fichier_nom = $this->fileHandler->upload($fichier, "evenement/");

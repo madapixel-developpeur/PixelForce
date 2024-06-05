@@ -19,6 +19,8 @@
         <li class=" nav-item {% if not app.user.canAccessFonct('CONTACT', app.session.get('secteurId')) %}disabled{% endif %}"><a class="d-flex align-items-center" href="{{ path('agent_contact_list') }}"><i data-feather="user"></i><span class="menu-title text-truncate" data-i18n="User">Contact</span></a></li>
         <li class=" nav-item"><a class="d-flex align-items-center" href="{{ path('agent_prospect_list') }}"><i data-feather="user"></i><span class="menu-title text-truncate" data-i18n="User">Prospect</span></a></li>
         <li class=" nav-item {% if not app.user.canAccessFonct('RDV', app.session.get('secteurId')) %}disabled{% endif %}"><a class="d-flex align-items-center " href="{{path('agent_contact_meeting_list')}}"><i data-feather="coffee"></i><span class="menu-title text-truncate" data-i18n="Meetings">Rendez-vous</span></a></li>
+        <li class=" nav-item"><a class="d-flex align-items-center" href="{{path('app_coach_evenement')}}"><i class="fa fa-calendar"></i><span class="menu-title text-truncate" data-i18n="Calendar">Evènement</span></a></li>
+        
         {# <li class=" nav-item"><a class="d-flex align-items-center" href="{{ path('agent_contact_list') }}"><i data-feather="user"></i><span class="menu-title text-truncate" data-i18n="User">Contacts</span></a></li> #}
         {# <li class=" nav-item"><a class="d-flex align-items-center" href="{{ path('agent_zoom_list') }}"><i data-feather="video"></i><span class="menu-title text-truncate" data-i18n="User">Réunions</span></a> #}
 
@@ -47,7 +49,6 @@
         {% elseif app.session.get('typeSecteurId') == 5 %}
             {# coming soon #}
         {% else %}
-            {# <li class=" nav-item {% if not app.user.canAccessFonct('VENTE', app.session.get('secteurId')) %}disabled{% endif %}"><a class="d-flex align-items-center" href="{{path('admin_ordersecu_list')}}"><i data-feather="eye"></i><span class="menu-title text-truncate" data-i18n="Calendar">Ventes</span></a></li> #}
         {% endif %}
         
         {# <li class=" nav-item"><a class="d-flex align-items-center" href="{{ path('live_video_list') }}"><i data-feather="calendar"></i><span class="menu-title text-truncate" data-i18n="Calendar">Réunions</span></a></li> #}

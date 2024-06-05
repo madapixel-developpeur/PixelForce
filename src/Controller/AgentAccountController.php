@@ -17,6 +17,7 @@ use App\Repository\ContactRepository;
 use App\Repository\SecteurRepository;
 use App\Services\AgentSecteurService;
 use App\Entity\SearchEntity\UserSearch;
+use App\Repository\EvenementRepository;
 use App\Repository\FormationRepository;
 use App\Services\FormationAgentService;
 use App\Services\Stat\StatAgentService;
@@ -24,6 +25,7 @@ use App\Repository\AgentSecteurRepository;
 use App\Repository\CalendarEventRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use App\Repository\FormationAgentRepository;
+use App\Repository\UserTransactionRepository;
 use Symfony\Component\HttpFoundation\Request;
 use App\Repository\PlanAgentAccountRepository;
 use Symfony\Component\Routing\Annotation\Route;
@@ -33,7 +35,6 @@ use App\Repository\RFormationCategorieRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use App\Repository\UserTransactionRepository;
 
 class AgentAccountController extends AbstractController
 {
@@ -54,7 +55,8 @@ class AgentAccountController extends AbstractController
     protected $repoUser;
 
     public function __construct(SecteurRepository $repoSecteur, AgentSecteurRepository $repoAgentSecteur, FormationRepository $repoFormation,SessionInterface $session, ContactRepository $repoContact, FormationAgentRepository $repoFormationAgent, CategorieFormationRepository $repoCatFormation, RFormationCategorieRepository $repoRelationFormationCategorie, CategorieFormationAgentService $categorieFormationAgentService, CalendarEventRepository $calendarEventRepository, StripeService $stripeService, StripeManager $stripeManager, AgentService $agentService, PlanAgentAccountRepository $repoPlanAgentAccount, UserRepository $repoUser,
-    private EntityManager $entityManager)
+    private EntityManager $entityManager,
+    private EvenementRepository $evenementRepository,)
     {
         $this->repoSecteur = $repoSecteur;
         $this->repoAgentSecteur = $repoAgentSecteur;
@@ -152,7 +154,6 @@ class AgentAccountController extends AbstractController
     public function agent_dashboard_secteur( Request $request, PaginatorInterface $paginator, Secteur $secteur, StatAgentService $statAgentService,UserRepository $userRepository, UserTransactionRepository $userTransactionRepository, CategorieFormationRepository $categorieFormationRepository)
     {
       
-        //dd($secteur);
         $agent = (object)$this->getUser();
         $this->agentService->setStartDate($agent);
       
@@ -207,6 +208,9 @@ class AgentAccountController extends AbstractController
 
         $formationCategoriesOrdered = $categorieFormationRepository->getValidCategoriesOrdered();
 
+        $lastEvent= $this->evenementRepository->getLatestEvent();
+
+
         return $this->render('user_category/agent/dashboard_secteur.html.twig', [
             'secteur' => $secteur,
             'firstFormation' => $firstFormation,
@@ -231,6 +235,8 @@ class AgentAccountController extends AbstractController
             'soldeRemuneration' => $soldeRemuneration,
             'formationCategoriesOrdered' => $formationCategoriesOrdered,
             'repoFormationAgent' => $this->repoFormationAgent,
+            'lastEvent' => $lastEvent,
+            'filesDirectory' => $this->getParameter('files_directory_relative')
         ]);
     }
 

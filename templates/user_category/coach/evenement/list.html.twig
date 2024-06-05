@@ -32,7 +32,9 @@
                             <h4 class="my-auto">Liste des évènements</h4>
                         </div>
                         <div class="col-6 ">
+                        {% if is_granted('ROLE_COACH') %}
                             <a href="{{path('coach_add_evenement')}}" class="btn btn-primary btn-sm waves-effect waves-float waves-light fw-bolder d-flex float-end d-flex align-items-center"><i class="fa-solid fa-plus me-2"></i> Ajouter</a>
+                        {% endif  %}
                         </div>
                     </div>
                 </div>
@@ -62,10 +64,16 @@
                                 <a href="{{ path('evenement_view', {'id': evenement.id}) }}" class="btn btn-secondary">
                                     <i class="fa-solid fa-eye"></i>
                                 </a>
-                                  <a href="{{ path('coach_edit_evenement', {'id': evenement.id}) }}" class="btn btn-success">
+                                {% if is_granted('ROLE_COACH') %}
+                                    <a href="{{ path('coach_edit_evenement', {'id': evenement.id}) }}" class="btn btn-success">
                                     <i class="fa fa-pencil-square" aria-hidden="true"></i>
-                                </a>
-                                
+                                    </a>
+                                {% endif  %}
+                                {# {% if is_granted('ROLE_AGENT') %}
+                                    <a href="#" class="btn btn-success">
+                                       S'inscrire
+                                    </a>
+                                {% endif  %} #}
                             </td>
                         </tr>
                     {% endfor %}
