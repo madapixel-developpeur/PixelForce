@@ -262,15 +262,13 @@ class AgentAccountController extends AbstractController
      */
     public function getDataUnilevel(Request $request)
     {
+        $limit = 24;
         $idAgent = $request->get('agentId');
         if($idAgent){
             $user = $this->repoUser->findOneBy(['id' => $idAgent]);
         }
         else{
             $user = (object)$this->getUser();
-        }
-        if(in_array('ROLE_AGENT', $user->getRoles())) {
-            $limit = ($user->getPosition()??0) + 1;
         }
         $unilevel = $this->agentService->getUnilevelChildren($user,1,true, $limit);
         $data = ['equipe' => $unilevel];

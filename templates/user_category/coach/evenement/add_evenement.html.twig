@@ -1,0 +1,46 @@
+ {% extends 'base.html.twig' %}
+
+{% block title %} {{ label|default('Ajout') }} évènement {% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    
+        <link rel="stylesheet" type="text/css" href="{{ asset('assets/vuexy/vendors/css/calendars/fullcalendar.min.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ asset('assets/vuexy/css/pages/app-calendar.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/templates/calendar/calendar.style.css') }}">
+{% endblock %}
+
+
+{% block body %}
+	<div class="my-5">
+		<div class="content-body-form">
+			<a href="{{ path('app_coach_evenement') }}" class="btn btn-secondary"> <i class="fa-solid fa-circle-arrow-left"></i> Retour </a>
+			<h1 class="text-center fw-bold">Information sur l'évènement</h1>
+				<div class="form-add-contact">
+					{{ form_start(form) }}
+						{{ form_row(form.nom) }}
+                        <div class="row">
+							<div class="col-md-6">{{ form_row(form.startDate) }}</div>
+							<div class="col-md-6">{{ form_row(form.endDate) }}</div>
+						</div>
+						{{ form_row(form.description) }}
+						{{ form_row(form.filePath) }}
+						<div class="row">
+							<div class="col-md-12 text-end"><button type="submit" class="btn btn-{{btn_class}}" style="margin-bottom: 81px;">{{ button|default('Enregistrer') }}</button></div>
+						</div>
+
+					{{ form_end(form) }}
+				</div>
+		</div>
+	</div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('assets/templates/calendar/calendar.js') }}"></script>
+    <script src="{{ asset('assets/vuexy/js/scripts/pages/app-calendar-events.js') }}"></script>
+    <script src="{{ asset('assets/vuexy/js/scripts/pages/app-calendar.js') }}"></script>
+    
+    
+    {# <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js"></script>
+    {{ encore_entry_script_tags('calendarJS') }} #}
+{% endblock %}

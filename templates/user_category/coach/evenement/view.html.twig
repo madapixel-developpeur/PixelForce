@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+{% block title %}Evènement détail{% endblock %}
+{% block body %}
+
+        <a href="{{ path('app_coach_evenement') }}" class="btn btn-secondary mb-2"> <i class="fa-solid fa-circle-arrow-left"></i> Retour </a>
+    <div class="p-5 pb-5 mb-5 bg-white border position-relative" id="form-formation">
+        <h3 class="mb-3"><i class="fa fa-calendar"></i> Détail</h3>
+        <input type="hidden" id="inputVideo" class="hiddenVideoData">
+        <div class="row">
+            <div class="col-12 col-md-12">
+                <div class="info-container">
+                    <ul class="list-unstyled">
+                        <li class="mb-75">
+                            <span class="fw-bolder me-25">Nom:</span>
+                            <span>{{ evenement.nom }}</span>
+                        </li>
+                        <li class="mb-75">
+                            <span class="fw-bolder me-25">Date:</span>
+                            <span>{{  evenement.startDate.format('d-m-Y') ~ " à "~ evenement.endDate.format('d-m-Y') }}</span>
+                        </li>
+                        <li class="mb-75">
+                            <span class="fw-bolder me-25">Description:</span>
+                            <span>{{ evenement.description }}</span>
+                        </li>
+                    </ul>
+                     <div >
+                        <img class="img-fluid card-img-top ecommerce-card-img"  src="{{ asset( filesDirectory ~ evenement.filePath) }}" alt="Image pour {{evenement.nom}}" />
+                    </div>
+                </div>  
+            </div>
+        </div>
+        
+    </div>
+
+
+{% endblock %}
+
