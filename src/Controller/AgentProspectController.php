@@ -2,10 +2,12 @@
 
 namespace App\Controller;
 
+use Exception;
 use App\Entity\Prospect;
 use App\Form\UserSearchType;
 use App\Manager\EntityManager;
 use App\Repository\TagRepository;
+use App\Services\ProspectService;
 use App\Entity\ContactInformation;
 use App\Repository\UserRepository;
 use App\Entity\ProspectInformation;
@@ -20,8 +22,12 @@ use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\ProspectInformationRepository;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Constraints\Collection;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -34,7 +40,8 @@ class AgentProspectController extends AbstractController
 
 
     public function __construct(UserRepository $repoUser, ProspectRepository $repoProspect,SecteurRepository $repoSecteur, EntityManager $entityManager,
-        private AgentService $agentService)
+        private AgentService $agentService,
+        private ProspectService $prospectService)
     {
         $this->repoUser = $repoUser;
         $this->repoProspect = $repoProspect;
@@ -179,6 +186,54 @@ class AgentProspectController extends AbstractController
             $this->addFlash('danger', $th->getMessage());
         }
         return $this->redirectToRoute('agent_prospect_view', ['id' => $prospect->getId()]);
+    }
+
+    /**
+     * @Route("/api/add_prospect", name="prospect_api_add", methods={"POST"})
+    */
+    public function addProspect(ValidatorInterface $validator,Request $request)
+    {
+        try{
+            $parameters = json_decode($request->getContent(), true);
+            $requiredFields = ["agent_username","firstname","lastname","numero","email"];
+            foreach ($requiredFields as $field) {
+               if(!isset($parameters[$field])){
+                    return new JsonResponse(['errors' => 'Champ '.$field." obligatoire"], 400);
+               }
+            }
+            $collection = new Collection([
+                'agent_username' => [
+                    new Assert\Type('string'), 
+                    new Assert\NotBlank(), 
+                ],
+                'firstname' => [
+                    new Assert\Type('string'), 
+                    new Assert\NotBlank(), 
+                ],
+                'lastname' => [
+                    new Assert\Type('string'), 
+                    new Assert\NotBlank(), 
+                ],
+                'numero' => [
+                    new Assert\Type('string'), 
+                    new Assert\NotBlank(), 
+                ],
+                'email' => [
+                    new Assert\Type('string'), 
+                    new Assert\NotBlank(), 
+                ]
+            ]);
+            $errors = $validator->validate($parameters, $collection);
+            if ($errors->count()) {
+                // Handle validation errors
+                $errorsString = (string) $errors;
+                return new JsonResponse(['errors' => $errorsString], 400);
+            }
+            $prospect = $this->prospectService->saveProspectViaDataApi($parameters);
+            return new JsonResponse($prospect);
+        } catch(Exception $ex){
+            return new JsonResponse(array('message' => $ex->getMessage()), 500);
+        }
     }
 
 }

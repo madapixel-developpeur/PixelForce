@@ -295,7 +295,7 @@ class AgentService
             $data['prospect'] = $prospect;
             $this->saveAgent($user, $_ENV['DEFAULT_PASSWORD'],$data);
         } catch (\Throwable $th) {
-            throw $th;
+            // throw $th;
             throw  new Exception("Une erreur s'est produite");
         }
       
