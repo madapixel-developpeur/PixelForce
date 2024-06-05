@@ -9,6 +9,7 @@ use App\Repository\TagRepository;
 use App\Entity\ContactInformation;
 use App\Repository\UserRepository;
 use App\Entity\ProspectInformation;
+use App\Services\User\AgentService;
 use App\Form\ProspectInformationType;
 use App\Repository\SecteurRepository;
 use App\Repository\ProspectRepository;
@@ -32,7 +33,8 @@ class AgentProspectController extends AbstractController
     protected $entityManager;
 
 
-    public function __construct(UserRepository $repoUser, ProspectRepository $repoProspect,SecteurRepository $repoSecteur, EntityManager $entityManager)
+    public function __construct(UserRepository $repoUser, ProspectRepository $repoProspect,SecteurRepository $repoSecteur, EntityManager $entityManager,
+        private AgentService $agentService)
     {
         $this->repoUser = $repoUser;
         $this->repoProspect = $repoProspect;
@@ -43,7 +45,7 @@ class AgentProspectController extends AbstractController
 
 
     #[Route('/agent/prospect/liste', name: 'agent_prospect_list')]
-    public function agent_contact_list(Request $request, PaginatorInterface $paginator)
+    public function agent_prospect_list(Request $request, PaginatorInterface $paginator)
     {
         $agent = $this->getUser();
         $search = new UserSearch();
@@ -84,9 +86,8 @@ class AgentProspectController extends AbstractController
     /**
      * @Route("/agent/client/prospect/add", name="agent_prospect_info_add")
      */
-    public function agent_contact_info_add(Request $request)
+    public function agent_prospect_info_add(Request $request)
     {
-        // dd('here');
         $prospect = new Prospect();
         $form = $this->createForm(ProspectInformationType::class, $prospect);
         $form->handleRequest($request);
@@ -163,6 +164,21 @@ class AgentProspectController extends AbstractController
             'button' => 'Modifier',
             'btn_class' =>  'success',
         ]);     
+    }
+
+    #[Route('/agent/prospect/ajouter-à-l-équipe', name: 'prospect_add_to_team')]
+    public function agent_add_to_team_list(Request $request)
+    {
+       try {
+            $prospect = $this->repoProspect->findOneBy(['id'=> $request ->get('prospect_id') ]);
+            $parrainUsername =$request ->get('parrain');
+            $this->agentService->saveProspectAsUSer($this->getUser(),$parrainUsername,$prospect);
+            return $this->redirectToRoute('agent_view');
+        } catch (\Throwable $th) {
+            //throw $th;
+            $this->addFlash('danger', $th->getMessage());
+        }
+        return $this->redirectToRoute('agent_prospect_view', ['id' => $prospect->getId()]);
     }
 
 }

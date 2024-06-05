@@ -24,8 +24,42 @@
             {% endfor %}
         </div>
 
-	<div class="content-card-user-information mt-3">
-			
+		<div class="content-card-user-information mt-3">
+			 <div class="modal fade my-custom-card" id="addNewCard" tabindex="-1" aria-labelledby="addNewCardTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-transparent">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body px-sm-5 mx-50 pb-5">
+                    <h1 class="text-center mb-1" id="addNewCardTitle">Information</h1>
+                    {# <p class="text-center">Add card for future billing</p> #}
+
+                    <!-- form -->
+                    <form action="{{ path('prospect_add_to_team')}}" class="">
+                        
+                        <div class="col-12 col-md-12">
+                            <div class="form-group">
+                                <label class="form-label" for="parrain">Parrain</label>
+                                <input class="form-control" type="text" id="parrain" name="parrain" />
+                                <input class="form-control" type="text" id="prospect_id" name="prospect_id"  value="{{ prospect.id }}" hidden/>
+                            </div>
+                        </div>
+
+                        <div class="mt-3 d-flex flex-wrap justify-content-around align-items-center text-center">
+                            <button type="submit" role="button" class="btn btn-primary" >
+                                Ajouter
+                            </button>
+
+                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" aria-label="Close">
+                                Annuler
+                            </button>
+                        </div>
+                    </form>    
+                </div>
+            </div>
+        </div>
+    </div>
 			<section class="app-user-view-account">
 				<div class="row">
 					<div class="col-12 col-md-8">
@@ -35,7 +69,9 @@
 								{% if is_granted('ROLE_AGENT') %}
 									<a href="{{ path('agent_prospect_info_edit', {id:prospect.id}) }}" class="btn btn-primary"><i class="fa fa-edit"></i> Modifier</a>
 								{% endif %}
-	
+								{% if prospect.account is null %}
+									<div><a href="#" class="btn rounded-3 btn-outline-primary mt-3" data-bs-toggle="modal" data-bs-target="#addNewCard"><i class="fa fa-user-plus"></i> Ajouter à l'équipe</a></div>
+								{% endif %}
 							</div>
 							<div class="contact-card__infos-container">
 								<div class="contact-card__info-item">

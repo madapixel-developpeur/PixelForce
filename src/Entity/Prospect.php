@@ -33,7 +33,7 @@ class Prospect
 
 
       /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="contact")
+     * @ORM\ManyToOne(targetEntity=User::class)
      * @ORM\JoinColumn(nullable=false)
      */
     private $agent;
@@ -98,6 +98,13 @@ class Prospect
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $created_at;
+
+      /**
+     * @ORM\ManyToOne(targetEntity=User::class, cascade={"persist"})
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $account;
+
     
 
     public function getId(): ?int
@@ -310,6 +317,26 @@ class Prospect
     public function setRue($rue)
     {
         $this->rue = $rue;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of account
+     */ 
+    public function getAccount()
+    {
+        return $this->account;
+    }
+
+    /**
+     * Set the value of account
+     *
+     * @return  self
+     */ 
+    public function setAccount($account)
+    {
+        $this->account = $account;
 
         return $this;
     }

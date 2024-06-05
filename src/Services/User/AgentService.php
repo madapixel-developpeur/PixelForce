@@ -2,16 +2,21 @@
 
 namespace App\Services\User;
 
+use Exception;
 use App\Entity\User;
+use App\Entity\Prospect;
 use App\Entity\AgentSecteur;
+use App\Manager\UserManager;
 use App\Services\MailService;
 use App\Manager\EntityManager;
 use App\Manager\StripeManager;
 use App\Services\MailerService;
 use App\Services\StripeService;
+use PhpParser\Node\Stmt\TryCatch;
 use App\Repository\UserRepository;
 use App\Repository\SecteurRepository;
 use App\Services\DirectoryManagement;
+use App\Repository\ProspectRepository;
 use phpDocumentor\Reflection\Types\This;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -30,6 +35,8 @@ class AgentService
         private UrlGeneratorInterface $urlGenerator,
         private SecteurRepository $secteurRepository,
         private MailerService $mailerService,
+        private  UserManager $userManager,
+        private ProspectRepository $prospectRepo,
     )
     {
         $this->em = $em;
@@ -212,7 +219,7 @@ class AgentService
     }
 
 
-    public function saveAgent(User $agent,$password){
+    public function saveAgent(User $agent,$password,$options = []){
         try{        
             $this->em->beginTransaction();    
             $agent->setAccountStatus(User::ACCOUNT_STATUS['ACTIVE']); // On met temporairement le statut comme ACTIVE
@@ -227,7 +234,10 @@ class AgentService
             $agentSecteur->setStatut(1);
             $agentSecteur->setDateValidation(new \DateTime());
             $this->em->persist($agentSecteur);  
-            
+            if(isset($options['prospect'])){
+                $options['prospect']->setAccount($agent);
+                $this->em->persist($options['prospect']);
+            }
             /* Send mail */
             $data = [];
             $data['password'] = $password;
@@ -235,6 +245,8 @@ class AgentService
             $this->mailerService->sendWelcomeMail($agent,$data);
             $this->em->flush();
             $this->em->commit();
+
+            return $agent;
         }catch(\Exception $e){
             if($this->em->getConnection()->isTransactionActive()) {
                 $this->em->rollback();
@@ -243,5 +255,49 @@ class AgentService
         } finally {
             $this->em->clear();
         }
+    }
+
+    public function isInTeam(User $mainUser,User $userToCheck){
+        if($userToCheck->getId() == $mainUser->getId()) return true;
+        while($userToCheck->getParrain()){
+            $userToCheck = $userToCheck->getParrain();
+            if($userToCheck->getId() == $mainUser->getId()){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public function saveProspectAsUSer(User $mainUser,$parrainUsername,Prospect $prospect){
+        $parrain = $this->repoUser->findOneBy(['username'=> $parrainUsername]);
+        if(!$parrain || !$this->isInTeam($mainUser,$parrain)){
+            throw new Exception("Le nom d'utilisateur ".$parrainUsername." n'existe pas dans votre équipe.");
+        }
+        try {
+            $user = new User();
+            $user->setNom($prospect->getFirstName());
+            $user->setPrenom($prospect->getLastName());
+            $user->setEmail($prospect->getEmail());
+            $user->setAdresse($prospect->getAddress());
+            $user->setTelephone($prospect->getNumero());
+            $user->setNumeroRue($prospect->getRue());
+            $user->setVille($prospect->getVille());
+            $user->setCodePostal($prospect->getCodePostal());
+            $user->setAmbassadorUsername($parrainUsername);
+            $user->setUsername($prospect->getEmail());
+        
+            $this->userManager->setUserPasword($user, $_ENV['DEFAULT_PASSWORD'], '', false);
+            $user->setRoles([ User::ROLE_AGENT ]);
+            $user->setActive(1);
+            $user->setParrain($parrain);
+
+            $data = [];
+            $data['prospect'] = $prospect;
+            $this->saveAgent($user, $_ENV['DEFAULT_PASSWORD'],$data);
+        } catch (\Throwable $th) {
+            throw $th;
+            throw  new Exception("Une erreur s'est produite");
+        }
+      
     }
 }
