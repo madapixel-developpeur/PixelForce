@@ -20,21 +20,25 @@ class ProspectService
     }
 
     public function saveProspectViaDataApi($data){
-        $agent = $this->userRepository->findOneBy(['username' => $data['agent_username']]);
-        if(is_null($agent)){
-            throw new \Exception("Nom d'utilisateur ".$data['agent_username']." introuvable");
-        }
+        // $agent = $this->userRepository->findOneBy(['username' => $data['agent_username']]);
+        // if(is_null($agent)){
+        //     throw new \Exception("Nom d'utilisateur ".$data['agent_username']." introuvable");
+        // }
         try {
             $prospect = new Prospect();
-            $prospect->setAgent($agent);
+            // $prospect->setAgent($agent);
             $prospect->setFirstname($data['firstname']);
-            $prospect->setLastname($data['lastname']);
+            $prospect->setLastname('');
             $prospect->setEmail($data['email']);
             $prospect->setPhone($data['numero']);
+            if(!empty($data['subject'])){
+                $prospect->setNote($data['subject']);
+            }
+            $prospect->setNote($prospect->getNote()." : ".$data['note']);
             $this->entityManager->persist($prospect);
             $this->entityManager->flush();
         } catch (\Throwable $th) {
-            throw new \Exception("Une erreur s'est produite");
+            throw new \Exception($th->getMessage());
         }
       
     }
