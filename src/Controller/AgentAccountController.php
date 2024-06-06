@@ -156,7 +156,7 @@ class AgentAccountController extends AbstractController
         $agentSecteur->setStatut(1);
         $agentSecteur->setDateValidation(new \DateTime());
         $this->entityManager->save($agentSecteur);
-        return $this->redirectToRoute('agent_home');
+        return $this->redirectToRoute('agent_generate_sessionSecteur_before_redirect_to_route_dahsboard',['id'=>$secteur->getId()]);
     }
 
     /**
