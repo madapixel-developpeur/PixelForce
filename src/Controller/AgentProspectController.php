@@ -200,7 +200,7 @@ class AgentProspectController extends AbstractController
             $requiredFields = ["firstname","numero","email","note"];
             foreach ($requiredFields as $field) {
                if(!isset($parameters[$field])){
-                    return new JsonResponse(['errors' => 'Champ '.$field." obligatoire"], 400);
+                    return new JsonResponse(array('class' => 'alert alert-danger', 'message' => 'Champ '.$field." obligatoire"));
                }
             }
             $collection = new Collection([
@@ -228,13 +228,13 @@ class AgentProspectController extends AbstractController
             if ($errors->count()) {
                 // Handle validation errors
                 $errorsString = (string) $errors;
-                return new JsonResponse(['errors' => $errorsString], 400);
+                return new JsonResponse(array('class' => 'alert alert-danger', 'message' => $errorsString));
             }
             $prospect = $this->prospectService->saveProspectViaDataApi($parameters);
             $this->mailerService->sendContactInfo($parameters);
             return new JsonResponse(array('class' => 'alert alert-success', 'message' => 'Message envoyé avec succès. On vous recontacte bientôt!'));
         } catch(Exception $ex){
-            return new JsonResponse(array('class' => 'alert alert-danger', 'message' => $ex->getMessage()));
+            return new JsonResponse(array('class' => 'alert alert-danger', 'message' => "Une erreur s'est produite lors de l'envoi du message"));
         }
     }
 
