@@ -24,25 +24,25 @@ class RemunerationService
     ];
 
     public const CONDITIONS = [
-        ["type"=> "vente", "condition"=> "\$userVenteId == \$user->getId()", "gain" => "\$amount * 0.5 * 0.2"],
-        ["type"=> "audit", "condition"=> "\$auditAgentId == \$user->getId()", "gain" => "\$amount * 0.5 * 0.1"],
+        ["type"=> "vente", "condition"=> "\$userVenteId == \$user->getId()", "gain" => "\$amount * 1 * 0.1"],
+        ["type"=> "audit", "condition"=> "\$auditAgentId == \$user->getId()", "gain" => "\$amount * 1 * 0.05"],
         [
             "type"=> "position", 
             "position" => 1, 
             "condition"=> "\$user->getPosition() >= 1 || (count(\$filsNiveau[0]) >= 5 && \$caNiveau[0] >= 1000)", 
-            "gain" => " \$niveau == 1 ? ((\$caNiveau[0] - \$amount) < 1000 && !(\$positionBefore >= 1) ? (\$caNiveau[0] - \$amount) : \$amount) * 0.5 * 0.1 : 0 "
+            "gain" => " \$niveau == 1 ? ((\$caNiveau[0] - \$amount) < 1000 && !(\$positionBefore >= 1) ? (\$caNiveau[0] - \$amount) : \$amount) * 1 * 0.05 : 0 "
         ],
         [
             "type"=> "position", 
             "position" => 2, 
             "condition"=> "\$user->getPosition() >= 2 || ((count(\$filsNiveau[0]) + count(\$filsNiveau[1]) + count(\$filsNiveau[2])) >= 25 )", 
-            "gain" => "\$niveau == 2 ? \$amount * 0.5 * 0.1 : 0",
+            "gain" => "\$niveau == 2 ? \$amount * 1 * 0.05 : 0",
         ],
         [
             "type"=> "position", 
             "position" => 3, 
             "condition"=> "\$user->getPosition() >= 3 || ((count(\$filsNiveau[0]) + count(\$filsNiveau[1]) + count(\$filsNiveau[2])) >= 100 )", 
-            "gain" => "(\$niveau == 1 ? ((\$caNiveau[0] - \$amount) < 1000 && !(\$positionBefore >= 1) ? (\$caNiveau[0] - \$amount) : \$amount) : \$amount  ) * 0.5 * 0.05 ",
+            "gain" => "(\$niveau == 1 ? ((\$caNiveau[0] - \$amount) < 1000 && !(\$positionBefore >= 1) ? (\$caNiveau[0] - \$amount) : \$amount) : \$amount  ) * 1 * 0.025 ",
         ],
     ];
 
