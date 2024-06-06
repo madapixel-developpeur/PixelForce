@@ -403,4 +403,22 @@ class MailerService
         }
     }
 
+    public function sendContactInfo($data)
+    {
+        try {
+            $this->sendMail([
+                'subject' => $data['subject'],
+                'to' => [
+                    $_ENV['TUNNEL_AFRIQUE_CONTACT']
+                ],
+                'template' => 'contact.html.twig',
+                'template_vars' => [
+                    'data' => $data,
+                ]
+            ]);       
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
+
 }

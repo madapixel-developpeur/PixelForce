@@ -22,6 +22,7 @@ use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\ProspectInformationRepository;
+use App\Services\MailerService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Constraints\Collection;
@@ -41,7 +42,8 @@ class AgentProspectController extends AbstractController
 
     public function __construct(UserRepository $repoUser, ProspectRepository $repoProspect,SecteurRepository $repoSecteur, EntityManager $entityManager,
         private AgentService $agentService,
-        private ProspectService $prospectService)
+        private ProspectService $prospectService,
+        private MailerService $mailerService)
     {
         $this->repoUser = $repoUser;
         $this->repoProspect = $repoProspect;
@@ -229,9 +231,10 @@ class AgentProspectController extends AbstractController
                 return new JsonResponse(['errors' => $errorsString], 400);
             }
             $prospect = $this->prospectService->saveProspectViaDataApi($parameters);
-            return new JsonResponse($prospect);
+            $this->mailerService->sendContactInfo($parameters);
+            return new JsonResponse(array('class' => 'alert alert-success', 'message' => 'Message envoyé avec succès. On vous recontacte bientôt!'));
         } catch(Exception $ex){
-            return new JsonResponse(array('message' => $ex->getMessage()), 500);
+            return new JsonResponse(array('class' => 'alert alert-danger', 'message' => $ex->getMessage()));
         }
     }
 
