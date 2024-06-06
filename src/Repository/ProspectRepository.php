@@ -31,10 +31,7 @@ class ProspectRepository extends ServiceEntityRepository
     public function findProspect(UserSearch $search, $agent)
     {
         $query = $this->createQueryBuilder('c');
-        $query = $query
-            ->andwhere('c.agent = :agent')
-            ->setParameter('agent', $agent)
-        ;
+       
 
         if ($search->getPrenom()) {
             $query = $query

@@ -195,22 +195,14 @@ class AgentProspectController extends AbstractController
     {
         try{
             $parameters = json_decode($request->getContent(), true);
-            $requiredFields = ["agent_username","firstname","lastname","numero","email"];
+            $requiredFields = ["firstname","numero","email","note"];
             foreach ($requiredFields as $field) {
                if(!isset($parameters[$field])){
                     return new JsonResponse(['errors' => 'Champ '.$field." obligatoire"], 400);
                }
             }
             $collection = new Collection([
-                'agent_username' => [
-                    new Assert\Type('string'), 
-                    new Assert\NotBlank(), 
-                ],
                 'firstname' => [
-                    new Assert\Type('string'), 
-                    new Assert\NotBlank(), 
-                ],
-                'lastname' => [
                     new Assert\Type('string'), 
                     new Assert\NotBlank(), 
                 ],
@@ -221,6 +213,13 @@ class AgentProspectController extends AbstractController
                 'email' => [
                     new Assert\Type('string'), 
                     new Assert\NotBlank(), 
+                ],
+                'subject' => [
+                    new Assert\Type('string'), 
+                ],
+                'note' => [
+                    new Assert\Type('string'),
+                    new Assert\NotBlank(),
                 ]
             ]);
             $errors = $validator->validate($parameters, $collection);
