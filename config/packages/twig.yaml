@@ -14,6 +14,7 @@ twig:
         video_information_vimeo_src: '%env(VIDEO_INFORMATION_VIMEO_SRC)%'
         authService: '@util.auth'
         secteurDigitalId: '%env(SECTEUR_DIGITAL_ID)%'
+        statisticState: '%env(STATISTIC_STATE)%'
     paths:
         # pour spécifier le namespace des image. Exemple d'utilisation : email.image('@images/logo.png')
         '%kernel.project_dir%/assets/images': images
