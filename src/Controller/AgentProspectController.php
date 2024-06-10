@@ -197,7 +197,7 @@ class AgentProspectController extends AbstractController
     {
         try{
             $parameters = json_decode($request->getContent(), true);
-            $requiredFields = ["nom","telephone","email","prenom",'platform'];
+            $requiredFields = ["agent_username","nom","telephone","email","prenom",'platform'];
             foreach ($requiredFields as $field) {
                if(!isset($parameters[$field])){
                     return new JsonResponse(array('class' => 'alert alert-danger', 'message' => 'Champ '.$field." obligatoire"));
@@ -224,6 +224,10 @@ class AgentProspectController extends AbstractController
                     new Assert\Type('string'), 
                     new Assert\NotBlank(), 
                 ],
+                'agent_username' => [
+                    new Assert\Type('string'), 
+                    new Assert\NotBlank(), 
+                ],
             ]);
             $errors = $validator->validate($parameters, $collection);
             if ($errors->count()) {
@@ -231,13 +235,13 @@ class AgentProspectController extends AbstractController
                 return new JsonResponse(array('class' => 'danger', 'message' => $errorsString),500);
             }
             if($this->prospectService->checkExistingInfo($parameters)){
-                return new JsonResponse(array('class' => 'success', 'message' => 'Vous êtes déjà inscrit.'));
+                return new JsonResponse(array('class' => 'danger', 'message' => 'Vous êtes déjà inscrit.'));
             }
             $prospect = $this->prospectService->saveProspectViaDataApi($parameters);
             $this->mailerService->sendContactInfo($parameters);
             return new JsonResponse(array('class' => 'success', 'message' => 'Inscription effectuée avec succès'));
         } catch(Exception $ex){
-            return new JsonResponse(array('class' => 'danger', 'message' => $ex->getMessage()),500);
+            return new JsonResponse(array('class' => 'danger', 'message' => $ex->getMessage(),'state' => 0,));
         }
     }
 

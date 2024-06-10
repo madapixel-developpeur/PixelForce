@@ -242,6 +242,7 @@ class AgentService
             $data = [];
             $data['password'] = $password;
             $data['url_platform'] = $_ENV["PLATFORM_URL"];
+            $data['parrain'] = $options["parrain"];
             $this->mailerService->sendWelcomeMail($agent,$data);
             $this->em->flush();
             $this->em->commit();
@@ -273,6 +274,10 @@ class AgentService
         if(!$parrain || !$this->isInTeam($mainUser,$parrain)){
             throw new Exception("Le nom d'utilisateur ".$parrainUsername." n'existe pas dans votre équipe.");
         }
+        $user = $this->repoUser->findOneBy(['email'=> $prospect->getEmail()]);
+        if($user){
+            throw new Exception("L'adresse email du prospect est déjà rattachée à un compte existant.");
+        }
         try {
             $user = new User();
             $user->setNom($prospect->getFirstName());
@@ -293,6 +298,7 @@ class AgentService
 
             $data = [];
             $data['prospect'] = $prospect;
+            $data['parrain'] = $prospect->getAgent()->getUsername();
             $this->saveAgent($user, $_ENV['DEFAULT_PASSWORD'],$data);
         } catch (\Throwable $th) {
             // throw $th;

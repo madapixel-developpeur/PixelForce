@@ -3,11 +3,12 @@
 
 namespace App\Services;
 
+use Exception;
 use App\Entity\Prospect;
 use App\Services\Normalizer;
 use App\Manager\EntityManager;
-use App\Repository\ProspectRepository;
 use App\Repository\UserRepository;
+use App\Repository\ProspectRepository;
 
 class ProspectService
 {
@@ -27,8 +28,13 @@ class ProspectService
     }
 
     public function saveProspectViaDataApi($data){
+        $agent =$this->userRepository->findOneBy(['username' => $data['agent_username']]);
+        if(is_null($agent)){
+            throw new Exception('Le nom d\'utilisateur '.$data['agent_username'].' n\'existe pas.');
+        }
         try {
             $prospect = new Prospect();
+            $prospect->setAgent($agent);
             $prospect->setFirstname($data['nom']);
             $prospect->setLastname($data['prenom']);
             $prospect->setEmail($data['email']);
@@ -41,7 +47,7 @@ class ProspectService
             $this->entityManager->persist($prospect);
             $this->entityManager->flush();
         } catch (\Throwable $th) {
-            throw new \Exception($th->getMessage());
+            throw new \Exception('Une erreur s\'est produite');
         }
       
     }
