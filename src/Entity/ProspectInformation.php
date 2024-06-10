@@ -2,19 +2,16 @@
 
 namespace App\Entity;
 
-use DateTime;
+use App\Repository\ProspectInformationRepository;
 use Doctrine\ORM\Mapping as ORM;
-use App\Repository\ProspectRepository;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\Common\Collections\ArrayCollection;
+
 
 /**
- * @ORM\Entity(repositoryClass=ProspectRepository::class)
+ * @ORM\Entity(repositoryClass=ProspectInformationRepository::class)
  */
-class Prospect
+class ProspectInformation
 {
-
-      
+    
     const TYPE_DEFAULT = 1;
     const TYPE_AUDIT = 2;
     const TYPE_CLIENT = 3;
@@ -24,9 +21,6 @@ class Prospect
         self::TYPE_CLIENT => 'Client', 
     ];
 
-    const EUROPE_PLATFORM = 1;
-    const AFRICA_PLATFORM = 2;
-
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -34,13 +28,6 @@ class Prospect
      */
     private $id;
 
-
-      /**
-     * @ORM\ManyToOne(targetEntity=User::class)
-     * @ORM\JoinColumn(nullable=true)
-     */
-    private $agent;
-    
     /**
      * @ORM\Column(type="string", length=255)
      */
@@ -65,11 +52,13 @@ class Prospect
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $address;
-   
-      /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+
+    /**
+     * @ORM\OneToOne(targetEntity=Prospect::class, mappedBy="information", cascade={"persist", "remove"})
      */
-    private $rue;
+    private $prospect;
+
+   
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -86,33 +75,11 @@ class Prospect
      */
     private $ville;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $note;
-
    
-    /**
+      /**
      * @ORM\Column(type="integer",options={"default" : 1})
      */
     private $type = self::TYPE_DEFAULT;
-
-        /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    private $created_at;
-
-      /**
-     * @ORM\ManyToOne(targetEntity=User::class, cascade={"persist"})
-     * @ORM\JoinColumn(nullable=true)
-     */
-    private $account;
-
-
-      /**
-     * @ORM\Column(type="integer",options={"default" : 1})
-     */
-    private $platform = self::EUROPE_PLATFORM;
 
     
 
@@ -181,6 +148,29 @@ class Prospect
         return $this;
     }
 
+    public function getprospect(): ?Prospect
+    {
+        return $this->prospect;
+    }
+
+    public function setProspect(?Prospect $prospect): self
+    {
+        // unset the owning side of the relation if necessary
+        if ($prospect === null && $this->prospect !== null) {
+            $this->prospect->setInformation(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($prospect !== null && $prospect->getInformation() !== $this) {
+            $prospect->setInformation($this);
+        }
+
+        $this->prospect = $prospect;
+
+        return $this;
+    }
+
+   
 
     public function getNumero(): ?string
     {
@@ -249,124 +239,4 @@ class Prospect
         return self::TYPE_ARRAY_FORM[$this->getType()];
     }
 
-
-    /**
-     * Get the value of created_at
-     */ 
-    public function getCreated_at()
-    {
-        return $this->created_at;
-    }
-
-    /**
-     * Set the value of created_at
-     *
-     * @return  self
-     */ 
-    public function setCreated_at($created_at)
-    {
-        $this->created_at = $created_at;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of agent
-     */ 
-    public function getAgent()
-    {
-        return $this->agent;
-    }
-
-    /**
-     * Set the value of agent
-     *
-     * @return  self
-     */ 
-    public function setAgent($agent)
-    {
-        $this->agent = $agent;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of note
-     */ 
-    public function getNote()
-    {
-        return $this->note;
-    }
-
-    /**
-     * Set the value of note
-     *
-     * @return  self
-     */ 
-    public function setNote($note)
-    {
-        $this->note = $note;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of rue
-     */ 
-    public function getRue()
-    {
-        return $this->rue;
-    }
-
-    /**
-     * Set the value of rue
-     *
-     * @return  self
-     */ 
-    public function setRue($rue)
-    {
-        $this->rue = $rue;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of account
-     */ 
-    public function getAccount()
-    {
-        return $this->account;
-    }
-
-    /**
-     * Set the value of account
-     *
-     * @return  self
-     */ 
-    public function setAccount($account)
-    {
-        $this->account = $account;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of platform
-     */ 
-    public function getPlatform()
-    {
-        return $this->platform;
-    }
-
-    /**
-     * Set the value of platform
-     *
-     * @return  self
-     */ 
-    public function setPlatform($platform)
-    {
-        $this->platform = $platform;
-
-        return $this;
-    }
 }

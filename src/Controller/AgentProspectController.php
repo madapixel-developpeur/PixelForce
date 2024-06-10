@@ -197,18 +197,22 @@ class AgentProspectController extends AbstractController
     {
         try{
             $parameters = json_decode($request->getContent(), true);
-            $requiredFields = ["firstname","numero","email","note"];
+            $requiredFields = ["nom","telephone","email","prenom",'platform'];
             foreach ($requiredFields as $field) {
                if(!isset($parameters[$field])){
                     return new JsonResponse(array('class' => 'alert alert-danger', 'message' => 'Champ '.$field." obligatoire"));
                }
             }
             $collection = new Collection([
-                'firstname' => [
+                'nom' => [
                     new Assert\Type('string'), 
                     new Assert\NotBlank(), 
                 ],
-                'numero' => [
+                'prenom' => [
+                    new Assert\Type('string'), 
+                    new Assert\NotBlank(), 
+                ],
+                'telephone' => [
                     new Assert\Type('string'), 
                     new Assert\NotBlank(), 
                 ],
@@ -216,26 +220,26 @@ class AgentProspectController extends AbstractController
                     new Assert\Type('string'), 
                     new Assert\NotBlank(), 
                 ],
-                'subject' => [
+                'platform' => [
                     new Assert\Type('string'), 
+                    new Assert\NotBlank(), 
                 ],
-                'note' => [
-                    new Assert\Type('string'),
-                    new Assert\NotBlank(),
-                ]
             ]);
             $errors = $validator->validate($parameters, $collection);
             if ($errors->count()) {
-                // Handle validation errors
                 $errorsString = (string) $errors;
-                return new JsonResponse(array('class' => 'alert alert-danger', 'message' => $errorsString));
+                return new JsonResponse(array('class' => 'danger', 'message' => $errorsString),500);
+            }
+            if($this->prospectService->checkExistingInfo($parameters)){
+                return new JsonResponse(array('class' => 'success', 'message' => 'Vous êtes déjà inscrit.'));
             }
             $prospect = $this->prospectService->saveProspectViaDataApi($parameters);
             $this->mailerService->sendContactInfo($parameters);
-            return new JsonResponse(array('class' => 'alert alert-success', 'message' => 'Message envoyé avec succès. On vous recontacte bientôt!'));
+            return new JsonResponse(array('class' => 'success', 'message' => 'Inscription effectuée avec succès'));
         } catch(Exception $ex){
-            return new JsonResponse(array('class' => 'alert alert-danger', 'message' => "Une erreur s'est produite lors de l'envoi du message"));
+            return new JsonResponse(array('class' => 'danger', 'message' => $ex->getMessage()),500);
         }
     }
 
 }
+  

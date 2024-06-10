@@ -89,6 +89,22 @@ class ProspectRepository extends ServiceEntityRepository
         ;
     }
 
+    public function checkExistingProspect($data){
+        $qb = $this->createQueryBuilder('p')
+            ->select('COUNT(p.id)')
+            ->where('p.firstname = :nom')
+            ->andWhere('p.lastname = :prenom')
+            ->andWhere('p.email = :email')
+            ->setParameter('nom', $data['nom'])
+            ->setParameter('prenom', $data['prenom'])
+            ->setParameter('email', $data['email']);
+ 
+        $result =   $qb->getQuery()
+            ->getSingleScalarResult();
+        ;
+        return $result > 0 ? true : false;
+    }
+
 //    /**
 //     * @return Prospect[] Returns an array of Prospect objects
 //     */

@@ -407,11 +407,11 @@ class MailerService
     {
         try {
             $this->sendMail([
-                'subject' => $data['subject'],
+                'subject' => "Inscription réussie",
                 'to' => [
-                    $_ENV['TUNNEL_AFRIQUE_CONTACT']
+                    $data['email']
                 ],
-                'template' => 'contact.html.twig',
+                'template' => '/inscription/welcome_prospect.html.twig',
                 'template_vars' => [
                     'data' => $data,
                 ]
