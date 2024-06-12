@@ -66,6 +66,12 @@
 {#            <button class="btn btn-primary" type="submit" id="btn-next">Procéder au paiement <i class="fa-solid fa-angles-right"></i></button>#}
             <button class="btn btn-primary w-100" type="submit" id="btn-next">S’inscrire</button>
         </div>
+        <div class=" text-center mt-3">
+            <a href="{{ path('app_forgetPassword') }}">Mot de passe oublié ?</a>
+        </div>         
+         <div class=" text-center mt-3">
+            Vous avez déjà un compte? <a href="{{ path('app_login') }}">Connexion</a>
+        </div>
     {{ form_end(form) }}
 {% endblock %}
 

@@ -99,22 +99,12 @@
                                                 S'authentifier
                                             </button>
                                         </div>
-                                        <div class="row mt-2 justify-content-center d-flex">
-                                            <div class="col-12 col-xl-6 pe-xl-0">
-                                                <div class=" text-center">
-                                                    <a class="btn btn-success w-100 font-weight-bold" href="{% if agentToken %} {{ path('signup_client', {'token': agentToken}) }} {% else %} {{ path('agent_inscription') }} {% endif %}">
-                                                        S'inscrire
-                                                    </a>
-                                                </div>
-                                            </div>
-                                            <div class="col-12 col-xl-6 pt-2 pt-xl-0">
-                                                <div class=" text-center">
-                                                    <a class="btn btn-danger w-100 font-weight-bold" href="{{ path('app_forgetPassword') }}">
-                                                        Mot de passe oublié ?
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>                                    
+                                         <div class=" text-center mt-3">
+                                             <a href="{{ path('app_forgetPassword') }}">  Mot de passe oublié ?</a>
+                                        </div>                          
+                                        <div class=" text-center mt-3">
+                                             <a href="{% if agentToken %} {{ path('signup_client', {'token': agentToken}) }} {% else %} {{ path('agent_inscription') }} {% endif %}">S'inscrire</a>
+                                        </div>
                                     </form>
                                     
                                     {# <div class="divider my-2">
