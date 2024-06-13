@@ -126,6 +126,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         return $query;
     }
 
+    
 
     /**
      * Permet de filtrer les utilisateurs (Coach ou Agent)
@@ -488,6 +489,34 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         ->setParameter('parrain', $user)
         ->getQuery()
         ->getSingleScalarResult();
+    }
+
+    public function findByKeyWordQuery($keyWord, $secteurId = null){
+        if(is_null($secteurId)){
+            $secteurId = $_ENV['SECTEUR_METHER_ID'];
+        }
+        $query =  $this->createQueryBuilder('a')
+                ->where('a.prenom LIKE :keyword')
+                ->orWhere('a.nom LIKE :keyword')
+                ->orWhere('a.email LIKE :keyword')
+                ->orWhere('a.telephone LIKE :keyword')
+                ->setParameter('keyword', '%'.$keyWord.'%')
+                ->orderBy('a.nom','ASC')
+        ;
+
+        $query = $query
+            ->join('a.coachSecteurs', 'aSec')
+            ->andwhere('aSec.secteur = :secteur')
+            ->setParameter('secteur', $secteurId)
+            ->orderBy('a.id', 'DESC')
+        ;
+
+        
+        return $query->getQuery()
+            ->getResult()
+            ;
+
+
     }
   
     

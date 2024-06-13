@@ -100,7 +100,7 @@
                                                     <a href="{{ path('agent_quiz_begin', {id:formation.id}) }}" class="btn btn-primary btn-sm"><i class="fa fa-chevron-right"></i> Commencer</a>
                                                 {% elseif statut == constant('App\\Entity\\Formation::STATUT_IN_PROGRESS') or statut == constant('App\\Entity\\Formation::STATUT_TERMINER') %}
                                                     <a href="{{ path('agent_quiz_begin', {id:formation.id}) }}" class="btn btn-primary btn-sm"><i class="fa fa-repeat"></i> Réessayer</a>
-                                                    <a href="{{ path('agent_quiz_result', {id:formationAgentRelation.id}) }}" class="btn btn-success btn-sm ms-2"><i class="fa fa-chevron-right"></i> Voir le dérnier résultat</a>
+                                                    <a href="{{ path('agent_quiz_result', {id:formationAgentRelation.id}) }}" class="btn btn-outline-primary btn-sm ms-2"><i class="fa fa-chevron-right"></i> Voir le dérnier résultat</a>
                                                 {% endif %}
                                             {% else %}
                                                 {% if statut == constant('App\\Entity\\Formation::STATUT_BLOQUEE') %}
@@ -108,7 +108,7 @@
                                                 {% elseif statut == constant('App\\Entity\\Formation::STATUT_DISPONIBLE')%}
                                                     <a href="{{ path('agent_formation_fiche', {id:formation.id}) }}" class="btn btn-primary btn-sm"><i class="fa fa-chevron-right"></i> Fiche formation</a>
                                                 {% elseif statut == constant('App\\Entity\\Formation::STATUT_TERMINER')%}
-                                                    <a href="{{ path('agent_formation_fiche', {id:formation.id}) }}" class="btn btn-success btn-sm"><i class="fa fa-check"></i> Formation terminée</a>
+                                                    <a href="{{ path('agent_formation_fiche', {id:formation.id}) }}" class="btn btn-outline-primary btn-sm"><i class="fa fa-check"></i> Formation terminée</a>
                                                 {% endif %}
                                             {% endif %}
                                         {# {% endif %} #}

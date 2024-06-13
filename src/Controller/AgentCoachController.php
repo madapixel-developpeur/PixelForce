@@ -63,8 +63,14 @@ class AgentCoachController extends AbstractController
                             ->remove('active')
                             ->remove('dateInscriptionMax');
         $searchForm->handleRequest($request);
+
+        $searckKeyWord = $request->get('search');
+        $query = $this->userRepository->findCoachBySecteur($search, $secteur);
+        if(!is_null($searckKeyWord)){
+            $query = $this->userRepository->findByKeyWordQuery($searckKeyWord);
+        }
         $agents = $this->paginator->paginate(
-            $this->userRepository->findCoachBySecteur($search, $secteur),
+            $query,
             $request->query->getInt('page', 1),
             20
         );
