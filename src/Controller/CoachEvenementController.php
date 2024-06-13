@@ -42,6 +42,7 @@ class CoachEvenementController extends AbstractController
         );
         return $this->render('user_category/coach/evenement/list.html.twig', [
             'evenements' => $evenements,
+            'filesDirectory' => $this->getParameter('files_directory_relative'),
         ]);
     }
 

@@ -52,6 +52,10 @@ class Evenement
     */
     private $coach;
 
+     /**
+     * @ORM\Column(type="string", length=255, nullable=false)
+     */
+    private $ville;
 
     public function getId(): ?int
     {
@@ -194,6 +198,26 @@ class Evenement
     public function setCoach($coach)
     {
         $this->coach = $coach;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of ville
+     */ 
+    public function getVille()
+    {
+        return $this->ville;
+    }
+
+    /**
+     * Set the value of ville
+     *
+     * @return  self
+     */ 
+    public function setVille($ville)
+    {
+        $this->ville = $ville;
 
         return $this;
     }

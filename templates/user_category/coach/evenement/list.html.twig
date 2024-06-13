@@ -21,8 +21,6 @@
             {% endfor %}
         </div>
 
-        <hr class="my-5">
-
         <!-- Liste Audit -->
         <div class="row mb-3">
             <div class="col-12  mt-2 mt-md-3">
@@ -40,51 +38,48 @@
                 </div>
             </div>
 		</div>
-        <div class="table-responsive">
-			<table class="table table-striped table-hover text-center ">
-				<thead>
-					<tr style="white-space:nowrap" >
-						<th scope="col" class="text-center">#</th>
-						<th scope="col" class="text-center">Nom</th>
-						<th scope="col" class="text-center">description</th>
-						<th scope="col" class="text-center">Date</th>
-						<th scope="col" class="text-center table-th-notSortable">ACTION</th>
-					</tr>
-				</thead>
-				<tbody>
-					{% for evenement in evenements %}
-                        <tr>
-                            <td></td>
-                            <td>{{ evenement.nom }}</td>
-                            <td>{{ evenement.description }}</td>
-                            <td>{{ evenement.startDate.format('Y-m-d') ~ " à "~ evenement.endDate.format('Y-m-d') }}</td>
-                           
-                            
-                            <td style="white-space:nowrap">
-                                <a href="{{ path('evenement_view', {'id': evenement.id}) }}" class="btn btn-secondary">
-                                    <i class="fa-solid fa-eye"></i>
-                                </a>
-                                {% if is_granted('ROLE_COACH') %}
-                                    <a href="{{ path('coach_edit_evenement', {'id': evenement.id}) }}" class="btn btn-success">
-                                    <i class="fa fa-pencil-square" aria-hidden="true"></i>
-                                    </a>
-                                {% endif  %}
-                                {# {% if is_granted('ROLE_AGENT') %}
-                                    <a href="#" class="btn btn-success">
-                                       S'inscrire
-                                    </a>
-                                {% endif  %} #}
-                            </td>
-                        </tr>
-                    {% endfor %}
 
-				</tbody>
-			</table>
-		</div>
+        <div class="row">
+        {% for evenement in evenements %}
+           <div class="col-lg-4 col-md-6 col-12">
+                <div class="card card-developer-meetup position-relative">
+                    <div class="position-absolute right-0 top-0 m-3">
+                        {# <a href="{{ path('calendar_index') }}" class="btn btn-primary d-flex justify-content-center align-items-center">Mon Agenda <i data-feather="calendar" class="ms-3"></i></a> #}
+                    </div>
+                    <div class="meetup-img-wrapper rounded-top text-center">
+                        <img src="{{ asset( filesDirectory ~ evenement.filePath) }}" alt="Meeting Pic" height="300" width="300" />
+                    </div>
+                    <div class="card-body" style="height:170px">
+                        <h5 class="bold">{{ evenement.nom}}</h5>
+                       
+                        <p class="card-text ">{{ evenement.description}}</p>
+                    </div>
+                    <div class='container mb-3 ml-23'>
+                        <p class="card-text "> 
+                               {% if evenement.ville is null %}
+                                    <i class="fa-solid fa-location-dot"></i>{{ evenement.ville}} 
+                                {% endif %}
+                                    <i class="fa-solid fa-clock"></i> {{  evenement.startDate.format('d-m-Y') }}</p>
+                        <p class="card-text ml-5 "> <a href="{{ path('evenement_view', {'id': evenement.id}) }}" class="btn btn-primary">
+                                Voir l'évènements
+                        </a></p>
+                    </div>
+                    {# <div class="card-footer" >
+                       
+                    </div> #}
+                </div>
+            </div>
+        {% endfor %}
+        </div>
 
+				
+
+   
 		<div class="pagination d-flex justify-content-center">
 			{{ knp_pagination_render(evenements)}}
 		</div>
+
+           
     </div>
 {% endblock %}
 
