@@ -206,8 +206,8 @@
         if (d.children || d._children) return 14;
             return 0;
         })
-        .attr("fill", "#42b2ff")
-        .attr("style", "stroke: #42b2ff")
+        .attr("fill", "#e5c259")
+        .attr("style", "stroke: #e5c259")
     //   collapsibles.attr("r", function(d) {
     //       if (d.children || d._children) return attrs.collapseCircleRadius;
     //       return 0;
