@@ -11,6 +11,7 @@ class ErrorController extends AbstractController
     public function show(\Throwable $exception): Response
     {
         // Détermine le code d'état HTTP à partir de l'exception
+        dd($exception);
         $code = $exception instanceof HttpExceptionInterface ? $exception->getStatusCode() : Response::HTTP_INTERNAL_SERVER_ERROR;
 
         // Vous pouvez personnaliser les messages d'erreur en fonction du code d'état HTTP
