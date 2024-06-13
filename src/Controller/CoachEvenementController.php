@@ -35,6 +35,11 @@ class CoachEvenementController extends AbstractController
             ->from(Evenement::class, 'e')
             ->orderBy('e.createdAt','DESC')
         ;  
+
+        $searckKeyWord = $request->get('search');
+        if(!is_null($searckKeyWord)){
+            $query = $this->evenementRepository->findByKeyWordQuery($searckKeyWord);
+        }
         $evenements = $paginator->paginate(
             $query,
             $request->query->getInt('page', 1),
