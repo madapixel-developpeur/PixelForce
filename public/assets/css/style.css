@@ -392,3 +392,7 @@ a, a:hover{
 	border-left: inherit;
 	cursor: pointer;
 }
+
+.icon.mether {
+	stroke: #e5c259;
+}
