@@ -19,12 +19,14 @@
 				<div class="form-add-contact">
 					{{ form_start(form) }}
 						{{ form_row(form.nom) }}
+						{{ form_row(form.ville) }}
                         <div class="row">
 							<div class="col-md-6">{{ form_row(form.startDate) }}</div>
 							<div class="col-md-6">{{ form_row(form.endDate) }}</div>
 						</div>
 						{{ form_row(form.description) }}
 						{{ form_row(form.filePath) }}
+						{{ form_row(form.couvertureFilePath) }}
 						<div class="row">
 							<div class="col-md-12 text-end"><button type="submit" class="btn btn-{{btn_class}}" style="margin-bottom: 81px;">{{ button|default('Enregistrer') }}</button></div>
 						</div>

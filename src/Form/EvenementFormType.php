@@ -7,12 +7,14 @@ use Mpdf\Tag\TextArea;
 use App\Entity\Evenement;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
 
 class EvenementFormType extends AbstractType
 {
@@ -31,24 +33,56 @@ class EvenementFormType extends AbstractType
                 'placeholder' => ''
             ]
         ])
-        ->add('startDate', DateType::class, [
+        ->add('startDate', DateTimeType::class, [
             'label' => 'Début',
             'widget' => 'single_text',
             'attr' => [
                 'class' => 'form-control',
                 'id' => 'default-date',
             ],
+            'constraints' => [
+                new GreaterThanOrEqual([
+                    'value' =>new DateTime(),
+                    'message' => "Date déjà passée"
+                ])
+            ],
         ])
-        ->add('endDate', DateType::class, [
+        ->add('endDate', DateTimeType::class,[
             "label" => "Fin",
             'widget' => 'single_text',
+            'required' =>false,
             'attr' => [
                 // 'class' => 'datepicker',
                 'id' => 'default-date',
+            ],
+            'constraints' => [
+                new GreaterThanOrEqual([
+                    'value' =>new DateTime(),
+                    'message' => "Date déjà passée"
+                ])
+            ],
+        ])
+        ->add('ville', TextType::class, [
+            'label' => 'Ville',
+            'required' =>false,
+            'attr' => [
+                'placeholder' => ''
             ]
         ])
         ->add('filePath', FileType::class, [
-            "label" => "Fichier ",
+            "label" => "Image pour bannière",
+            'mapped' => false,
+            "required" => $options['isCreation'],
+            'constraints' => [
+                new File([
+                    // 'maxSize' => '1024k',
+                    'mimeTypes' => ['image/jpeg', 'image/png', 'image/gif'],
+                    'mimeTypesMessage' => 'Image invalide. Le format doit être: .jpeg ou .png',
+                ])
+            ]
+        ])
+        ->add('couvertureFilePath', FileType::class, [
+            "label" => "Image pour couverture ",
             'mapped' => false,
             "required" => $options['isCreation'],
             'constraints' => [

@@ -27,6 +27,11 @@ class Evenement
      */
     private $filepath;
 
+       /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $couvertureFilePath;
+
      /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
@@ -218,6 +223,26 @@ class Evenement
     public function setVille($ville)
     {
         $this->ville = $ville;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of couvertureFilePath
+     */ 
+    public function getCouvertureFilePath()
+    {
+        return $this->couvertureFilePath;
+    }
+
+    /**
+     * Set the value of couvertureFilePath
+     *
+     * @return  self
+     */ 
+    public function setCouvertureFilePath($couvertureFilePath)
+    {
+        $this->couvertureFilePath = $couvertureFilePath;
 
         return $this;
     }

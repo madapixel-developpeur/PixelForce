@@ -60,6 +60,11 @@ class CoachEvenementController extends AbstractController
                 $fichier_nom = $this->fileHandler->upload($fichier, "evenement/");
                 $evenement->setFilepath($fichier_nom);
             }
+            $fichier = $form->get('couvertureFilePath')->getData();
+            if ($fichier) {
+                $fichier_nom = $this->fileHandler->upload($fichier, "evenement/");
+                $evenement->setCouvertureFilepath($fichier_nom);
+            }
             $this->entityManager->save($evenement);
             $this->addFlash('success', "Nouvel évènement enregistré avec succès");
             return $this->redirectToRoute('app_coach_evenement');
@@ -91,6 +96,11 @@ class CoachEvenementController extends AbstractController
             if ($fichier) {
                 $fichier_nom = $this->fileHandler->upload($fichier, "evenement/");
                 $evenement->setFilepath($fichier_nom);
+            }
+            $fichier = $form->get('couvertureFilePath')->getData();
+            if ($fichier) {
+                $fichier_nom = $this->fileHandler->upload($fichier, "evenement/");
+                $evenement->setCouvertureFilepath($fichier_nom);
             }
             $this->entityManager->save($evenement);
             $this->addFlash('success', "Evènement modifié avec succès");

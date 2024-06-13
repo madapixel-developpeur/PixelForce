@@ -16,15 +16,21 @@
                         </li>
                         <li class="mb-75">
                             <span class="fw-bolder me-25">Date:</span>
-                            <span>{{  evenement.startDate.format('d-m-Y') ~ " à "~ evenement.endDate.format('d-m-Y') }}</span>
+                            <span>{{  evenement.startDate.format('d-m-Y') }}</span>
                         </li>
+                        {% if evenement.ville is not  empty %}
+                        <li class="mb-75">
+                            <span class="fw-bolder me-25">Ville:</span>
+                            <span>{{  evenement.ville }}</span>
+                        </li>
+                        {% endif %}
                         <li class="mb-75">
                             <span class="fw-bolder me-25">Description:</span>
                             <span>{{ evenement.description }}</span>
                         </li>
                     </ul>
                      <div >
-                        <img class="img-fluid card-img-top ecommerce-card-img"  src="{{ asset( filesDirectory ~ evenement.filePath) }}" alt="Image pour {{evenement.nom}}" />
+                        <img class="img-fluid card-img-top ecommerce-card-img"  src="{{ asset( filesDirectory ~ evenement.couvertureFilePath) }}" alt="Image pour {{evenement.nom}}" />
                     </div>
                 </div>  
             </div>

@@ -47,7 +47,7 @@
                         {# <a href="{{ path('calendar_index') }}" class="btn btn-primary d-flex justify-content-center align-items-center">Mon Agenda <i data-feather="calendar" class="ms-3"></i></a> #}
                     </div>
                     <div class="meetup-img-wrapper rounded-top text-center">
-                        <img src="{{ asset( filesDirectory ~ evenement.filePath) }}" alt="Meeting Pic" height="300" width="300" />
+                        <img src="{{ asset( filesDirectory ~ evenement.couvertureFilePath) }}" alt="Meeting Pic" height="300" width="300" />
                     </div>
                     <div class="card-body" style="height:170px">
                         <h5 class="bold">{{ evenement.nom}}</h5>
@@ -56,8 +56,8 @@
                     </div>
                     <div class='container mb-3 ml-23'>
                         <p class="card-text "> 
-                               {% if evenement.ville is null %}
-                                    <i class="fa-solid fa-location-dot"></i>{{ evenement.ville}} 
+                               {% if evenement.ville is not empty %}
+                                    <i class="fa-solid fa-location-dot"></i> {{ evenement.ville}} 
                                 {% endif %}
                                     <i class="fa-solid fa-clock"></i> {{  evenement.startDate.format('d-m-Y') }}</p>
                         <p class="card-text ml-5 "> <a href="{{ path('evenement_view', {'id': evenement.id}) }}" class="btn btn-primary">
