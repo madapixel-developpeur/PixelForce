@@ -23,16 +23,16 @@
             <div class="col-12  mt-2 mt-md-3">
                 <div class=" w-100 h-100 ps-3 py-3  bg-white border pe-3">
                     <div class="row h-100">
-                        <div class="col-6">
+                        <div class="col-md-6">
                             <h4 class="my-auto">Liste des coachs</h4>
                         </div>
-                        <div class="col-4">
+                        <div class="col-md-4">
                             <form  role="search" id="search-form" action="">
                                 <div class="row g-3">
                                     <div class="col-md-8 search-form">
                                         <input name="search" value="{{ app.request.get('search') | default('') }}" class="form-control " type="search mt-1" aria-label="Search">
                                     </div>
-                                    <div class="col d-flex align-items-around search-form">
+                                    <div class="col  mb-2 text-end">
                                         <button class="btn btn-outline-primary ml-2" type="submit" >Rechercher</button>
                                     </div>
                                 </div>

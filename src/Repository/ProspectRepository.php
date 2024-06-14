@@ -107,6 +107,31 @@ class ProspectRepository extends ServiceEntityRepository
         return $result > 0 ? true : false;
     }
 
+    public function findByKeyWordQuery($keyword,$agent,$secteurId = null){
+        if(is_null($secteurId)){
+            $secteurId = $_ENV['SECTEUR_METHER_ID'];
+        }
+        $query = $this->createQueryBuilder('p');
+        $query = $query
+            ->andwhere('p.agent = :agent')
+            ->setParameter('agent',$agent->getId());
+
+        $query->andWhere(
+            $query->expr()->orX(
+                $query->expr()->like($query->expr()->lower('p.firstname'), ':keyword'),    
+                $query->expr()->like($query->expr()->lower('p.lastname'), ':keyword'),    
+                $query->expr()->like($query->expr()->lower('p.email'), ':keyword'),    
+                $query->expr()->like($query->expr()->lower('p.phone'), ':keyword'),    
+                $query->expr()->like($query->expr()->lower('p.address'), ':keyword')
+            )
+            )->setParameter('keyword', '%' . strtolower($keyword) . '%');
+        
+        return $query->getQuery()
+            ->getResult()
+        ;
+       
+    }
+
 //    /**
 //     * @return Prospect[] Returns an array of Prospect objects
 //     */

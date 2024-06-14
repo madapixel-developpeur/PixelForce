@@ -80,8 +80,14 @@ class AgentProspectController extends AbstractController
         ;
         $searchForm->handleRequest($request);
         
+
+        $searckKeyWord = $request->get('search');
+        $query =   $this->repoProspect->findProspect($search, $agent);
+        if(!is_null($searckKeyWord)){
+            $query = $this->repoProspect->findByKeyWordQuery($searckKeyWord,$agent);
+        }
         $prospects = $paginator->paginate(
-            $this->repoProspect->findProspect($search, $agent),
+           $query,
             $request->query->getInt('page', 1),
             20
         );
