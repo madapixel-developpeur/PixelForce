@@ -180,6 +180,38 @@ class ContactRepository extends ServiceEntityRepository
         ;
     }
 
+    public function findByKeyWordQuery($keyword,$agent,$secteurId = null){
+        if(is_null($secteurId)){
+            $secteurId = $_ENV['SECTEUR_METHER_ID'];
+        }
+        $query = $this->createQueryBuilder('c');
+        $query = $query
+            ->andwhere('c.agent = :agent')
+            ->setParameter('agent', $agent)
+            ->join('c.secteur', 'cs')
+            ->andwhere('cs.id = :secteurId')
+            ->setParameter('secteurId', $secteurId)
+            ->join('c.information', 'ci')
+        ;
+
+        $query->where(
+            $query->expr()->orX(
+                $query->expr()->like($query->expr()->lower('ci.lastname'), ':keyword'),    
+                $query->expr()->like($query->expr()->lower('ci.firstname'), ':keyword'),    
+                $query->expr()->like($query->expr()->lower('ci.email'), ':keyword'),    
+                $query->expr()->like($query->expr()->lower('ci.phone'), ':keyword'),    
+                $query->expr()->like($query->expr()->lower('ci.address'), ':keyword'),    
+            )
+            ) ->setParameters([
+                'keyword' => '%' . strtolower($keyword) . '%',
+            ]);
+        
+            return $query->getQuery()
+            ->getResult()
+        ;
+       
+    }
+
 
     // /**
     //  * @return Contact[] Returns an array of Contact objects

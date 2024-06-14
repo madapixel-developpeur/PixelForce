@@ -81,9 +81,15 @@ class AgentContactController extends AbstractController
             ])
         ;
         $searchForm->handleRequest($request);
+
+        $searckKeyWord = $request->get('search');
+        $query =   $this->repoContact->findContactBySecteur($search, $agent, $secteurId);
+        if(!is_null($searckKeyWord)){
+            $query = $this->repoContact->findByKeyWordQuery($searckKeyWord,$agent);
+        }
         
         $contacts = $paginator->paginate(
-            $this->repoContact->findContactBySecteur($search, $agent, $secteurId),
+            $query,
             $request->query->getInt('page', 1),
             20
         );

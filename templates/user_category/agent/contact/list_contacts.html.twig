@@ -27,8 +27,67 @@
             
         </div>
 
-        <!-- Formulaire de recherche -->
-        <div class="search-form">
+
+
+        <!-- Liste agent -->
+        <div class="row mb-3">
+            <div class="col-12  mt-2 mt-md-3">
+                <div class=" w-100 h-100 ps-3 py-3  bg-white border pe-3">
+                    <div class="row h-100 mb-sm-5 mb-md-0">
+                        <div class="col-md-5">
+                           <h4><i class="fa fa-book-atlas"></i> Liste de mes contacts</h4>
+                        </div>
+                        <div class="col-md-4 mt-2">
+                            <form  role="search" id="search-form" action="">
+                                <div class="row g-3">
+                                    <div class="col-md-8 search-form">
+                                        <input name="search" value="{{ app.request.get('search') | default('') }}" class="form-control " type="search mt-1" aria-label="Search">
+                                    </div>
+                                    <div class="col d-flex search-form text-end">
+                                        <button class="btn btn-outline-primary ml-2" type="submit" >Rechercher</button>
+                                    </div>
+                                </div>
+                            </form>	
+                        </div>	
+                          <div class="col-md-1 mt-2">
+                            <a href="#" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample" id="collapseButton" class="btn btn-primary  waves-effect waves-float waves-light fw-bolder d-flex float-end d-flex align-items-center"><span >Options</span> <i id='option-text' class="fas fa-chevron-down"></i></a>
+                        </div>	
+                        <div class="col text-end mt-2">
+                             <a href="{{ path('agent_contact_info_add') }}" class="btn btn-outline-primary"><i class="fa fa-plus"></i> Nouveau contact</a>
+                        </div>	
+                    </div>
+                </div>
+            </div>
+		</div>
+        {# <div class="row mb-3">
+            <div class="col-12  mt-2 mt-md-3">
+                <div class="row mb-4 mt-3 mt-m-0">
+                    <div class="col-12 col-md-6 order-2 order-md-1">
+                        <h4><i class="fa fa-book-atlas"></i> Liste de mes contacts</h4>
+                    </div>
+                     <div class="col-4">
+                            <form  role="search" id="search-form" action="">
+                                <div class="row g-3">
+                                    <div class="col-md-8 search-form">
+                                        <input name="search" value="{{ app.request.get('search') | default('') }}" class="form-control " type="search mt-1" aria-label="Search">
+                                    </div>
+                                    <div class="col d-flex align-items-around search-form">
+                                        <button class="btn btn-outline-primary ml-2" type="submit" >Rechercher</button>
+                                    </div>
+                                </div>
+                            </form>	
+                        </div>	
+                        <div class="col">
+                            <a href="#" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample" id="collapseButton" class="btn btn-primary  waves-effect waves-float waves-light fw-bolder d-flex float-end d-flex align-items-center"><span >Options</span> <i id='option-text' class="fas fa-chevron-down"></i></a>
+                        </div>	
+                    <div class="col-12 col-md-6 text-sm-start text-md-end order-1 order-md-1 mb-3 mb-md-0">
+                        <a href="{{ path('agent_contact_info_add') }}" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> Ajouter un contact</a>
+                    </div>
+                </div>
+            </div>
+		</div> #}
+
+         <div class="search-form collapse mt-3 mb-5" id="collapseExample">
             {{form_start(searchForm)}}
             <div class="row text-center">
                 <div class="col-12 col-sm-3 col-md-2">
@@ -72,21 +131,6 @@
             {{form_end(searchForm)}}
         </div>
 
-        <hr class="my-5">
-
-        <!-- Liste agent -->
-        <div class="row mb-3">
-            <div class="col-12  mt-2 mt-md-3">
-                <div class="row mb-4 mt-3 mt-m-0">
-                    <div class="col-12 col-md-6 order-2 order-md-1">
-                        <h4><i class="fa fa-book-atlas"></i> Liste de mes contacts</h4>
-                    </div>
-                    <div class="col-12 col-md-6 text-sm-start text-md-end order-1 order-md-1 mb-3 mb-md-0">
-                        <a href="{{ path('agent_contact_info_add') }}" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> Ajouter un contact</a>
-                    </div>
-                </div>
-            </div>
-		</div>
         <div class="table-responsive">
 			<table class="table table-striped table-hover text-center">
 				<thead>
@@ -140,9 +184,9 @@
                 <div class="col-sm-12 col-lg-6 ">
                     <div class="row">
                         <div class="d-flex flex-wrap align-items-center">
-                            <a href="{{path('agent_contact_export_excel')}}" class=" mt-2 btn btn-success btn-sm mx-2"><i class="fa fa-file-text"></i> <span class="ms-1">Exporter excel</span></a>
-                            <a href="{{path('agent_contact_export_pdf')}}" class=" mt-2 btn btn-danger btn-sm mx-2"><i class="fa fa-file-text"></i> <span class="ms-1"> Exporter pdf</span></a>
-                            <a href="{{path('agent_contact_import_export_mobile')}}" class="mt-2 btn btn-secondary btn-sm mx-2"><i class="fa-solid fa-mobile-screen-button"></i><span class="imp-exp-text-js ms-1">Importer/Exportation mobile</sapn></a>
+                            <a href="{{path('agent_contact_export_excel')}}" class=" mt-2 btn btn-outline-success text-success mx-2"><i class="fa fa-file-text"></i> <span class="ms-1">Exporter excel</span></a>
+                            <a href="{{path('agent_contact_export_pdf')}}" class=" mt-2 btn btn-outline-danger  text-danger mx-2"><i class="fa fa-file-text"></i> <span class="ms-1"> Exporter pdf</span></a>
+                            <a href="{{path('agent_contact_import_export_mobile')}}" class="mt-2 btn btn-outline-secondary  mx-2"><i class="fa-solid fa-mobile-screen-button"></i><span class="imp-exp-text-js ms-1">Importer/Exportation mobile</sapn></a>
                         </div>
                     </div>
                 </div>
@@ -169,6 +213,23 @@
                 $('.imp-exp-text-js').text('Import/Export mobile');
             }
         });
+    </script>
+
+     <script>
+         $(document).ready(function() {
+        $('#collapseExample').on('show.bs.collapse', function() {
+            $('#option-text').removeClass('fa-chevron-down');
+            $('#option-text').addClass('fa-chevron-up');
+            $('#search-form').addClass('d-none');
+        });
+
+        $('#collapseExample').on('hide.bs.collapse', function() {
+              $('#option-text').removeClass('fa-chevron-up');
+            $('#option-text').addClass('fa-chevron-down');
+            $('#search-form').removeClass('d-none');
+
+        });
+    });
     </script>
 {% endblock %}
 
