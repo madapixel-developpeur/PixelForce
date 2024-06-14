@@ -71,7 +71,7 @@
  */
 
 .bg-princ {
-    background: #3e4f9c !important;
+    background: #e5c259 !important;
 }
 
 .bg-light-gray {
@@ -97,7 +97,7 @@ textarea.error,input.error {
 
 /* popover*/
 .popover-header{
-    background: linear-gradient(118deg, #7367f0, rgba(115, 103, 240, 0.7)) !important;
+    background: linear-gradient(118deg, #E5C259, rgba(115, 103, 240, 0.7)) !important;
 }
 
 /** version desktop **/

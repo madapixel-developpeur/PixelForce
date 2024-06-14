@@ -396,3 +396,7 @@ a, a:hover{
 .icon.mether {
 	stroke: #e5c259;
 }
+
+.avatar-icon {
+    stroke: #e5c259 !important;
+}
