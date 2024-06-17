@@ -400,3 +400,7 @@ a, a:hover{
 .avatar-icon {
     stroke: #e5c259 !important;
 }
+
+.page-link{
+	background-color: #e5c259 !important;
+}

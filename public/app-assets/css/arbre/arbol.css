@@ -490,16 +490,16 @@
 
   .nodeHasChildren {
     fill: white;
-    stroke: #42b2ff;
+    stroke: #e5c259;
   }
 
   .nodeDoesNotHaveChildren {
     fill: white;
-    stroke: #42b2ff;
+    stroke: #e5c259;
   }
 
   .nodeRepresentsCurrentUser {
-    stroke: #42b2ff;
+    stroke: #e5c259;
     stroke-width: 2;
   }
 
@@ -522,7 +522,7 @@
   }
 
   .node-collapse-right-rect {
-    fill: #42b2ff;
+    fill: #e5c259;
     stroke: #42b2ff;
   }
 
