@@ -2,20 +2,22 @@
 
 namespace App\Repository;
 
+use DateInterval;
+use App\Entity\User;
+use App\Entity\Secteur;
+use App\Entity\NewsLetters;
 use App\Entity\AgentSecteur;
 use App\Entity\CanalMessage;
 use App\Entity\CoachSecteur;
-use App\Entity\SearchEntity\UserSearch;
-use App\Entity\Secteur;
-use App\Entity\User;
-use DateInterval;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use App\Entity\SearchEntity\UserSearch;
+use Doctrine\ORM\Query\ResultSetMapping;
+use Doctrine\ORM\OptimisticLockException;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
-use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 
 /**
  * @method User|null find($id, $lockMode = null, $lockVersion = null)
@@ -516,6 +518,24 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->getResult()
             ;
 
+
+    }
+
+    public function getListOfEmailsCombinedWithpProspect(){
+        $rsm = new ResultSetMapping();
+        $rsm->addScalarResult('email', 'email');
+     
+        $sql = "
+            SELECT DISTINCT email FROM (
+                SELECT email FROM user
+                UNION
+                SELECT email FROM prospect
+            ) as combined_emails
+        ";
+        $query =  $this->getEntityManager()->createNativeQuery($sql,$rsm);
+        $query->setParameter('state', NewsLetters::SENT);
+        $result = $query->getResult();
+        return $result;
 
     }
   

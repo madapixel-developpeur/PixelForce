@@ -1,0 +1,137 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title %}
+	News letters
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+    {# <div class="block block--bordered block--rounded">
+        <h1 class="block__text block__text--center mt-2" >Options de filtre :</h1>
+        <div class="filter-wrap">
+            
+            {{ form_start(form, {'attr': {'class': 'filter-form', 'id': 'product-filter-form'}}) }}
+                <div class="row">
+                <div class="col-12 col-md-2">
+                <div class="my-form-widget">
+                    {{form_label(form.status)}}
+                    {{form_widget(form.status)}}
+                    {{form_errors(form.status)}}
+                </div>
+                </div>
+                <div class="col-12 col-md-2">
+                <div class="my-form-widget">
+                    {{form_label(form.dateMin)}}
+                    {{form_widget(form.dateMin)}}
+                    {{form_errors(form.dateMin)}}
+                </div>
+                </div>
+                <div class="col-12 col-md-2">
+                <div class="my-form-widget">
+                    {{form_label(form.dateMax)}}
+                    {{form_widget(form.dateMax)}}
+                    {{form_errors(form.dateMax)}}
+                </div>
+                </div>
+                <div class="col-12 col-md-3">
+                <div class="my-form-widget">
+                    {{form_label(form.userName)}}
+                    {{form_widget(form.userName)}}
+                    {{form_errors(form.userName)}}
+                </div>
+                </div>
+                <div class="col-12 col-md-3">
+                <div class="my-form-widget">
+                    {{form_label(form.rib)}}
+                    {{form_widget(form.rib)}}
+                    {{form_errors(form.rib)}}
+                </div>
+                </div>
+                <div class="col-12 col-md-3">
+                <div class="my-form-widget">
+                    {{form_label(form.sort)}}
+                    {{form_widget(form.sort)}}
+                    {{form_errors(form.sort)}}
+                </div>
+                </div>
+                <div class="col-12 col-md-3">
+                <div class="my-form-widget">
+                    {{form_label(form.direction)}}
+                    {{form_widget(form.direction)}}
+                    {{form_errors(form.direction)}}
+                </div>
+                </div>
+                </div>
+                <div class="btn-wrap d-flex justify-content-start mt-3">
+                    <button class="btn btn-primary" type="submit"><i data-feather="filter"></i>Filtrer</button>
+                </div>
+            {{ form_end(form) }}
+        </div>
+    </div> #}
+    <div class="row mb-3">
+            <div class="col-12  mt-2 mt-md-3">
+                <div class=" w-100 h-100 ps-3 py-3  bg-white border pe-3">
+                    <div class="row h-100">
+                        <div class="col-6">
+                            <h4 class="my-auto">Liste des news letters</h4>
+                        </div>
+                        <div class="col-6 ">
+                            <a href="{{ path('admin_news_letters_add') }}" class="btn btn-primary btn-sm waves-effect waves-float waves-light fw-bolder d-flex float-end d-flex align-items-center"><i class="fa-solid fa-plus me-2"></i> Ajouter</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+		</div>
+       
+        {% if data|length ==0 %}
+                <div class="alert alert-primary p-3 text-center" role="alert">
+                    <div class="alert-body">
+                        Aucun résultat.
+                    </div>
+                </div>
+        {% endif %}
+        {% if data|length !=0 %}
+       <div class="table-responsive">
+			<table class="table table-striped table-hover text-center sortable">
+                <thead>
+                    <tr>
+                        <th scope="col" class="text-center">Date</th>
+                        <th scope="col" class="text-center">Objet</th>
+                        <th scope="col" class="text-center">Corps du mail</th>
+                        <th scope="col" class="text-center">Statut</th>
+                        <th scope="col" class="text-center"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in data %}
+                    <tr>
+                        <td>{{item.createdAt | date("d/m/Y H:i")}}</td>
+                        <td>{{item.objet }}</td>
+                        <td>{{item.content | u.truncate(90, '...') }}</td>
+                        <td class="col-action d-flex align-items-center justify-content-center">
+            
+                            <form action="#" method="post">
+                                <button class="btn btn-sm btn-success" type="submit">
+                                    Envoyer
+                                </button>
+                            </form>
+                        </td>   
+
+                       
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="d-flex justify-content-center scale-up-center">
+            {{ knp_pagination_render(data) }}
+        <div>
+        {% endif %}
+    </div>
+
+{% endblock %}
+
+
