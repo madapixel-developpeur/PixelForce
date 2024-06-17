@@ -23,4 +23,5 @@ return [
     Gregwar\CaptchaBundle\GregwarCaptchaBundle::class => ['all' => true],
     FOS\CKEditorBundle\FOSCKEditorBundle::class => ['all' => true],
     Nelmio\CorsBundle\NelmioCorsBundle::class => ['all' => true],
+    Zenstruck\ScheduleBundle\ZenstruckScheduleBundle::class => ['all' => true],
 ];

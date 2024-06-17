@@ -4,16 +4,17 @@ namespace App\Services;
 use Exception;
 use App\Entity\User;
 use App\Entity\Audit;
+use App\Entity\Prospect;
 use App\Entity\BasketItem;
 use App\Entity\NewsLetters;
-use App\Entity\Prospect;
 use App\Manager\EntityManager;
+use App\Util\Search\Constants;
 use App\Repository\UserRepository;
 use App\Repository\AuditRepository;
+use App\Repository\ProspectRepository;
 use App\Repository\NewsLettersRepository;
 use DoctrineExtensions\Query\Sqlite\IfNull;
 use App\Repository\PiecesJointesNewsLettersRepository;
-use App\Repository\ProspectRepository;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class NewsLettersService
@@ -31,10 +32,37 @@ class NewsLettersService
 
     }
     public function sendNewsLetters(){
-        $new =  $this->newsLettersRepository->findOneBy(['id' => 2]);
-        $piecesJointe =  $this->piecesJointesNewsLettersRepository->findBy(['newsLetters' => 2]);
-        $emails = $this->userRepository->getListOfEmailsCombinedWithpProspect();
-        $this->mailerService->sendNewsLetters($new,$piecesJointe,'itdevmail1@gmail.com');
+        $newsLetter =  $this->newsLettersRepository->findOneBy(['state' => NewsLetters::PROCCESSING]);
+        if(is_null($newsLetter)){
+            return ; 
+        }
+        $piecesJointe =  $this->piecesJointesNewsLettersRepository->findBy(['newsLetters' => $newsLetter->getId()]);
+        $emails = $this->userRepository->getListOfEmailsCombinedWithProspect(Constants::NUMBER_OF_MAIL_PER_OPERATION);
+        if(count($emails) == 0){
+            $newsLetter->setState(NewsLetters::SENT);
+            $this->entityManager->save($newsLetter);
+            return;
+        }
+        try {
+            $this->entityManager->beginTransaction();
+
+            foreach ($emails as $email) {
+                $this->mailerService->sendNewsLetters($newsLetter,$piecesJointe,$email);
+                $this->prospectRepository->changeStateNewsLettersByEmail($email,Prospect::NEWS_LETTERS_OK);
+                $this->userRepository->changeStateNewsLettersByEmail($email,Prospect::NEWS_LETTERS_OK);
+            }            
+            $this->entityManager->flush();
+            $this->entityManager->commit();
+        }catch(\Exception $ex){
+            if($this->entityManager->getConnection()->isTransactionActive()) {
+                $this->entityManager->rollback();
+            }
+            throw $ex;
+            throw new Exception("Une erreur s'est produite");
+        }
+        finally {
+            $this->entityManager->clear();
+        }
     }
 
     public function proccessNewsLetters(NewsLetters $newsLetter){

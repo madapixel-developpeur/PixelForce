@@ -7,10 +7,12 @@ use App\Entity\DevisCompany;
 use Twig\Environment as Twig_Environment;
 use App\Entity\DocumentRecipient;
 use App\Entity\Formation;
+use App\Entity\NewsLetters;
 use App\Entity\Order;
 use App\Entity\OrderAroma;
 use App\Entity\OrderDigital;
 use App\Entity\OrderSecu;
+use App\Entity\PiecesJointesNewsLetters;
 use App\Entity\User;
 use Nucleos\DompdfBundle\Wrapper\DompdfWrapperInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
@@ -419,6 +421,24 @@ class MailerService
         } catch (\Throwable $th) {
             throw $th;
         }
+    }
+
+
+    public function sendNewsLetters(NewsLetters $newsLetter,$pieceJointes,$email){
+        
+        $body = $this->renderTwig('emails/news_letters.html.twig', [
+            'newsLetter' => $newsLetter,
+        ]);
+
+        $attachmentsPath = [];
+        foreach($pieceJointes as $item){
+            $attachmentsPath[] = $item->getFilepath();
+        }
+        $this->mySendMail([
+            'subject' => $newsLetter->getObjet(),
+            'to' => $email,
+            'body' => $body
+        ], $attachmentsPath, null);
     }
 
 }

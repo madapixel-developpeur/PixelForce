@@ -142,6 +142,17 @@ class ProspectRepository extends ServiceEntityRepository
             ->execute($params);
 
     }
+
+    public function changeStateNewsLettersByEmail($email, $state)
+    {
+        $query = "UPDATE App\Entity\Prospect r SET r.newsLettersState = :state where r.email = :email ";
+        $params = ['state' => $state ,'email' => $email ];
+
+        $this->getEntityManager()
+            ->createQuery($query)
+            ->execute($params);
+
+    }
   
 
 //    /**

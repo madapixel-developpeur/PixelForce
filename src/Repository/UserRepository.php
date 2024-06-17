@@ -521,19 +521,21 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
     }
 
-    public function getListOfEmailsCombinedWithpProspect(){
+    public function getListOfEmailsCombinedWithProspect($limit){
         $rsm = new ResultSetMapping();
         $rsm->addScalarResult('email', 'email');
      
         $sql = "
             SELECT DISTINCT email FROM (
-                SELECT email FROM user
+                SELECT email FROM user where news_letters_state =:state
                 UNION
-                SELECT email FROM prospect
+                SELECT email FROM prospect where news_letters_state =:state
             ) as combined_emails
+            LIMIT :limit
         ";
         $query =  $this->getEntityManager()->createNativeQuery($sql,$rsm);
-        $query->setParameter('state', NewsLetters::SENT);
+        $query->setParameter('state', User::NEWS_LETTERS_NEED_TO_SEND);
+        $query->setParameter('limit',$limit);
         $result = $query->getResult();
         return $result;
 
@@ -543,6 +545,18 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     {
         $query = "UPDATE App\Entity\User r SET r.newsLettersState = :state ";
         $params = ['state' => $state ];
+
+        $this->getEntityManager()
+            ->createQuery($query)
+            ->execute($params);
+
+    }
+
+
+    public function changeStateNewsLettersByEmail($email, $state)
+    {
+        $query = "UPDATE App\Entity\User r SET r.newsLettersState = :state where r.email = :email ";
+        $params = ['state' => $state ,'email' => $email ];
 
         $this->getEntityManager()
             ->createQuery($query)

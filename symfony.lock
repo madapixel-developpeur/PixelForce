@@ -708,5 +708,8 @@
     },
     "willdurand/jsonp-callback-validator": {
         "version": "v1.1.0"
+    },
+    "zenstruck/schedule-bundle": {
+        "version": "v1.8.0"
     }
 }

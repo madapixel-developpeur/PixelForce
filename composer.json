@@ -75,7 +75,8 @@
         "twig/extra-bundle": "^3.3",
         "twig/intl-extra": "^3.4",
         "twig/string-extra": "^3.10",
-        "twig/twig": "^2.12|^3.0"
+        "twig/twig": "^2.12|^3.0",
+        "zenstruck/schedule-bundle": "^1.8"
     },
     "config": {
         "allow-plugins": {

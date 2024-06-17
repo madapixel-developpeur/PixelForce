@@ -9,4 +9,7 @@ class Constants {
 
     public const SEP_AND = "AND";
     public const SEP_OR = "OR";
+
+
+    public const NUMBER_OF_MAIL_PER_OPERATION = 7;
 }
