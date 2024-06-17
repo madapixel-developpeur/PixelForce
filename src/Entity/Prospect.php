@@ -124,6 +124,12 @@ class Prospect
     private $newsLettersState = 0;
 
 
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $emailAgent;
+
+
     
 
     public function getId(): ?int
@@ -396,6 +402,26 @@ class Prospect
     public function setNewsLettersState($newsLettersState)
     {
         $this->newsLettersState = $newsLettersState;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of emailAgent
+     */ 
+    public function getEmailAgent()
+    {
+        return $this->emailAgent;
+    }
+
+    /**
+     * Set the value of emailAgent
+     *
+     * @return  self
+     */ 
+    public function setEmailAgent($emailAgent)
+    {
+        $this->emailAgent = $emailAgent;
 
         return $this;
     }

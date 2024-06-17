@@ -28,13 +28,10 @@ class ProspectService
     }
 
     public function saveProspectViaDataApi($data){
-        $agent =$this->userRepository->findOneBy(['username' => $data['agent_username']]);
-        if(is_null($agent)){
-            throw new Exception('Le nom d\'utilisateur '.$data['agent_username'].' n\'existe pas.');
-        }
         try {
             $prospect = new Prospect();
-            $prospect->setAgent($agent);
+            // $prospect->setAgent($agent);
+            $prospect->setEmailAgent($data['agent_username']);
             $prospect->setFirstname($data['nom']);
             $prospect->setLastname($data['prenom']);
             $prospect->setEmail($data['email']);
