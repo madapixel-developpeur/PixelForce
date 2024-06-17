@@ -91,5 +91,28 @@ class NewsLettersService
             $this->entityManager->clear();
         }
     }
+
+    public function stopNewsLetters(NewsLetters $newsLetter){
+       try {
+            $this->entityManager->beginTransaction();
+
+            $newsLetter->setState(NewsLetters::SENT);
+            $this->userRepository->changeStateNewsLetters(User::NEWS_LETTERS_OK);
+            $this->prospectRepository->changeStateNewsLetters(Prospect::NEWS_LETTERS_OK);
+
+            $this->entityManager->flush();
+            $this->entityManager->commit();
+
+        }catch(\Exception $ex){
+            if($this->entityManager->getConnection()->isTransactionActive()) {
+                $this->entityManager->rollback();
+            }
+            // throw $ex;
+            throw new Exception("Une erreur s'est produite");
+        }
+        finally {
+            $this->entityManager->clear();
+        }
+    }
    
 }

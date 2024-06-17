@@ -404,3 +404,11 @@ a, a:hover{
 .page-link{
 	background-color: #e5c259 !important;
 }
+
+.main-menu.menu-light .navigation > li.active > a {
+	background: linear-gradient(118deg, #e5c259, rgba(229, 194, 89, 0.7)) !important;
+	box-shadow: 0 0 10px 1px rgba(229, 194, 89, 0.7) !important ;
+	color: #fff;
+	font-weight: 400;
+	border-radius: 4px;
+}

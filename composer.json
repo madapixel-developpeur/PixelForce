@@ -16,7 +16,7 @@
         "doctrine/orm": "^2.11",
         "dompdf/dompdf": "^1.2",
         "fpdf/fpdf": "^1.84",
-        "friendsofsymfony/ckeditor-bundle": "^2.4",
+        "friendsofsymfony/ckeditor-bundle": "^2.5",
         "friendsofsymfony/jsrouting-bundle": "2.8.0",
         "google/apiclient": "^2.12",
         "gregwar/captcha-bundle": "^2.2",

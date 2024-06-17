@@ -99,6 +99,7 @@
                 <thead>
                     <tr>
                         <th scope="col" class="text-center">Date</th>
+                        <th scope="col" class="text-center">Titre</th>
                         <th scope="col" class="text-center">Objet</th>
                         <th scope="col" class="text-center">Corps du mail</th>
                         <th scope="col" class="text-center">Statut</th>
@@ -109,17 +110,38 @@
                     {% for item in data %}
                     <tr>
                         <td>{{item.createdAt | date("d/m/Y H:i")}}</td>
+                        <td>{{item.titre }}</td>
                         <td>{{item.objet }}</td>
-                        <td>{{item.content | u.truncate(90, '...') }}</td>
+                        <td>{{item.content |u.truncate(90, '...')|replace({'\n': '<br>', '^(\s+)' : '&nbsp;&nbsp;'})|raw   }}</td>
                         <td>{{item.stringStatus }}</td>
-                        <td class="col-action d-flex align-items-center justify-content-center">
+                       <td class="text-center">
+                            <div class="d-flex justify-content-center align-items-center ">
                             {% if item.state == constant('App\\Entity\\NewsLetters::CREATED') %}
-                                <form action="{{ path('admin_send_news_letters',{'id' : item.id })}}" method="post">
-                                    <button class="btn btn-sm btn-success" type="submit">
+                                <form action="{{ path('admin_send_news_letters',{'id' : item.id })}}" method="post" style=" margin-right:8px">
+                                    <button class="btn btn-success" type="submit">
                                         Envoyer
                                     </button>
                                 </form>
+                            {% elseif item.state == constant('App\\Entity\\NewsLetters::PROCCESSING') %}
+                                <form action="{{ path('admin_stop_news_letters',{'id' : item.id })}}" method="post" style=" margin-right:8px">
+                                    <button class="btn btn-danger" type="submit">
+                                       Arrêter l'envoi
+                                    </button>
+                                </form>
+                            {% elseif item.state == constant('App\\Entity\\NewsLetters::SENT') %}
+                                <form action="{{ path('admin_send_news_letters',{'id' : item.id })}}" method="post" style=" margin-right:8px">
+                                    <button class="btn btn-success" type="submit">
+                                        Ré-envoyer
+                                    </button>
+                                </form>
                             {% endif %}
+                            <a href="{{ path('admin_newsletter_view', {'id': item.id}) }}" class="btn btn-info ml-3" style=" margin-right:8px">
+                                    <i class="fa-solid fa-eye"></i>
+                            </a>
+                             <a href="{{ path('admin_news_letters_edit', {'id': item.id}) }}" class="btn btn-primary ml-3">
+                                    <i class="fa-solid fa-edit"></i>
+                            </a>
+                        </div>   
                         </td>   
 
                        

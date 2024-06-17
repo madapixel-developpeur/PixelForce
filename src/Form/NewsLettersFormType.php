@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\NewsLetters;
 use Symfony\Component\Form\AbstractType;
+use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -16,22 +17,27 @@ class NewsLettersFormType extends AbstractType
         $builder
             ->add('titre', TextType::class, [
                 'label' => 'Titre',
-                'required' =>false,
+                'required' =>true,
                 'attr' => [
                     'placeholder' => ''
                 ]
             ])
             ->add('objet', TextType::class, [
                 'label' => 'Objet',
-                'required' =>false,
+                'required' =>true,
                 'attr' => [
                     'placeholder' => ''
                 ]
             ])
-            ->add('content', TextareaType::class, [
+            ->add('content',  CKEditorType::class, [
                 'label' => 'Contenu',
+                'config' => [
+                    'toolbar' => 'custom_config',
+                ],
                 'attr' => [
-                    'placeholder' => ''
+                    'placeholder' => '',
+                    'class' => 'form-control',
+                    'rows'  => 9
                 ]
             ])
         ;

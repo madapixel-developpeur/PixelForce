@@ -1,0 +1,73 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title %}
+	Newsletters
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+	<div class="p-5 pb-5 mb-5 bg-white border position-relative" id="form-formation">
+        <a href="{{ path('admin_news_letters') }}" class="btn btn-secondary"> <i class="fa-solid fa-circle-arrow-left"></i> Retour </a>
+
+        <div class="content-card-user-information mt-3">
+            <div class="row">
+                <div class="col-12 col-md-12">
+                    <div class="info-container">
+                          <h2 class=" text-center">{{ newsLetter.titre }}</h2>
+                        <ul class="list-unstyled">
+                           
+                            <li class="mb-75">
+                                <span class="fw-bolder me-25">Objet:</span>
+                                <span>{{  newsLetter.objet }}</span>
+                            </li>
+                            <li class="mb-75">
+                                <span class="fw-bolder me-25">Contenu:</span>
+                                <span><br> <pre style=" font-family: inherit; 
+                                        font-size: inherit; 
+                                        font-weight: inherit;
+                                        background-color:transparent;
+                                        white-space: pre-wrap;
+                                        word-wrap: break-word
+                                        overflow-x: auto; 
+                                        max-width: 100%;">{{  newsLetter.content }}</pre></span>
+                            </li>
+                             <li class="mb-75">
+                                <a href="{{ path('admin_news_letters_edit', {'id': newsLetter.id}) }}" class="btn btn-primary ml-3">
+                                    <i class="fa-solid fa-edit"></i> Modifier
+                                </a>
+                            </li>
+                        </ul>
+                    </div>  
+                </div>
+                
+                {% if piecesJointes|length > 0 %}
+                    <hr>
+
+                    <h5 class=" fw-bolder me-25 mb-5">Pièces jointes:</h5>
+                {% endif %}
+                {% for item in piecesJointes %}
+                    
+                    {% set parts = item.filepath|split('/') %}
+                    {% set lastPart = parts|last %} 
+                    <div class="col-md-3 text-center ">
+                        {% if lastPart|split('.')|last in ['jpg', 'jpeg', 'png', 'gif', 'bmp'] %}
+                            <img class="img-fluid card-img-top ecommerce-card-img"  src="{{ asset( filesDirectory ~ item.filepath) }}" alt=" Document" />
+                        {% else %}
+                            <img class="img-fluid card-img-top ecommerce-card-img"  src="{{ asset( filesDirectory ~ "newsLetters/icons8-file-500.png") }}" alt=" Document" />
+                    {% endif %}                    
+                        <span class="me-25 bold"> {{ lastPart }}</span>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+	{{ encore_entry_script_tags('vuexy_app_user_view_js') }}
+{% endblock %}

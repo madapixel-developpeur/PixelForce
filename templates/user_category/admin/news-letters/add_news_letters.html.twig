@@ -40,8 +40,29 @@
                         </div>
                     {{ form_end(form) }}
                 </div>
-            </div>
-		</div>
+             <div class="row">
+            {% if piecesJointes is defined and piecesJointes|length > 0 %}
+                    <hr>
+
+                    <h5 class=" fw-bolder me-25 mb-5">Pièces jointes:</h5>
+              
+					{% for item in piecesJointes %}
+						
+						{% set parts = item.filepath|split('/') %}
+						{% set lastPart = parts|last %} 
+						<div class="col-md-3 text-center ">
+							{% if lastPart|split('.')|last in ['jpg', 'jpeg', 'png', 'gif', 'bmp'] %}
+								<img class="img-fluid card-img-top ecommerce-card-img"  src="{{ asset( filesDirectory ~ item.filepath) }}" alt=" Document" />
+							{% else %}
+								<img class="img-fluid card-img-top ecommerce-card-img"  src="{{ asset( filesDirectory ~ "newsLetters/icons8-file-500.png") }}" alt=" Document" />
+						{% endif %}                    
+							<span class="me-25 bold"> {{ lastPart }}</span>
+						</div>
+					{% endfor %}
+				{% endif %}
+                </div>
+             </div>
+        </div>
 	</div>
 {% endblock %}
 {% block javascripts %}

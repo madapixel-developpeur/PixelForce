@@ -21,6 +21,24 @@ fos_ck_editor:
                     name: "styles", 
                     items: ['Bold', 'Italic', 'Underline', 'Strike', '-', 'Link', 'NumberedList', 'BulletedList', '-', 'Styles', 'Format','Font','FontSize', '-', 'TextColor'] 
                 }
+            custom_config:
+                toolbar: [
+                    { name: 'clipboard', items: ['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo'] },
+                    { name: 'editing', items: ['Scayt'] },
+                    { name: 'links', items: ['Link', 'Unlink', 'Anchor'] },
+                    { name: 'insert', items: ['Image', 'Table', 'HorizontalRule', 'SpecialChar'] },
+                    { name: 'tools', items: ['Maximize'] },
+                    { name: 'document', items: ['Source'] },
+                    { name: 'basicstyles', items: ['Bold', 'Italic', 'Underline', 'Strike', '-', 'RemoveFormat'] },
+                    { name: 'paragraph', items: ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'] },
+                    { name: 'styles', items: ['Styles', 'Format'] }
+                ]
+                uiColor: "#d3d3d3"
+                height: 400
+                resize_enabled: true
+                removePlugins: 'elementspath'
+                extraPlugins: 'divarea,tab'
+
         items:
             document: [ "Source", "-", "Save" ]
             link:     [ "Anchor" ]
