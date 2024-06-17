@@ -28,7 +28,7 @@ class AppScheduleBuilder implements ScheduleBuilder
             $this->newsLettersService->sendNewsLetters();
         })
         ->description('Send newsLetters')
-        ->cron('0 */2 * * *');
+        ->cron('*/25 * * * *');
 
       
     }

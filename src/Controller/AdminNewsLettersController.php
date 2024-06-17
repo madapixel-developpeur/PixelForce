@@ -176,7 +176,7 @@ class AdminNewsLettersController extends AbstractController
                 return $this->redirectToRoute('admin_newsletter_view',['id' => $newsLetter->getId()]);
     
             }catch(\Exception $ex){
-                $this->addFlash('success', "Une erreur s'est produite");
+                $this->addFlash('danger', "Une erreur s'est produite");
             }
                 
         }
