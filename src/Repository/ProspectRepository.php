@@ -132,6 +132,18 @@ class ProspectRepository extends ServiceEntityRepository
        
     }
 
+    public function changeStateNewsLetters($state)
+    {
+        $query = "UPDATE App\Entity\Prospect r SET r.newsLettersState = :state ";
+        $params = ['state' => $state ];
+
+        $this->getEntityManager()
+            ->createQuery($query)
+            ->execute($params);
+
+    }
+  
+
 //    /**
 //     * @return Prospect[] Returns an array of Prospect objects
 //     */

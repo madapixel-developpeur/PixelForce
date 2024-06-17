@@ -76,7 +76,7 @@
                 <div class=" w-100 h-100 ps-3 py-3  bg-white border pe-3">
                     <div class="row h-100">
                         <div class="col-6">
-                            <h4 class="my-auto">Liste des news letters</h4>
+                            <h4 class="my-auto">Liste des newsletters</h4>
                         </div>
                         <div class="col-6 ">
                             <a href="{{ path('admin_news_letters_add') }}" class="btn btn-primary btn-sm waves-effect waves-float waves-light fw-bolder d-flex float-end d-flex align-items-center"><i class="fa-solid fa-plus me-2"></i> Ajouter</a>
@@ -111,13 +111,15 @@
                         <td>{{item.createdAt | date("d/m/Y H:i")}}</td>
                         <td>{{item.objet }}</td>
                         <td>{{item.content | u.truncate(90, '...') }}</td>
+                        <td>{{item.stringStatus }}</td>
                         <td class="col-action d-flex align-items-center justify-content-center">
-            
-                            <form action="#" method="post">
-                                <button class="btn btn-sm btn-success" type="submit">
-                                    Envoyer
-                                </button>
-                            </form>
+                            {% if item.state == constant('App\\Entity\\NewsLetters::CREATED') %}
+                                <form action="{{ path('admin_send_news_letters',{'id' : item.id })}}" method="post">
+                                    <button class="btn btn-sm btn-success" type="submit">
+                                        Envoyer
+                                    </button>
+                                </form>
+                            {% endif %}
                         </td>   
 
                        

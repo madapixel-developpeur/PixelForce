@@ -184,5 +184,18 @@ class NewsLetters
         return $this;
     }
 
+    public function getStringStatus(){
+        switch ($this->getState()) {
+            case self::PROCCESSING:
+                return "Envoi en cours";
+                
+            case self::SENT : 
+                return "Envoi terminé";
+
+            default :
+                return "Créée";
+        }
+    }
+
     
 }

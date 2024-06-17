@@ -538,6 +538,17 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         return $result;
 
     }
+
+    public function changeStateNewsLetters($state)
+    {
+        $query = "UPDATE App\Entity\User r SET r.newsLettersState = :state ";
+        $params = ['state' => $state ];
+
+        $this->getEntityManager()
+            ->createQuery($query)
+            ->execute($params);
+
+    }
   
     
 }

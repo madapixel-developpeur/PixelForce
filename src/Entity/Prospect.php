@@ -27,6 +27,10 @@ class Prospect
     const EUROPE_PLATFORM = 1;
     const AFRICA_PLATFORM = 2;
 
+    
+    const NEWS_LETTERS_OK = 0 ;
+    const NEWS_LETTERS_NEED_TO_SEND = 1 ;
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -113,6 +117,12 @@ class Prospect
      * @ORM\Column(type="integer",options={"default" : 1})
      */
     private $platform = self::EUROPE_PLATFORM;
+
+         /**
+     * @ORM\Column(type="integer", nullable=true, options={"default": 0 })
+     */
+    private $newsLettersState = 0;
+
 
     
 
@@ -366,6 +376,26 @@ class Prospect
     public function setPlatform($platform)
     {
         $this->platform = $platform;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of newsLettersState
+     */ 
+    public function getNewsLettersState()
+    {
+        return $this->newsLettersState;
+    }
+
+    /**
+     * Set the value of newsLettersState
+     *
+     * @return  self
+     */ 
+    public function setNewsLettersState($newsLettersState)
+    {
+        $this->newsLettersState = $newsLettersState;
 
         return $this;
     }
