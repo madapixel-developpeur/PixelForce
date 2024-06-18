@@ -774,8 +774,8 @@ footer.footer-border {
   z-index: 1; }
 
 .main-menu.menu-light .navigation > li.active > a {
-  background: linear-gradient(118deg, #7367f0, rgba(115, 103, 240, 0.7));
-  box-shadow: 0 0 10px 1px rgba(115, 103, 240, 0.7);
+  background: linear-gradient(118deg, #e5c259, rgba(229, 194, 89, 0.7));
+  box-shadow: 0 0 10px 1px rgba(229, 194, 89, 0.7);
   color: #fff;
   font-weight: 400;
   border-radius: 4px; }
