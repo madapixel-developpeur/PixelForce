@@ -1,0 +1,45 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title %}
+	 {{ label|default('Ajout') }} prospect
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+    <div class="my-5">
+		<div class="content-body-form">
+			<a href="{{ path('agent_prospect_list') }}" class="btn btn-secondary"> <i class="fa-solid fa-circle-arrow-left"></i> Retour </a>
+			<h1 class="text-center fw-bold">Information personnelle</h1>
+				<div class="form-add-contact">
+					{{ form_start(form) }}
+						<div class="row">
+							<div class="col-md-6">{{ form_row(form.lastname) }}</div>
+							<div class="col-md-6">{{ form_row(form.firstname) }}</div>
+						</div>
+						{{ form_row(form.email) }}
+						{{ form_row(form.phone) }}
+						{{ form_row(form.address) }}
+						{{ form_row(form.numero) }}
+						{{ form_row(form.codePostal) }}
+						{{ form_row(form.ville) }}
+						{{ form_row(form.rue) }}
+						{{ form_row(form.type) }}
+						{{ form_row(form.note) }}
+						<div class="row">
+							<div class="col-md-12 text-end"><button type="submit" class="btn btn-{{btn_class}}" style="margin-bottom: 81px;">{{ button|default('Enregistrer') }}</button></div>
+						</div>
+
+					{{ form_end(form) }}
+				</div>
+		</div>
+	</div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('datatableJs')}}
+{% endblock %}

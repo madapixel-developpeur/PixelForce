@@ -28,12 +28,15 @@ class ProspectRepository extends ServiceEntityRepository
      * @param string $role
      * @return Query
      */
-    public function findProspect(UserSearch $search, $agent)
+    public function findProspect(UserSearch $search, $agent = null)
     {
         $query = $this->createQueryBuilder('c');
-        $query = $query
-                ->andwhere('c.agent = :agent')
-                ->setParameter('agent',$agent->getId());
+        
+        if(!is_null($agent)){
+            $query = $query
+                    ->andwhere('c.agent = :agent')
+                    ->setParameter('agent',$agent->getId());
+        }
 
         if ($search->getPrenom()) {
             $query = $query
@@ -75,6 +78,12 @@ class ProspectRepository extends ServiceEntityRepository
             $query = $query
                 ->andwhere('c.type = :type')
                 ->setParameter('type', $search->getType());
+        }
+
+        if ($search->getPlatform()) {
+            $query = $query
+                ->andwhere('c.platform = :platform')
+                ->setParameter('platform', $search->getPlatform());
         }
 
         if (isset($_GET['ordre'])) {

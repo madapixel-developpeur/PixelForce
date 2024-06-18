@@ -50,6 +50,11 @@ class UserSearch {
      */
     private $type;
 
+      /**
+     * @var integer|1
+     */
+    private $platform;
+
     /**
      * Get the value of prenom
      *
@@ -278,6 +283,30 @@ class UserSearch {
     public function setType($type)
     {
         $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of platform
+     *
+     * @return  integer|1
+     */ 
+    public function getPlatform()
+    {
+        return $this->platform;
+    }
+
+    /**
+     * Set the value of platform
+     *
+     * @param  integer|1  $platform
+     *
+     * @return  self
+     */ 
+    public function setPlatform($platform)
+    {
+        $this->platform = $platform;
 
         return $this;
     }

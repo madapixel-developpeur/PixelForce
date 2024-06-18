@@ -1,0 +1,103 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title %}
+	Détail prospects
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/templates/contact/contact.style.css') }}">
+{% endblock %}
+
+{% block body %}	
+
+    <div class="mt-2">
+		<a href="{{ path('admin_prospect_list') }}" class="btn btn-secondary"> <i class="fa-solid fa-circle-arrow-left"></i> Retour </a>
+
+        <!-- Message alert -->
+        <div class="alert-message">
+            {% for label, messages in app.flashes %}
+                <div class="alert alert-{{label}} text-center">
+                    {% for message in messages %}
+                        {{message | raw}}
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        </div>
+
+		<div class="content-card-user-information mt-3">
+			<section class="app-user-view-account">
+				<div class="row">
+					<div class="col-12 col-md-8">
+						<div class="contact-card">
+							<div class="contact-card__name-container">
+								<h3 class="mb-5">{{ prospect.fullName }}</h3>
+									<a href="{{ path('admin_prospect_edit', {'id': prospect.id}) }}" class="btn btn-primary"><i class="fa fa-edit"></i> Modifier</a>
+							</div>
+							<div class="contact-card__infos-container">
+								<div class="contact-card__info-item">
+									<i class="fa-solid fa-phone"></i>
+									<span> {{ 'Prospect ' ~ prospect.stringType }}</span>
+								</div>
+								<div class="contact-card__info-item">
+									<i class="fa-solid fa-envelope"></i>
+									<span>{{ prospect.email|default('Aucune adresse email') }}</span>
+								</div>
+								{% if prospect.phone %}
+								<div class="contact-card__info-item">
+									<i class="fa-solid fa-phone"></i>
+									<span> {{ prospect.phone }}</span>
+								</div>
+								{% endif %}
+								<div class="contact-card__info-item mt-3">
+									<i class="fa-solid fa-location-dot"></i> <span>{{ prospect.address|default('(Adresse)') }}</span>
+									<ul>
+										{% if prospect.rue %}
+											<li><span class="fw-bolder">rue :</span> {{ prospect.rue }}</li>
+										{% endif %}
+										{% if prospect.codePostal %}
+											<li><span class="fw-bolder">Code postal :</span> {{ prospect.codePostal }}</li>
+										{% endif %}
+										{% if prospect.ville %}
+											<li><span class="fw-bolder">Ville :</span> {{ prospect.ville }}</li>
+										{% endif %}
+									</ul>
+								</div>
+							
+							
+
+								<div class="contact-card__info-item row">
+						
+									
+								</div>
+							
+							</div>
+						</div>
+
+						
+					</div>
+					<div class="col-12 col-md-4">
+						<div class="note">
+							<div class="note-header">
+								Notes
+							</div>
+							<div class="note-content">
+								{% if prospect.note != null %}
+									{{prospect.note| raw }}
+								{% else %}
+									<div class="note-blank-alert">Aucune note pour ce prospect</div>
+								{% endif %}
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+		</div>
+	</div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('datatableJs')}}
+{% endblock %}

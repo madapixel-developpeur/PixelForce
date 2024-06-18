@@ -26,8 +26,14 @@ class Prospect
 
     const EUROPE_PLATFORM = 1;
     const AFRICA_PLATFORM = 2;
+    const METHER_PLATFORM = 3;
 
-    
+    const PLATFORM_ARRAY_FORM = [
+        self::EUROPE_PLATFORM => 'Europe', 
+        self::AFRICA_PLATFORM => 'Afrique', 
+        self::METHER_PLATFORM => 'Mether Plateforme', 
+    ];
+
     const NEWS_LETTERS_OK = 0 ;
     const NEWS_LETTERS_NEED_TO_SEND = 1 ;
 
@@ -114,9 +120,9 @@ class Prospect
 
 
       /**
-     * @ORM\Column(type="integer",options={"default" : 1})
+     * @ORM\Column(type="integer",options={"default" : 3})
      */
-    private $platform = self::EUROPE_PLATFORM;
+    private $platform = self::METHER_PLATFORM;
 
          /**
      * @ORM\Column(type="integer", nullable=true, options={"default": 0 })
@@ -424,5 +430,9 @@ class Prospect
         $this->emailAgent = $emailAgent;
 
         return $this;
+    }
+
+    public function getStringPlatformOrigin(){
+        return self::PLATFORM_ARRAY_FORM[$this->getPlatform()];
     }
 }

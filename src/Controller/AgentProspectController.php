@@ -70,8 +70,16 @@ class AgentProspectController extends AbstractController
                 ]
             ])
             ->add('type', ChoiceType::class, [
-                "label" => "Type du contact",
+                "label" => "Type du prospect",
                 'choices' => array_flip(Prospect::TYPE_ARRAY_FORM),
+                'required' => false,
+                'attr' => [
+                    'class' => "form-control"
+                ]
+            ])
+            ->add('platform', ChoiceType::class, [
+                "label" => "Plateforme",
+                'choices' => array_flip(Prospect::PLATFORM_ARRAY_FORM),
                 'required' => false,
                 'attr' => [
                     'class' => "form-control"
@@ -113,7 +121,7 @@ class AgentProspectController extends AbstractController
             $prospect->setAgent($this->getUser());
             $prospect->setCreated_at(new \DateTime());
             $this->entityManager->save($prospect);
-            $this->addFlash('success', "Ajout du prospect avec succès");
+            $this->addFlash('success', "Prospect ajouté avec succès");
             return $this->redirectToRoute('agent_prospect_list', ['id' => $prospect->getId()]);
         }
         return $this->render('user_category/agent/prospect/add_prospect.html.twig', [
@@ -171,7 +179,7 @@ class AgentProspectController extends AbstractController
             }
             $prospect->setAgent($this->getUser());
             $this->entityManager->save($prospect);
-            $this->addFlash('success', "Modification du prospect avec succès");
+            $this->addFlash('success', "Prospect modifié avec succès");
             return $this->redirectToRoute('agent_prospect_view', ['id' => $prospect->getId()]);
         }
         return $this->render('user_category/agent/prospect/add_prospect.html.twig', [
