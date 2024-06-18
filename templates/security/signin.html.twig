@@ -14,7 +14,7 @@
         <link rel="stylesheet" href="{{ asset('/assets/vuexy/css/pages/authentication.css') }}" />
         <link rel="stylesheet" type="text/css" href="{{asset('assets/css/animations.css')}}">
         <link rel="stylesheet" type="text/css" href="{{asset('assets/css/style.css')}}">
-        <link rel="stylesheet" type="text/css" href="{{asset('assets/css/login.css')}}">
+        <link rel="stylesheet" type="text/css" href="{{asset('assets/css/inscription.css')}}">
         {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
         {% block stylesheets %}
             {{ encore_entry_link_tags('vuexy_colors') }}
@@ -45,12 +45,12 @@
 
                         <!-- Left Text-->
                         <div class="d-none d-lg-flex col-lg-8 align-items-center m-0 p-0">
-                            <img class="img-fluid" src="{{asset('assets/vuexy/images/pages/login-images.png')}}" alt="Login V2" />
+                            <img class="img-fluid" src="{{asset('assets/vuexy/images/pages/Inscription-photo.png')}}" alt="Login V2" />
                         </div>
                         <!-- /Left Text-->
                         <!-- Login-->
                         <div class=" col-lg-4 align-items-center auth-bg px-2 ">
-                            <div class="col-12 col-sm-8 col-md-6 col-lg-12 p-lg-5 m- mx-auto">
+                            <div class="col-12 col-sm-8 col-md-6 col-lg-12 p-lg-3 m- mx-auto">
                                 <div class="p-lg-4">
                                     <h2 class="card-title  mb-1 text-center  pixelforce-logo">
                                             <a href="{{ path('app_dashboard') }}" class="text-center text-muted  d-flex align-items-center justify-content-center ">
@@ -59,46 +59,75 @@
                                             </a>  
                                     </h2>
                                     
-                                    <h2 class="text-center fw-bold ">Connexion</h2>
                                     {% block form %}
-                                        <form class="auth-login-form mt-3" method="POST">
-                                            <!-- Affichage des messages flash -->
-                                            {% for label, messages in app.flashes %}
-                                                {% for message in messages %}
-                                                    <div id="msgFlash" class="alert alert-{{ label }} msgFlash mb-2 ">
-                                                        {{ message | raw }}
+                                    <h2 class="text-center fw-bold pb-3">Inscription</h2>
+                                        <!-- Message alert -->
+                                            <div class="alert-message">
+                                                {% for label, messages in app.flashes %}
+                                                    <div class="alert alert-{{label}} text-center">
+                                                        {% for message in messages %}
+                                                            {{message | raw}}
+                                                        {% endfor %}
                                                     </div>
                                                 {% endfor %}
-                                            {% else %}
-                                                {% if error %}
-                                                    <div class="mt-3 alert alert-danger">Email ou mot de passe invalide</div>
-                                                {% endif %}
-                                            {% endfor %}
-                                            <div class="mb-2">
-                                                <input type="text" class="form-control"  placeholder="Nom d'utilisateur/Email" value="{{ last_username }}" name="email" id="inputMail_users"  required autofocus>
                                             </div>
-                                            <div class="mb-2">   
-                                                <div class="input-group input-group-merge form-password-toggle">
-                                                    <input class="form-control form-control-merge" id="login-password" type="password" name="password" placeholder="Mot de passe" aria-describedby="login-password" tabindex="2" required/><span class="input-group-text cursor-pointer"><i data-feather="eye"></i></span>
+                                        {{ form_start(form) }}
+                                            <div class="row">
+                                                <div class="col-md-6 col-12">
+                                                    {{ form_row(form.nom) }}
+                                                </div>
+                                                <div class="col-md-6 col-12">
+                                                    {{ form_row(form.prenom) }}
                                                 </div>
                                             </div>
-                                            <input type="hidden" name="agentToken" value="{{agentToken}}" />
-                                            {# <div class="mb-3  mt-3 form-check">
-                                                <input type="checkbox" class="form-check-input" id="remember_me" name="_remember_me">
-                                                <label class="form-check-label" for="exampleCheck1">Se souvenir de moi</label>
-                                            </div> #}
-                                            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-
-                                            <div class=" text-center mt-4">
-                                                <button class="login-button w-100 h-30 font-weight-bold rounded-3 p-1" type="submit">
-                                                    Connexion
-                                                </button>
+                                            <div class="row">
+                                                <div class="col-md-6 col-12">
+                                                    {{ form_row(form.email) }}
+                                                </div>
+                                                <div class="col-md-6 col-12">
+                                                    {{ form_row(form.telephone) }}
+                                                </div>
                                             </div>
-                                            <div class="divider my-2">
+                                            <div class="row">
+                                                <div class="col-md-6 col-12">
+                                                    {{ form_row(form.adresse) }}
+                                                </div>
+                                                <div class="col-md-6 col-12">
+                                                    {{ form_row(form.numero_rue) }}
+                                                </div>
+                                                <div class="col-md-6 col-12">
+                                                    {{ form_row(form.codePostal) }}
+                                                </div>
+                                                <div class="col-md-6 col-12">
+                                                    {{ form_row(form.ville) }}
+                                                </div>
+                                            </div>
+                                            {# <h5 class="mt-4">Choix du secteur</h5>
+                                            <div class="row my-3">
+                                                {% for secteurList in form.secteur.children.secteur.children %}
+                                                    <div class="col-12 col-md-4">
+                                                        {{ form_row(secteurList) }}
+                                                    </div>
+
+                                                {% endfor %}
+                                            </div> #}
+
+                                            <h5 class="mb-4">Information sur la connexion</h5>
+                                            {% if form.ambassador_username is defined %}
+                                                {{ form_row(form.ambassador_username) }}
+                                            {% endif %}
+
+                                            {{ form_row(form.username) }}
+                                            {{ form_row(form.password) }}
+                                            <div class="w-100 text-center">
+                                                {#            <button class="btn btn-primary" type="submit" id="btn-next">Procéder au paiement <i class="fa-solid fa-angles-right"></i></button>#}
+                                                    <button class="sign-in-button w-100 h-30 font-weight-bold rounded-3 p-1" type="submit" id="btn-next">S’inscrire</button>
+                                             </div>
+                                        {{ form_end(form) }}
+                                        <div class="divider my-2">
                                             <hr/>
                                             </div>
-
-                                            <div class="row mt-2 justify-content-center d-flex">
+                                        <div class="row mt-2 justify-content-center d-flex">
                                                 <div class="col-12 ">
                                                     <div class=" text-center">
                                                         <a class="w-100 font-weight-bold login-other-button" href="{{ path('app_forgetPassword') }}">
@@ -108,21 +137,20 @@
                                                 </div>
                                                 <div class="col-12 ">
                                                     <div class=" text-center">
-                                                        <a class=" w-100 font-weight-bold login-other-button" href="{% if agentToken %} {{ path('signup_client', {'token': agentToken}) }} {% else %} {{ path('agent_inscription') }} {% endif %}">
-                                                            S'inscrire
+                                                        <a class=" w-100 font-weight-bold login-other-button" href="{{ path('app_login') }}">
+                                                            Se connecter
                                                         </a>
                                                     </div>
                                                 </div>
                                                 
-                                            </div>                                    
-                                        </form>
-                                        
-                                        
+                                            </div>    
+                                    
                                     {% endblock %}
+
 
                                 </div>
                             </div>
-                            <div class="text-left mt-5 p-0">
+                            <div class="text-left  p-0">
                                 &#169; {{ 'now' | date('Y') }} Mether
                             </div>
                         </div>

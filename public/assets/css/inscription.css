@@ -1,0 +1,23 @@
+.pixelforce-logo{
+    margin: auto;
+    padding-bottom: 10px;
+}
+
+.pixelforce-logo img{
+    width: 40px;
+}
+.pixelforce-logo h2{
+    font-size:medium;
+    font-family:Arial, Helvetica, sans-serif;
+    color:black;
+}
+.sign-in-button{
+    background-color: #371fa6;
+    color: white;
+    border-width: 1px; /* Width of the border */
+    border-style: solid; /* Style of the border */
+    border-color: #371fa6; /* Color of the border */
+}
+.login-other-button{
+    color:black
+}
