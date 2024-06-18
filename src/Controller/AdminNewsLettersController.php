@@ -171,6 +171,15 @@ class AdminNewsLettersController extends AbstractController
                     }
                 }
                 $this->entityManager->flush();
+                
+                /*  delete old files */
+                if ($files) {
+                    foreach ($piecesJointes as $file) {
+                        $this->fileHandler->deleteFile( $this->getParameter('files_directory_relative').$file->getFilepath());
+                        $this->entityManager->remove($file);
+                    }
+                }
+                $this->entityManager->flush();
                 $this->entityManager->commit();
                 $this->addFlash('success', "Newsletter modifiée avec succès.");
                 return $this->redirectToRoute('admin_newsletter_view',['id' => $newsLetter->getId()]);

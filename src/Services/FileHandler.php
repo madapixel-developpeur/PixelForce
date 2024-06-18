@@ -146,4 +146,14 @@ class FileHandler
         
         return $response;
     }
+
+
+    public function deleteFile($absolutePath){
+        $filesystem = new Filesystem();
+        if ($filesystem->exists($absolutePath)) {
+            $filesystem->remove($absolutePath);
+            return true;
+        }
+        return false;
+    }
 }
