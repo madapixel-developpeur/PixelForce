@@ -1,0 +1,137 @@
+{% if  is_granted('ROLE_AGENT') and app.session.get('secteurId') %}
+{% set fonctionnalites = authService.getAccessibleFonctionnalites(app.user, app.session.get('secteurId')) %}
+{% endif %}
+<!DOCTYPE html>
+<html >
+    <head>
+        {% if app.environment == 'prod' %}
+            <script async src="https://www.googletagmanager.com/gtag/js?id=G-8PBBKR57JN"></script>
+            <script type="text/javascript" src="{{ asset('assets/js/google_analytics.js') }}"></script>
+        {% endif %}
+
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        {# <meta name="viewport" content="width=device-width, initial-scale=1"> #}
+        <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=0,minimal-ui">
+        <meta name="google-site-verification" content="O5bvNXZxdhGiT5VN5hPxisFh_XZeZCQr4aN4yoy0Ilk" />
+
+        <title>{% block title %}PixelForce{% endblock %}</title>
+        <link rel="stylesheet" href="/assets/fontawesome-free-6.0.0-web/css/all.css" />
+
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500;1,600" rel="stylesheet">
+        
+        <link rel="stylesheet"  href="{{ asset('assets/vuexy/vendors/css/vendors.min.css') }}">
+        <link rel="stylesheet"  href="{{ asset('assets/vuexy/vendors/css/charts/apexcharts.css') }}">
+        <link rel="stylesheet"  href="{{ asset('assets/vuexy/vendors/css/extensions/toastr.min.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ asset('assets/vuexy/vendors/css/forms/select/select2.min.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ asset('assets/vuexy/vendors/css/pickers/flatpickr/flatpickr.min.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ asset('assets/vuexy/css/plugins/forms/pickers/form-flat-pickr.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ asset('assets/vuexy/css/plugins/forms/form-validation.css') }}">
+        
+        <link rel="stylesheet" type="text/css" href="{{asset('assets/css/animations.css')}}">
+        <link rel="stylesheet" type="text/css" href="{{asset('assets/css/style.css')}}">
+        <link rel="stylesheet" type="text/css" href="{{asset('app-assets/css/pages/app-invoice.css')}}">
+        <link rel="stylesheet" type="text/css" href="{{asset('app-assets/css/pages/app-ecommerce.css')}}">
+        <!-- Calendly link widget begin -->
+		<link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
+		<script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript" async></script>
+		<!-- Calendly link widget end -->
+
+
+        {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
+        {% block stylesheets %}
+            {# {{ encore_entry_link_tags('vuexy_apexcharts') }} #}
+            {# {{ encore_entry_link_tags('vuexy_toastr') }} #}
+            {{ encore_entry_link_tags('vuexy_bootstrap') }}
+            {{ encore_entry_link_tags('vuexy_bootstrap_extended') }}
+            {{ encore_entry_link_tags('vuexy_colors') }}
+            {{ encore_entry_link_tags('vuexy_components') }}
+            {{ encore_entry_link_tags('vuexy_dark_layout') }}
+            {{ encore_entry_link_tags('vuexy_vertical_menu') }}
+            {{ encore_entry_link_tags('vuexy_ext_component_toastr') }}
+
+            {{ encore_entry_link_tags('app') }}
+            {{ encore_entry_link_tags('base') }}
+            {{ encore_entry_link_tags('chat') }}
+        {% endblock %}
+
+    </head>
+    <body class="pace-done vertical-layout vertical-menu-modern navbar-floating footer-static menu-collapsed" data-open="click" data-menu="vertical-menu-modern" data-col="">
+        <!-- Navbar -->
+        {% include '/partials/header-navbar.html.twig' %}
+
+        <!-- Sidebar -->
+
+        <!-- Content -->
+        <div class="app-content content ">
+            <div class="content-overlay"></div>
+            <div class="header-navbar-shadow"></div>
+            <div class="content-wrapper container-xxl p-0">
+                <div class="content-header row">
+                </div>
+                <div class="content-body">
+                    {# Affichage des messages flash #}
+                    {% for label, messages in app.flashes %}
+                        {% for message in messages %}
+                            <div id="msgFlash" class="alert alert-{{ label }} msgFlash mb-2 mt-4 mb-4">
+                                {{ message | raw }}
+                            </div>
+                        {% endfor %}
+                    {% endfor %}
+
+                    {# Body component #}
+                    {% block body %} {% endblock %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Overlay -->
+        <div class="sidenav-overlay"></div>
+        <div class="drag-target"></div> 
+
+        {% include 'live/video/liveVideoRapide.html.twig' %}
+        {% include 'live/chat/mini_menu_chat.html.twig'  %}
+        
+        {% block javascripts %}
+            <script type="application/json" id="live-call-topic">{{ mercure(constant('App\\Services\\LiveVideo::CALL_TOPIC')~(app.user.id|base64_encode))|json_encode(constant('JSON_UNESCAPED_SLASHES') b-or constant('JSON_HEX_TAG'))|raw }}</script>
+            <script type="application/json" id="live-refus-topic">{{ mercure(constant('App\\Services\\LiveVideo::REFUS_CALL_TOPIC')~(app.user.id|base64_encode))|json_encode(constant('JSON_UNESCAPED_SLASHES') b-or constant('JSON_HEX_TAG'))|raw }}</script>
+            <script type="application/json" id="chat-newMessage-topic">{{ mercure(constant('App\\Services\\Chat\\ChatMercureNotification::CHAT_ADD_MESSAGE_TOPIC')~(app.user.id|base64_encode))|json_encode(constant('JSON_UNESCAPED_SLASHES') b-or constant('JSON_HEX_TAG'))|raw }}</script>
+            <script type="application/json" id="chat-vu-topic">{{ mercure(constant('App\\Services\\Chat\\ChatMercureNotification::CHAT_ADD_VU_TOPIC')~(app.user.id|base64_encode))|json_encode(constant('JSON_UNESCAPED_SLASHES') b-or constant('JSON_HEX_TAG'))|raw }}</script>
+            <script type="application/json" id="chat-userTyping-topic">{{ mercure(constant('App\\Services\\Chat\\ChatMercureNotification::CHAT_USER_TYPING_TOPIC')~(app.user.id|base64_encode))|json_encode(constant('JSON_UNESCAPED_SLASHES') b-or constant('JSON_HEX_TAG'))|raw }}</script>
+            <script type="application/json" id="chat-userStopTyping-topic">{{ mercure(constant('App\\Services\\Chat\\ChatMercureNotification::CHAT_USER_STOP_TYPING_TOPIC')~(app.user.id|base64_encode))|json_encode(constant('JSON_UNESCAPED_SLASHES') b-or constant('JSON_HEX_TAG'))|raw }}</script>
+            <script type="application/json"  id="current-user-id">{{ app.user.id }}</script>
+            <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js"></script>
+            <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+            <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
+            <script src='https://meet.jit.si/external_api.js' id='meet-live-video'></script>
+            <script src="{{ asset('assets/vuexy/vendors/js/vendors.min.js') }}" ></script>
+            <script src="{{ asset('assets/vuexy/vendors/js/extensions/toastr.min.js') }}"></script>
+
+            
+
+            {# {{ encore_entry_script_tags('vuexy_calendar_fullcalendar') }} #}
+            {# {{ encore_entry_script_tags('vuexy_extensions_moment') }} #}
+            {# {{ encore_entry_script_tags('vuexy_forms_select_select2') }} #}
+            {# {{ encore_entry_script_tags('vuexy_forms_validation_jquery_validate') }}
+            {{ encore_entry_script_tags('vuexy_pickers_flatpickr') }} #}
+
+            {{ encore_entry_script_tags('app') }}
+            {{ encore_entry_script_tags('bootstrap_touchspin') }}
+            {{ encore_entry_script_tags('vuexy_app_menu') }}
+            {{ encore_entry_script_tags('vuexy_app') }}
+            {{ encore_entry_script_tags('vuexyJS') }}
+            {{ encore_entry_script_tags('chatJS')}}
+
+            <script src="{{ asset('assets/bootstrap/js/bootstrap.js')}}" defer></script>
+            <script src="{{ asset('assets/js/sweetallert.js')}}" defer></script>
+            <script src="{{ asset('assets/js/confirmation.js')}}" defer></script>
+            <script src="{{ asset('assets/vuexy/vendors/js/calendar/fullcalendar.min.js') }}"></script>
+            <script src="{{ asset('assets/vuexy/vendors/js/extensions/moment.min.js') }}"></script>
+            <script src="{{ asset('assets/vuexy/vendors/js/forms/select/select2.full.min.js') }}" defer></script>
+            <script src="{{ asset('assets/vuexy/vendors/js/forms/validation/jquery.validate.min.js') }}" defer></script>
+            <script src="{{ asset('assets/vuexy/vendors/js/pickers/flatpickr/flatpickr.min.js') }}" defer></script>
+        
+        
+        {% endblock %}
+    </body>
+</html>

@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends 'base-choix.html.twig' %}
 
 {% block title %}
 	Page d'accueil
@@ -12,7 +12,8 @@
     {% set stripe_defaultButton =  "S'abonner (" ~ planPrice ~ " €)" %}
 
     <div class="container-page">
-        <h1 class="text-center mt-3">Bienvenue sur PixelForce</h1>    
+
+        <h1 class="choix-secteur-primary mt-3">Bienvenue sur Pixelforce</h1>    
 
         {% if app.session.get('enabledContent') == true %}
             {% if app.request.get('stripe_checkout') == 'successfully' %}
@@ -20,47 +21,79 @@
                     Paiement efféctué avec success !
                 </div>
             {% endif %}
-            
-            <h4 class="text-center mb-3 mt-3" style="padding: 0 100px">Après avoir visionné la vidéo pour vous informer sur les opportunités offertes par la plateforme, vous êtes libre de choisir parmi les différents secteurs disponibles.</h4>
-            
-            <div class="mt-5 mb-5">
-               <div style="padding:56.25% 0 0 0;position:relative;">
-                    <iframe src="{{video_information_vimeo_src}}" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write" style="position:absolute;top:0;left:0;width:100%;height:100%;"></iframe>
+            <div class="row pt-3">
+                <div class="col-12 col-md-5">
+                    <h6 class="">Après avoir visionné la vidéo pour vous informer sur les opportunités offertes par la plateforme, vous êtes libre de choisir parmi les différents secteurs disponibles.</h6>
                 </div>
+                <div class="col-0 col-md-7"></div>
+            </div>
+            <div class="ratio ratio-16x9 mt-3 choix-secteur-video rounded-3" >
+                <iframe src="{{video_information_vimeo_src}}"  allow="autoplay; fullscreen; picture-in-picture; clipboard-write"  ></iframe>
                 <script src="https://player.vimeo.com/api/player.js"></script>
             </div>
             
-            <div class="block-list-card-secteur mt-5">
-                <div class="row d-flex justify-content-center">
-                    {% for secteur in allSecteurs %}
-                        <div class="col-12 col-md-4 mb-3">
-                            {% set agentSecteur = repoAgentSecteur.findOneBy({'secteur' : secteur, 'agent' : agent}) %}
-                        
-                            <div style="min-height: 140px;" class="card-secteur bg-{% if agentSecteur and agentSecteur.statut == true %}primary{% elseif agentSecteur and agentSecteur.statut == false %}warning{% else %}secondary{% endif %} p-3">
-
-                                <h2 class="text-white text-center">{{ secteur.nom }}</h2>
-                                <div class="d-flex align-items-center justify-content-center ">                  
-                                    <img src="{{ asset('files/')}}/{{secteur.affiche}}" class="img-thumbnail w-50" alt="">
-                                </div>
-                                <div class="secteur-info d-none text-center">
-                                    <h5 class="text-white secteur-description">{{ secteur.description }}</h5>
-                                </div>
-                                
-
-                                <div class="button-block text-center mt-5">
-                                    {% if agentSecteur is null and secteur.active > 0 %}
-                                        <!-- <a href="" class="btn btn-primary" disabled><i class="fa-solid fa-location-arrow"></i> Découvrir</a> -->
-                                        <a href="{{ path('agent_add_sector', {id: secteur.id}) }}" class="btn btn-primary"><i class="fa-solid fa-plus"></i> Ajouter </a>
-                                    {% elseif agentSecteur and agentSecteur.statut == true %}
-                                        <a href="{{ path('agent_generate_sessionSecteur_before_redirect_to_route_dahsboard', {id: secteur.id}) }}" class="btn btn-success"><i class="fa-solid fa-location-arrow"></i> Accéder </a>
-                                    {% elseif agentSecteur and agentSecteur.statut == false %}
-                                        <a class="btn btn-success"><i class="fa-solid fa-spinner"></i> En attente de validation</a>
-                                    {% endif %}
-                                </div>
+            <h1 class="choix-secteur-primary mt-5 ml-5">Choisissez votre secteur</h1>
+            <div class="row pt-3 ml-5">
+                <div class="col-12 col-md-5">
+                    <h6 class="">Après avoir visionné la vidéo pour vous informer sur les opportunités offertes par la plateforme, vous êtes libre de choisir parmi les différents secteurs disponibles.</h6>
+                </div>
+                <div class="col-0 col-md-7"></div>
+            </div>
+            <div id="secteurCarousel" class="carousel carousel-dark slide slide mt-5" data-ride="carousel">
+                <div class="carousel-inner">
+                    {% for secteur in allSecteurs|batch(3) %}
+                        <div class="carousel-item {% if loop.first %}active{% endif %}">
+                            <div class="row">
+                                {% for s in secteur %}
+                                    {% set agentSecteur = repoAgentSecteur.findOneBy({'secteur' : s, 'agent' : agent}) %}
+                                    
+                                    <div class="col-12 col-lg-4">
+                                        <div class="card" style="">
+                                                    <img src="{{ asset('files/')}}/{{s.affiche}}" class="card-img-top" alt="...">
+                                                    <div class="card-body choix-secteur-card rounded-bottom">
+                                                        <div class="row card-body-part-a" >
+                                                            <div class="col-8">
+                                                                <h5 class=" text-white fw-bold pb-1">{{ s.nom }}</h5>
+                                                                <p class="card-text">{{ s.description }}</p>
+                                                            </div>
+                                                            <div class="col-4">
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-7">
+                                                            
+                                                            </div>
+                                                            <div class="col-5  text-center " >
+                                                            
+                                                                        {% if agentSecteur is null and s.active > 0 %}
+                                                                            <!-- <a href="" class="btn btn-primary" disabled><i class="fa-solid fa-location-arrow"></i> Découvrir</a> -->
+                                                                            <a href="{{ path('agent_add_sector', {id: s.id}) }}" class="regular-button   font-weight-bold rounded-3 pl-3 pr-3"> Ajouter </a>
+                                                                            {% elseif agentSecteur and agentSecteur.statut == true %}
+                                                                                <a href="{{ path('agent_generate_sessionSecteur_before_redirect_to_route_dahsboard', {id: s.id}) }}" class="regular-button  font-weight-bold rounded-3 pl-3 pr-3"> Accéder </a>
+                                                                            {% elseif agentSecteur and agentSecteur.statut == false %}
+                                                                                <a class="regular-button   font-weight-bold rounded-3 pl-3 pr-3"> En attente de validation</a>
+                                                                        {% endif %}
+                                                            </div>
+                                                        </div>
+                                            
+                                            
+                                            
+                                        </div>
+                                    </div>
+                                    </div>
+                                {% endfor %}
                             </div>
                         </div>
                     {% endfor %}
                 </div>
+                <a class="carousel-control-prev" href="#secteurCarousel" role="button" data-slide="prev">
+                    <span class="fs-1" aria-hidden="true"><i class="fa fa-angle-left" aria-hidden="true"></i></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#secteurCarousel" role="button" data-slide="next">
+                    <span class="fs-1" aria-hidden="true"><i class="fa fa-angle-right" aria-hidden="true"></i></span>
+                    <span class="sr-only">Next</span>
+                </a>
             </div>
         {% else %}
             <div class="row mt-3">
