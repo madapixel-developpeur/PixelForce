@@ -402,6 +402,16 @@ a, a:hover{
 	padding:5px 20px;
 	display:inline-block
 }
+.general-primary-text{
+	color:#192030;
+	font-weight: bold;
+}
+.text-dark-template{
+	color:#192030;
+}
+.text-tableau{
+	color:#7d78e1;
+}
 .user-nav{
 	margin-left:10px;
 }
@@ -436,12 +446,72 @@ a, a:hover{
 	padding: 0px 0px;
 	margin:10px 1;
 }
-.card{
-	margin:0 10px;
-}
-.card p{
+
+.choix-secteur-card p{
 	color: white;
 	line-height: 14px;
 	font-size: 12px;
 	margin: 0px auto;
 }
+/* Header */
+.header-user{
+	font-size: small;
+	color:#192030;
+}
+/* Navbar */
+.left-sidebar{
+	background-color: #192030;
+}
+.main-menu{
+	background-color: #192030;
+}
+/* Agent-home */
+.statistics-section{
+	margin-top: 10px;
+}
+.statistics-section div {
+	margin-right:5px;
+	max-width: 160px;
+	padding:6px 0;
+	color:#192030
+}
+.statistics-section h6{
+	font-size: small;
+}
+.avatar{
+	width:50px;
+	height:50px;
+}
+.avatar a{
+	margin-left:18px;
+	margin-top:7px;
+}
+.avatar i{
+	font-size:40px;
+}
+/* Partie vision */
+.vision-section{
+	background-color: #7d78e1;
+}
+.vision-section-1 p{
+	color: white;
+	line-height: 16px;
+	font-size: 12px;
+	margin: 0px auto;
+}
+.vision-button{
+    background-color: #ebedf5;
+    color: #192030;
+    border-width: 1px; /* Width of the border */
+    border-style: solid; /* Style of the border */
+    border-color: #192030; /* Color of the border */
+	padding:5px 20px;
+	display:inline-block
+}
+/* Gestion projet */
+.gestion-projet{
+	width:70px;
+	height:70px;
+	display:inline-block;
+}
+/* Contact section */

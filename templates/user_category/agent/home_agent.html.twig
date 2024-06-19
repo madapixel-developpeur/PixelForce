@@ -12,7 +12,6 @@
     {% set stripe_defaultButton =  "S'abonner (" ~ planPrice ~ " €)" %}
 
     <div class="container-page">
-
         <h1 class="choix-secteur-primary mt-3">Bienvenue sur Pixelforce</h1>    
 
         {% if app.session.get('enabledContent') == true %}
@@ -48,7 +47,7 @@
                                     {% set agentSecteur = repoAgentSecteur.findOneBy({'secteur' : s, 'agent' : agent}) %}
                                     
                                     <div class="col-12 col-lg-4">
-                                        <div class="card" style="">
+                                        <div class="card choix-secteur-card" style="">
                                                     <img src="{{ asset('files/')}}/{{s.affiche}}" class="card-img-top" alt="...">
                                                     <div class="card-body choix-secteur-card rounded-bottom">
                                                         <div class="row card-body-part-a" >

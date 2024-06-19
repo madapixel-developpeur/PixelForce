@@ -17,29 +17,51 @@
                 <a class="nav-link modern-nav-toggle pe-0" data-bs-toggle="collapse"><i class="fa fa-bars fs-5" aria-hidden="true"></i></a>
             </li>
         </ul>
-        <ul class="nav navbar-nav align-items-center ms-auto">
+        <ul class="nav navbar-nav d-none d-xl-block">
             <li class="nav-item">
+               <h3 class="general-primary-text">Ravi de vous revoir, {{app.user.prenom|default(' ')}} 👋</h3>
+            </li>
+        </ul>
+        <ul class="nav navbar-nav align-items-center ms-auto">
+            <li class="nav-item m-2">
                 <i class="fa-regular fa-bell fs-4 pt-2"></i>
             </li>
-            <li class="nav-item dropdown dropdown-user">
-                <a class="nav-link dropdown-toggle dropdown-user-link" id="dropdown-user" href="#" data-bs-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                    <span class="avatar">
-                        <img class="round"
-                             src="{{ path('user_avatar', {id:app.user.id}) }}"
-                             onerror='this.onerror=null; this.src="{{ asset('assets/vuexy/images/portrait/small/avatar-s-11.jpg') }}"'
-                             alt="avatar" height="40">
-                    </span>
+            <li class="nav-item dropdown dropdown-user">      
+                   <div class="d-flex align-items-center">
+                        <div class="avatar me-3 ml-5">
+                                <img class="round"
+                                    src="{{ path('user_avatar', {id:app.user.id}) }}"
+                                    onerror='this.onerror=null; this.src="{{ asset('assets/vuexy/images/portrait/small/avatar-s-11.jpg') }}"'
+                                    alt="avatar" height="40">
+                        </div>
 
-                     <div class="user-nav pt-3">
-                        <h6 class="">
-                            <span class="user-status">{{app.user.prenom|default(' ')}}</span>  <span class="user-name ">{{app.user.nom}}</span>
-                        </h6>
-                    </div>
-                     <div class="">
-                        <i class="fa-solid fa-caret-down fs-2 p-0"></i>
+                        <div class="user-nav  me-2 ">
+                            <ul class="list-unstyled p-0">
+                                <li class="p-0">
+                                    <span class="user-status header-user">{{ app.user.prenom|default(' ') }}</span>
+                                    <span class="user-name header-user" >{{ app.user.nom }}</span>
+                                </li>
+                                <li class="d-flex p-0">
+                                    <span class="header-user">Ref:</span>
+                                    <span class="ms-2">
+                                        <a class="header-user" href="{{ path('agent_order_list_digital', {'referenceVente' : generateReference(app.user.id, app.user.id) }) }}">
+                                            {{ generateReference(app.user.id, app.user.id) }}
+                                        </a>
+                                        <a href="#" class="ms-2 header-user" onclick="copyLink('{{ generateReference(app.user.id, app.user.id) }}', 'Liens de la référence {{ generateReference(app.user.id, app.user.id) }} copié avec succès')">
+                                            <i class="fa-solid fa-copy"></i>
+                                        </a>
+                                    </span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div>
+                            <a class="nav-link dropdown-toggle dropdown-user-link" id="dropdown-user" href="#" data-bs-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa-solid fa-caret-down fs-2 p-0"></i></a>
+                        </div>
                     </div>
 
-                </a>
+
+                
                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdown-user">
                     <a class="dropdown-item" href="{{ path('user_accountSetting', {id:app.user.id}) }}"><i class="me-50" data-feather="user"></i> Mon compte</a>
                     <a class="dropdown-item" href="{{ path('app_logout') }}"><i class="me-50" data-feather="power"></i> Se déconnecter</a>

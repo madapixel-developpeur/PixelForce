@@ -19,131 +19,91 @@
     <div class="mt-3">
         <section id="dashboard-ecommerce">
             <div class="row match-height">
-                <!-- Medal Card -->
+                <!-- Affiliation Card -->
                 <div class="col-xl-4 col-md-6 col-12">
-                    <div class="card card-congratulation-medal">
+                    <div class="card">
                         <div class="card-body">
-                            <h5>Félicitation 🎉 {{ app.user.prenom }}!</h5>
-                            <p class="card-text font-small-3">
+                            <h5 class="general-primary-text">Invité des personnes</h5>
                             {% if app.user.canAccessFonct('RDV', app.session.get('secteurId')) %}
-                                Pour inviter d'autres personnes à se joindre à vous, <br/>
-                                veuillez cliquer 
-                                <a class="w-100 font-weight-bold" href="#" onclick="copyLink('{{ url('agent_inscription', {'ambassador_username': agent.username != "" ? agent.username : ' '}) }}') " > 
-                                    ici 
-                                </a>.
+                            <p >Pour inviter d'autres personnes à se joindre à vous, veuillez cliquer ici.</p>
+							<a class="regular-button w-100 text-center" href="#" onclick="copyLink('{{ url('agent_inscription', {'ambassador_username':  app.user.username != "" ?  app.user.username : ' '}) }}') " >Copier votre lien</a>    
                             {% endif %}
-                            </p>
-                            {# {% if (estSecurite or estEcommerce) %} #}
-                            <h3 class="mb-75 mt-2 pt-50">
-                            <a href="#">
-                                {{ (statDigital ? statDigital.totalAmount : chiffreAffaireTotal ) | number_format(2, ',', ' ')}} €  
-                            </a>                           
-                            </h3>
-                            {# {% endif %} #}
-                            {% if app.user.canAccessFonct('VENTE', app.session.get('secteurId')) %}
-                            {% if estSecurite %}
-                            <a role="button" href="{{path('admin_ordersecu_list')}}" class="btn btn-primary">Voir les ventes</a>
-                            {% elseif estEcommerce %}
-                            <a role="button" href="{{path('agent_order_list')}}" class="btn btn-primary">Voir les ventes</a>
-                            {% elseif estDemandeDevis %}
-                            <a role="button" href="{{path('agent_demandedevis_list')}}" class="btn btn-primary">Voir les ventes</a>
-                            {% endif %}
-                            {% endif %}
-                            <img src="{{asset('assets/vuexy/images/illustration/badge.svg')}}" class="congratulation-medal" alt="Medal Pic" />
                         </div>
                     </div>
                 </div>
-                <!--/ Medal Card -->
-    
+                <!--/ Affiliation Card --> 
                 <!-- Statistics Card -->
                 <div class="col-xl-8 col-md-6 col-12">
-                    <div class="card card-statistics">
-                        <div class="card-header">
+                    <div class="">
                             <h4 class="card-title">Statistiques</h4>
-                        </div>
+                    
                         <div class="card-body statistics-body">
-                            <div class="row">
-                                <div class="col-xl-3 col-sm-6 col-12 mb-2 mb-xl-0">
-                                    <div class="d-flex flex-row">
-                                        <div class="avatar bg-light-primary me-2">
-                                            <div class="avatar-content">
-                                                <a {% if app.user.canAccessFonct('VENTE', app.session.get('secteurId')) %}href="{% if estSecurite %}{{path('admin_ordersecu_list')}}{% elseif estEcommerce %}{% if app.session.get('secteurId') == secteurDigitalId  %}{{path('agent_order_list_digital')}}{% else %}{{path('agent_order_list')}}{% endif %}{% elseif estDemandeDevis %}{{path('agent_demandedevis_list')}}{% else %}#{% endif %}"{% endif %}><i data-feather="trending-up" class="avatar-icon"></i></a>
+                            <div class="row statistics-section">
+                                <div class="col-xl-3 col-sm-6 col-12 card rounded-4">
+                                    <div class="d-flex flex-row align-items-center justify-content-center">
+                                        <div class="">
+                                            <div class="avatar bg-light-warning me-2">
+                                                <a {% if app.user.canAccessFonct('VENTE', app.session.get('secteurId')) %}href="{% if estSecurite %}{{path('admin_ordersecu_list')}}{% elseif estEcommerce %}{% if app.session.get('secteurId') == secteurDigitalId  %}{{path('agent_order_list_digital')}}{% else %}{{path('agent_order_list')}}{% endif %}{% elseif estDemandeDevis %}{{path('agent_demandedevis_list')}}{% else %}#{% endif %}"{% endif %}>
+                                                <i data-feather="trending-up" class="avatar-icon"></i>
+                                                </a>
                                             </div>
                                         </div>
                                         <div class="my-auto">
-
-                                            <h4 class="fw-bolder mb-0">
+                                            <h4 class="card-text font-small-3 mb-0">Ventes</h4>
+                                            <h6 class="fw-bolder mb-0">
                                                 {{(statDigital ? statDigital.orderCount : nbVentesTotal) | number_format(0, ',', ' ')}}
-                                            </h4>
+                                            </h6>
                                             
-                                            <p class="card-text font-small-3 mb-0">Ventes</p>
                                         </div>
                                     </div>
                                 </div>
-                                {#
-                                <div class="col-xl-3 col-sm-6 col-12 mb-2 mb-xl-0">
-                                    <div class="d-flex flex-row">
-                                        <div class="avatar bg-light-info me-2">
-                                            <div class="avatar-content">
-                                                <i data-feather="user" class="avatar-icon"></i>
+                                <div class="col-xl-3 col-sm-6 col-12 card rounded-4">
+                                    <div class="d-flex flex-row align-items-center justify-content-center">
+                                        <div class="">
+                                            <div class="avatar bg-light-primary me-2">
+                                                <a {% if app.user.canAccessFonct('RDV', app.session.get('secteurId')) %}href="{{path('agent_contact_meeting_list')}}"{% endif %}>
+                                                <i data-feather="box" class="avatar-icon"></i>
+                                                </a>
                                             </div>
                                         </div>
                                         <div class="my-auto">
-                                            <h4 class="fw-bolder mb-0">
-                                                {# {{nbrClients | number_format(0, ',', ' ')}} 
-                                                {% if secteur.id == 9 or secteur.nom == "Pixelsior Buzz Boosters" %}
-                                                    10
-                                                {% else %}
-                                                    {{nbrClients | number_format(0, ',', ' ')}}
-                                                {% endif %}    
-                                            </h4>
-                                            <p class="card-text font-small-3 mb-0">Les clients</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                #}
-                                <div class="col-xl-3 col-sm-6 col-12 mb-2 mb-sm-0">
-                                    <div class="d-flex flex-row">
-                                        <div class="avatar bg-light-danger me-2">
-                                            <div class="avatar-content">
-                                                <a {% if app.user.canAccessFonct('RDV', app.session.get('secteurId')) %}href="{{path('agent_contact_meeting_list')}}"{% endif %}><i data-feather="box" class="avatar-icon"></i></a>
-                                            </div>
-                                        </div>
-                                        <div class="my-auto">
-                                            <h4 class="fw-bolder mb-0">{{nbrRdv | number_format(0, ',', ' ')}}</h4>
-                                            <p class="card-text font-small-3 mb-0">Rendez-vous</p>
+                                            <h4 class="card-text font-small-3 mb-0">Rendez-vous</h4>
+                                            <h6 class=" mb-0 fw-bolder">{{nbrRdv | number_format(0, ',', ' ')}}</h6>
                                         </div>
                                     </div>
                                 </div>
                                 {# {% if (estSecurite or estEcommerce) %} #}
-                                <div class="col-xl-3 col-sm-6 col-12">
-                                    <div class="d-flex flex-row">
-                                        <div class="avatar bg-light-success me-2">
-                                            <div class="avatar-content">
-                                                <a {% if app.user.canAccessFonct('VENTE', app.session.get('secteurId')) %}href="{% if estSecurite %}{{path('admin_ordersecu_list')}}{% elseif estEcommerce %}{% if app.session.get('secteurId') == secteurDigitalId  %}{{path('agent_order_list_digital')}}{% else %}{{path('agent_order_list')}}{% endif %}{% elseif estDemandeDevis %}{{path('agent_demandedevis_list')}}{% else %}#{% endif %}"{% endif %}><i data-feather="dollar-sign" class="avatar-icon"></i></a>
+                                <div class="col-xl-3 col-sm-6 col-12 card rounded-4">
+                                    <div class="d-flex flex-row align-items-center justify-content-center">
+                                        <div class="">
+                                            <div class="avatar bg-light-danger me-2">
+                                                <a {% if app.user.canAccessFonct('VENTE', app.session.get('secteurId')) %}href="{% if estSecurite %}{{path('admin_ordersecu_list')}}{% elseif estEcommerce %}{% if app.session.get('secteurId') == secteurDigitalId  %}{{path('agent_order_list_digital')}}{% else %}{{path('agent_order_list')}}{% endif %}{% elseif estDemandeDevis %}{{path('agent_demandedevis_list')}}{% else %}#{% endif %}"{% endif %}>
+                                                    <i data-feather="dollar-sign" class="avatar-icon"></i>
+                                                </a>
                                             </div>
                                         </div>
                                         <div class="my-auto">
-                                            <h4 class="fw-bolder mb-0">
+                                            <h4 class="card-text font-small-3 mb-0">Revenu</h>
+                                            <h6 class="fw-bolder mb-0 ">
                                                 {{ (statDigital ? statDigital.totalAmount : chiffreAffaireTotal ) | number_format(2, ',', ' ')}} €  
-                                            </h4>
-                                            <p class="card-text font-small-3 mb-0">Revenu</p>
+                                            </h6>
                                         </div>
                                     </div>
                                 </div>
                                 {# {% endif %} #}
-                                <div class="col-xl-3 col-sm-6 col-12">
-                                    <div class="d-flex flex-row">
-                                        <div class="avatar bg-light-success me-2">
-                                            <div class="avatar-content">
+                                <div class="col-xl-3 col-sm-6 col-12 card rounded-4">
+                                    <div class="d-flex flex-row  align-items-center justify-content-center">
+                                        <div class=" ">
+                                            <div class="avatar bg-light-success me-2">
                                                 <a href="#"><i data-feather="dollar-sign" class="avatar-icon"></i></a>
                                             </div>
                                         </div>
                                         <div class="my-auto">
-                                            <h4 class="fw-bolder mb-0">
+                                            <h4 class="card-text font-small-3 mb-0 text-dark-template">Rémunération</h4>
+                                            <h6 class="fw-bolder mb-0 ">
                                                 {{ soldeRemuneration | number_format(2, ',', ' ')}} €  
-                                            </h4>
-                                            <p class="card-text font-small-3 mb-0">Rémunération</p>
+                                            </h6>
+                                            
                                         </div>
                                     </div>
                                 </div>
@@ -153,36 +113,66 @@
                 </div>
                 <!--/ Statistics Card -->
             </div>
-            <div class="">
-                <div class="card card-statistics">
-                    <div class="card-header">
-                        <h4 class="card-title">Progression</h4>
-                    </div>
-                    <div class="card-body statistics-body">
-                        <h4 class="text-center">Position</h4>
-                        {% include 'partials/stepper-progression-agent.html.twig' %}
-                        
-                        <h4 class="text-center mt-2">Formation</h4>
-                        <div class="mt-1 steps formation-progression d-flex flex-wrap flex-sm-nowrap justify-content-between padding-top-2x padding-bottom-1x">
-                            {% set isCompletedBefore = true %}
-                            {% for step in formationCategoriesOrdered %}
-                            {% set isCompleted = (not firstFormation or (firstFormation and step.ordreCatFormation < firstFormation.CategorieFormation.ordreCatFormation)) %}
-                            {% set isCurrent = (isCompletedBefore and not isCompleted) %}
-                            <div class="step {% if isCompleted %} completed {% endif %} {% if isCurrent %} current {% endif %}">
-                                <div class="step-icon-wrap">
-                                <div class="step-icon">{% if isCompleted %}<i class="fa fa-check"></i>{% else %}{{loop.index}}{% endif %}</div>
+            <div class="row match-height">
+                <!-- Actual position Card -->
+                <h4 class="general-primary-text">Progression</h4>
+                <div class="col-xl-4 col-md-6 col-12">
+                    <div class="card card-congratulation-medal">
+                        <div class="card-body">
+           
+                            <h4 class="text-center general-primary-text">Position actuelle</h4>
+                            <div class="row">
+                                <div clas="col-6">
+                                    {# <a class="gestion-projet bg-light-primary rounded-circle " href="" >
+                                       1
+                                    </a> #}
                                 </div>
-                                <h4 class="step-title">{{step.nom}}</h4>
+                                <div clas="col-6">
+                                </div>
                             </div>
-                            {% set isCompletedBefore = isCompleted %}
-                            {% endfor %}
+                            {# {% if (estSecurite or estEcommerce) %} #}
+                           
+                            {% include 'partials/stepper-progression-agent_V2.html.twig' %}
+                            
                         </div>
                     </div>
                 </div>
+                <!--/ Actual position Card -->
+    
+                <!-- Formation Card -->
+                <div class="col-xl-8 col-md-6 col-12">
+                    <div class="">
+                        <div class="card card-statistics">
+                            <div class="card-body statistics-body">
+                               
+                                <h4 class=" mt-2 choix-secteur-primary">Formation</h4>
+                                <p class="w-50">Une priève description sur le déroulement de la formation</p>
+                               
+                                
+                                <div class="mt-1 steps formation-progression d-flex flex-wrap flex-sm-nowrap justify-content-between padding-top-2x padding-bottom-1x">
+                                    {% set isCompletedBefore = true %}
+                                    {% for step in formationCategoriesOrdered %}
+                                    {% set isCompleted = (not firstFormation or (firstFormation and step.ordreCatFormation < firstFormation.CategorieFormation.ordreCatFormation)) %}
+                                    {% set isCurrent = (isCompletedBefore and not isCompleted) %}
+                                    <div class="step {% if isCompleted %} completed {% endif %}">
+                                        <div class="step-icon-wrap">
+                                        <div class="step-icon">{% if isCompleted %}<i class="fa fa-check"></i>{% elseif isCurrent %}<p class="text-tableau mt-1">{{loop.index}}</p>{% else %}<i class="fa-solid fa-lock text-tableau"></i>{% endif %}</div>
+                                        </div>
+                                        <h4 class="step-title">{{step.nom}}</h4>
+                                    </div>
+                                    {% set isCompletedBefore = isCompleted %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--/ Formation Card -->
             </div>
 
             <div class="row match-height">
                 <div class="col-lg-8 col-12">
+                    <h4 class=" mt-2 choix-secteur-primary">Listes des formations</h4>
                     <div class="card card-company-table">
                         <div class="card-body p-0">
                             {% if firstFormation == null %}
@@ -274,10 +264,37 @@
                             
                         </div>
                     </div>
+                    {% if app.user.canAccessFonct('PRODUIT', app.session.get('secteurId')) %}
+                    <div class="col-lg-12 col-md-12 mb-4">
+                        <div class="vision-section rounded-3 pb-1" style="">
+                            <div class=" p-0">
+                                <div class="row p-5 align-items-center">
+                                    <h4 class="general-primary-text fs-1">{{secteur.title}}</h4>
+                                    <div class="col-md-6 vision-section-1">
+                                        <p>
+                                            {{secteur.longDescription | raw}}  
+                                        </p>
+                                        <h6 class="mt-3">
+                                        <span class="text-white">Référence :</span> 
+                                        <a class="text-dark-template fs-4" href="{{ path('agent_order_list_digital',{'referenceVente' : generateReference(app.user.id,app.user.id) }) }}" >  {{ generateReference(app.user.id,app.user.id) }} </a>
+                                        <a class="p-2 text-dark-template fs-4" href="#" onclick="copyLink('{{generateReference(app.user.id,app.user.id) }}','Liens de la référence {{ generateReference(app.user.id,app.user.id) }} copié avec succès') "><i class="fa-solid fa-copy"></i></a> 
+                                        </h6>
+                                        <a class="vision-button w-100 text-center rounded-3" href="#" onclick="copyLink('{{ url('agent_inscription', {'ambassador_username':  app.user.username != "" ?  app.user.username : ' '}) }}') " >Voir les catalogues pour le digital</a>    
+                                        {# <a target="_blank" href="{{secteur.liens}}" class="card-link">Lien vers {{secteur.nom}}</strong></a> #}
+                                    </div>
+                                    <div class="col-md-6">
+                                            <img src="{{ asset('files/')}}/{{secteur.couverture}}" class="w-100 rounded-3" alt="">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
                 </div>
                 {% if app.user.canAccessFonct('AGENDA', app.session.get('secteurId')) %}
                 <!-- Developer Meetup Card -->
                 <div class="col-lg-4 col-md-6 col-12">
+                    <h4 class=" mt-2 choix-secteur-primary">Mon agenda</h4>
                     <div class="card card-developer-meetup position-relative">
                         <div class="position-absolute right-0 top-0 m-3">
                             <a href="{{ path('calendar_index') }}" class="btn btn-primary d-flex justify-content-center align-items-center">Mon Agenda <i data-feather="calendar" class="ms-3"></i></a>
@@ -358,101 +375,28 @@
                             </div> #}
                         </div>
                     </div>
+                    <div class="card" style="max-height:170px;">
+                        <div class="card-body">
+                         <div class="row">
+                            <div class="col-8">
+                                <h5 class="general-primary-text">Gestion de projet</h5>
+                                <p>Accèder à la plateforme pour la suivie de vos projets.</p>
+                            </div>
+                            <div class="col-4 text-center">
+                                <a class="gestion-projet bg-light-primary rounded-circle " href="{{pixelforce_url}}" >
+                                    <i class="fa fa-briefcase fs-1 mt-3" aria-hidden="true"></i>
+                                </a>
+                            </div>
+                         </div>
+                            <a class="regular-button w-100 text-center mt-4 rounded-3" href="{{pbb_url }}">Accèder à la plateforme</a>    
+                        </div>
+                    </div>
                 </div>
                 <!--/ Developer Meetup Card -->
                 {% endif %}
-    
-                <!-- Browser States Card -->
-                {# <div class="col-lg-12 col-12">
-                    <h6 class="display-6" style="font-size : 20px;">Votre liste de contact :</h6>
-                    <div class="card card-company-table pb-5" style="min-height: 300px;">
-                        <div class="card-body p-0">
-                            <div class="table-responsive">
-                                <table class="table">
-                                    <thead>
-                                        <tr class="text-center">
-                                            <th scope="col" class="p-3"></th>
-                                            <th scope="col" class="p-3">Prénoms</th>
-                                            <th scope="col" class="p-3">Email</th>
-                                            <th scope="col" class="p-3">Téléphone</th>
-                                            <th scope="col" class="p-3">Adresse</th>
-                                            <th scope="col" class="p-3">Tags</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {% if contacts|length < 1 %}
-                                            <div class="d-flex justify-content-center my-2">
-                                                <a href="{{ path('agent_contact_info_add') }}" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> Ajouter un contact</a>
-                                            </div>
-                                        {% else %}
-                                            {% for contact in contacts %}
-                                            {% set information = contact.information %}
-                                                <tr class="text-center">
-                                                    <td class="text-center"><i class="fa-solid fa-address-card"></i></td>
-                                                    <td><a href="{{ path('agent_contact_view', {'id': contact.id}) }}" class="text-black"> {{ information.lastname }}</a></td>
-                                                    <td><a href="{{ path('agent_contact_view', {'id': contact.id}) }}" class="text-black" > {{ information.email }}</a></td>
-                                                    <td>{{ information.phone }}</td>
-                                                    <td>{{ information.address }}</td>
-                                                    <td class="justify-content-center d-flex">
-                                                        {% set tags = information.contact.tags.toArray %}
-                                                        {% for tag in tags %}
-                                                            <div class="caret caret-shadow caret-hoverable rounded-3 d-inline-block bg-{{ tag.couleur }}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="{{ tag.libelle }}"></div>
-                                                        {% endfor %}
-                                                    </td>
-
-                                                </tr>
-                                            {% endfor %}
-                                        {% endif %}
-                                    </tbody>
-                                </table>
-                            </div>
-                            {% if contacts|length > 0 %}
-                            <div class="position-absolute bottom-0 start-50 translate-middle-x mb-3">
-                                <a href="{{ path('agent_contact_list') }}" class="btn btn-primary float-bottom">Voir plus <i class="fa-solid fa-circle-arrow-right ms-1"></i></a>
-                            </div>
-                            {% endif %}
-                        </div>
-                    </div>
-                </div> #}
-                <!--/ Browser States Card -->
-                <!-- Browser States Card -->
-                {% if app.user.canAccessFonct('PRODUIT', app.session.get('secteurId')) %}
-                <div class="col-lg-12 col-md-12">
-                    <div class="card card-company-table pb-5" style="min-height: 300px;">
-                        <div class="card-body p-0">
-                            <div class="row p-5 align-items-center">
-                                <div class="col-md-4">
-                                   <div class="img d-flex align-items-center justify-content-center">
-                                        <img src="{{ asset('files/')}}/{{secteur.couverture}}" class="img-thumbnail img-fluid w-100" alt="">
-                                    </div>
-                                </div>
-                                <div class="col-md-8">
-                                    <h3>{{secteur.title}}</h3>
-                                    <p>
-                                        {{secteur.longDescription | raw}}  
-                                    </p>
-                                    <h5>
-                                       Référence : <a href="{{ path('agent_order_list_digital',{'referenceVente' : generateReference(app.user.id,app.user.id) }) }}">  {{ generateReference(app.user.id,app.user.id) }} </a>
-                                       <a class="p-2" href="#" onclick="copyLink('{{generateReference(app.user.id,app.user.id) }}','Liens de la référence {{ generateReference(app.user.id,app.user.id) }} copié avec succès') "><i class="fa-solid fa-copy"></i></a> 
-                                    </h5>
-
-                                    {# <a target="_blank" href="{{secteur.liens}}" class="card-link">Lien vers {{secteur.nom}}</strong></a> #}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                {% endif %}
+                
                 {% if app.user.canAccessFonct('RDV', app.session.get('secteurId')) %}
-                {# <div class="card text-center col-lg-12 col-md-12 align-items-center">
-                    
-                    <div class="card-body m-5">
-                        <h5 class="card-title">Copier mon lien</h5>
-                        <p class="card-text">Pour inviter d'autres personnes à se joindre à vous via ce lien, veuillez cliquer ici.</p>
-                         <a class="btn btn-primary w-100 font-weight-bold" href="#" onclick="copyLink('{{ url('agent_inscription', {'ambassador_username': agent.username != "" ? agent.username : ' '}) }}') " >Prendre rdv </a>
-                    </div>
-                    
-                </div> #}
+                
                 {% endif %}
                  
                 
@@ -474,26 +418,32 @@
                                         <th scope="col">Nom et prénoms</th>
                                         <th scope="col">Email</th>
                                         <th scope="col">Téléphone</th>
+                                        <th scope="col">Secteur</th>
                                         <th scope="col">ACTION</th>
                                     </tr>
                                     </thead>
-                                    <tbody class="align-items-center justify-content-center">
+                                    <tbody class="align-items-center ">
                                     {% for coach in coachs %}
                                         
-                                            <tr class="">
+                                            <tr class="align-items-center">
                                                 <td>{{ coach.id }}</td>
                                                 <td >
                                                     <div class="d-flex align-items-center justify-content-center">
                                                         <div class="img">
-                                                            <img src="{{ asset('files/')}}/{{coach.photo}}" class="img-thumbnail w-25" alt="">
-                                                        </div>
+                                                            <img src="{{ path('user_avatar', {id:coach.id}) }}" class="w-50 rounded-3" alt="">
+                                                        </div
                                                     </div>
                                                 </td>
-                                                <td>{{ coach.fullName }}</td>
-                                                <td><a href= "mailto: {{ coach.email }}"> {{ coach.email }} </a></td>
-                                                <td><a href="tel:{{ coach.telephone|default('-') }}">{{ coach.telephone|default('-') }}</a></td>
+                                                <td class="text-dark-template ">{{ coach.fullName }}</td>
+                                                <td ><a class="text-tableau" href= "mailto: {{ coach.email }}"> {{ coach.email }} </a></td>
+                                                <td ><a class="text-tableau" href="tel:{{ coach.telephone|default('-') }}">{{ coach.telephone|default('-') }}</a></td>
+                                                 <td>
+                                                    {# On récupère les secteurs reliés par l'agent  #}
+                                                    {% set secteurs = repoCoachSecteur.findBy({'coach' : coach}) %}
+                                                    {{ coach.allSecteursOfUser(secteurs)|default('-') }}     
+                                                </td>
                                                 <td>
-                                                    <a class="btn btn-primary w-100 font-weight-bold" href="#" onclick="Calendly.initPopupWidget({url: '{{coach.getLienCalendly()}}'});return false;" >Prendre rdv </a>
+                                                    <a class="regular-button text-center rounded-3"  href="#" onclick="Calendly.initPopupWidget({url: '{{coach.getLienCalendly()}}'});return false;" style="min-width:140px;">Prendre RDV </a>
                                                 </td>    
                                             </tr>
                       
