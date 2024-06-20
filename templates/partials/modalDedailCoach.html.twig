@@ -1,0 +1,88 @@
+<!-- Button trigger modal -->
+{% set modal_id = "modal" ~ coach.id %}
+{# <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+  Launch demo modal
+</button> #}
+
+<!-- Modal -->
+<div class="modal fade bd-example-modal-lg rounded-3" id="{{modal_id}}" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="row">
+        <div class="col-6">
+            <h3 class="modal-title modal-coach-titre general-primary-text" id="exampleModalLabel">Coach Details</h3>
+        </div>
+        <div class="d-flex justify-content-end p-2 col-6">
+            <i class="fa-solid fa-circle-xmark text-danger fs-1 modal-coach-exit" type="button" data-dismiss="modal" aria-label="Close"></i>
+        </div>
+      </div>
+      <div class="modal-body">
+        <!-- User Card -->
+            <div class="card-body">
+                <div class="row"> 
+                    <div class="col-4">
+                        <div class="img">
+                            <img src="{{ path('user_avatar', {id:coach.id}) }}" class="w-100 rounded-3" alt="">
+                        </div>
+                    </div>
+                    <div class="col-8">
+                        <div class="user-avatar-section">
+                            <div class="row"> 
+                                <div class="col-6">
+                                    <div class="user-info">
+                                        <h4 class="general-primary-text">{{ coach.nom }}</h4>
+                                        <h4 class="general-primary-text">{{ coach.prenom }}</h4>
+                                        <span class="badge bg-light-primary ">{{ coach.roles[0]|slice(5)}}</span>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="info-container">
+                                            <ul class="list-unstyled">
+                                                
+                                                <li class="mb-25">
+                                                    <span class="fw-bolder me-25">Email:</span>
+                                                    <span>{{ coach.email }}</span>
+                                                </li>
+                                                <li class="mb-25">
+                                                    <span class="fw-bolder me-25">Statut:</span>
+                                                    <span class="badge bg-light-success">{{ coach.active == 1 ? 'Active' : 'Banni' }}</span>
+                                                </li>
+                                                <li class="mb-25">
+                                                    <span class="fw-bolder me-25">Contact:</span>
+                                                    <span>{% if coach.telephone %} {{ coach.telephone }} {% else %} Pas de numero {% endif %}</span>
+                                                </li>
+                                                <li class="mb-25">
+                                                    <span class="fw-bolder me-25">Adresse:</span>
+                                                    <span>{{ coach.adresse }}</span>
+                                                </li>
+                                                {% if detailAgentCoach is defined  %}
+                                                <li class="mb-25">
+                                                    <span class="fw-bolder me-25">Chiffre d'affaires:</span>
+                                                    <span>{{ chiffreAffaireTotal | number_format(2, ',', ' ') }} € </span>
+                                                </li>
+                                                {% endif %}
+                                            </ul>
+                                            
+                                    </div>
+                                </div>
+                            </div>
+                        </div>                
+                        <div>
+                            <p><span class="general-primary-text">Mission</span> 
+                            {# {{secteur.LongDescription | raw}} #}
+                                Chez Pixelsior Buzz Boosters, nous sommes les pionniers d'une présence en ligne sans limites. Notre équipe de super-héros du numérique déploie des stratégies audacieuses et utilise les dernières tendances technologiques pour propulser nos clients vers le succès mondial.
+                            </p>
+                        </div>
+                        <div class="mt-4">
+                            <a class="regular-button text-center rounded-3"  href="#" onclick="Calendly.initPopupWidget({url: '{{coach.getLienCalendly()}}'});return false;" style="min-width:200px;">Prendre RDV </a>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        <!-- /User Card -->
+
+      </div>
+    </div>
+  </div>
+</div>

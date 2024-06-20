@@ -50,6 +50,7 @@ class AgentAccountController extends AbstractController
     private $agentService;
     private $repoPlanAgentAccount;
     private $repoCoachSecteur;
+    private $repoUser;
 
     public function __construct(SecteurRepository $repoSecteur, AgentSecteurRepository $repoAgentSecteur, FormationRepository $repoFormation, SessionInterface $session, ContactRepository $repoContact, FormationAgentRepository $repoFormationAgent, CategorieFormationRepository $repoCatFormation, RFormationCategorieRepository $repoRelationFormationCategorie, CategorieFormationAgentService $categorieFormationAgentService, CalendarEventRepository $calendarEventRepository, StripeService $stripeService, StripeManager $stripeManager, AgentService $agentService, PlanAgentAccountRepository $repoPlanAgentAccount, UserRepository $repoUser,
         private EntityManager $entityManager, CoachSecteurRepository $repoCoachSecteur)
@@ -69,6 +70,7 @@ class AgentAccountController extends AbstractController
         $this->agentService = $agentService;
         $this->repoPlanAgentAccount = $repoPlanAgentAccount;
         $this->repoCoachSecteur = $repoCoachSecteur;
+        $this->repoUser=$repoUser;
     }
 
     /**

@@ -1,16 +1,45 @@
-<div class="mt-1 steps d-flex flex-wrap flex-sm-nowrap justify-content-between padding-top-2x padding-bottom-1x">
-    {% set isCompletedBefore = true %}
-    {% set positionSteps = remunerationService.getPositionSteps() %}
-    {% for step in positionSteps %}
-    {% set isLastStep = (loop.index == positionSteps|length) %}
-    {% set isCompleted = (step.position <= app.user.position) %}
-    {% set isCurrent = (isCompletedBefore and not isCompleted) %}
-    <div class="step  completed ">
-        <div class="step-icon-wrap">
-        <div class="step-icon">{% if isCompleted and not isLastStep %}<i class="fa fa-check"></i>{% else %}{{step.position}}{% endif %}</div>
-        </div>
-        <h4 class="step-title">{{step.label}}</h4>
-    </div>
-    {% set isCompletedBefore = isCompleted %}
-    {% endfor %}
-</div>
+<div class="card card-congratulation-medal m-1 rounded-3">
+                        <div class="m-3">
+                            <div class="d-flex">
+                                <div class="">
+                                    <h4 class=" general-primary-text">Position actuelle</h4>
+                                    <div class="d-flex  ">
+                                        <div clas="progression-positon-part1">
+                                            <a class="progression-positon-chiffre rounded-circle d-block " href="" >
+                                            <p class="text-center pt-4 fs-1 text-white">1</p>
+                                            </a>
+                                        </div>
+                                        <div class="progression-positon-part1 progression-positon-part1-b">
+                                            <h6 class="general-primary-text">Position 1</h6>
+                                            <p class="">Avoir au moin 5 filleuil direct avec au moin 1000</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="">
+                                    <h1 class="progression-positon-part2 text-center">1</h1>
+                                </div>
+                            </div>
+                            <div class="row ">
+                                <div class=" col-9">
+                                    <p class="m-0"><i class="fa fa-usd" aria-hidden="true"></i>   Chiffre d'affaire:  <span class="text-tableau fw-bolder">550$/1000$</span></p>
+                                    <p class="p-0"><i class="fa fa-usd" aria-hidden="true"></i>  Atelier directe:  <span class="text-tableau fw-bolder">4/5</span></p>
+                                </div>
+                                <div class=" col-2">
+                                   <h6 class="text-center p-0">26%</h6>
+                                </div>
+                            </div>
+                            <div class="progress" role="progressbar" aria-label="Default striped example" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100">
+                                <div class="vision-section" style="width: 10%"></div>
+                            </div>
+                            <div class="row align-items-center">
+                                <div class=" col-6 ">
+                                  
+                                </div>
+                                <div class=" col-6 text-end">
+                                   <button type="button" class="btn btn-link text-right text-dark-template">Position Suivante</button>
+                                </div>
+                            </div>
+                            
+
+                        </div></div>
+       

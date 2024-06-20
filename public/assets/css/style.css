@@ -412,13 +412,17 @@ a, a:hover{
 .text-tableau{
 	color:#7d78e1;
 }
+.table-header-custom th{
+	color:#192030;
+	font-weight:600;
+}
 .user-nav{
 	margin-left:10px;
 }
 /* css utile dans la partie choix de secteur */
 .choix-secteur-primary{
 	color:#192030;
-	font-weight: bold;
+	font-weight:bold;
 }
 .choix-secteur-video{
 	border: 1px solid rgba(0, 0, 0, 0.125);
@@ -482,6 +486,10 @@ a, a:hover{
 	width:50px;
 	height:50px;
 }
+.avatar-statistique{
+	width:50px;
+	height:50px;
+}
 .avatar a{
 	margin-left:18px;
 	margin-top:7px;
@@ -514,4 +522,41 @@ a, a:hover{
 	height:70px;
 	display:inline-block;
 }
-/* Contact section */
+/* Progression */
+.progression-positon-chiffre{	
+	background-color: #7d78e1;
+	width: 75px;
+	height: 75px;
+}
+.progression-positon-part1{
+	margin: 0 10px;
+}
+.progression-positon-part1-b p{
+	font-size: 12px;
+	line-height: 12px;
+}
+.progression-positon-part2{
+	font-size: 150px;
+	color: #f8f8f8;
+	font-weight: 900;
+	line-height:45%;
+	float: right;
+	font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.progression-positon-pourcentage{
+	margin-top:px;
+}
+/* Detail agent */
+.detail-agent-equipe{
+	width:50px;
+	height:50px;
+	display:inline-block;
+}
+/* modal */
+.modal-coach-titre{
+	margin-left:30px;
+	margin-top: 30px;
+}
+.modal-coach-exit{
+	margin-right:20px;
+}
