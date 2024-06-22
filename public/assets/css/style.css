@@ -466,6 +466,11 @@ a, a:hover{
 .left-sidebar{
 	background-color: #192030;
 }
+.left-sidebar .navigation li a{
+	color: #a3a5ac;
+	padding: 10px 15px 10px 15px;
+	line-height: 1.45;	
+}
 .main-menu{
 	background-color: #192030;
 }

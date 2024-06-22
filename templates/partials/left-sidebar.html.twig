@@ -1,6 +1,6 @@
-<div class="left-sidebar main-menu menu-fixed menu-light menu-accordion menu-shadow" data-scroll-to-active="true">
+<div class="left-sidebar main-menu menu-fixed  menu-accordion menu-shadow" data-scroll-to-active="true">
     <div class="navbar-header">
-        <ul class="nav navbar-nav flex-row">
+        {# <ul class="nav navbar-nav flex-row">
             <li class="nav-item me-auto my-2">
                 <a class="navbar-brand" href="{{
                 is_granted('ROLE_ADMINISTRATEUR') ? path('admin_dashboard') : (
@@ -10,13 +10,12 @@
                     )  : ( is_granted('ROLE_COACH') ? path('app_dashboard') : '#' ))
                 }}">
                     <span><img src="/assets/img/logo/pixelforce/logo-pixelforce-00.png" class="img-fluid" alt="logo-pixelforce" width="35"></span>
-                    <h2 class="brand-text text-black fw-bolder">PIXELFORCE</h2>
+                    <h2 class="brand-text fw-bolder">PIXELFORCE</h2>
                 </a>
             </li>
-            <li class="nav-item nav-toggle"><a class="nav-link modern-nav-toggle pe-0" data-bs-toggle="collapse"><i class="d-block d-xl-none text-primary toggle-icon font-medium-4" data-feather="x"></i><i class="d-none d-xl-block collapse-toggle-icon font-medium-4  text-primary" data-feather="disc" data-ticon="disc"></i></a></li>
-        </ul>
+            <li class="nav-item nav-toggle text-white"><a class="nav-link modern-nav-toggle pe-0" data-bs-toggle="collapse"><i class="d-block d-xl-none text-primary toggle-icon font-medium-4" data-feather="x"></i><i class="d-none d-xl-block collapse-toggle-icon font-medium-4  text-primary" data-feather="disc" data-ticon="disc"></i></a></li>
+        </ul> #}
     </div>
-    <div class="shadow-bottom"></div>
     <div class="main-menu-content">
         <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
             {# On vérifie si l'user est dans la page d'accueil pour Agent  #}
