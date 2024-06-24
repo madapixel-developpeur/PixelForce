@@ -400,7 +400,8 @@ a, a:hover{
     border-style: solid; /* Style of the border */
     border-color: #7d78e1; /* Color of the border */
 	padding:5px 20px;
-	display:inline-block
+	display:inline-block;
+	border-radius: 7px !important;
 }
 .general-primary-text{
 	color:#192030;
@@ -445,7 +446,6 @@ a, a:hover{
 	min-width: 0;
 	word-wrap: break-word;
 	background-clip: border-box;
-	border: 1px solid rgba(0, 0, 0, 0.125);
 	border-radius: 0.25rem;
 	padding: 0px 0px;
 	margin:10px 1;
@@ -456,6 +456,13 @@ a, a:hover{
 	line-height: 14px;
 	font-size: 12px;
 	margin: 0px auto;
+}
+.choix-secteur-card-body {
+	background-color: #192030;
+	color:white;
+}
+.card{
+	border-radius: 7px !important;
 }
 /* Header */
 .header-user{
@@ -479,8 +486,6 @@ a, a:hover{
 	margin-top: 10px;
 }
 .statistics-section div {
-	margin-right:5px;
-	max-width: 160px;
 	padding:6px 0;
 	color:#192030
 }

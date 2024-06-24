@@ -44,15 +44,14 @@
                         
 
                         <!-- Left Text-->
-                        <div class="d-none d-lg-flex col-lg-8 align-items-center m-0 p-0">
-                            <img class="img-fluid" src="{{asset('assets/vuexy/images/pages/Inscription-photo.png')}}" alt="Login V2" />
+                        <div class="d-none d-lg-flex col-lg-8 align-items-center m-0 p-0 bg-image">
                         </div>
                         <!-- /Left Text-->
                         <!-- Login-->
-                        <div class=" col-lg-4 align-items-center auth-bg px-2 ">
+                        <div class=" col-lg-4 auth-bg px-1 d-flex justify-content-center align-items-center">
                             <div class="col-12 col-sm-8 col-md-6 col-lg-12 p-lg-3 m- mx-auto">
                                 <div class="p-lg-4">
-                                    <h2 class="card-title  mb-1 text-center  pixelforce-logo">
+                                    <h2 class="card-title   text-center  pixelforce-logo">
                                             <a href="{{ path('app_dashboard') }}" class="text-center text-muted  d-flex align-items-center justify-content-center ">
                                                 <img src="/assets/img/logo/pixelforce/logo-pixelforce-00.png" class="img-fluid  m-2" alt="logo-pixelforce">
                                                 <h2 class="ml-0 fw-bold">PIXELFORCE</h2>
@@ -60,7 +59,7 @@
                                     </h2>
                                     
                                     {% block form %}
-                                    <h2 class="text-center fw-bold pb-3">Inscription</h2>
+                                    <h2 class="text-center fw-bold ">Inscription</h2>
                                         <!-- Message alert -->
                                             <div class="alert-message">
                                                 {% for label, messages in app.flashes %}
@@ -112,7 +111,7 @@
                                                 {% endfor %}
                                             </div> #}
 
-                                            <h5 class="mb-4">Information sur la connexion</h5>
+                                            <h5 class="mb-1">Information sur la connexion</h5>
                                             {% if form.ambassador_username is defined %}
                                                 {{ form_row(form.ambassador_username) }}
                                             {% endif %}
@@ -121,10 +120,10 @@
                                             {{ form_row(form.password) }}
                                             <div class="w-100 text-center">
                                                 {#            <button class="btn btn-primary" type="submit" id="btn-next">Procéder au paiement <i class="fa-solid fa-angles-right"></i></button>#}
-                                                    <button class="sign-in-button w-100 h-30 font-weight-bold rounded-3 p-1" type="submit" id="btn-next">S’inscrire</button>
+                                                    <button class="sign-in-button w-100 h-30 font-weight-bold rounded-3 p-2" type="submit" id="btn-next">S’inscrire</button>
                                              </div>
                                         {{ form_end(form) }}
-                                        <div class="divider my-2">
+                                        <div class="divider my-1">
                                             <hr/>
                                             </div>
                                         <div class="row mt-2 justify-content-center d-flex">
@@ -137,7 +136,7 @@
                                                 </div>
                                                 <div class="col-12 ">
                                                     <div class=" text-center">
-                                                        <a class=" w-100 font-weight-bold login-other-button" href="{{ path('app_login') }}">
+                                                        <a class=" w-100 font-weight-bold login-other-button " href="{{ path('app_login') }}">
                                                             Se connecter
                                                         </a>
                                                     </div>
@@ -149,9 +148,6 @@
 
 
                                 </div>
-                            </div>
-                            <div class="text-left  p-0">
-                                &#169; {{ 'now' | date('Y') }} Mether
                             </div>
                         </div>
                         <!-- /Login-->

@@ -34,17 +34,16 @@
                 <!--/ Affiliation Card --> 
                 <!-- Statistics Card -->
                 <div class="col-xl-8 col-md-6 col-12">
-                    <div class="">
-                            <h4 class="card-title">Statistiques</h4>
-                    
-                        <div class="card-body statistics-body">
+                   
+                            <h4 class="card-title">Statistiques</h4>             
+                        <div class="statistics-body">
                             <div class="row statistics-section">
-                                <div class="col-xl-3 col-sm-6 col-12 card rounded-4">
-                                    <div class="d-flex flex-row align-items-center justify-content-center">
+                                <div class="col-xl-3 col-sm-6 col-12  ">
+                                    <div class="d-flex flex-row align-items-center m-2 p-3 card">
                                         <div class="">
                                             <div class="text-center avatar-statistique rounded-circle bg-light-warning me-2">
                                                 <a {% if app.user.canAccessFonct('VENTE', app.session.get('secteurId')) %}href="{% if estSecurite %}{{path('admin_ordersecu_list')}}{% elseif estEcommerce %}{% if app.session.get('secteurId') == secteurDigitalId  %}{{path('agent_order_list_digital')}}{% else %}{{path('agent_order_list')}}{% endif %}{% elseif estDemandeDevis %}{{path('agent_demandedevis_list')}}{% else %}#{% endif %}"{% endif %}>
-                                                    <i class="fa-solid fa-arrow-trend-up fs-4 mt-2"></i>
+                                                    <i class="fa-solid fa-arrow-trend-up fs-4 mt-2  text-warning"></i>
                                                 </a>
                                             </div>
                                         </div>
@@ -57,12 +56,12 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-xl-3 col-sm-6 col-12 card rounded-4">
-                                    <div class="d-flex flex-row align-items-center justify-content-center">
+                                <div class="col-xl-3 col-sm-6 col-12 ">
+                                    <div class="d-flex flex-row align-items-center m-2 p-3 card">
                                         <div class="">
                                             <div class="text-center avatar-statistique rounded-circle bg-light-primary me-2">
                                                 <a {% if app.user.canAccessFonct('RDV', app.session.get('secteurId')) %}href="{{path('agent_contact_meeting_list')}}"{% endif %}>
-                                                    <i class="fa fa-handshake fs-4 mt-2"></i>
+                                                    <i class="fa fa-handshake fs-4 mt-2 text-primary"></i>
                                                 </a>
                                             </div>
                                         </div>
@@ -73,12 +72,12 @@
                                     </div>
                                 </div>
                                 {# {% if (estSecurite or estEcommerce) %} #}
-                                <div class="col-xl-3 col-sm-6 col-12 card rounded-4">
-                                    <div class="d-flex flex-row align-items-center justify-content-center">
+                                <div class="col-xl-3 col-sm-6 col-12 ">
+                                    <div class="d-flex flex-row align-items-center m-2 p-3 card">
                                         <div class="">
                                             <div class="avatar-statistique rounded-circle bg-light-danger me-2 text-center">
                                                 <a class="" {% if app.user.canAccessFonct('VENTE', app.session.get('secteurId')) %}href="{% if estSecurite %}{{path('admin_ordersecu_list')}}{% elseif estEcommerce %}{% if app.session.get('secteurId') == secteurDigitalId  %}{{path('agent_order_list_digital')}}{% else %}{{path('agent_order_list')}}{% endif %}{% elseif estDemandeDevis %}{{path('agent_demandedevis_list')}}{% else %}#{% endif %}"{% endif %}>
-                                                    <i class="fa-solid fa-money-bill-wave fs-4 mt-2"></i>
+                                                    <i class="fa-solid fa-money-bill-wave fs-4 mt-2 text-danger"></i>
                                                 </a>
                                             </div>
                                         </div>
@@ -91,11 +90,11 @@
                                     </div>
                                 </div>
                                 {# {% endif %} #}
-                                <div class="col-xl-3 col-sm-6 col-12 card rounded-4">
-                                    <div class="d-flex flex-row  align-items-center justify-content-center">
+                                <div class="col-xl-3 col-sm-6 col-12 ">
+                                    <div class="d-flex flex-row  align-items-center m-2 p-3 card">
                                         <div class=" ">
                                             <div class="text-center avatar-statistique rounded-circle bg-light-success me-2">
-                                                <a href="#"><i class="fa-solid fa-dollar-sign fs-4 mt-2"></i></a>
+                                                <a href="#"><i class="fa-solid fa-dollar-sign fs-4 mt-2 text-success"></i></a>
                                             </div>
                                         </div>
                                         <div class="my-auto">

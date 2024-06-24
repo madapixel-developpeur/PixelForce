@@ -1,5 +1,5 @@
 <nav class="header-navbar navbar navbar-expand-lg align-items-center floating-nav navbar-light navbar-shadow container-xxl">
-    <div class="navbar-container d-flex content">
+    <div class="navbar-container d-flex justify-content-center align-items-center">
         <ul class="nav navbar-nav d-block d-xl-none">
             <li class="nav-item pt-2">
                 <a class="navbar-brand" href="{{
@@ -23,16 +23,13 @@
             </li>
         </ul>
         <ul class="nav navbar-nav align-items-center ms-auto">
-            <li class="nav-item m-2">
-                <i class="fa-regular fa-bell fs-4 pt-2"></i>
-            </li>
             <li class="nav-item dropdown dropdown-user">      
                    <div class="d-flex align-items-center">
                         <div class="avatar me-3 ml-5">
                                 <img class="round"
                                     src="{{ path('user_avatar', {id:app.user.id}) }}"
                                     onerror='this.onerror=null; this.src="{{ asset('assets/vuexy/images/portrait/small/avatar-s-11.jpg') }}"'
-                                    alt="avatar" height="40">
+                                    alt="avatar" >
                         </div>
 
                         <div class="user-nav  me-2 ">
@@ -56,7 +53,7 @@
                         </div>
 
                         <div>
-                            <a class="nav-link dropdown-toggle dropdown-user-link" id="dropdown-user" href="#" data-bs-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa-solid fa-caret-down fs-2 p-0"></i></a>
+                            <a class="nav-link dropdown-toggle dropdown-user-link" id="dropdown-user" href="#" data-bs-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa-solid fa-caret-down fs-1 p-1"></i></a>
                         </div>
                     </div>
 

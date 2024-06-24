@@ -21,3 +21,10 @@
 .login-other-button{
     color:black
 }
+.bg-image {
+    background-image: url("../vuexy/images/pages/login-images.png");
+    background-size: cover; /* Ajuste l'image pour couvrir toute la div */
+    background-position: center; /* Centre l'image */
+    width: 100%; /* Assurez-vous que la div prend toute la largeur possible */
+    height: 100%; /* Ajustez selon la hauteur souhaitée */
+}
