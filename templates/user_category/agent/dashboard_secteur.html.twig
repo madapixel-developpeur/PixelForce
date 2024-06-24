@@ -120,14 +120,13 @@
                     
                 </div>
                 <!--/ Actual position Card -->
-    
                 <!-- Formation Card -->
                 <div class="col-xl-8 col-md-6 col-12">
                     <div class="">
                         <div class="card card-statistics">
-                            <div class="card-body statistics-body">
+                            <div class="card-body ">
                                
-                                <h4 class=" mt-2 choix-secteur-primary">Formation</h4>
+                                <h4 class="  choix-secteur-primary">Formation</h4>
                                 <p class="w-50">Une priève description sur le déroulement de la formation</p>
                                
                                 
@@ -155,7 +154,7 @@
             <div class="row match-height">
                 <div class="col-lg-8 col-12">
                     <h4 class=" mt-2 choix-secteur-primary">Listes des formations</h4>
-                    <div class="card rounded-3">
+                    <div class="card ">
                         <div class="card-body p-0">
                             {% if firstFormation == null %}
                                 <div class="alert alert-primary text-center m-5">
@@ -418,7 +417,7 @@
                                             
                                             {{include ('partials/modalDedailCoach.html.twig',{coach:coach,secteur:secteurs[0].getSecteur()}) }}
 
-                                            <tr class="align-items-center">
+                                            <tr class="justify-content-center align-items-center">
                                                 <td>{{ coach.id }}</td>
                                                 <td >
                                                     <div class="d-flex align-items-center justify-content-center" type="button" class="btn btn-primary" data-toggle="modal" data-target="#{{modal_id}}">

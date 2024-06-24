@@ -271,9 +271,7 @@ a, a:hover{
 	min-height : 150px;
 	display : none;
 }
-.searchbar-wrap:focus-within .suggestion-wrap{
-	/*display : block;*/
-}
+
 
 .searchbar-wrap .suggestion-wrap .suggestion-wrap-title{
 	margin : 0px;
@@ -399,7 +397,7 @@ a, a:hover{
     border-width: 1px; /* Width of the border */
     border-style: solid; /* Style of the border */
     border-color: #7d78e1; /* Color of the border */
-	padding:5px 20px;
+	padding:8px 20px;
 	display:inline-block;
 	border-radius: 7px !important;
 }
@@ -580,4 +578,7 @@ a, a:hover{
 .search-filter{
 	margin-left: 10px;
 	display:inline-block;
+}
+body{
+	background-color:#eceef5 !important;
 }
