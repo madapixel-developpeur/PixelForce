@@ -33,11 +33,12 @@ class AgentZoomController extends AbstractController
      */
     private $liveVideo;
 
-    public function __construct(LiveChatVideoRepository $liveChatVideoRepository,
-                                LiveVideo $liveVideo,
-                                SessionInterface $session,
-                                SecteurRepository $secteurRepository)
-    {
+    public function __construct(
+        LiveChatVideoRepository $liveChatVideoRepository,
+        LiveVideo $liveVideo,
+        SessionInterface $session,
+        SecteurRepository $secteurRepository
+    ) {
         $this->liveChatVideoRepository = $liveChatVideoRepository;
         $this->session = $session;
         $this->secteurRepository = $secteurRepository;
@@ -55,7 +56,7 @@ class AgentZoomController extends AbstractController
         $livesForDeletingAuto = $this->liveChatVideoRepository->findBy(['userB' => $this->getUser()]);
         $this->liveVideo->remove($livesForDeletingAuto);
         $lives = $this->liveChatVideoRepository->findBy(['secteur' => $secteur, 'userB' => $this->getUser(), 'isSpeedLive' => null]);
-        return $this->render('user_category/agent/zoom/zoom_list.html.twig',[
+        return $this->render('user_category/agent/zoom/zoom_list.html.twig', [
             'lives' => $lives,
             'liveChatVideoRepo' => $this->liveChatVideoRepository
         ]);
@@ -71,7 +72,7 @@ class AgentZoomController extends AbstractController
         $lives = $this->liveChatVideoRepository->findBy(['userB' => $this->getUser(), 'isSpeedLive' => true]);
         $lives_planifier = $this->liveChatVideoRepository->findBy(['userB' => $this->getUser(), 'isSpeedLive' => null, 'code' => $request->query->get('code')]);
         $lives = array_merge($lives, $lives_planifier);
-        if(!empty($lives)) {
+        if (!empty($lives)) {
             return $this->render('live/video/modal_joinLive.html.twig', [
                 'lives' => $lives
             ]);
@@ -80,7 +81,6 @@ class AgentZoomController extends AbstractController
         return $this->json([
             'message' => "Pas de live pour le moment"
         ]);
-
     }
 
     /**
@@ -95,7 +95,6 @@ class AgentZoomController extends AbstractController
             'nom' => $this->getUser()->getNom(),
             'prenom' => $this->getUser()->getPrenom(),
         ]);
-        return $this->json(['erreur'=>false, 'message'=>'ok']);
+        return $this->json(['erreur' => false, 'message' => 'ok']);
     }
-
 }

@@ -49,7 +49,7 @@ class ContactRepository extends ServiceEntityRepository
         }
     }
 
-     /**
+    /**
      * @param UserSearch $search
      * @param string $role
      * @return Query
@@ -60,29 +60,28 @@ class ContactRepository extends ServiceEntityRepository
         $query = $query
             ->andwhere('c.agent = :agent')
             ->setParameter('agent', $agent)
-            ->join('c.information', 'ci')
-        ;
+            ->join('c.information', 'ci');
 
         if ($search->getPrenom()) {
             $query = $query
                 ->andwhere('ci.lastname LIKE :lastname')
                 ->orwhere('ci.firstname LIKE :lastname')
-                ->setParameter('lastname', '%'.$search->getPrenom().'%');
+                ->setParameter('lastname', '%' . $search->getPrenom() . '%');
         }
         if ($search->getEmail()) {
             $query = $query
                 ->andwhere('ci.email LIKE :email')
-                ->setParameter('email', '%'.$search->getEmail().'%');
+                ->setParameter('email', '%' . $search->getEmail() . '%');
         }
         if ($search->getTelephone()) {
             $query = $query
                 ->andwhere('ci.phone LIKE :phone')
-                ->setParameter('phone', '%'.$search->getTelephone().'%');
+                ->setParameter('phone', '%' . $search->getTelephone() . '%');
         }
         if ($search->getAdresse()) {
             $query = $query
                 ->andwhere('ci.address LIKE :address')
-                ->setParameter('address', '%'.$search->getAdresse().'%');
+                ->setParameter('address', '%' . $search->getAdresse() . '%');
         }
         if ($search->getDateInscriptionMin()) {
             $query = $query
@@ -99,8 +98,7 @@ class ContactRepository extends ServiceEntityRepository
         }
 
         return $query->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
 
     /**
@@ -108,7 +106,7 @@ class ContactRepository extends ServiceEntityRepository
      * @param string $role
      * @return Query
      */
-    public function findContactBySecteur(UserSearch $search, $agent, $secteurId)
+    public function findContactBySecteur(UserSearch $search, $agent, $secteurId, $search_gal = null)
     {
         $query = $this->createQueryBuilder('c');
         $query = $query
@@ -117,29 +115,28 @@ class ContactRepository extends ServiceEntityRepository
             ->join('c.secteur', 'cs')
             ->andwhere('cs.id = :secteurId')
             ->setParameter('secteurId', $secteurId)
-            ->join('c.information', 'ci')
-        ;
+            ->join('c.information', 'ci');
 
         if ($search->getPrenom()) {
             $query = $query
                 ->andwhere('ci.lastname LIKE :lastname')
                 ->orwhere('ci.firstname LIKE :lastname')
-                ->setParameter('lastname', '%'.$search->getPrenom().'%');
+                ->setParameter('lastname', '%' . $search->getPrenom() . '%');
         }
         if ($search->getEmail()) {
             $query = $query
                 ->andwhere('ci.email LIKE :email')
-                ->setParameter('email', '%'.$search->getEmail().'%');
+                ->setParameter('email', '%' . $search->getEmail() . '%');
         }
         if ($search->getTelephone()) {
             $query = $query
                 ->andwhere('ci.phone LIKE :phone')
-                ->setParameter('phone', '%'.$search->getTelephone().'%');
+                ->setParameter('phone', '%' . $search->getTelephone() . '%');
         }
         if ($search->getAdresse()) {
             $query = $query
                 ->andwhere('ci.address LIKE :address')
-                ->setParameter('address', '%'.$search->getAdresse().'%');
+                ->setParameter('address', '%' . $search->getAdresse() . '%');
         }
         if ($search->getDateInscriptionMin()) {
             $query = $query
@@ -156,8 +153,8 @@ class ContactRepository extends ServiceEntityRepository
         }
 
         if ($search->getTag()) {
-            $query = $query->join('c.tags','tgs')
-                            ->andWhere('tgs = :tag')
+            $query = $query->join('c.tags', 'tgs')
+                ->andWhere('tgs = :tag')
                 ->setParameter('tag', $search->getTag());
         }
         if ($search->getType()) {
@@ -169,15 +166,18 @@ class ContactRepository extends ServiceEntityRepository
         if (isset($_GET['ordre'])) {
             if ($_GET['ordre'] == 'ASC') {
                 $query = $query->orderBy('ci.lastname', 'ASC');
-            }else {
+            } else {
                 $query = $query->orderBy('ci.lastname', 'DESC');
             }
         }
-      
+        if ($search_gal) {
+            $query->andwhere('ci.firstname LIKE :keyword OR ci.lastname LIKE :keyword OR ci.email LIKE :keyword OR ci.phone LIKE :keyword OR ci.address LIKE :keyword OR ci.type LIKE :keyword')
+                // Ajoutez autant de champs que nécessaire pour la recherche
+                ->setParameter('keyword', '%' . $search_gal . '%');
+        }
 
         return $query->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
 
 

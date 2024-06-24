@@ -40,27 +40,27 @@ class UserTransactionRepository extends ServiceEntityRepository
     }
 
     public function getSolde($user, $secteurIds)
-   {
-       $qb = $this->createQueryBuilder('u')
-       ->select('coalesce(sum(u.amount * (CASE WHEN u.sortie = 1 THEN -1 ELSE 1 END)), 0) as solde')
-       ->leftJoin('u.secteur', 's')
-       ->andWhere('u.status > :statusCreated')
-       ->setParameter('statusCreated', UserTransaction::STATUS_CREATED)
-        ->andWhere('u.user = :user')
-        ->setParameter('user', $user);
+    {
+        $qb = $this->createQueryBuilder('u')
+            ->select('coalesce(sum(u.amount * (CASE WHEN u.sortie = 1 THEN -1 ELSE 1 END)), 0) as solde')
+            ->leftJoin('u.secteur', 's')
+            ->andWhere('u.status > :statusCreated')
+            ->setParameter('statusCreated', UserTransaction::STATUS_CREATED)
+            ->andWhere('u.user = :user')
+            ->setParameter('user', $user);
 
-    if ($secteurIds) {
-        $qb->andWhere('s.id in (:secteurIds)')
-        ->setParameter('secteurIds', $secteurIds);
-    }
-           
+        if ($secteurIds) {
+            $qb->andWhere('s.id in (:secteurIds)')
+                ->setParameter('secteurIds', $secteurIds);
+        }
+
         $result =   $qb->getQuery()
-           ->getScalarResult()
-       ;
-       return count($result) > 0 ? floatval($result[0]['solde']) : 0;
-   }
+            ->getScalarResult();
+        return count($result) > 0 ? floatval($result[0]['solde']) : 0;
+    }
 
-   public function getNumberOfPendingRetrait($user,$secteurIds){
+    public function getNumberOfPendingRetrait($user, $secteurIds)
+    {
         $qb = $this->createQueryBuilder('u');
 
         $qb->select('COUNT(u.id)')
@@ -71,16 +71,17 @@ class UserTransactionRepository extends ServiceEntityRepository
             ->setParameter('type', UserTransaction::TYPE_RETRAIT)
             ->andWhere('u.user = :user')
             ->setParameter('user', $user);
-        
+
         if ($secteurIds) {
             $qb->andWhere('s.id in (:secteurIds)')
-            ->setParameter('secteurIds', $secteurIds);
+                ->setParameter('secteurIds', $secteurIds);
         }
 
         return (int) $qb->getQuery()->getSingleScalarResult();
-   }
+    }
 
-   public function getHistoryQuery($user,$secteurIds){
+    public function getHistoryQuery($user, $secteurIds, $params = null)
+    {
         $qb = $this->createQueryBuilder('u');
 
         $qb->select('u')
@@ -89,43 +90,49 @@ class UserTransactionRepository extends ServiceEntityRepository
             ->setParameter('type', UserTransaction::TYPE_RETRAIT)
             ->andWhere('u.user = :user')
             ->setParameter('user', $user);
-        
+
         if ($secteurIds) {
             $qb->andWhere('s.id in (:secteurIds)')
-            ->setParameter('secteurIds', $secteurIds);
+                ->setParameter('secteurIds', $secteurIds);
         }
-        return $qb ->orderBy('u.createdAt', 'DESC');
+        if ($params) {
+            $qb->Andwhere('u.amount LIKE :keyword OR u.rib LIKE :keyword OR u.status LIKE :keyword ')
+                // Ajoutez autant de champs que nécessaire pour la recherche
+                ->setParameter('keyword', '%' . $params . '%');
+        }
+        return $qb->orderBy('u.createdAt', 'DESC');
     }
 
-   public function getHistory($user,$secteurIds){
-        $qb = $this->getHistoryQuery($user,$secteurIds);
+    public function getHistory($user, $secteurIds, $param = null)
+    {
+        $qb = $this->getHistoryQuery($user, $secteurIds, $param);
         return $qb->getQuery()->getResult();
     }
 
-   
 
-//    /**
-//     * @return UserTransaction[] Returns an array of UserTransaction objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('u')
-//            ->andWhere('u.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('u.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
 
-//    public function findOneBySomeField($value): ?UserTransaction
-//    {
-//        return $this->createQueryBuilder('u')
-//            ->andWhere('u.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    //    /**
+    //     * @return UserTransaction[] Returns an array of UserTransaction objects
+    //     */
+    //    public function findByExampleField($value): array
+    //    {
+    //        return $this->createQueryBuilder('u')
+    //            ->andWhere('u.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->orderBy('u.id', 'ASC')
+    //            ->setMaxResults(10)
+    //            ->getQuery()
+    //            ->getResult()
+    //        ;
+    //    }
+
+    //    public function findOneBySomeField($value): ?UserTransaction
+    //    {
+    //        return $this->createQueryBuilder('u')
+    //            ->andWhere('u.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->getQuery()
+    //            ->getOneOrNullResult()
+    //        ;
+    //    }
 }

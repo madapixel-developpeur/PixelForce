@@ -39,12 +39,12 @@
                                 <p class="w-50 fs-6 lh-sm">Avoir au moin 5 filleuil directs avec au moins 1000 € de CA au Total</p>
                                 </div>
                                 <div class="col-5 d-flex justify-content-center">
-                                    <div class="input-group rounded-3 m-2 w-75">
-                                        <span class="input-group-text border-0" id="search-addon">
-                                            <i class="fas fa-search"></i>
-                                        </span>
-                                        <input type="search" class="form-control  input-group-text border-0" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
-                                    </div>
+                                    <form action="{{path('agent_contact_list')}}" class="input-group rounded-3 m-2 w-75">
+                                        <button class="input-group-text border-0" id="search-addon" type="submit">
+											<i class="fas fa-search"></i>
+										</button>
+                                        <input type="search"name="search" class="form-control  input-group-text border-0" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
+                                    </form>
                                     <div class="input-group rounded-3 m-2 w-25" data-bs-toggle="collapse" data-bs-target="#filters" aria-expanded="false" aria-controls="filters">
                                         <span class="input-group-text border-0 w-25 rounded-4" id="search-addon">
                                             <i class="fa-solid fa-bars-staggered "></i>
@@ -99,12 +99,13 @@
                                                    
                                                 </div>
                                                 <div class="row">
-                                                    <div class="col-12 col-md-6 mt-3 d-flex align-items-center justify-content-center">
-                                                        <a href="{{path('agent_contact_export_excel')}}" class=" mt-2 btn btn-success btn-sm mx-2 rounded-3"><i class="fa fa-file-text"></i> <span class="ms-1">Exporter excel</span></a>
+                                                    <div class="col-12 col-md-8 mt-3 d-flex align-items-center justify-content-center">
+                                                            <a href="{{path('agent_contact_info_add')}}" class=" mt-2 btn btn-success btn-sm mx-2 rounded-3"><i class="fa fa-file-text"></i> <span class="ms-1">Ajout</span></a>
+                                                            <a href="{{path('agent_contact_export_excel')}}" class=" mt-2 btn btn-success btn-sm mx-2 rounded-3"><i class="fa fa-file-text"></i> <span class="ms-1">Exporter excel</span></a>
                                                             <a href="{{path('agent_contact_export_pdf')}}" class=" mt-2 btn btn-danger btn-sm mx-2 rounded-3"><i class="fa fa-file-text"></i> <span class="ms-1"> Exporter pdf</span></a>
                                                             <a href="{{path('agent_contact_import_export_mobile')}}" class="mt-2 btn btn-secondary btn-sm mx-2"><i class="fa-solid fa-mobile-screen-button"></i><span class="imp-exp-text-js ms-1">Importer/Exportation mobile</span></a>
                                                     </div>
-                                                    <div class="col-12  col-md-6 mt-3 d-flex align-items-center justify-content-end">
+                                                    <div class="col-12  col-md-4 mt-3 d-flex align-items-center justify-content-end">
                                                         <button class="regular-button w-50 rounded-3 fw-bolder">Rechercher</button>
                                                     </div>
                                                 </div>
@@ -129,22 +130,21 @@
                                 <tbody class="align-items-center">
                                     <tr>
                                         <th>Id</th>
-                                        <th>Date de début</th>
-                                        <th>Date de fin</th>
-                                        <th>Libellé</th>
-                                        <th>Invité</th>
-                                        <th>Téléphone</th>
+                                        <th>nom</th>
                                         <th>Email</th>
-                                        <th>Référence</th>
-                                        <th>AUDIT</th>
+                                        <th>Téléphone</th>
+                                        <th>Adresse</th>
                                         <th>Statut</th>
+                                        <th>Type</th>
+                                        <th>Référence</th>
                                         <th class="table-th-notSortable"></th>
                                     </tr>
 
                                     {% for contact in contacts %}            
                                         {% set information = contact.information %}
                                     <tr>
-                                        <td>{{ information.firstname }}</td>
+                                        <td>{{ information.id }}</td>
+                                        <td>{{ information.firstname }} {{ information.lastname }}</td>
                                         <td>{{ information.email }}</td>
                                         <td>{{ information.phone }}</td>
                                         <td>{{ information.address }}</td>

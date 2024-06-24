@@ -24,12 +24,12 @@
                         	<p class="w-50 fs-6 lh-sm">Avoir au moin 5 filleuil directs avec au moins 1000 € de CA au Total</p>
 							</div>
 							<div class="col-5 d-flex justify-content-center">
-								<div class="input-group rounded-3 m-2 w-75">
-									<span class="input-group-text border-0" id="search-addon">
+								<form action="{{path('agent_contact_meeting_list')}}" class="input-group rounded-3 m-2 w-75">
+                                    <button class="input-group-text border-0" id="search-addon" type="submit">
 										<i class="fas fa-search"></i>
-									</span>
-									<input type="search" class="form-control  input-group-text border-0" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
-								</div>
+									</button>
+                                    <input type="search"name="search" class="form-control  input-group-text border-0" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
+                                </form>
 								<div class="input-group rounded-3 m-2 w-25" data-bs-toggle="collapse" data-bs-target="#filters" aria-expanded="false" aria-controls="filters">
 									<span class="input-group-text border-0 w-25 rounded-4" id="search-addon">
 										<i class="fa-solid fa-bars-staggered "></i>
@@ -117,9 +117,9 @@
                                     </td>
                                     <td> 
                                         {% if meeting.audit != null  %}
-                                            <a class="btn btn-outline-primary " {% if meeting.audit != null  %}href="{{ path('meeting_audit_view', { 'id': meeting.getId() }) }}"{% endif %}>Détail</a>
+                                            <a class="btn btn-outline-primary p-2" {% if meeting.audit != null  %}href="{{ path('meeting_audit_view', { 'id': meeting.getId() }) }}"{% endif %}>Détail</a>
                                         {% else %}
-                                            <a class="btn btn-outline-success m-2" href="{{ path('meeting_audit_add', { id: meeting.getId() }) }}">Ajouter</a>
+                                            <a class="btn btn-outline-success p-2" href="{{ path('meeting_audit_add', { id: meeting.getId() }) }}">Ajouter</a>
                                         {% endif %}
                                     </td>
                                     
@@ -130,8 +130,8 @@
                                             {{meeting.meetingState.name}}
                                         {% endif %}
                                     </td>
-                                    <td class="col-action ">
-                                        <a href="{{path('agent_contact_meeting_fiche', {'id': meeting.id})}}">
+                                    <td class="col-action p-2">
+                                        <a href="{{path('agent_contact_meeting_fiche', {'id': meeting.id})}}" >
                                             <i data-feather="eye"></i>
                                         </a>
                                     </td>
@@ -144,7 +144,7 @@
 						</table>
 					</div>
 					<div class="pagination d-flex justify-content-center">
-						{{ knp_pagination_render(history)}}
+						{{ knp_pagination_render(meetings)}}
 					</div>
                      {% endif %}
 				</div>

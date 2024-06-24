@@ -42,7 +42,7 @@ class AgentContactController extends AbstractController
      */
     private $tagRepository;
 
-    public function __construct(TagRepository $tagRepository,UserRepository $repoUser, ContactRepository $repoContact, ContactInformationRepository $repoContactInfo, SessionInterface $session, SecteurRepository $repoSecteur, EntityManager $entityManager)
+    public function __construct(TagRepository $tagRepository, UserRepository $repoUser, ContactRepository $repoContact, ContactInformationRepository $repoContactInfo, SessionInterface $session, SecteurRepository $repoSecteur, EntityManager $entityManager)
     {
         $this->repoUser = $repoUser;
         $this->repoContact = $repoContact;
@@ -78,12 +78,11 @@ class AgentContactController extends AbstractController
                 'attr' => [
                     'class' => "form-control"
                 ]
-            ])
-        ;
+            ]);
         $searchForm->handleRequest($request);
-        
+
         $contacts = $paginator->paginate(
-            $this->repoContact->findContactBySecteur($search, $agent, $secteurId),
+            $this->repoContact->findContactBySecteur($search, $agent, $secteurId, $request->get('search')),
             $request->query->getInt('page', 1),
             20
         );
@@ -108,18 +107,16 @@ class AgentContactController extends AbstractController
                     'toolbar' => 'note_contact_toolbar'
                 ]
             ])
-            ->getForm()
-        ;
+            ->getForm();
 
         $formNote->handleRequest($request);
-        if($formNote->isSubmitted() && $formNote->isValid()) {
+        if ($formNote->isSubmitted() && $formNote->isValid()) {
             $note = $request->request->get('form')['note'];
             $contact->setNote($note);
             $this->entityManager->save($contact);
 
             $this->addFlash('success', 'Note enregistré avec succès');
             return $this->redirectToRoute('agent_contact_view', ['id' => $contact->getId()]);
-
         }
 
         $tags = $contact->getTags() ? $contact->getTags() : [];
@@ -142,9 +139,11 @@ class AgentContactController extends AbstractController
         $contacts = $this->repoContact->findBy(['agent' => $this->getUser(), 'secteur' => $secteur]);
 
         $headers = ["NOM ET PRÉNOMS", "EMAIL", "TÉLÉPHONE", "ADRESSE", "TYPE DU LOGEMENT", "RUE", "NUMÉRO", "CODE POSTAL", "VILLE", "COMPOSITION DU FOYER", "NOMBRE DE PERSONNE", "COMMENTAIRE"];
-        $fields = ["information.lastname", "information.email", "information.phone", "information.address", 
-            "information.typeLogement.nom", "information.rue", "information.numero", "information.codePostal", 
-            "information.ville", "information.compositionFoyer", "information.nbrPersonne", "information.commentaire"];
+        $fields = [
+            "information.lastname", "information.email", "information.phone", "information.address",
+            "information.typeLogement.nom", "information.rue", "information.numero", "information.codePostal",
+            "information.ville", "information.compositionFoyer", "information.nbrPersonne", "information.commentaire"
+        ];
         $file = $excelService->export($contacts, $fields, $headers);
 
         $date = (new \DateTime())->format('Y-m-d m:s');
@@ -191,17 +190,16 @@ class AgentContactController extends AbstractController
                 $contactEntity->setSecteur($secteur);
                 $contacts[] = $contactEntity;
             }
-
-        }else{
+        } else {
             return $this->json(['contacts' => 'empty']);
         }
 
         $fields = [
-            "information.lastname", "information.email", "information.phone", "information.address", 
-            "information.typeLogement.nom", "information.rue", "information.numero", "information.codePostal", 
+            "information.lastname", "information.email", "information.phone", "information.address",
+            "information.typeLogement.nom", "information.rue", "information.numero", "information.codePostal",
             "information.ville", "information.compositionFoyer", "information.nbrPersonne"
         ];
-       
+
         $rows = $excelService->getrowsInTable($contacts, $fields);
 
         return $this->json([
@@ -224,7 +222,7 @@ class AgentContactController extends AbstractController
         if (isset($_POST['contacts'])) {
             if ($_POST['contacts']) {
                 $contactsApi = $_POST['contacts'];
-    
+
                 foreach ($contactsApi as $contactApi) {
                     $contactEntity = new Contact();
                     // /** @var ContactInformation $information */
@@ -235,20 +233,19 @@ class AgentContactController extends AbstractController
                     $contactEntity->setSecteur($secteur);
                     $contacts[] = $contactEntity;
                 }
-    
-            }else{
+            } else {
                 return $this->redirectToRoute('agent_contact_list');
             }
-        }else {
+        } else {
             return $this->json(['contacts' => 'empty']);
         }
 
         $fields = [
-            "information.lastname", "information.email", "information.phone", "information.address", 
-            "information.typeLogement.nom", "information.rue", "information.numero", "information.codePostal", 
+            "information.lastname", "information.email", "information.phone", "information.address",
+            "information.typeLogement.nom", "information.rue", "information.numero", "information.codePostal",
             "information.ville", "information.compositionFoyer", "information.nbrPersonne"
         ];
-       
+
         $rows = $excelService->getrowsInTable($contacts, $fields);
 
         return $this->json([
@@ -266,10 +263,10 @@ class AgentContactController extends AbstractController
         return $this->render('user_category/agent/contact/list_contacts_mobile.html.twig', [
             'google_client_id' => $_ENV['GOOGLE_CLIENT_ID'],
             'google_api_key' => $_ENV['GOOGLE_API_KEY'],
-            
+
         ]);
     }
-    
+
 
     /**
      * @Route("/agent/contact/mobile/import", name="agent_contact_mobile_import")
@@ -282,7 +279,7 @@ class AgentContactController extends AbstractController
         $contacts = $_POST['contacts'];
 
         $contactManager->persistContactInformation($contacts, $agent->getid(), $secteurId);
-        
+
         return $this->json(
             ['contact' => 'added'],
             200
@@ -310,12 +307,12 @@ class AgentContactController extends AbstractController
             $contact->setAgent($this->getUser());
             $contact->setStatus(0);
             $contact->setSecteur($secteur);
-            if(isset($request->request->get('contact_information')['note'])) {
+            if (isset($request->request->get('contact_information')['note'])) {
                 $contact->setNote($request->request->get('contact_information')['note']);
             }
             $this->repoContact->add($contact);
             $tags_id = $request->request->get('tags');
-            foreach($tags_id = $tags_id ?? [] as $tag_id) {
+            foreach ($tags_id = $tags_id ?? [] as $tag_id) {
                 $tag = $this->tagRepository->findOneBy(['id' => $tag_id]);
                 $contact->addTag($tag);
             }
@@ -333,10 +330,10 @@ class AgentContactController extends AbstractController
             'btn_class' =>  'success',
             'tags' => $tags,
             'tags_selectionner' => []
-        ]);    
+        ]);
     }
 
-    
+
     /**
      * @Route("/agent/client/contact/information/{id}/edit", name="agent_contact_info_edit")
      */
@@ -349,11 +346,11 @@ class AgentContactController extends AbstractController
             $this->repoContactInfo->add($contactInformation);
             $tags_id = $request->request->get('tags');
             $contact->clearTags();
-            foreach($tags_id = $tags_id ?? [] as $tag_id) {
+            foreach ($tags_id = $tags_id ?? [] as $tag_id) {
                 $tag = $this->tagRepository->findOneBy(['id' => $tag_id]);
                 $contact->addTag($tag);
             }
-            if(isset($request->request->get('contact_information')['note'])) {
+            if (isset($request->request->get('contact_information')['note'])) {
                 $contact->setNote($request->request->get('contact_information')['note']);
             }
             $this->entityManager->save($contact);
@@ -373,7 +370,7 @@ class AgentContactController extends AbstractController
             'tags' => $tags,
             'tags_selectionner' => $tags_selectionner,
             'contact' => $contact
-        ]);    
+        ]);
     }
 
 
@@ -383,12 +380,11 @@ class AgentContactController extends AbstractController
      */
     public function agent_contact_info_delete(Contact $contact, Request $request)
     {
-        if ($this->isCsrfTokenValid('delete'. $contact->getId(), $request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $contact->getId(), $request->get('_token'))) {
             $this->repoContact->remove($contact);
 
-            $this->addFlash( 'danger', 'Contact supprimé');
+            $this->addFlash('danger', 'Contact supprimé');
         }
-        return $this->redirectToRoute('agent_contact_list');    
+        return $this->redirectToRoute('agent_contact_list');
     }
-    
 }
