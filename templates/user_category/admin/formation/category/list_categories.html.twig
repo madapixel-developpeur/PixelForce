@@ -79,11 +79,11 @@
                                     <a href="{{ path('admin_formation_categorie_edit', {'id': categorie.id}) }}" class="btn btn-success">
                                         <i class="fas fa-edit"></i>
                                     </a>
-                                    <a href="{{ path('admin_formation_categorie_statut_deleted', {'id': categorie.id}) }}" class="btn btn-danger"  onclick="return confirm('Êtes vous vraiment d\'archiver cette catégorie ?')">
+                                    <a href="{{ path('admin_formation_categorie_statut_deleted', {'id': categorie.id}) }}" class="btn btn-danger"  onclick="confirmation('{{ path('admin_formation_categorie_statut_deleted', {'id': categorie.id}) }}','Êtes vous vraiment sur de vouloir supprimer cette catégorie ?')">
                                         <i class="fas fa-trash-alt"></i>
                                     </a>
                                 {% else %}
-                                    <a href="{{ path('admin_formation_categorie_reactiver', {'id': categorie.id}) }}" class="btn btn-success">
+                                    <a href="{{ path('admin_formation_categorie_reactiver', {'id': categorie.id}) }}" class="btn btn-success" onclick="confirmation('{{ path('admin_formation_categorie_reactiver', {'id': categorie.id}) }}','Êtes vous vraiment sur de vouloir reactiver cette catégorie ?')">
                                         <i class="fa-solid fa-sync"></i>
                                     </a>
                                 {% endif %}

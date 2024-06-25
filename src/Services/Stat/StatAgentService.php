@@ -1,23 +1,28 @@
 <?php
+
 namespace App\Services\Stat;
 
+use Exception;
 use App\Entity\TypeSecteur;
+use App\Services\RemunerationService;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\ResultSetMapping;
-use Exception;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class StatAgentService
 {
     private $entityManager;
+    private  $remunerationService;
 
-    public function __construct(EntityManagerInterface $entityManager, private HttpClientInterface $client,private ParameterBagInterface $parameterBag)
+    public function __construct(EntityManagerInterface $entityManager, private HttpClientInterface $client, private ParameterBagInterface $parameterBag, RemunerationService $remunerationService)
     {
         $this->entityManager = $entityManager;
+        $this->remunerationService = $remunerationService;
     }
 
-    public function getStatVente($agentId, $secteurId, $typeSecteurId){
+    public function getStatVente($agentId, $secteurId, $typeSecteurId)
+    {
         $conn = $this->entityManager->getConnection();
 
 
@@ -28,19 +33,21 @@ class StatAgentService
         $stmt = $conn->prepare($sql);
         $resultSet = $stmt->executeQuery(['agentId' => $agentId, 'secteurId' => $secteurId]);
         $result = (array)$resultSet->fetchAllAssociative();
-        if(count($result) == 0) return null;
+        if (count($result) == 0) return null;
         return $result[0];
     }
-    public function getPbbSummary($pbb_id){
+    public function getPbbSummary($pbb_id)
+    {
         $pbb_ws_url = $this->parameterBag->get('pbb_ws_url');
         $response = $this->client->request(
             'GET',
-            $pbb_ws_url.'/api/pbb_summary?pbb_id='.$pbb_id
+            $pbb_ws_url . '/api/pbb_summary?pbb_id=' . $pbb_id
         );
         $content = json_decode($response->getContent(), true);
         return $content;
     }
-    public function getRevenuAnnee($annee, $secteurId = -1, $agentId = -1){
+    public function getRevenuAnnee($annee, $secteurId = -1, $agentId = -1)
+    {
         $conn = $this->entityManager->getConnection();
 
         $sql = '
@@ -49,13 +56,14 @@ class StatAgentService
         $stmt = $conn->prepare($sql);
         $resultSet = $stmt->executeQuery(['agentId' => $agentId, 'secteurId' => $secteurId, 'annee' => $annee]);
         $result = (array)$resultSet->fetchAllAssociative();
-        $total = array_sum(array_map(function($item) { 
-            return $item['montant']; 
+        $total = array_sum(array_map(function ($item) {
+            return $item['montant'];
         }, $result));
         return ['result' => $result, 'total' => $total];
     }
 
-    public function getRevenuAnneeMois($annee, $mois, $secteurId = -1, $agentId = -1){
+    public function getRevenuAnneeMois($annee, $mois, $secteurId = -1, $agentId = -1)
+    {
         $conn = $this->entityManager->getConnection();
 
         $sql = '
@@ -64,11 +72,12 @@ class StatAgentService
         $stmt = $conn->prepare($sql);
         $resultSet = $stmt->executeQuery(['agentId' => $agentId, 'secteurId' => $secteurId, 'annee' => $annee, 'mois' => $mois]);
         $result = (array)$resultSet->fetchAllAssociative();
-        if(count($result) == 0) return null;
+        if (count($result) == 0) return null;
         return $result[0];
     }
 
-    public function getTopClients($agentId, $secteurId, $limit){
+    public function getTopClients($agentId, $secteurId, $limit)
+    {
         $conn = $this->entityManager->getConnection();
 
 
@@ -77,14 +86,15 @@ class StatAgentService
             WHERE agent_id = :agentId AND secteur_id = :secteurId order by montant desc, nbr desc
              LIMIT %d 
             ';
-        $sql = sprintf($sql, $limit);    
+        $sql = sprintf($sql, $limit);
         $stmt = $conn->prepare($sql);
         $resultSet = $stmt->executeQuery(['agentId' => $agentId, 'secteurId' => $secteurId]);
         $result = $resultSet->fetchAllAssociative();
         return $result;
     }
 
-    public function getNbrClients($agentId){
+    public function getNbrClients($agentId)
+    {
         $conn = $this->entityManager->getConnection();
 
         $sql = '
@@ -97,7 +107,8 @@ class StatAgentService
         return $result[0];
     }
 
-    public function getNbrRdv($userId){
+    public function getNbrRdv($userId)
+    {
         $conn = $this->entityManager->getConnection();
 
         $sql = '
@@ -110,5 +121,57 @@ class StatAgentService
         return $result[0];
     }
 
-    
+    public function getOrders($params)
+    {
+        $pbb_ws_url = $this->parameterBag->get('pbb_ws_url');
+        $response = $this->client->request(
+            'GET',
+            $pbb_ws_url . '/api/order/search',
+            ['query' => $params]
+        );
+        $content = json_decode($response->getContent(), true);
+        return $content;
+    }
+
+    public function getOrderById($id)
+    {
+        $pbb_ws_url = $this->parameterBag->get('pbb_ws_url');
+        $response = $this->client->request(
+            'GET',
+            $pbb_ws_url . '/api/order/details/' . $id,
+        );
+        $content = json_decode($response->getContent(), true);
+        return $content;
+    }
+
+    public function getPbbStat($pbb_id)
+    {
+        $pbb_ws_url = $this->parameterBag->get('pbb_ws_url');
+        $response = $this->client->request(
+            'GET',
+            $pbb_ws_url . '/api/pbb_stat/' . $pbb_id
+        );
+        $content = json_decode($response->getContent(), true);
+        return $content;
+    }
+    // public function progression()
+    // {
+    //     $reponse=[];
+    //     $isCompletedBefore = true ;
+    //     $positionSteps = $this->remunerationService.getPositionSteps() ;
+    //     $length=count($positionSteps);
+    //     $position=$this->getUser()->position;
+    //      foreach($positionSteps as  $index => $step){
+    //         isCompleted = ($index <= $app.user.position) ;
+    //      } 
+
+    //       isCurrent = (isCompletedBefore and not isCompleted) 
+    //     <div class="step  if isCompleted  completed  endif   if isCurrent  current  endif ">
+    //         <div class="step-icon-wrap">
+    //         <div class="step-icon"> if isCompleted and not isLastStep <i class="fa fa-check"></i> else {{step.position}} endif </div>
+    //         </div>
+    //         <h4 class="step-title">{{step.label}}</h4>
+    //     </div>
+    //       isCompletedBefore = isCompleted 
+    // }
 }

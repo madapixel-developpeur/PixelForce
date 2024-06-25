@@ -1,0 +1,117 @@
+{% extends 'base_popup.html.twig' %}
+
+{% block title %}
+	Liste des produits
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %} 
+    <div class="block block--bordered block--rounded">
+        <h1 class="block__text block__text--center mt-2" >Options de filtre :</h1>
+        <div class="filter-wrap">
+            {{ form_start(form, {'attr': {'class': 'filter-form', 'id': 'product-filter-form'}}) }}
+                
+                <div class="my-form-widget">
+                    {{form_label(form.nom)}}
+                    {{form_widget(form.nom)}}
+                    {{form_errors(form.nom)}}
+                </div>
+                
+                <div class="my-form-widget">
+                    {{form_label(form.categorie)}}
+                    {{form_widget(form.categorie)}}
+                    {{form_errors(form.categorie)}}
+                </div>
+                
+                <div class="my-form-widget">
+                    {{form_label(form.sort)}}
+                    {{form_widget(form.sort)}}
+                    {{form_errors(form.sort)}}
+                </div>
+                <div class="my-form-widget">
+                    {{form_label(form.direction)}}
+                    {{form_widget(form.direction)}}
+                    {{form_errors(form.direction)}}
+                </div>
+                <input type="hidden" name="popup" value="{{popup}}">
+                <input type="hidden" name="opener" value="{{opener}}">
+                <div class="btn-wrap">
+                    <button class="btn btn-primary" type="submit"><i data-feather="filter"></i>Filtrer</button>
+                </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+    <div class="block block--bordered block--rounded">
+        <div class="block__header mb-1" >
+            <h1 class="block__title">Liste des produits :</h1>
+            {# <div class="fab-btn-wrap">
+                <a  href="/admin/product/new" class="btn btn-primary btn--rounded fab-btn"><i data-feather="plus"></i>Nouveau produit</a>
+            </div> #}
+        </div>
+        {% if productList|length ==0 %}
+                <div class="alert alert-primary p-3 text-center" role="alert">
+                    <div class="alert-body">
+                        Aucun produit disponible pour le moment.
+                    </div>
+                </div>
+        {% endif %}
+        {% if productList|length !=0 %}
+        <div class="table-responsive mb-1">
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Id</th>
+                        <th>Nom</th>
+                        <th>Catégorie</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in productList %}
+                    <tr class="popup_elmt">
+                        <td><input type="radio" name="check_popup" ></td>
+                        <td class='id' data-popup="{{product.id}}" >{{product.id}}</td>
+                        <td class='nom' data-popup="{{product.nom}}">{{product.nom}}</td>
+                        <td >{{product.categorie.nom}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="d-flex justify-content-center scale-up-center">
+            {{ knp_pagination_render(productList) }}
+        <div>
+        {% endif %}
+    </div>
+
+{% endblock %}
+
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var mapPopup = {{mapPopup | json_encode | raw }};  
+            $('.popup_elmt').each(function (index){
+                var elmt = $(this);
+                elmt
+                .find('input[name="check_popup"]')
+                .change(function (e){
+                    Object.keys(mapPopup)
+                    .forEach((key) => {
+                        window.opener.document.getElementById(key).value = elmt.find('.'+mapPopup[key]).attr('data-popup');
+                    });
+                    window.close();
+                });
+            });
+
+        });
+        
+    </script>
+
+{% endblock %}
+
+

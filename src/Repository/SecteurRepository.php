@@ -106,7 +106,7 @@ class SecteurRepository extends ServiceEntityRepository
     public function findAllActive()
     {
         return $this->createQueryBuilder('u')
-            ->orWhere('u.active = 1')
+            ->orWhere('u.active >= 0')
             ->orWhere('u.active is null')
             ->getQuery()
             ->getResult();

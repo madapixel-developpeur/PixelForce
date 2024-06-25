@@ -9,6 +9,7 @@ use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class FileHandler
 {
@@ -134,5 +135,15 @@ class FileHandler
         $data = file_get_contents($path);
         $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
         return $base64;
+    }
+    public function downloadFile($path,$name){
+        // Path to your files directory
+        $filePath = $this->kernel->getProjectDir(). '/public/files/'.$path;
+        // Create a BinaryFileResponse
+        $response = new BinaryFileResponse($filePath);
+        // Optionally set a custom filename for the download
+        $response->setContentDisposition('attachment',$name);
+        
+        return $response;
     }
 }

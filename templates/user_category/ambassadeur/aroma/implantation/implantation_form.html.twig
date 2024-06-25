@@ -1,0 +1,286 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	Formulaire Implantation
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .my-text-right{
+            text-align: right;
+        }
+
+        .my-text-center{
+            text-align: center;
+        }
+    </style>
+{% endblock %}
+
+{% form_theme form '/user_category/coach/aroma/implantation/partials/theme_implantation_form.html.twig' %}
+{% block body %}
+<div class="block block--bordered block--rounded">
+    <h1 class="block__text block__text--center mt-2" >Formulaire Implantation :</h1>
+
+        {{ form_start(form) }}
+            <div class="my-form">
+            <div class="my-form-widget">
+                {{form_label(form.nom)}}
+                {{form_widget(form.nom)}}
+                {{form_errors(form.nom)}}
+            </div>
+            <div class="my-form-widget">
+                {{form_label(form.description)}}
+                {{form_widget(form.description)}}
+                {{form_errors(form.description)}}
+            </div>
+            <div class="my-form-widget">
+                {{form_label(form.reassort)}}
+                {{form_widget(form.reassort)}}
+                {{form_errors(form.reassort)}}
+            </div>
+            <div class="my-form-widget">
+                {{form_label(form.qteElmt)}}
+                {{form_widget(form.qteElmt)}}
+                {{form_errors(form.qteElmt)}}
+            </div>
+            <div class="my-form-widget">
+                {{form_label(form.remise)}}
+                {{form_widget(form.remise)}}
+                {{form_errors(form.remise)}}
+            </div>
+            <div class="my-form-widget">
+                {{form_label(form.imageFile)}}
+                {{form_widget(form.imageFile, {'attr': {'class': 'my-image-file'}})}}
+                {{form_errors(form.imageFile)}}
+            </div>
+            <div class="my-form-img-preview-container">
+                {% if mere != null and mere.image != null %}
+                    <img class="my-form-img-preview" id="my-form-img-preview" src="{{ asset( files_directory_relative ~ mere.image) }}" alt="Image pour {{mere.nom}}" />
+                {% endif %}
+            </div>
+            
+            </div>
+            <div class="table-responsive mb-1" >
+                {{ form_errors(form.filles) }}
+                <table class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>Produit</th>
+                            {# <th>PU conseillé</th> #}
+                            <th>PU TTC</th>
+                            <th>PU après réduction TTC</th>
+                            <th>Montant TTC</th>
+                            <th>Unités Gratuites</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="row-list">
+                        {{form_widget(form.filles)}}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="3"></td>
+                            <td class="my-text-right">Montant total TTC</td>
+                            <td class="my-text-right" id="implantationTotal"></td>
+                            <td></td>
+                            
+                        </tr>
+                        <tr>
+                            <td colspan="3"></td>
+                            <td class="my-text-right">Unités Gratuites</td>
+                            <td class="my-text-right" id="implantationUG"></td>
+                            <td></td>
+                            
+                        </tr>
+                    </tfoot>
+                    
+                </table>
+            </div>
+            <div style="margin-bottom: 100px;">
+                <div class="d-flex justify-content-end align-items-center">
+                    <div class="btn-wrap mx-2">
+                        <button class="btn btn-success add-another-collection-widget" type="button"
+                            id="add-row" ><i class="fa fa-plus" aria-hidden="true"></i>&nbsp;Nouvelle ligne</button>
+                    </div>
+                    <div class="btn-wrap">
+                        <button class="btn btn-primary" type="submit"><i data-feather="save"></i>{{ isEdit ? 'Enregistrer les modifications' : 'Créer' }}</button>
+                    </div>
+                </div>
+            </div>
+                
+        {{ form_end(form) }}
+</div>
+
+
+
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        function openPopup(path, opener, popup, queryString = ''){
+            var options = "resizable=yes,scrollbars=yes,location=no,width=1000,height=500,top=0,left=0";
+            window.open(path+'?'+queryString+"&opener="+opener+"&popup="+popup, 'popUpWindow', options).focus();
+        }   
+
+        function formatPrix(prix){
+            let text = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(prix);
+            return text;
+        }
+
+        function myRound(val, afterComma=2){
+            return val.toFixed(afterComma); 
+        }
+
+        function ifNullZero(val){
+            val = `${val}`.trim();
+            if(val == '') return 0;
+            return parseFloat(val);
+        }
+
+        $( document ).ready(function() {
+
+            function handleDeleteRowBtn(btn){
+                $(btn).click(function (){
+                    let rowId = $(this)[0].dataset.rowId;
+                    console.log(rowId);
+                    $('#implantation_aroma_form_filles_'+rowId+'_statut').val('0');
+                    $('#'+rowId).remove();
+
+                    onChangeTotal();
+                    onChangeUG();
+                });
+                
+            }
+
+            $('#add-row').click(function(){
+                const index = +$('#widgets-counter').val();
+                let tmpl = $('#implantation_aroma_form_filles').data('prototype').replace(/__name__/g, index);
+                tmpl = tmpl.substring(tmpl.indexOf('<tr'));
+                tmpl = tmpl.substring(0, tmpl.indexOf('</tr>')+6);
+                let newRow = $(tmpl);
+                handleDeleteRowBtn(newRow.find('.delete-row'));
+                
+                
+                $('#row-list').append(newRow);
+                $('#widgets-counter').val(index + 1);
+                
+                checkChangeRow();
+                checkChangeTotal();
+                checkChangeUG();
+                
+            });
+
+            $('.delete-row').each(function (){
+                handleDeleteRowBtn(this);
+            });
+
+            //image implantation
+            let imgViewer = document.getElementById("my-form-img-preview");
+            let imgViewerContainer = document.querySelector(".my-form-img-preview-container");
+            let productImgInput = document.querySelector(".my-image-file");
+
+            function previewImage(data){
+                let input = data.target;
+                let file = input.files[0];
+                var reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onloadend = () => {
+                    let base64 = reader.result;
+                    if(!imgViewer){
+                        imgViewerContainer.innerHTML = `<img class="my-form-img-preview" id="my-form-img-preview" src="${base64}" alt="Image preview" />`;
+                    }
+                    else{
+                        imgViewer.src = base64;
+                    }
+                };
+            }
+
+            if(productImgInput){
+                productImgInput.addEventListener("change", previewImage);
+            }
+
+            //metier
+            
+            function onChangeRow(elmt){
+                let remise = ifNullZero($(`#implantation_aroma_form_remise`).val());
+                let qteElmt = ifNullZero($(`#implantation_aroma_form_qteElmt`).val());
+                let rowId = $(elmt).attr('id');
+                let prix = ifNullZero($(`#${rowId}_prixProduit`).val());
+                let prixApresReduction = prix * (1. - remise/100);
+                let montant = prixApresReduction * qteElmt;
+                $(`#${rowId}_prixProduitFormated`).val(formatPrix(prix));
+                $(`#${rowId}_prix`).val(formatPrix(prixApresReduction));
+                $(`#${rowId}_montant`).val(formatPrix(montant));
+            }
+
+            function onChangeRemiseOrQteElmt(){
+                $('.implantation-elmt-row').each(function(){
+                    onChangeRow(this);
+                });
+            }
+
+            
+            function checkChangeRemiseOrQteElmt(){
+                $(`#implantation_aroma_form_remise, #implantation_aroma_form_qteElmt`).change(function (){
+                    onChangeRemiseOrQteElmt();
+                });
+            }
+
+            function checkChangeRow(){
+                $(`.row-prix-produit`).change(function (){
+                    const parentId = $(this).data('parentId');
+                    console.log(`parentId = ${parentId}`);
+                    const elmt = $(`#${parentId}`);
+                    onChangeRow(elmt);
+                });
+            }
+
+            
+            function onChangeTotal(){
+                let remise = ifNullZero($(`#implantation_aroma_form_remise`).val());
+                let qteElmt = ifNullZero($(`#implantation_aroma_form_qteElmt`).val());
+                let total = 0;
+                $('.implantation-elmt-row').each(function(){
+                    let rowId = $(this).attr('id');
+                    let prix = ifNullZero($(`#${rowId}_prixProduit`).val());
+                    let prixApresReduction = prix * (1. - remise/100);
+                    total += qteElmt * prixApresReduction;
+                });
+                $(`#implantationTotal`).html(formatPrix(total));
+            }
+
+            function onChangeUG(){
+                
+                let ug = 0;
+                $('.implantation-elmt-row').each(function(){
+                    let rowId = $(this).attr('id');
+                    let ugRow = ifNullZero($(`#${rowId}_qteGratuit`).val());
+                    ug += ugRow;
+                });
+                $(`#implantationUG`).html(myRound(ug, 0));
+            }
+
+            function checkChangeTotal(){
+                $(`#implantation_aroma_form_qteElmt, #implantation_aroma_form_remise, .row-prix-produit`).change(function (){
+                    onChangeTotal();
+                });
+            }
+
+            function checkChangeUG(){
+                $(`.row-qteGraduit`).change(function (){
+                    onChangeUG();
+                });
+            }
+
+            checkChangeRow();
+            checkChangeRemiseOrQteElmt();
+            checkChangeTotal();
+            checkChangeUG();
+            onChangeRemiseOrQteElmt();
+            onChangeTotal();
+            onChangeUG();
+
+        });
+    </script>
+{% endblock %}

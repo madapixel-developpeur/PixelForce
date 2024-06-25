@@ -45,6 +45,11 @@ class UserSearch {
 
     private $tag;
 
+      /**
+     * @var integer|1
+     */
+    private $type;
+
     /**
      * Get the value of prenom
      *
@@ -252,4 +257,28 @@ class UserSearch {
 
 
 
+
+    /**
+     * Get the value of type
+     *
+     * @return  integer|1
+     */ 
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * Set the value of type
+     *
+     * @param  integer|1  $type
+     *
+     * @return  self
+     */ 
+    public function setType($type)
+    {
+        $this->type = $type;
+
+        return $this;
+    }
 }

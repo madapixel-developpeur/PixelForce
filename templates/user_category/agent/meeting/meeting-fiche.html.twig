@@ -34,11 +34,11 @@
             <tr>
             <tr>
                 <th>Téléphone</th>
-                <td> <a href="{{ path('agent_contact_view', { id: meeting.userToMeet.information.contact.id }) }}">{{ meeting.userToMeet.information.phone|default('-') }}</a> </td>
+                <td> <a href="tel:{{ meeting.userToMeet.information.phone}}">{{ meeting.userToMeet.information.phone|default('-') }}</a> </td>
             </tr>
             <tr>
                 <th>Email</th>
-                <td> <a href="{{ path('agent_contact_view', { id: meeting.userToMeet.information.contact.id }) }}">{{ meeting.userToMeet.information.email|default('-') }}</a> </td>
+                <td> <a href="mailto:{{meeting.userToMeet.information.email}}">{{ meeting.userToMeet.information.email|default('-') }}</a> </td>
             </tr>
             <tr>
                 <th>Statut</th>
@@ -51,18 +51,78 @@
                     </i>
                 </td>
             <tr>
+             <tr>
+                <th>Référence</th>
+                <td> 
+                    {% if meeting.audit != null %}
+                        <a href="{{ path('agent_order_list_digital',{'referenceVente' :  generateReference(meeting.userToMeet.agent.id,app.user.id,meeting.userToMeet.id,meeting.audit.id)   }) }}">  {{ generateReference(meeting.userToMeet.agent.id,app.user.id,meeting.userToMeet.id,meeting.audit.id) }}  </a>
+                        <a class="p-2" href="#" onclick="copyLink('{{ generateReference(meeting.userToMeet.agent.id,app.user.id,meeting.userToMeet.id,meeting.audit.id)}}','Liens de la référence {{ generateReference(meeting.userToMeet.agent.id,app.user.id,meeting.userToMeet.id,meeting.audit.id) }} copié avec succès.') "><i class="fa-solid fa-copy"></i></a> 
+                    {% else %}
+                        <a href="{{ path('agent_order_list_digital',{'referenceVente' : generateReference(meeting.userToMeet.agent.id,app.user.id,meeting.userToMeet.id)   }) }}"> {{ generateReference(meeting.userToMeet.agent.id,app.user.id,meeting.userToMeet.id) }}</a>
+                        <a class="p-2" href="#" onclick="copyLink('{{ generateReference(meeting.userToMeet.agent.id,app.user.id,meeting.userToMeet.id)}}','Liens de la référence {{ generateReference(meeting.userToMeet.agent.id,app.user.id,meeting.userToMeet.id) }} copié avec succès.') "><i class="fa-solid fa-copy"></i></a> 
+                    {% endif %}
+                </a> </td>
+            </tr>
+            {% if meeting.audit != null %}
+            <tr class="note-row">
+                <th>Audit</th>
+                <td>
+                    <div class="info-container">
+                        <ul class="list-unstyled ">
+                            <li class="mb-75">
+                                <span class="fw-bolder me-25">Nom du projet:</span>
+                                <span>{{ meeting.audit.nomProjet }}</span>
+                            </li>
+                            <li class="mb-75">
+                                <span class="fw-bolder me-25">Url du site:</span>
+                                <span>{{ meeting.audit.urlSite }}</span>
+                            </li>
+                            <li class="mb-75">
+                                <span class="fw-bolder me-25">Description:</span>
+                                <span>{{ meeting.audit.description }}</span>
+                            </li>
+                            <li class="mb-75">
+                                <span class="fw-bolder me-25">Date d'ajout:</span>
+                                <span class="badge bg-light-success">{{ meeting.audit.DateAjout!=null?meeting.audit.DateAjout.format('Y-m-d'):"" }}</span>
+                            </li>
+                            <li class="mb-75">
+                                <span class="fw-bolder me-25">Proprietaire:</span>
+                                 <span>{{ meeting.audit.propriétaire != null?meeting.audit.propriétaire.fullName:"Néant" }}</span> 
+                            </li>
+                            <li class="mb-75 text-center ">
+                                 <a class="btn btn-outline-primary m-4" {% if meeting.audit != null  %}href="{{ path('meeting_audit_view', { 'id': meeting.getId() }) }}"{% endif %}>Détail de l'audit</a>
+                            </li>
+                           
+                            
+                        </ul>
+                        
+                    </div>
+                </td>
+            <tr>
+            {% else %}
+            <tr>
+                <th class="pt-4">Audit</th>
+                <td><a class="btn btn-outline-success m-2" href="{{ path('meeting_audit_add', { id: meeting.getId() }) }}">Ajouter un audit</a></td>
+            </tr>
+            {% endif %}
             <tr class="note-row">
                 <th>Note</th>
                 <td>{{meeting.note|raw}}</td>
             <tr>
             
+            
         </table>
         <div class="meeting-fiche-controls">
+            <a class="btn btn-outline-warning m-2" href="{{ path('agent_contact_meeting_edit', { id: meeting.getId() }) }}">Modifier le rendez-vous</a>
             {% if meeting.meetingState.name == "En attente" %}<button class="btn btn-outline-danger" type="button" onclick="cancelMeeting({{meeting.id}})">Annuler le rendez-vous</button>{% endif %}
             {# <button class="btn btn-outline-secondary" type="button" onclick="reportMeeting({{meeting.id}})">Rendez-vous après 48h</button> #}
 
             {% if meeting.meetingState.name == "En attente" %}<button class="btn btn-primary" type="button"  onclick="endMeeting({{meeting.id}})">Marquer comme terminé</button>{% endif %}
-
+            {% if meeting.audit != null  %}
+                {% if meeting.audit.secteur != null  %}
+                <a class="btn btn-outline-warning" href="{{meeting.audit.secteur.googleForms}}" target="_blank" >Accéder aux formulaires </a>
+                {% endif %}
+            {% endif %}
         </div>
     </div>
     {% endif %}

@@ -1,0 +1,119 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/templates/meeting/meeting.style.css') }}">
+{% endblock %}
+
+{% block body %}
+    {% if meeting == null %}
+        <div class="alert alert-danger" role="alert">
+            <div class="alert-body">
+                Rendez-vous indéfini.
+            </div>
+        </div>
+    {% else %}
+    <div class="block block--bordered block--rounded">
+        <h1 class="block__text block__text--center mt-2" >Fiche du rendez-vous n° {{meeting.id}} :</h1>
+        <table class="table table-bordered meeting-fiche">
+            <tr>
+                <th>Libellé</th>
+                <td>{{meeting.title}}</td>
+            <tr>
+            <tr>
+                <th>Date de début</th>
+                <td>{{meeting.start | date("d/m/Y H:i")}}</td>
+            <tr>
+            <tr>
+                <th>Date de fin</th>
+                <td>{{meeting.end | date("d/m/Y H:i")}}</td>
+            <tr>
+            <tr>
+                <th>Invité</th>
+                <td><a href="{{ path('coach_agent_contact_view', { id: meeting.userToMeet.information.contact.id }) }}">{{meeting.userToMeet.information.lastname}} {{meeting.userToMeet.information.firstname}}</a></td>
+            <tr>
+            <tr>
+                <th>Téléphone</th>
+                <td> <a href="{{ path('coach_agent_contact_view', { id: meeting.userToMeet.information.contact.id }) }}">{{ meeting.userToMeet.information.phone|default('-') }}</a> </td>
+            </tr>
+            <tr>
+                <th>Email</th>
+                <td> <a href="{{ path('coach_agent_contact_view', { id: meeting.userToMeet.information.contact.id }) }}">{{ meeting.userToMeet.information.email|default('-') }}</a> </td>
+            </tr>
+            <tr>
+                <th>Statut</th>
+                <td><i>{{meeting.meetingState.name}}</i></td>
+            <tr>
+            <tr class="note-row">
+                <th>Note</th>
+                <td>{{meeting.note|raw}}</td>
+            <tr>
+            
+        </table>
+    </div>
+    {% endif %}
+{% endblock %}
+
+{% block title %}
+    Rendez-vous
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('assets/templates/meeting/meeting.js') }}"></script>
+    <script type="text/javascript">
+        function cancelMeeting(id){
+            let request = $.ajax({  
+                url:        '/meeting/api/cancel/'+id,  
+                type:       'POST',   
+                contentType: 'application/json; charset=utf-8',
+                dataType: "json"
+            });  
+            request.done(function(data) {
+                console.log(data);
+                location.reload();
+            });
+
+            request.fail(function(jqXHR, textStatus) {
+                let errMessage = jqXHR.responseJSON.detail;
+                console.log(jqXHR);
+                alert("Erreur: "+errMessage);
+            });
+        }
+        function reportMeeting(id){
+            let request = $.ajax({  
+                url:        '/meeting/api/report/'+id,  
+                type:       'POST',   
+                contentType: 'application/json; charset=utf-8',
+                dataType: "json"
+            });  
+            request.done(function(data) {
+                console.log(data);
+                location.reload();
+            });
+
+            request.fail(function(jqXHR, textStatus) {
+                let errMessage = jqXHR.responseJSON.detail;
+                console.log(jqXHR);
+                alert("Erreur: "+errMessage);
+            });
+        }
+        function endMeeting(id){
+            let request = $.ajax({  
+                url:        '/meeting/api/end/'+id,  
+                type:       'POST',   
+                contentType: 'application/json; charset=utf-8',
+                dataType: "json"
+            });  
+            request.done(function(data) {
+                console.log(data);
+                location.reload();
+            });
+
+            request.fail(function(jqXHR, textStatus) {
+                let errMessage = jqXHR.responseJSON.detail;
+                console.log(jqXHR);
+                alert("Erreur: "+errMessage);
+            });
+        }
+    </script>
+{% endblock %}

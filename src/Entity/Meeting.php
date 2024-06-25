@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\MeetingRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use JsonSerializable;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -48,6 +49,11 @@ class Meeting implements JsonSerializable
      */
     private $user;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Audit::class)
+     * @ORM\JoinColumn(name="audit_id", referencedColumnName="id", nullable=true)
+     */
+    private $audit;
 
      /**
      * @ORM\ManyToOne(targetEntity="MeetingState", inversedBy="meetings")
@@ -60,6 +66,12 @@ class Meeting implements JsonSerializable
      * @ORM\JoinColumn(nullable=false)
      */
     private $userToMeet;
+
+    /**
+        * @ORM\ManyToOne(targetEntity=Secteur::class, inversedBy="agentSecteurs",fetch="EAGER")
+    */
+    private $secteur;
+
 
     public function getId(): ?int
     {
@@ -172,6 +184,38 @@ class Meeting implements JsonSerializable
     public function setUserToMeet(?Contact $userToMeet): self
     {
         $this->userToMeet = $userToMeet;
+
+        return $this;
+    }
+
+    public function getAudit(): ?Audit
+    {
+        return $this->audit;
+    }
+
+    public function setAudit(?Audit $audit): static
+    {
+        $this->audit = $audit;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of secteur
+     */ 
+    public function getSecteur()
+    {
+        return $this->secteur;
+    }
+
+    /**
+     * Set the value of secteur
+     *
+     * @return  self
+     */ 
+    public function setSecteur($secteur)
+    {
+        $this->secteur = $secteur;
 
         return $this;
     }

@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\AgentSecteurRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -36,6 +37,11 @@ class AgentSecteur
      * @ORM\Column(type="boolean", nullable=true)
      */
     private $statut;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $currentFormationRank;
 
     public function getId(): ?int
     {
@@ -86,6 +92,23 @@ class AgentSecteur
     public function setStatut(?bool $statut): self
     {
         $this->statut = $statut;
+
+        return $this;
+    }
+
+    public function isStatut(): ?bool
+    {
+        return $this->statut;
+    }
+
+    public function getCurrentFormationRank(): ?int
+    {
+        return $this->currentFormationRank;
+    }
+
+    public function setCurrentFormationRank(int $currentFormationRank): self
+    {
+        $this->currentFormationRank = $currentFormationRank;
 
         return $this;
     }

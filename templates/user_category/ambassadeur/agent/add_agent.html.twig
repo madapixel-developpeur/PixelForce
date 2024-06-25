@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	Ajout agent
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+	<div class="container my-5">
+		<div class="content-body-form">
+			<a href="{{ path('coach_agent_list') }}" class="btn btn-secondary"> <i class="fa-solid fa-circle-arrow-left"></i> Retour </a>
+			<h1 class="text-center fw-bold">1- Information générale</h1>
+			<div class="form-add-agent">
+    			{{ form_start(formUser) }}
+					{% include "global/user_form/_user_agent_form.html.twig" %}
+						<div class="row">
+							<div class="col-md-12 text-end"><button class="btn btn-success my-4">Suivant <i class="fa-solid fa-angles-right"></i></button></div>
+						</div>
+				{{ form_end(formUser) }}
+			</div>
+		</div>
+	</div>
+{% endblock %}

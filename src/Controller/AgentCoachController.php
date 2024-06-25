@@ -58,13 +58,13 @@ class AgentCoachController extends AbstractController
         $secteur = $this->secteurRepository->findOneBy(['id' => $this->session->get('secteurId')]);
         $search = new UserSearch();
         $searchForm = $this->createForm(UserSearchType::class, $search)->remove('secteur')
-                            ->remove('tag')
-                            ->remove('dateInscriptionMin')
-                            ->remove('active')
-                            ->remove('dateInscriptionMax');
+            ->remove('tag')
+            ->remove('dateInscriptionMin')
+            ->remove('active')
+            ->remove('dateInscriptionMax');
         $searchForm->handleRequest($request);
         $agents = $this->paginator->paginate(
-            $this->userRepository->findCoachBySecteur($search, $secteur),
+            $this->userRepository->findCoachBySecteur($search, $secteur, $request->get('search')),
             $request->query->getInt('page', 1),
             20
         );
@@ -77,5 +77,4 @@ class AgentCoachController extends AbstractController
             'mySector' => $secteur
         ]);
     }
-
 }

@@ -5,15 +5,15 @@ namespace App\Entity;
 use App\Repository\SecteurRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use JsonSerializable;
-
+use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity(repositoryClass=SecteurRepository::class)
  */
 class Secteur implements JsonSerializable
 {
-    const PBB = 9;
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -31,6 +31,40 @@ class Secteur implements JsonSerializable
      */
     
     private $description;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    
+    private $title;
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    
+    private $longDescription;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $couverture;
+
+     /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $affiche;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $liens;
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $googleForms;
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $googleFormsResponse;
 
     /**
      * @ORM\OneToMany(targetEntity=AgentSecteur::class, mappedBy="secteur")
@@ -121,6 +155,30 @@ class Secteur implements JsonSerializable
     public function setDescription(?string $description): self
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    public function getTitle(): ?string
+    {
+        return $this->title;
+    }
+
+    public function setTitle(?string $title): self
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    public function getLongDescription(): ?string
+    {
+        return $this->longDescription;
+    }
+
+    public function setLongDescription(?string $longDescription): self
+    {
+        $this->longDescription = $longDescription;
 
         return $this;
     }
@@ -372,6 +430,84 @@ class Secteur implements JsonSerializable
         }
 
         $this->contratSecu = $contratSecu;
+
+        return $this;
+    }
+
+    public function getCouverture(): ?string
+    {
+        return $this->couverture;
+    }
+
+    public function setCouverture(?string $couverture): static
+    {
+        $this->couverture = $couverture;
+
+        return $this;
+    }
+
+    public function getLiens(): ?string
+    {
+        return $this->liens;
+    }
+    public function getStructuredLiens(): ?string
+    {
+        return $this->ensureHttpPrefix($this->liens);
+    }
+    public function getStructuredGoogleForms(): ?string
+    {
+        return $this->ensureHttpPrefix($this->googleForms);
+    }
+    private function ensureHttpPrefix(string $url): string
+    {
+        // Vérifier si le lien commence par http:// ou https://
+        if (!preg_match("~^(?:f|ht)tps?://~i", $url)) {
+            // Si le lien ne commence pas par http:// ou https://, ajouter le préfixe http://
+            $url = 'http://' . $url;
+        }
+
+        return $url;
+    }
+
+    public function setLiens(?string $liens): static
+    {
+        $this->liens = $liens;
+
+        return $this;
+    }
+
+    public function getAffiche(): ?string
+    {
+        return $this->affiche;
+    }
+
+    public function setAffiche(?string $affiche): static
+    {
+        $this->affiche = $affiche;
+
+        return $this;
+    }
+
+    public function getGoogleForms(): ?string
+    {
+        return $this->googleForms;
+    }
+
+    public function setGoogleForms(?string $googleForms): static
+    {
+        $this->googleForms = $googleForms;
+
+        return $this;
+    }
+
+    public function getGoogleFormsResponse(): ?string
+    {
+        return $this->googleFormsResponse;
+    }
+
+    public function setGoogleFormsResponse(?string $googleFormsResponse): static
+    {
+        $this->googleFormsResponse = $googleFormsResponse;
 
         return $this;
     }

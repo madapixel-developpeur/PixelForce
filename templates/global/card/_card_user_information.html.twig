@@ -62,6 +62,12 @@
                     <span class="fw-bolder me-25">Adresse:</span>
                     <span>{{ user.adresse }}</span>
                 </li>
+                {% if detailAgentCoach is defined  %}
+                   <li class="mb-75">
+                    <span class="fw-bolder me-25">Chiffre d'affaires:</span>
+                    <span>{{ chiffreAffaireTotal | number_format(2, ',', ' ') }} € </span>
+                </li>
+                {% endif %}
             </ul>
             <div class="d-flex justify-content-center pt-2">
                 {# {% if is_granted('ROLE_ADMINISTRATEUR') and user.roles[0] == 'ROLE_AGENT' %}
@@ -90,6 +96,7 @@
                         Modifier
                     </a>
                 {% endif %}
+               
 {#                <a href="javascript:;" class="btn btn-outline-danger suspend-user">Suspendu</a>#}
             </div>
         </div>

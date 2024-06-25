@@ -32,6 +32,26 @@ class FormationAgent
      */
     private $agent;
 
+    /**
+     * @ORM\Column(type="json", nullable=true)
+     */
+    private $lastResultSnapshot = [];
+
+    /**
+     * @ORM\Column(type="decimal", precision=5, scale=2, nullable=true)
+     */
+    private $lastResultScore;
+
+    /**
+     * @ORM\Column(type="json", nullable=true)
+     */
+    private $maxResultSnapshot = [];
+
+    /**
+     * @ORM\Column(type="decimal", precision=5, scale=2, nullable=true)
+     */
+    private $maxResultScore;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -69,6 +89,54 @@ class FormationAgent
     public function setAgent(?User $agent): self
     {
         $this->agent = $agent;
+
+        return $this;
+    }
+
+    public function getLastResultSnapshot(): ?array
+    {
+        return $this->lastResultSnapshot;
+    }
+
+    public function setLastResultSnapshot(?array $lastResultSnapshot): self
+    {
+        $this->lastResultSnapshot = $lastResultSnapshot;
+
+        return $this;
+    }
+
+    public function getLastResultScore(): ?string
+    {
+        return $this->lastResultScore;
+    }
+
+    public function setLastResultScore(?string $lastResultScore): self
+    {
+        $this->lastResultScore = $lastResultScore;
+
+        return $this;
+    }
+
+    public function getMaxResultSnapshot(): ?array
+    {
+        return $this->maxResultSnapshot;
+    }
+
+    public function setMaxResultSnapshot(?array $maxResultSnapshot): self
+    {
+        $this->maxResultSnapshot = $maxResultSnapshot;
+
+        return $this;
+    }
+
+    public function getMaxResultScore(): ?string
+    {
+        return $this->maxResultScore;
+    }
+
+    public function setMaxResultScore(?string $maxResultScore): self
+    {
+        $this->maxResultScore = $maxResultScore;
 
         return $this;
     }

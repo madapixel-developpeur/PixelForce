@@ -1,0 +1,116 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	Visualisation Audit
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+	{% set role = app.user.roles[0]  %}
+	{% if role == constant('App\\Entity\\User::ROLE_AGENT') %}
+		{% set reponses = audit.getActiveReponses()  %}
+	{% else %}
+		{% set reponses = audit.getAllReponses()  %}        
+    {% endif %}
+	<div class="mt-2">
+		{% if meeting == null %}
+		<a href="{{ path('audit_list') }}" class="btn btn-secondary"> <i class="fa-solid fa-circle-arrow-left"></i> Retour </a>
+		{% elseif previousUrl is defined %}
+		<a href="{{  previousUrl }}" class="btn btn-secondary"> <i class="fa-solid fa-circle-arrow-left"></i> Retour </a>
+		{% else %}
+		<a href="{{ path('agent_contact_meeting_fiche',{'id':meeting.getId()}) }}" class="btn btn-secondary"> <i class="fa-solid fa-circle-arrow-left"></i> Retour </a>
+		{% endif %}
+		<div class="content-card-user-information mt-3">
+			<section class="app-user-view-account">
+				<div class="row">
+					<!-- User Content -->
+					<div class="col-0  col-md-3 ">
+					</div>
+					<!--/ User Content -->
+
+					<!-- User Sidebar -->
+					<div class="col-12  col-md-6 order-1 order-md-0">
+						{{ include ('global/card/_card_audit_information.html.twig', {audit :audit}) }}
+					</div>
+					<!--/ User Sidebar -->
+
+					<!-- User Content -->
+					<div class="col-0  col-md-3 ">
+					</div>
+					<!--/ User Content -->
+				</div>
+				<div class="card">
+						<div class="row mb-3">
+							<div class="col-12  mt-2 mt-md-3">
+								<div class=" w-100 h-100 ps-3 py-3  bg-white border pe-3">
+									<div class="row h-100">
+										<div class="col-6">
+											<h4 class="my-auto">Liste des réponses potentiels</h4>
+										</div>
+										<div class="col-6 ">
+											<a href="{{ path('reponse_add', {'id': audit.id}) }}" class="btn btn-primary btn-sm waves-effect waves-float waves-light fw-bolder d-flex float-end d-flex align-items-center"><i class="fa-solid fa-user-plus me-2"></i> Ajouter</a>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="table-responsive">
+							<table class="table table-striped table-hover text-center sortable">
+								<thead>
+									<tr style="white-space:nowrap" >
+										<th scope="col" class="text-center">#</th>
+										<th scope="col" class="text-center">Titre</th>
+										<th scope="col" class="text-center">Déscription</th>
+										<th scope="col" class="text-center">Fichier jointe</th>
+										<th scope="col" class="text-center">Action</th>
+									</tr>
+								</thead>
+								<tbody>
+									
+
+									{% for reponse in reponses %}
+										<tr>
+											<td>Réponse-{{ reponse.id }}</td>
+											<td>{{ reponse.titre }}</td>
+											<td>{{ reponse.description}}</td>
+											<td>
+											<a class="bg-light-primary" href="{{ path('reponse_download', {'id': reponse.id}) }}"><span>Télécharger</span></a>
+											</td>
+											<td style="white-space:nowrap">
+												<a href="{{path('reponse_view',{'id':reponse.id})}}" class="btn btn-secondary">
+													<i class="fa-solid fa-eye"></i>
+												</a>
+												<a href="{{ path('reponse_edit', {'id': reponse.id}) }}" class="btn btn-secondary">
+													<i class="fa fa-pencil-square" aria-hidden="true"></i>
+												</a>		
+												{% if reponse.isActive == constant('App\\Entity\\Reponse::ACTIVE_YES') %}
+													<a href="{{ path('reponse_delete', {'id':reponse.id}) }}" class="btn btn-secondary" onclick="confirmation('{{ path('reponse_delete', {'id':reponse.id}) }}','Êtes-vous sûr(e) de vouloir supprimer cette réponse?')">
+													 <i class="fa fa-trash" aria-hidden="true"></i>
+													</a>	
+												{% else %}
+													<a href="{{ path('reponse_restore', {'id': reponse.id}) }}" class="btn btn-secondary" onclick="confirmation('{{ path('reponse_restore', {'id':reponse.id}) }}','Êtes-vous sûr(e) de vouloir réstorer cette réponse?')">
+													 <i class="fa fa-undo" aria-hidden="true"></i>
+													</a>	
+												{% endif %}			
+											</td>
+										</tr>
+									{% endfor %}
+
+								</tbody>
+							</table>
+						</div>
+				
+				</div>
+			</section>
+			
+		</div>
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+	{{ encore_entry_script_tags('vuexy_app_user_view_js') }}
+{% endblock %}

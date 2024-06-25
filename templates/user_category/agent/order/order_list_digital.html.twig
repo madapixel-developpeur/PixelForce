@@ -1,0 +1,134 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	Commandes
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+    <div class="row mb-3">
+		<div class="col-12  mt-2 mt-md-3">
+			<h4 class="my-auto general-primary-text">Liste des commandes</h4>
+		</div>
+	</div>
+	<div class="card card-company-table p-5 rounded-3" style="">
+				<div class="card-body p-0">
+					<div class="card-head mb-3">
+						<div class="row">
+							<div class="col-7">
+                        	<p class="w-50 fs-6 lh-sm">Avoir au moin 5 filleuil directs avec au moins 1000 € de CA au Total</p>
+							</div>
+							<div class="col-5 d-flex justify-content-center">
+								<form action="" class="input-group rounded-3 m-2 w-75">
+                                    <button class="input-group-text border-0" id="search-addon" type="submit">
+										<i class="fas fa-search"></i>
+									</button>
+                                    <input type="search"name="search" class="form-control  input-group-text border-0" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
+                                </form>
+								<div class="input-group rounded-3 m-2 w-25" data-bs-toggle="collapse" data-bs-target="#filters" aria-expanded="false" aria-controls="filters">
+									<span class="input-group-text border-0 w-25 rounded-4" id="search-addon">
+										<i class="fa-solid fa-bars-staggered "></i>
+									</span>
+									<a type="search" class="input-group-text border-0 w-75">Filtres<a/>
+								</div>
+							</div>
+						</div>
+                    </div>
+                    <div class="collapse" id="filters">
+                        <div class="block block--bordered block--rounded">
+                             <h1 class="block__text block__text--center mt-2" >Options de filtre :</h1>
+                             <div class="filter-wrap">
+                                    <!-- Formulaire de recherche -->
+                                    <div class="search-form">
+                                        {{ form_start(form, {'attr': {'class': 'filter-form', 'id': 'product-filter-form'}}) }}
+                                            <div class="col-12 col-md-3">
+                                                    {{form_label(form.status)}}
+                                                    {{form_widget(form.status)}}
+                                                    {{form_errors(form.status)}}
+                                            </div>
+                                            <div class="col-12 col-md-2">
+                                                    {{form_label(form.dateMin)}}
+                                                    {{form_widget(form.dateMin)}}
+                                                    {{form_errors(form.dateMin)}}
+                                            </div>
+                                            <div class="col-12 col-md-2">
+                                                    {{form_label(form.dateMax)}}
+                                                    {{form_widget(form.dateMax)}}
+                                                    {{form_errors(form.dateMax)}}
+                                            </div>
+                                            <div class="col-12 col-md-2">
+                                                    {{form_label(form.clientName)}}
+                                                    {{form_widget(form.clientName)}}
+                                                    {{form_errors(form.clientName)}}
+                                            </div>
+                                            <div class="col-12  col-md-2">
+                                                    {{form_label(form.referenceVente)}}
+                                                    {{form_widget(form.referenceVente)}}
+                                                    {{form_errors(form.referenceVente)}}
+                                            </div>
+
+                                            <div class="btn-wrap">
+                                                <button class="btn btn-primary" type="submit"><i data-feather="filter"></i>Filtrer</button>
+                                            </div>
+                                        {{ form_end(form) }}
+                                    </div>
+                             </div>
+                        </div>
+                    </div>
+                    
+                    {% if orderList|length ==0 %}
+                        <div class="alert alert-primary p-3 text-center" role="alert">
+                            <div class="alert-body">
+                                Aucune Commande
+                            </div>
+                        </div>
+                    {% endif %}
+                    {% if orderList|length !=0 %}
+					<div class="table-responsive">
+						<table class="table text-center">
+							<tbody class="align-items-center">
+								<tr>
+                                    <th>Date</th>
+                                    <th>Client</th>
+                                    <th>Pack - (service)</th>
+                                    <th>Montant</th>
+                                    <th>Référence</th>
+                                    <th>Statut</th>
+                                    <th></th>
+                                </tr>
+
+								{% for order in orderList %}
+                                    <tr>
+                                        <td>{{order.createdAt | date("d/m/Y H:i")}}</td>
+                                        <td>{{order.infoClient.firstName}} {{order.infoClient.lastName}}</td>
+                                        <td>{{order.package.name}} - ({{order.package.service}})</td>
+                                        <td class="text-right">{{order.amount | number_format(2, ',', ' ') }}</td>
+                                        <td>
+                                            <a href="{{ path('agent_order_list_digital',{'referenceVente' : order.infoClient.referenceVente }) }}">{{order.infoClient.referenceVente}}</a>
+                                            {# <a class="p-2" href="#" onclick="copyLink('{{ url('agent_order_list_digital',{'referenceVente' : order.infoClient.referenceVente }) }}','Liens de la référence {{  order.infoClient.referenceVente }} copié avec succès') "><i class="fa-solid fa-copy"></i></a>  #}
+                                        </td>
+                                        <td>{{order.statusStr}}</td>
+                                        <td class="col-action ">
+                                            <a href="{{path('agent_order_details_digital', {'id': order.id})}}">
+                                                <i data-feather="eye"></i>
+                                            </a>
+                                        </td>   
+                                    </tr>
+                                {% endfor %}
+
+							</tbody>
+						</table>
+					</div>
+					<div class="pagination d-flex justify-content-center">
+						{{ knp_pagination_render(orderList)}}
+					</div>
+                     {% endif %}
+				</div>
+	</div>
+
+{% endblock %}
+
+

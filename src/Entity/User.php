@@ -6,6 +6,7 @@ use App\Repository\UserRepository;
 use App\Services\StripeService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Exception;
 use JsonSerializable;
@@ -29,18 +30,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
     const ROLE_AGENT = 'ROLE_AGENT';
     const ROLE_MADA = 'ROLE_MADA';
     const ROLE_COACH = 'ROLE_COACH';
+    const ROLE_AMBASSADEUR = 'ROLE_AMBASSADEUR';
     const ROLE_ADMINISTRATEUR = 'ROLE_ADMINISTRATEUR';
     const ROLE_CLIENT = 'ROLE_CLIENT';
     const ROLE_DOCUMENT_OWNER = 'ROLE_DOCUMENT_OWNER';
     const ROLES = [
-      self::ROLE_AGENT => self::ROLE_AGENT,
-      self::ROLE_MADA => self::ROLE_MADA,
-      self::ROLE_COACH => self::ROLE_AGENT,
-      self::ROLE_ADMINISTRATEUR => self::ROLE_ADMINISTRATEUR,
-      self::ROLE_CLIENT => self::ROLE_CLIENT,
-      self::ROLE_DOCUMENT_OWNER => self::ROLE_DOCUMENT_OWNER,
+        self::ROLE_AGENT => self::ROLE_AGENT,
+        self::ROLE_MADA => self::ROLE_MADA,
+        self::ROLE_COACH => self::ROLE_AGENT,
+        self::ROLE_ADMINISTRATEUR => self::ROLE_ADMINISTRATEUR,
+        self::ROLE_CLIENT => self::ROLE_CLIENT,
+        self::ROLE_DOCUMENT_OWNER => self::ROLE_DOCUMENT_OWNER,
+        self::ROLE_AMBASSADEUR => self::ROLE_AMBASSADEUR,
     ];
-    
+
+    const INACTIVE_STATE = -1 ;
+
 
     /**
      *  Clés disponibles :
@@ -93,9 +98,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
     private $email;
 
     /**
-     * @ORM\Column(type="string", length=255, unique=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $username;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class)
+     * @ORM\JoinColumn(name="parrain_id", referencedColumnName="id", nullable=true)
+     */
+    private $parrain;
+
+    /**
+     * @ORM\OneToMany(targetEntity=User::class, mappedBy="parrain")
+     */
+    private $fils;
 
     /**
      * @ORM\Column(type="json")
@@ -264,12 +280,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
      */
     private $categorieFormationAgents;
 
-     /**
+    /**
      * @ORM\OneToMany(targetEntity="Meeting", mappedBy="user")
      */
     private $meetings;
 
-     /**
+    /**
      * @ORM\OneToMany(targetEntity="Meeting", mappedBy="userToMeet")
      */
     private $meetingGuests;
@@ -278,13 +294,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
      * @ORM\ManyToOne(targetEntity=User::class)
      */
     private $clientAgent;
-
-    /**
-     * 
-     * @ORM\ManyToOne(targetEntity=User::class)
-     */
-    private $parrain;
-
 
     private $plainPassword;
 
@@ -327,21 +336,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $ville;
-    
+
     /*
      * @ORM\OneToMany(targetEntity=DevisCompany::class, mappedBy="agent")
      */
     private $devisCompanies;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $has_paid_subscription;
+    private $ambassadorUsername;
+
+    private $accessibleFonctionnalites = [];
 
     /**
-     * @ORM\OneToMany(targetEntity=OrderPack::class, mappedBy="agent")
+     * @ORM\Column(type="integer", nullable=true)
      */
-    private $orderPacks;
+    private $position;
 
     public function __construct()
     {
@@ -365,15 +376,38 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
         $this->subscriptionPlanAgentAccounts = new ArrayCollection();
         $this->orderDigitals = new ArrayCollection();
         $this->devisCompanies = new ArrayCollection();
-        $this->orderPacks = new ArrayCollection();
-
-
-
+        $this->fils = new ArrayCollection();
     }
 
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getAccessibleFonctionnalites($secteurId): ?array
+    {
+        $key = ''. $secteurId;
+        return isset($this->accessibleFonctionnalites[$key]) && $this->accessibleFonctionnalites[$key] ? $this->accessibleFonctionnalites[$key] : null;
+    }
+
+    public function setAccessibleFonctionnalites($secteurId, array $accessibleFonctionnalitesSecteur): self
+    {
+        $key = ''. $secteurId;
+        $this->accessibleFonctionnalites[$key] = $accessibleFonctionnalitesSecteur;
+
+        return $this;
+    }
+    
+    public function getPosition(): ?int
+    {
+        return $this->position;
+    }
+
+    public function setPosition(int $position): self
+    {
+        $this->position = $position;
+
+        return $this;
     }
 
     public function getEmail(): ?string
@@ -384,6 +418,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
     public function setEmail(string $email): self
     {
         $this->email = $email;
+
+        return $this;
+    }
+
+    public function getAmbassadorUsername(): ?string
+    {
+        return $this->ambassadorUsername;
+    }
+
+    public function setAmbassadorUsername(string $ambassadorUsername): self
+    {
+        $this->ambassadorUsername = $ambassadorUsername;
 
         return $this;
     }
@@ -419,8 +465,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
     {
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
-//        $roles[] = self::ROLE_AGENT;
-
+        //        $roles[] = self::ROLE_AGENT;
+        $roles[] = 'ROLE_USER';
         return array_unique($roles);
     }
 
@@ -433,13 +479,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
 
     public function getStringRole()
     {
-        switch($this->roles[0]) {
-            case self::ROLE_AGENT: return 'Agent'; break;
-            case self::ROLE_COACH: return 'Coach'; break;
-            case self::ROLE_ADMINISTRATEUR: return 'Administrateur'; break;
-            case self::ROLE_CLIENT: return 'Client'; break;
-            case self::ROLE_DOCUMENT_OWNER: return 'Propriétaire de document'; break;
-            
+        switch ($this->roles[0]) {
+            case self::ROLE_AGENT:
+                return 'Agent';
+                break;
+            case self::ROLE_COACH:
+                return 'Coach';
+                break;
+            case self::ROLE_ADMINISTRATEUR:
+                return 'Administrateur';
+                break;
+            case self::ROLE_CLIENT:
+                return 'Client';
+                break;
+            case self::ROLE_DOCUMENT_OWNER:
+                return 'Propriétaire de document';
+                break;
         }
     }
 
@@ -558,7 +613,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
     public function setPhoto(?string $photo = null, $setNull = false): self
     {
         $this->photo = $photo ? $photo : $this->photo;
-        if($setNull) {
+        if ($setNull) {
             $this->photo = null;
         }
 
@@ -589,9 +644,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
         return $this;
     }
 
-    public function validateSixDigitCode($sixDigitCode):bool
+    public function validateSixDigitCode($sixDigitCode): bool
     {
-        if($this->sixDigitCode === (int) $sixDigitCode) {
+        if ($this->sixDigitCode === (int) $sixDigitCode) {
             return true;
         }
         return false;
@@ -599,7 +654,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
 
     public function validateForgottenPassToken($forgotten_pass)
     {
-        if($this->forgottenPassToken ===  $forgotten_pass) {
+        if ($this->forgottenPassToken ===  $forgotten_pass) {
             return true;
         }
         return false;
@@ -878,12 +933,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
 
     public function fullName()
     {
-        return $this->nom .' '. $this->prenom;
-    }
-
-    public function getFullName()
-    {
-        return $this->nom .' '. $this->prenom;
+        return $this->nom . ' ' . $this->prenom;
     }
 
     public function getCreatedAt(): ?\DateTimeInterface
@@ -1029,13 +1079,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
     // }
     public function getFormationStatut(Formation $formation)
     {
-       $formationAgents =  $formation->getFormationAgents();
-       foreach($formationAgents->toArray() as $formationAgent) {
-           if($formationAgent->getAgent()->getId() === $this->getId()) {
-               return $formationAgent->getStatut();
-           }
-       }
-       return Formation::STATUT_DISPONIBLE;
+        $formationAgents =  $formation->getFormationAgents();
+        foreach ($formationAgents->toArray() as $formationAgent) {
+            if ($formationAgent->getAgent()->getId() === $this->getId()) {
+                return $formationAgent->getStatut();
+            }
+        }
+        return Formation::STATUT_DISPONIBLE;
     }
 
     /**
@@ -1049,7 +1099,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
         $mySecteurs = [];
         /** @var AgentSecteur $secteur */
         foreach ($agentSecteurs as $agentSecteur) {
-           $mySecteurs[] = $agentSecteur->getSecteur()->getNom();
+            $mySecteurs[] = $agentSecteur->getSecteur()->getNom();
         }
 
         $joinSecteur = join(', ', $mySecteurs);
@@ -1064,7 +1114,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
         } else {
             $price = self::ACCOUNT_PRICE_MANY_SECTOR;
         }
-        
+
         return $price;
     }
 
@@ -1076,7 +1126,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
         } else {
             $type = StripeService::ACCOUNT_SUBSCRIPTION_TYPE['MANY_SECTOR'];
         }
-        
+
         return $type;
     }
 
@@ -1111,7 +1161,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
 
     public function getSecteurByCoach()
     {
-        if(in_array(self::ROLE_COACH, $this->roles) && $this->coachSecteurs->count() > 0) {
+        if (in_array(self::ROLE_COACH, $this->roles) && $this->coachSecteurs->count() > 0) {
             return $this->coachSecteurs->toArray()[0]->getSecteur();
         }
         return null;
@@ -1121,7 +1171,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
     {
         $agentSecteurs = $this->getAgentSecteurs();
         $secteurs_ids = [];
-        foreach($agentSecteurs->toArray() as $agentSecteur) {
+        foreach ($agentSecteurs->toArray() as $agentSecteur) {
             $secteurs_ids[] = $agentSecteur->getSecteur()->getId();
         }
         return $secteurs_ids;
@@ -1131,7 +1181,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
     {
         $agentSecteurs = $this->getAgentSecteurs();
         $secteurs_ids = [];
-        foreach($agentSecteurs->toArray() as $agentSecteur) {
+        foreach ($agentSecteurs->toArray() as $agentSecteur) {
             $secteurs_ids[] = $agentSecteur->getSecteur();
         }
         return $secteurs_ids;
@@ -1142,7 +1192,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
      */
     public function getAgentSecteurs(): Collection
     {
-        if(in_array(self::ROLE_AGENT, $this->roles)) {
+        if (in_array(self::ROLE_AGENT, $this->roles)) {
             return $this->agentSecteurs;
         }
         $this->agentSecteurs->clear();
@@ -1215,7 +1265,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
 
     public function getUniqueCoachSecteur(): ?Secteur
     {
-        if(count($this->getCoachSecteurs()) == 0) {
+        if (count($this->getCoachSecteurs()) == 0) {
             throw new Exception("Pas de secteur");
         }
         return $this->getCoachSecteurs()[0]->getSecteur();
@@ -1237,22 +1287,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
 
         return $this;
     }
-    public function getParrain(): ?self
-    {
-        return $this->parrain;
-    }
-
-    public function setParrain(?self $parrain): self
-    {
-        $this->parrain = $parrain;
-
-        return $this;
-    }
-
 
     /**
      * Get the value of plainPassword
-     */ 
+     */
     public function getPlainPassword()
     {
         return $this->plainPassword;
@@ -1262,7 +1300,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
      * Set the value of plainPassword
      *
      * @return  self
-     */ 
+     */
     public function setPlainPassword($plainPassword)
     {
         $this->plainPassword = $plainPassword;
@@ -1419,17 +1457,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
 
         return $this;
     }
-    public function getHasPaidSubscription(): ?bool
-    {
-        return $this->has_paid_subscription;
-    }
 
-    public function setHasPaidSubscription(?bool $has_paid_subscription): self
-    {
-        $this->has_paid_subscription = $has_paid_subscription;
-
-        return $this;
-    }
     public function removeDevisCompany(DevisCompany $devisCompany): self
     {
         if ($this->devisCompanies->removeElement($devisCompany)) {
@@ -1442,17 +1470,55 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
         return $this;
     }
 
-    /**
-     * @return Collection<int, OrderPack>
-     */
-    public function getOrderPacks(): Collection
+    public function getParrain(): ?self
     {
-        return $this->orderPacks;
+        return $this->parrain;
+    }
+
+    public function setParrain(?self $parrain): static
+    {
+        $this->parrain = $parrain;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, User>
+     */
+    public function getFils(): Collection
+    {
+        return $this->fils;
+    }
+
+    public function addFil(User $fil): static
+    {
+        if (!$this->fils->contains($fil)) {
+            $this->fils->add($fil);
+            $fil->setParrain($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFil(User $fil): static
+    {
+        if ($this->fils->removeElement($fil)) {
+            // set the owning side to null (unless already changed)
+            if ($fil->getParrain() === $this) {
+                $fil->setParrain(null);
+            }
+        }
+
+        return $this;
+    }
+    public function countFils()
+    {
+        return count($this->fils);
     }
 
     public function jsonSerialize()
     {
-       /* $vars = get_object_vars($this);
+        /* $vars = get_object_vars($this);
         unset($vars['password']);
         unset($vars['roles']);
         unset($vars['coachAgents']);
@@ -1477,12 +1543,167 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
         unset($vars['devisCompanies']);*/
 
         $vars = [
-            'id'=>$this->getId(),
-            'email'=>$this->getEmail(),
-            'userIdentifer'=>$this->getUserIdentifier(),
-            'nom'=>$this->getNom(),
-            'prenom'=>$this->getPrenom(),
+            'id' => $this->getId(),
+            'email' => $this->getEmail(),
+            'userIdentifer' => $this->getUserIdentifier(),
+            'nom' => $this->getNom(),
+            'prenom' => $this->getPrenom(),
+            'role' => $this->getRoles()
         ];
         return $vars;
+    }
+
+    /**
+     * @return Collection<int, LiveChatVideo>
+     */
+    public function getLiveChatVideosFromUserA(): Collection
+    {
+        return $this->liveChatVideosFromUserA;
+    }
+
+    public function addLiveChatVideosFromUserA(LiveChatVideo $liveChatVideosFromUserA): static
+    {
+        if (!$this->liveChatVideosFromUserA->contains($liveChatVideosFromUserA)) {
+            $this->liveChatVideosFromUserA->add($liveChatVideosFromUserA);
+            $liveChatVideosFromUserA->setUserA($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLiveChatVideosFromUserA(LiveChatVideo $liveChatVideosFromUserA): static
+    {
+        if ($this->liveChatVideosFromUserA->removeElement($liveChatVideosFromUserA)) {
+            // set the owning side to null (unless already changed)
+            if ($liveChatVideosFromUserA->getUserA() === $this) {
+                $liveChatVideosFromUserA->setUserA(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, LiveChatVideo>
+     */
+    public function getLiveChatVideosFromUserB(): Collection
+    {
+        return $this->liveChatVideosFromUserB;
+    }
+
+    public function addLiveChatVideosFromUserB(LiveChatVideo $liveChatVideosFromUserB): static
+    {
+        if (!$this->liveChatVideosFromUserB->contains($liveChatVideosFromUserB)) {
+            $this->liveChatVideosFromUserB->add($liveChatVideosFromUserB);
+            $liveChatVideosFromUserB->setUserB($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLiveChatVideosFromUserB(LiveChatVideo $liveChatVideosFromUserB): static
+    {
+        if ($this->liveChatVideosFromUserB->removeElement($liveChatVideosFromUserB)) {
+            // set the owning side to null (unless already changed)
+            if ($liveChatVideosFromUserB->getUserB() === $this) {
+                $liveChatVideosFromUserB->setUserB(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, CalendarEvent>
+     */
+    public function getCalendarEvents(): Collection
+    {
+        return $this->calendarEvents;
+    }
+
+    public function addCalendarEvent(CalendarEvent $calendarEvent): static
+    {
+        if (!$this->calendarEvents->contains($calendarEvent)) {
+            $this->calendarEvents->add($calendarEvent);
+            $calendarEvent->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCalendarEvent(CalendarEvent $calendarEvent): static
+    {
+        if ($this->calendarEvents->removeElement($calendarEvent)) {
+            // set the owning side to null (unless already changed)
+            if ($calendarEvent->getUser() === $this) {
+                $calendarEvent->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Meeting>
+     */
+    public function getMeetings(): Collection
+    {
+        return $this->meetings;
+    }
+
+    public function addMeeting(Meeting $meeting): static
+    {
+        if (!$this->meetings->contains($meeting)) {
+            $this->meetings->add($meeting);
+            $meeting->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMeeting(Meeting $meeting): static
+    {
+        if ($this->meetings->removeElement($meeting)) {
+            // set the owning side to null (unless already changed)
+            if ($meeting->getUser() === $this) {
+                $meeting->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Meeting>
+     */
+    public function getMeetingGuests(): Collection
+    {
+        return $this->meetingGuests;
+    }
+
+    public function addMeetingGuest(Meeting $meetingGuest): static
+    {
+        if (!$this->meetingGuests->contains($meetingGuest)) {
+            $this->meetingGuests->add($meetingGuest);
+            $meetingGuest->setUserToMeet($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMeetingGuest(Meeting $meetingGuest): static
+    {
+        if ($this->meetingGuests->removeElement($meetingGuest)) {
+            // set the owning side to null (unless already changed)
+            if ($meetingGuest->getUserToMeet() === $this) {
+                $meetingGuest->setUserToMeet(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function canAccessFonct(string $fonct, $secteurId): bool{
+        return in_array($fonct, $this->getAccessibleFonctionnalites($secteurId) ?? [] );
     }
 }

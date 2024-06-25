@@ -4,6 +4,7 @@
 namespace App\Controller;
 
 use App\Entity\Contact;
+use App\Entity\ContactInformation;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\UserRepository;
@@ -39,7 +40,7 @@ class AgentContactMeetingController extends AbstractController
     private $entityManager;
     private $meetingStateRepository;
     private $meetingRepository;
-    private $calendarEventLabelRepository;    
+    private $calendarEventLabelRepository;
     private $contactRepository;
     private $coachSecteurRepository;
     private $secteurRepository;
@@ -47,7 +48,7 @@ class AgentContactMeetingController extends AbstractController
     private $meetingService;
 
 
-    public function __construct(EntityManagerInterface $entityManager, MeetingRepository $meetingRepository ,MeetingStateRepository $meetingStateRepository , CalendarEventLabelRepository $calendarEventLabelRepository, ContactRepository $contactRepository, CoachSecteurRepository $coachSecteurRepository, SecteurRepository $secteurRepository, SessionInterface $session, MeetingService $meetingService)
+    public function __construct(EntityManagerInterface $entityManager, MeetingRepository $meetingRepository, MeetingStateRepository $meetingStateRepository, CalendarEventLabelRepository $calendarEventLabelRepository, ContactRepository $contactRepository, CoachSecteurRepository $coachSecteurRepository, SecteurRepository $secteurRepository, SessionInterface $session, MeetingService $meetingService)
     {
         $this->entityManager = $entityManager;
         $this->meetingStateRepository = $meetingStateRepository;
@@ -58,7 +59,6 @@ class AgentContactMeetingController extends AbstractController
         $this->secteurRepository = $secteurRepository;
         $this->session = $session;
         $this->meetingService = $meetingService;
-
     }
 
     /**
@@ -81,28 +81,33 @@ class AgentContactMeetingController extends AbstractController
             $secteurId = $this->session->get('secteurId');
             $secteur = $this->secteurRepository->find($secteurId);
             $allCoachSecteur = $this->coachSecteurRepository->findBy(['secteur' => $secteur]);
-           
-            try{
-                if($userToMeet == null) throw new \Exception('User to meet invalid');
 
-                $meetingCalendarEventLabel = $this->calendarEventLabelRepository->findOneBy(["value"=>"meeting"]);
-                if($meetingCalendarEventLabel == null) throw new \Exception('Calendar event "meeting" is missing in the database.');
-                
+            try {
+                if ($userToMeet == null) throw new \Exception('User to meet invalid');
+
+                $meetingCalendarEventLabel = $this->calendarEventLabelRepository->findOneBy(["value" => "meeting"]);
+                if ($meetingCalendarEventLabel == null) throw new \Exception('Calendar event "meeting" is missing in the database.');
+
                 $this->entityManager->beginTransaction();
 
-                foreach ($allCoachSecteur as $coachSecteur) {
-                    $coach = $coachSecteur->getCoach();
-                    if($coach!=null) {
-                        $meetingCoach = $meeting->clone($coach);
-                        $this->meetingService->saveMeeting($meetingCoach, $coach, $userToMeet);
-                        $this->meetingService->saveMeetingEvent($meetingCoach, $coach, $meetingCalendarEventLabel);
-                    }
-                   
-                }
+                // foreach ($allCoachSecteur as $coachSecteur) {
+                //     $coach = $coachSecteur->getCoach();
+                //     if($coach!=null) {
+                //         $meetingCoach = $meeting->clone($coach);
+                //         $this->meetingService->saveMeeting($meetingCoach, $coach, $userToMeet);
+                //         $this->meetingService->saveMeetingEvent($meetingCoach, $coach, $meetingCalendarEventLabel);
+                //     }
 
+                // }
+                $meeting->setSecteur($secteur);
                 $this->meetingService->saveMeeting($meeting, $agent, $userToMeet);
                 $this->meetingService->saveMeetingEvent($meeting, $agent, $meetingCalendarEventLabel);
 
+                $information = $userToMeet->getInformation();
+                $information->setType(ContactInformation::TYPE_AUDIT);
+                $this->entityManager->persist($information);
+
+                $this->entityManager->flush();
                 $this->entityManager->commit();
 
                 // // Get "En attente" meeting state
@@ -115,7 +120,7 @@ class AgentContactMeetingController extends AbstractController
                 // $this->entityManager->persist($meeting);
                 // $this->entityManager->flush();
 
-                
+
 
                 // // Insert calendarEvent for the current user (Agent)
                 // $event = $meeting->toCalendarEvent();
@@ -141,16 +146,16 @@ class AgentContactMeetingController extends AbstractController
                 // $event->setUser($coach);
                 // $this->entityManager->persist($event);
                 // $this->entityManager->flush();
-                
+
                 $this->addFlash(
-                   'success',
-                   'Rendez-vous programmé, veuillez aussi visualiser votre agenda'
+                    'success',
+                    "Votre rendez-vous a été programmé."
                 );
-             
-                return $this->redirectToRoute('agent_contact_list');
-            } catch(\Exception $ex){
+
+                return $this->redirectToRoute('agent_contact_meeting_fiche', ['id' => $meeting->getId()]);
+            } catch (\Exception $ex) {
                 $error = $ex->getMessage();
-                if($this->entityManager->getConnection()->isTransactionActive()) {
+                if ($this->entityManager->getConnection()->isTransactionActive()) {
                     $this->entityManager->rollback();
                 }
             }
@@ -159,40 +164,93 @@ class AgentContactMeetingController extends AbstractController
         return $this->render('user_category/agent/meeting/meeting-form.html.twig', [
             'userToMeet' => $userToMeet,
             'form' => $form->createView(),
-            'error' => $error
+            'error' => $error,
+            'button' => 'Prendre rendez-vous'
+        ]);
+    }
+    /**
+     * @Route("/agent/contact/meeting/{id}/edit", name="agent_contact_meeting_edit")
+     */
+    public function agent_contact_meeting_edit(Meeting $meeting, Request $request)
+    {
+
+        // $meeting->setStart(new \Datetime());
+        // $meeting->setEnd((new \Datetime())->add(new DateInterval('PT1H')));
+        $error = null;
+        $form = $this->createForm(MeetingType::class, $meeting);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            try {
+
+                $meetingCalendarEventLabel = $this->calendarEventLabelRepository->findOneBy(["value" => "meeting"]);
+                if ($meetingCalendarEventLabel == null) throw new \Exception('Calendar event "meeting" is missing in the database.');
+
+                $this->entityManager->beginTransaction();
+                $this->meetingService->updateMeeting($meeting);
+                $this->entityManager->flush();
+                $this->entityManager->commit();
+                $this->addFlash(
+                    'success',
+                    "Votre rendez-vous a été mis à jour."
+                );
+
+                return $this->redirectToRoute('agent_contact_meeting_fiche', ['id' => $meeting->getId()]);
+            } catch (\Exception $ex) {
+                $error = $ex->getMessage();
+                if ($this->entityManager->getConnection()->isTransactionActive()) {
+                    $this->entityManager->rollback();
+                }
+            }
+        }
+        return $this->render('user_category/agent/meeting/meeting-form.html.twig', [
+            'userToMeet' => $meeting->getUserToMeet(),
+            'form' => $form->createView(),
+            'error' => $error,
+            'button' => 'Modifier le rendez-vous'
         ]);
     }
 
     /**
      * @Route("/agent/contact/meeting/{id}/fiche", name="agent_contact_meeting_fiche")
      */
-    public function agent_contact_meeting_fiche($id)
+    public function agent_contact_meeting_fiche(Meeting $meeting)
     {
-        $meeting = $this->meetingRepository->find($id);
-        
         return $this->render('user_category/agent/meeting/meeting-fiche.html.twig', [
             'meeting' => $meeting
         ]);
     }
-
-     /**
-     * @Route("/agent/contact/meeting/list", name="agent_contact_meeting_list")
+    /**
+     * @Route("/agent/contact/meeting/audit/{id}/fiche", name="meeting_audit_view")
      */
-    public function agent_contact_meeting_list(Request $request, PaginatorInterface $paginator)
+    public function audit_view(Meeting $meeting)
+    {
+
+        return $this->render('user_category/agent/audit/view_audit.html.twig', [
+            'audit' => $meeting->getAudit(),
+            'meeting' => $meeting
+        ]);
+    }
+
+    /**
+     * @Route("/agent/contact/meeting/list/{contact}", name="agent_contact_meeting_list")
+     */
+    public function agent_contact_meeting_list(Request $request, PaginatorInterface $paginator, Contact $contact = null)
     {
         $agent = $this->getUser();
         $search = new MeetingSearch();
         $searchForm = $this->createForm(MeetingSearchType::class, $search);
         $searchForm->handleRequest($request);
         $meetings = $paginator->paginate(
-            $this->meetingRepository->findMeetingByUser($search, $agent),
+            $this->meetingRepository->findMeetingByUser($search, $agent, $contact, null, $request->get('search')),
             $request->query->getInt('page', 1),
             20
         );
-        
+
         return $this->render('user_category/agent/meeting/meeting-list.html.twig', [
             'meetings' => $meetings,
-            'searchForm' => $searchForm->createView()
+            'searchForm' => $searchForm->createView(),
+            'contact' => $contact
         ]);
     }
 
@@ -201,14 +259,14 @@ class AgentContactMeetingController extends AbstractController
      */
     public function cancelMeeting(Request $request, int $meetingId): JsonResponse
     {
-        try{
-            $meetingState = $this->meetingStateRepository->findOneBy(["name"=>"Annulé"]);
+        try {
+            $meetingState = $this->meetingStateRepository->findOneBy(["name" => "Annulé"]);
             $meeting = $this->meetingRepository->find($meetingId);
             $meeting->setMeetingState($meetingState);
             $this->entityManager->persist($meeting);
             $this->entityManager->flush();
             return new JsonResponse(array('id' => $meetingId));
-        } catch(Exception $ex){
+        } catch (Exception $ex) {
             return new JsonResponse(array('message' => $ex->getMessage()), 500);
         }
     }
@@ -217,14 +275,14 @@ class AgentContactMeetingController extends AbstractController
      */
     public function reportMeeting(Request $request, int $meetingId): JsonResponse
     {
-        try{
-            $meetingState = $this->meetingStateRepository->findOneBy(["name"=>"Annulé"]);
+        try {
+            $meetingState = $this->meetingStateRepository->findOneBy(["name" => "Annulé"]);
             $meeting = $this->meetingRepository->find($meetingId);
             $meeting->setMeetingState($meetingState);
             $this->entityManager->persist($meeting);
             $this->entityManager->flush();
             return new JsonResponse(array('id' => $meetingId));
-        } catch(Exception $ex){
+        } catch (Exception $ex) {
             return new JsonResponse(array('message' => $ex->getMessage()), 500);
         }
     }
@@ -233,14 +291,14 @@ class AgentContactMeetingController extends AbstractController
      */
     public function endMeeting(Request $request, int $meetingId): JsonResponse
     {
-        try{
-            $meetingState = $this->meetingStateRepository->findOneBy(["name"=>"Terminé"]);
+        try {
+            $meetingState = $this->meetingStateRepository->findOneBy(["name" => "Terminé"]);
             $meeting = $this->meetingRepository->find($meetingId);
             $meeting->setMeetingState($meetingState);
             $this->entityManager->persist($meeting);
             $this->entityManager->flush();
             return new JsonResponse(array('id' => $meetingId));
-        } catch(Exception $ex){
+        } catch (Exception $ex) {
             return new JsonResponse(array('message' => $ex->getMessage()), 500);
         }
     }

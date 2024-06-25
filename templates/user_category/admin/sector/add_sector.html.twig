@@ -26,7 +26,24 @@
 							<h3>Information secteur</h3>
 							{{ form_row(formSecteur.nom) }}
 							{{ form_row(formSecteur.description) }}
+							<div class="mb-3">
+                                {{form_label(formSecteur.liens)}}
+                                {{form_widget(formSecteur.liens,{ 'attr': {'class': 'form-control'} })}}
+                                {{form_errors(formSecteur.liens)}}
+                            </div>
+							<div class="mb-3">
+                                {{form_label(formSecteur.couverture)}}
+                                {{form_widget(formSecteur.couverture,{ 'attr': {'class': 'form-control'} })}}
+                                {{form_errors(formSecteur.couverture)}}
+                            </div>
+							<div class="mb-3">
+                                {{form_label(formSecteur.affiche)}}
+                                {{form_widget(formSecteur.affiche,{ 'attr': {'class': 'form-control'} })}}
+                                {{form_errors(formSecteur.affiche)}}
+                            </div>
 							{{ form_row(formSecteur.type) }}
+						
+							{{ form_rest(formSecteur)  }}
 						</div>
 					</div>
 					<div class="row">

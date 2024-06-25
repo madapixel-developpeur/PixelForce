@@ -11,6 +11,10 @@ twig:
         default_sector: '%env(DEFAULT_SECTOR)%'
         configSecteurService: '@util.config'
         secteurRepository: '@App\Repository\SecteurRepository'
+        remunerationService: '@App\Services\RemunerationService'
+        video_information_vimeo_src: '%env(VIDEO_INFORMATION_VIMEO_SRC)%'
+        authService: '@util.auth'
+        secteurDigitalId: '%env(SECTEUR_DIGITAL_ID)%'
     paths:
         # pour spécifier le namespace des image. Exemple d'utilisation : email.image('@images/logo.png')
         '%kernel.project_dir%/assets/images': images

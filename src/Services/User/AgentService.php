@@ -6,8 +6,12 @@ use App\Entity\User;
 use App\Manager\EntityManager;
 use App\Manager\StripeManager;
 use App\Services\StripeService;
+use App\Repository\UserRepository;
+use App\Services\DirectoryManagement;
 use phpDocumentor\Reflection\Types\This;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class AgentService
 {
@@ -16,7 +20,11 @@ class AgentService
     private $stripeService;
     private $stripeManager;
 
-    public function __construct(EntityManager $em, SessionInterface $session, StripeService $stripeService, StripeManager $stripeManager)
+    public function __construct(EntityManager $em, SessionInterface $session, StripeService $stripeService, StripeManager $stripeManager,
+        private  UserRepository $repoUser,
+        private DirectoryManagement $directoryManagement,
+        private UrlGeneratorInterface $urlGenerator
+    )
     {
         $this->em = $em;
         $this->session = $session;
@@ -137,4 +145,50 @@ class AgentService
         $planParams = $this->stripeService->create_Subscription_ProductAndPrice($amount, $intervalUnit, $productName, $productDescription, $priceName, $planDescription);
         $this->stripeManager->persistCreationPlanAgentAccount($planParams);
     }
+
+
+    public function getPic(User $user){
+        $file = $this->directoryManagement->getMediaFolder_UserAvatars().DIRECTORY_SEPARATOR.$user->getPhoto();
+        if(is_file($file)) {
+            return $this->urlGenerator->generate('user_avatar', ['id' => $user->getId()]);
+        }
+
+        return '/assets/vuexy/images/portrait/small/avatar-s-11.jpg';
+    }
+
+
+    public function getUnilevelChildren(User $user,int $currentLevel,bool $currentLoggedUser = false, $limit=null){
+        $data = [];
+        $data['ID'] = $user->getId();
+        $data['name'] = $user->getNom().' ' .($user->getPrenom()??'');
+        $data['imageUrl'] = $this->getPic($user);
+        $data['area'] = $user->getEmail();
+        $data['office'] = in_array("ROLE_ADMIN", $user->getRoles()) ? "Admin" : "User";
+        $data['isLoggedUser'] = $currentLoggedUser;
+        $data['positionName'] = $user->getUsername();
+        
+        $limitEnv = $_ENV['LIMIT_NIVEAU_EQUIPE_LINEAIRE'];
+        if(!($limit && $limit <= $limitEnv)) $limit = $limitEnv;
+        
+        $children = $this->repoUser->findBy(['parrain'=>$user->getId()]);
+        if($currentLevel  <= $limit){
+            foreach ($children as $child) {
+                $data['countChildren'] = count($children);
+                $data['children'][] = $this->getUnilevelChildren($child,$currentLevel+1,false,$limit);
+            }   
+         }
+        return $data;
+    }
+
+    public function getNumberOfTeam(User $user,int $currentLevel){
+        $equipe = 0;
+        if($currentLevel  > $_ENV['LIMIT_NIVEAU_EQUIPE_LINEAIRE']) return 0;
+        $children = $this->repoUser->findBy(['parrain'=>$user->getId()]);
+        foreach ($children as $child) {
+           $equipe +=  $this->getNumberOfTeam($child,$currentLevel+1)+1;
+        }  
+        return $equipe;
+
+    }
+
 }

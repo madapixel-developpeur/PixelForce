@@ -1,0 +1,171 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	Fiche Implantation
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .invoice-date-title{
+            width: initial !important;
+        }
+        .my-text-right{
+            text-align: right;
+        }
+
+        .my-text-center{
+            text-align: center;
+        }
+        .my-text-left{
+            text-align: left !important;
+            padding-left: 5px !important;
+        }
+
+        .qtyx{
+            text-align: center;
+            vertical-align: middle;
+            font-weight: bold;
+            font-size: 1.4rem;
+        }
+    </style>
+{% endblock %}
+
+
+
+{% block body %}
+<section class="invoice-preview-wrapper">
+    <div class="row invoice-preview">
+        <!-- Invoice -->
+        <div class="d-flex align-items-center justify-content-end mb-2">
+            <div class="btn-wrap mx-2">
+                <a href="{{path('admin_aroma_implantation_new', {'id': superMere.id})}}" class="btn btn-success" role="button"
+                    ><i class="fa fa-plus" aria-hidden="true"></i>&nbsp;Ajouter</a>
+            </div>
+        </div>
+        {% for mere in superMere.filles %}
+        {% if mere.valid %}
+        <div class="col-12" id="fille{{mere.id}}">
+            <div class="card invoice-preview-card">
+                <div class="card-body invoice-padding pb-0">
+                    <!-- Header starts -->
+                    <div class="d-flex align-items-center">
+                        <h3 class="text-primary invoice-logo">
+                            {{mere.nom}} 
+                        </h3>
+                        {% if mere.reassort %}
+                            <div class="invoice-date-wrapper">
+                                <p class="invoice-date">(RÉASSORT)</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-4 col-12">
+                            {% if mere.image != null %}
+                                <img src="{{asset(files_directory_relative ~ mere.image)}}" class="uploadedAvatar rounded me-50" alt="profile image" height="150" />
+                            {% endif %}
+                        </div>
+                        <div class="col-md-8 col-12 mt-3">
+                            <div class="invoice-date-wrapper">
+                                <p class="invoice-date-title">Nombre d'unités par produit:</p>
+                                <p class="invoice-date">{{mere.qteElmt}}</p>
+                            </div>
+                            <div class="invoice-date-wrapper">
+                                <p class="invoice-date-title">Remise:</p>
+                                <p class="invoice-date">{{mere.remise | number_format(2, ',', ' ')}} %</p>
+                            </div>
+    
+                            <div class="card-text mb-25">{{mere.description | raw}}</div>
+                        </div>
+                        
+                    </div>                     
+                    <!-- Header ends -->
+                </div>
+
+                <hr class="invoice-spacing" />
+
+                <!-- Address and Contact starts -->
+                <div class="card-body invoice-padding pt-0">
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Produit</th>
+                                {# <th>PU conseillé</th> #}
+                                <th>PU TTC</th>
+                                <th>PU après réduction TTC (remise de {{mere.remise | number_format(2, ',', ' ')}} %)</th>
+                                <th>Montant TTC</th>
+                                <th>Unités Gratuites</th>
+                            </tr>
+                        </thead>
+                        <tbody id="row-list">
+                            {% for elmt in mere.fillesValid %}
+                                <tr>
+                                    {% if loop.index0 == 0 %}
+                                        <td class="qtyx" rowspan="{{mere.fillesValid | length }}">{{mere.qteElmt | number_format(0, ',', ' ')}}x </td>
+                                    {% endif %}
+                                    <td class="my-text-left">{{elmt.produit.nom}}</td>
+                                    {# <td class="my-text-right">{{elmt.produit.prixConseille | number_format(2, ',', ' ')}} €</td> #}
+                                    <td class="my-text-right">{{elmt.produit.prix | number_format(2, ',', ' ')}} €</td>
+                                    <td class="my-text-right">{{elmt.prixFinal | number_format(2, ',', ' ')}} €</td>
+                                    <td class="my-text-right">{{elmt.montantFinal | number_format(2, ',', ' ')}} €</td>
+                                    <td class="my-text-right">{{elmt.qteGratuit | number_format(0, ',', ' ')}}</td>
+                                </tr>  
+                            {% endfor %}
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="4"></td>
+                                <td class="my-text-right">Montant total TTC</td>
+                                <td class="my-text-right">{{mere.allTotal.total | number_format(2, ',', ' ')}} €</td>                                
+                            </tr>
+                            <tr>
+                                <td colspan="4"></td>
+                                <td class="my-text-right">Unités Gratuites</td>
+                                <td class="my-text-right">{{mere.allTotal.ug | number_format(0, ',', ' ')}}</td>                                
+                            </tr>
+                        </tfoot>
+                        
+                    </table>
+                </div>
+                <!-- Address and Contact ends -->
+
+                <hr class="invoice-spacing" />
+
+                <!-- Invoice Note starts -->
+                <div class="card-body invoice-padding pt-0">
+                    <div class="row">
+                        {# <div class="col-12">
+                            <span class="fw-bold">Note:</span>
+                            <span>It was a pleasure working with you and your team. We hope you will keep us in mind for future freelance
+                                projects. Thank You!</span>
+                        </div> #}
+                        <div class="d-flex justify-content-end align-items-center">
+                            <div class="btn-wrap mx-2">
+                                <a href="{{path('admin_aroma_implantation_edit', {'id': mere.id})}}" class="btn btn-warning" role="button"
+                                    ><i class="fa fa-edit" aria-hidden="true"></i>&nbsp;Modifier</a>
+                            </div>
+                            <div class="btn-wrap">
+                                <a href="{{path('admin_aroma_implantation_delete', {'id': mere.id})}}" class="btn btn-danger" role="button"
+                                    ><i class="fa fa-trash" aria-hidden="true"></i>&nbsp;Supprimer</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Invoice Note ends -->
+            </div>
+            
+        </div>
+        <!-- /Invoice -->
+        {% endif %}
+        {% endfor %}
+        
+    </div>
+</section>
+
+
+
+    
+{% endblock %}
+            

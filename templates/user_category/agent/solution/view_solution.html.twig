@@ -1,0 +1,43 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title %}
+	Visualisation Solution
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+	<div class="mt-2">
+		<a href="{{ path('probleme_view',{'id':solution.probleme.id}) }}" class="btn btn-secondary"> <i class="fa-solid fa-circle-arrow-left"></i> Retour </a>
+
+		<div class="content-card-user-information mt-3">
+			<section class="app-user-view-account">
+				<div class="row">
+					<!-- User Content -->
+					<div class="col-0  col-md-3 ">
+					</div>
+					<!--/ User Content -->
+
+					<!-- User Sidebar -->
+					<div class="col-12  col-md-6 order-1 order-md-0">
+						{{ include ('global/card/_card_solution_information.html.twig', {solution :solution}) }}
+					</div>
+					<!--/ User Sidebar -->
+
+					<!-- User Content -->
+					<div class="col-0  col-md-3 ">
+					</div>
+					<!--/ User Content -->
+				</div>
+			</section>
+			
+		</div>
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+	{{ encore_entry_script_tags('vuexy_app_user_view_js') }}
+{% endblock %}

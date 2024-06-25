@@ -1,0 +1,125 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Retrait {% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+	<style>
+		
+	</style>
+{% endblock %}
+
+{% block body %}
+	<div class="container my-5">
+		<div class="content-body-form">
+			<div class="row align-items-center justify-content-center">
+				<div class="col-sm-12 col-md-6">
+						<h1 class="fw-bolder text-center mb-2 general-primary-text">Demande de retrait </h1>
+						{{ form_start(form) }}
+						<div class="row">
+							<div class="col-12 retrait-form">
+								<div class="mb-3 text-dark-template">
+									{{form_label(form.rib)}}
+									{{form_widget(form.rib,{ 'attr': {'class': 'form-control rounded-3'} })}}
+									{{form_errors(form.rib)}}
+								</div>
+								<div class="mb-3 text-dark-template">
+									{{form_label(form.amount)}}
+									{{form_widget(form.amount,{ 'attr': {'class': 'form-control rounded-3'} })}}
+									{{form_errors(form.amount)}}
+								</div>
+								
+						
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-12 text-center"><button class="btn btn-success w-100" type="submit">Enregistrer</button></div>
+						</div>					
+						{{ form_end(form) }}
+					</div>
+				<div class="col-sm-12 col-md-6 text-center">
+					<div class="card w-75 m-5 rounded-4" >
+						<div class="card-body d-flex align-items-center justify-content-center">
+							<div class=" text-center m-2">
+                                <a class="gestion-projet bg-light-primary rounded-circle" href="#" >
+                                    <i class="fa-solid fa-dollar-sign fs-1 mt-3" aria-hidden="true"></i>
+                                </a>
+                            </div>
+							<div class=" text-center m-2">
+                                <h4 class="fs-5 fw-bolder general-primary-text">Votre solde Actuelle</h4>
+								<h4 class="mb-3 fs-1 general-primary-text"> <span>  {{ solde }} €  </span></h4>
+                            </div>
+						</div>
+					</div>	
+				</div>
+			</div>
+
+
+			<div class="row mb-3">
+				<div class="col-12  mt-2 mt-md-3">
+					<h4 class="my-auto general-primary-text">Historique</h4>
+					
+				</div>
+			</div>
+			<div class="card card-company-table p-5 rounded-3" style="">
+				<div class="card-body p-0">
+					<div class="card-head mb-3">
+						<div class="row">
+							<div class="col-7">
+                        	<p class="w-50 fs-6 lh-sm">Avoir au moin 5 filleuil directs avec au moins 1000 € de CA au Total</p>
+							</div>
+							<div class="col-5 d-flex justify-content-center">
+								<form action="{{path('agent_transaction_retrait')}}" class="input-group rounded-3 m-2 w-75">
+                                        <button class="input-group-text border-0" id="search-addon" type="submit">
+											<i class="fas fa-search"></i>
+										</button>
+                                        <input type="search"name="search" class="form-control  input-group-text border-0" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
+                                </form>
+								<div class="input-group rounded-3 m-2 w-25">
+									<span class="input-group-text border-0 w-25 rounded-4" id="search-addon">
+										<i class="fa-solid fa-bars-staggered "></i>
+									</span>
+									<a type="search" class="input-group-text border-0 w-75">Filtres<a/>
+								</div>
+							</div>
+						</div>
+                    </div>
+					<div class="table-responsive">
+						<table class="table text-center">
+							<tbody class="align-items-center">
+								<tr style="table-header-custom" >
+									<th scope="col" class="text-center">#</th>
+									<th scope="col" class="text-center">Date</th>
+									<th scope="col" class="text-center">Montant</th>
+									<th scope="col" class="text-center">RIB</th>
+									<th scope="col" class="text-center table-th-notSortable">Statut</th>
+								</tr>
+
+								{% for item in history %}
+									<tr>
+										<td class="text-dark-template">{{item.id }}</td>
+										<td class="text-dark-template">{{item.createdAt | date("d/m/Y H:i")}}</td>
+										<td class="text-dark-template">{{item.amount | number_format(2, ',', ' ') }} €</td>
+										<td class="text-dark-template">{{item.rib }}</td>
+										<td><span class="badge bg-light-success ">{{item.statusRetraitStr}}</span>
+										</td>
+									</tr>
+								{% endfor %}
+
+							</tbody>
+						</table>
+					</div>
+					<div class="pagination d-flex justify-content-center">
+						{{ knp_pagination_render(history)}}
+					</div>
+				</div>
+			</div>
+
+			
+        </div>
+	</div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('datatableJs')}}
+{% endblock %}

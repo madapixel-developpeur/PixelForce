@@ -1,0 +1,154 @@
+{% extends 'base.html.twig' %}
+{% block title %}Coach - zoom{% endblock %}
+{% block body %}
+    <div class="px-2 px-md-3">
+        <!-- bar navigation -->
+        <div class="row ">
+            <div class="col-12  mt-2 mt-md-3">
+                <div class=" w-100 h-100 ps-3 py-3  bg-white border">
+                    <div class="row h-100">
+                        <div class="col-12 col-md-6 d-flex">
+                            <h4 class="text-danger"><i class="fa-solid fa-video"></i> Planifier une réunion</h4>
+                        </div>
+                        <div class="col-12 col-md-6  pe-4 text-start text-md-end ">
+                            {% if constant('App\\Entity\\User::ROLE_COACH') in app.user.roles and livesQuery|length > 0 %}
+                                <a href="#" data-bs-toggle="modal" data-bs-target="#ModalEditLivef12d" class="btn btn-secondary btn-sm my-3 my-md-0 "><i class="fa-solid fa-calendar-check me-2"></i> Planifier</a>
+                            {% endif %}
+                            <a href="#" data-bs-toggle="modal" data-bs-target="#modal-select-agent" class="btn btn-danger btn-sm "><i class="fa-solid fa-video me-2"></i> Démarrer un live</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end bar navigation -->
+        <!-- bar dashboard -->
+{#        {% include "live/video/dashboard.html.twig" %}#}
+        <!-- endbar dashboard -->
+        <div class="row">
+            {% for liveQuery in livesQuery %}
+                <div class="col-lg-4 col-md-5 col-12 mt-2 mt-md-3">
+                    <div class="live w-100 h-100 bg-white border p-3 position-relative" >
+                        <div class="row">
+                            <div class="col-6">
+                                <h1><i data-feather="video" class="font-large-5 text-danger"></i></h1>
+                            </div>
+                            <div class="col-6 d-flex pe-1">
+                                <span class="my-auto ms-auto text-danger fw-bold ">
+                                     <i class="fa-solid fa-users"></i> {{ liveChatRepo.countParticipants(liveQuery.live).nombreParticipants }} participants
+                                </span>
+                            </div>
+                        </div>
+                        <div class=" mb-4">
+                            <small class="my-auto fw-bold text-danger">{{ liveQuery.live.isInProcess ? 'En ligne' : 'Hors ligne' }}</small>
+                        </div>
+                        <h5> {{ liveQuery.live.theme ? liveQuery.live.theme : 'Cette réunion n\'a pas de thème' }}</h5>
+                        <p class="text-start"><small><u>Date début de la réunion</u> : <span class="text-danger">{{ liveQuery.live.dateDebutLive|date('d-m-Y H:i:s') }}</span></small></p>
+                        <p class="mb-5 pb-3"><u>Description</u> : {{ liveQuery.live.description ? liveQuery.live.description|slice(0, 150) : 'pas de description sur ce live' }}</p>
+                        <div class="w-100 position-absolute bottom-0 pe-4 pb-2 text-end">
+                            {% if (constant('App\\Entity\\User::ROLE_COACH') in app.user.roles and date(liveQuery.live.dateDebutLive|date("d-m-Y H:i:s")) <= date("now"|date("d-m-Y H:i:s"))) or liveQuery.live.isInProcess == '1' %}
+                                <a href="{{ path('coach_zoom_lancerReunion', {codeEncoded: liveQuery.live.code|base64_encode}) }}" class="btn btn-sm btn-info text-white"><i class="fa-solid fa-play"></i>
+                                    Lancer
+                                </a>
+                            {% endif %}
+                            <a href="#" class="btn btn-sm btn-secondary text-white" data-bs-toggle="modal" data-bs-target="#ModalEditLive{{ liveQuery.live.id }}"><i class="fa fa-edit"></i> Modifier</a>
+                            <a href="{{ path('coach_zoom_destruct', {code: liveQuery.live.code, }) }}" class="btn btn-danger btn-sm">{{  constant('App\\Entity\\User::ROLE_COACH') in app.user.roles ? 'Abandonner' : 'Se retirer' }}</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- import modal -->
+                {% include 'live/video/modal_modification.html.twig' with {live:liveQuery.live, agentsCompare:liveQuery.agents, agents: agents} %}
+
+            {% else %}
+{#                <div class="col-12  col-md-6 col-lg-4  h-100 d-flex mt-2 mt-md-3">#}
+{#                    <div class="m-auto border border-danger border-5 h-100">#}
+{#                        <img src="{{ asset('build/images/live-illustration.webp') }}" alt="" class="border border-danger border-5 img-fluid" style="border-style:double !important" />#}
+{#                        <h1 class="text-md-center text-muted mt-3">Aucun live n'est programmé </h1>#}
+{#                    </div>#}
+
+{#                </div>#}
+                {% if constant('App\\Entity\\User::ROLE_COACH') in app.user.roles %}
+                    <div class="col-12 col-md-6 col-lg-8 mt-4 mt-md-4">
+                        <form action="{{ path('coach_zoom_planifier') }}" name="form-planification" method="post">
+                            <div class="row">
+                                <div class="col-12 col-lg-8">
+                                    <div class="mb-3">
+                                        <h6>Date et heure :</h6>
+                                        <input type="datetime-local" placeholder="Date de debut live" class="form-control" name="dateDebutLive" required />
+                                    </div>
+                                    <div class="mb-3">
+                                        <h6>Thème :</h6>
+                                        <input type="text" name="theme" placeholder="Ajouter un thème" class="form-control" required />
+                                    </div>
+                                    <div class="mb-3 text-strat ">
+                                        <h6>Donner une petite description à la réunion :</h6>
+                                        <textarea name="description" placeholder="Une petite description concernant la réunion" class="border w-100 p-2" rows="10"></textarea>
+                                    </div>
+                                    <div class="text-end">
+                                        <button type="submit" class="btn btn-danger"><i class="fa-solid fa-calendar-plus me-2"></i> Planifier</button>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-lg-4 pt-1">
+                                    <div class="agentChecker">
+                                        <div class="list-group">
+                                            <label class="list-group-item text-center bg-princ text-white border-2">
+                                                <h6 class="text-white">Liste des agents</h6>
+                                            </label>
+                                            <label class="list-group-item">
+                                                <input class="form-check-input me-3"  name="all-agents" type="checkbox" value="all" id="agent-all">
+                                                Cocher tout le monde
+                                            </label>
+                                            {% for agent in agents %}
+                                                <label class="list-group-item">
+                                                    <input class="form-check-input me-3"  name="users[]" type="checkbox" value="{{ agent.id|base64_encode }}" id="agent-{{ agent.id }}">
+                                                    {{ agent.nom }} {{ agent.prenom }}
+                                                </label>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- import modal planification -->
+    {% include 'live/video/modal_modification.html.twig' %}
+
+    {# Live Rapide : Modal pour selectionner un agent #}
+    <div class="modal fade users agentChecker" id="modal-select-agent" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-danger"><i class="fa-solid fa-video me-2"></i> Live Rapide</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="list-group">
+                        <label class="list-group-item">
+                            <input class="form-check-input me-3"  name="all-agents" type="checkbox" value="all" id="agent-all">
+                            Cocher tout le monde
+                        </label>
+                        {% for agent in agents %}
+                            <label class="list-group-item">
+                                <input class="form-check-input me-3"  name="users[]" type="checkbox" value="{{ agent.id|base64_encode }}" id="agent-{{ agent.id }}">
+                                {{ agent.nom }} {{ agent.prenom }}
+                            </label>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                    <button type="button" class="btn btn-danger speed-liveVideo-call"><i class="fa-solid fa-video me-2"></i> Lancer le live</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('PlanificationLiveVideo') }}
+{% endblock %}

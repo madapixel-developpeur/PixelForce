@@ -4,11 +4,13 @@ namespace App\Repository;
 
 use App\Entity\CategorieFormation;
 use App\Entity\Formation;
+use App\Entity\FormationAgent;
 use App\Entity\Secteur;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Query\Expr;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
 /**
@@ -21,7 +23,7 @@ class FormationRepository extends ServiceEntityRepository
 {
     protected $repoFormationAgent;
 
-    public function __construct(ManagerRegistry $registry, FormationAgentRepository $repoFormationAgent)
+    public function __construct(ManagerRegistry $registry, FormationAgentRepository $repoFormationAgent, private AgentSecteurRepository $agentSecteurRepository)
     {
         parent::__construct($registry, Formation::class);
         $this->repoFormationAgent = $repoFormationAgent;
@@ -117,8 +119,9 @@ class FormationRepository extends ServiceEntityRepository
                 ->andWhere('u.nom LIKE :nom')
                 ->setParameter('nom', '%'.$criteres['auteur'].'%');
         }
+        $queryBuilder->addOrderBy('f.type', 'ASC');
         if(isset($criteres['trie']) && !empty($criteres['trie'])) {
-            $queryBuilder->orderBy('f.'.$criteres['trie'], $criteres['ordre']);
+            $queryBuilder->addOrderBy('f.'.$criteres['trie'], $criteres['ordre']);
         }
 
 
@@ -163,6 +166,7 @@ class FormationRepository extends ServiceEntityRepository
                 ->andWhere('u.nom LIKE :nom')
                 ->setParameter('nom', '%'.$criteres['auteur'].'%');
         }
+        $queryBuilder->addOrderBy('f.type', 'ASC');
         if(!empty($criteres['trie'])) {
             $queryBuilder->orderBy('f.'.$criteres['trie'], $criteres['ordre']);
         }
@@ -183,9 +187,12 @@ class FormationRepository extends ServiceEntityRepository
     public function searchForAgent(?array $criteres, $secteur)
     {
         $queryBuilder = ($this->createQueryBuilder('f'))->where('f.secteur=:secteur')
-            ->setParameter('secteur',$secteur->getId())
-            ->andWhere('f.brouillon=:brouillon')
-            ->setParameter('brouillon', false);
+            ->setParameter('secteur',$secteur->getId());
+        $queryBuilder->andWhere($queryBuilder->expr()->orX(
+                $queryBuilder->expr()->isNull('f.brouillon'),
+                $queryBuilder->expr()->eq('f.brouillon', ':brouillon')
+            ))->setParameter('brouillon', 0)
+        ;
         if(!empty($criteres['titre'])) {
             $queryBuilder->andWhere('f.titre LIKE :titre')
                 ->setParameter('titre', '%'.$criteres['titre'].'%');
@@ -202,6 +209,7 @@ class FormationRepository extends ServiceEntityRepository
                 ->andWhere('u.nom LIKE :nom')
                 ->setParameter('nom', '%'.$criteres['auteur'].'%');
         }
+        $queryBuilder->addOrderBy('f.type', 'ASC');
         if(!empty($criteres['trie'])) {
             $queryBuilder->orderBy('f.'.$criteres['trie'], $criteres['ordre']);
         }
@@ -217,6 +225,29 @@ class FormationRepository extends ServiceEntityRepository
 //        dd((string) $queryBuilder);
 
         return $queryBuilder->getQuery();
+    }
+
+    public function getNextFormationsByCategorieAndSecteur($secteur, $categorie, $formationId, $formationType)
+    {
+       $qb = $this->createQueryBuilder('f');
+
+        return $qb->andWhere('f.CategorieFormation = :categorie')
+        ->andWhere('f.secteur = :secteur')
+        ->andWhere('f.id > :formationId or coalesce(f.type, 1) > :formationType')
+        ->andWhere($qb->expr()->orX(
+            $qb->expr()->isNull('f.brouillon'),
+            $qb->expr()->eq('f.brouillon', ':brouillon')
+        ))->setParameter('brouillon', 0)
+        ->andWhere('f.statut = :statusCreated')
+            ->setParameter('statusCreated', Formation::STATUS_CREATED)
+        ->setParameter('categorie', $categorie)
+        ->setParameter('secteur', $secteur)
+        ->setParameter('formationId', $formationId)
+        ->setParameter('formationType', $formationType??1)
+        ->addOrderBy('f.type', 'ASC')
+        ->addOrderBy('f.id', 'ASC')
+        ->getQuery()
+        ->getResult();
     }
 
 
@@ -278,20 +309,29 @@ class FormationRepository extends ServiceEntityRepository
     }
 
     public function findOrderedNonFinishedFormations(Secteur $secteur, User $agent){
-        $qb = $this->createQueryBuilder('f');
-        $qb->join('f.CategorieFormation', 'cf')
-            ->leftJoin('f.formationAgents', 'fa', Join::WITH, $qb->expr()->eq('fa.agent', ':agent'))
-            ->andWhere('f.secteur=:secteur')
-            ->andWhere('f.statut=:statusCreated')
-            ->andWhere('fa.agent is NULL OR fa.statut != :finishedStatus')
-            ->setParameter('secteur',$secteur->getId())
-            ->setParameter('agent', $agent->getId())
-            ->setParameter('finishedStatus', Formation::STATUT_TERMINER)
-            ->setParameter('statusCreated', Formation::STATUS_CREATED)
-            ->addOrderBy('cf.ordreCatFormation')
-            ->addOrderBy('f.id');
-        return $qb->getQuery()->getResult();    
+        $agentSecteur = $this->agentSecteurRepository->findOneBy(["agent" => $agent, "secteur" => $secteur]);
+        $sql = '
+            SELECT f.id as formationId FROM formation f join categorie_formation cf on f.categorie_formation_id = cf.id
+            left join formation_agent fa ON f.id = fa.formation_id AND fa.agent_id = :agent 
+            WHERE f.secteur_id = :secteur AND f.statut = :statusCreated AND (f.brouillon IS NULL OR f.brouillon =0)
+            AND cf.ordre_cat_formation >= :formationRank
+            AND (fa.statut != :finishedStatus OR fa.agent_id IS NULL) ORDER BY cf.ordre_cat_formation, f.type, f.id LIMIT 1
+        ';   
+        $stmt = $this->getEntityManager()->getConnection()->prepare($sql);
+        $resultSet = $stmt->executeQuery([
+            'agent' => $agent->getId(), 
+            'secteur' => $secteur->getId(), 
+            'statusCreated' => Formation::STATUS_CREATED, 
+            'finishedStatus' => Formation::STATUT_TERMINER,
+            'formationRank' => $agentSecteur?->getCurrentFormationRank()??0,
+        ]);
+        $result = $resultSet->fetchAllAssociative();
+        if(count($result) > 0) {
+            return $this->find($result[0]['formationId']);
+        }
+        return null;        
     }
+    
 
     /**
      * Permet de recupérer les formations de l'agent en fonction du secteur et de la catégorie

@@ -1,0 +1,71 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title %}
+	Visualisation audit
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+	<div class="mt-2">
+		<a href="{{ path('audit_list') }}" class="btn btn-secondary"> <i class="fa-solid fa-circle-arrow-left"></i> Retour </a>
+
+		<div class="content-card-user-information mt-3">
+			<section class="app-user-view-account">
+				<div class="row">
+					<!-- User Content -->
+					<div class="col-0  col-md-3 ">
+					</div>
+					<!--/ User Content -->
+
+					<!-- User Sidebar -->
+					<div class="col-12  col-md-6 order-1 order-md-0">
+						{{ include ('global/card/_card_audit_information.html.twig', {audit :audit}) }}
+					</div>
+					<!--/ User Sidebar -->
+
+					<!-- User Content -->
+					<div class="col-0  col-md-3 ">
+					</div>
+					<!--/ User Content -->
+				</div>
+				<div class="card">
+						<h4 class="card-header">Liste des problèmes potentiels</h4>
+						<div class="table-responsive">
+							<table class="table table-striped table-hover text-center sortable">
+								<thead>
+									<tr style="white-space:nowrap" >
+										<th scope="col" class="text-center">#</th>
+										<th scope="col" class="text-center">titre</th>
+										<th scope="col" class="text-center">description</th>
+										<th scope="col" class="text-center">note</th>
+									</tr>
+								</thead>
+								<tbody>
+									{% for probleme in audit.allProblemes %}
+										<tr>
+											<td>{{ probleme.id }}</td>
+											<td>{{  probleme.titre }}</td>
+											<td>{{ probleme.description}}</td>
+											<td>{{ probleme.noteRisque }}</td>
+											
+										</tr>
+									{% endfor %}
+
+								</tbody>
+							</table>
+						</div>
+				
+				</div>
+			</section>
+			
+		</div>
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+	{{ encore_entry_script_tags('vuexy_app_user_view_js') }}
+{% endblock %}

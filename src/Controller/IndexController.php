@@ -27,12 +27,21 @@ class IndexController extends AbstractController
      */
     public function dashboard()
     {
-        if(in_array(User::ROLE_COACH, $this->getUser()->getRoles())) {
-            return $this->redirectToRoute('coach_agent_list');
+        if(in_array(User::ROLE_AGENT, $this->getUser()->getRoles())) {
+            return $this->redirectToRoute('agent_home');
         }
-        return $this->render('global/index/dashboard.html.twig', [
-            'controller_name' => 'IndexController',
-        ]);
+        elseif(in_array(User::ROLE_COACH, $this->getUser()->getRoles())) {
+            return $this->redirectToRoute('coach_dashboard_index');
+        }
+        elseif(in_array(User::ROLE_ADMINISTRATEUR, $this->getUser()->getRoles())) {
+            return $this->redirectToRoute('admin_dashboard');
+        }
+        else{
+            return $this->render('global/index/dashboard.html.twig', [
+                'controller_name' => 'IndexController',
+            ]);
+        }
+        
     }
 
     /**

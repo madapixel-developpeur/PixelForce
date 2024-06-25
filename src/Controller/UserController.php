@@ -21,6 +21,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use function Symfony\Component\String\b;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
 class UserController extends AbstractController
 {
@@ -186,5 +187,11 @@ class UserController extends AbstractController
         $user = $this->userRepository->find($id);
         if($user==null) return $this->json(null, 404);
         return $this->json($user, 200);
+    }
+
+    #[Route('/api/login', name: 'api_login', methods: ['POST'])]
+    public function index(): Response
+    {
+        return $this->json($this->getUser());
     }
 }

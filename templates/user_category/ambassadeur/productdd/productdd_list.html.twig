@@ -1,0 +1,236 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	Liste des produits
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+    <div class="modal fade my-custom-card" id="addNewCard" tabindex="-1" aria-labelledby="addNewCardTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-transparent">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body px-sm-5 mx-50 pb-5">
+                    <h1 class="text-center mb-1" id="addNewCardTitle">Export</h1>
+                    {# <p class="text-center">Add card for future billing</p> #}
+
+                    <!-- form -->
+                    <form id="addNewCardValidation" class="row gy-1 gx-2 mt-75">
+
+                        <div class="col-12 col-md-6">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" id="typeFileXls" name="typeFile" value="0" checked/>
+                                <label class="form-check-label" for="typeFileXls"><i class="fa fa-file-excel fa-4x"></i> Excel</label>
+                            </div>
+
+
+                        </div>
+
+                        <div class="col-12 col-md-6">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" id="typeFilePdf"  name="typeFile"  value="1"/>
+                                <label  class="form-check-label" for="typeFilePdf"><i class="fa fa-file-pdf fa-4x"></i> Pdf</label>
+                            </div>
+                        </div>
+
+
+                        <div class="col-12 mt-4">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" id="allData" name="typeData" value="0" checked/>
+                                <label class="form-check-label" for="allData">Toutes les données</label>
+                            </div>
+
+
+                        </div>
+
+                        <div class="col-12">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" id="showedData"  name="typeData"  value="1"/>
+                                <label  class="form-check-label" for="showedData">Seulement celles qui sont affichées</label>
+                            </div>
+                        </div>
+
+                        <div class="mt-3 d-flex flex-wrap justify-content-around align-items-center text-center">
+                            <a href="#" id="exportBtn" role="button" class="btn btn-primary" >
+                                Exporter
+                            </a>
+
+                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" aria-label="Close">
+                                Annuler
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="block block--bordered block--rounded">
+        <h1 class="block__text block__text--center mt-2" >Options de filtre :</h1>
+        <div class="filter-wrap">
+            {% if error %}
+                <div class="alert alert-danger" role="alert">
+                    <div class="alert-body">
+                        {{error}}
+                    </div>
+                </div>
+            {% endif %}
+            {{ form_start(form, {'attr': {'class': 'filter-form', 'id': 'product-filter-form'}}) }}
+
+                <div class="my-form-widget">
+                    {{form_label(form.nom)}}
+                    {{form_widget(form.nom)}}
+                    {{form_errors(form.nom)}}
+                </div>
+                <div class="my-form-widget">
+                    {{form_label(form.categorie)}}
+                    {{form_widget(form.categorie)}}
+                    {{form_errors(form.categorie)}}
+                </div>
+                <div class="my-form-widget">
+                    {{form_label(form.description)}}
+                    {{form_widget(form.description)}}
+                    {{form_errors(form.description)}}
+                </div>
+                <div class="my-form-widget">
+                    {{form_label(form.sort)}}
+                    {{form_widget(form.sort)}}
+                    {{form_errors(form.sort)}}
+                </div>
+                <div class="my-form-widget">
+                    {{form_label(form.direction)}}
+                    {{form_widget(form.direction)}}
+                    {{form_errors(form.direction)}}
+                </div>
+                <div class="btn-wrap">
+                    <button class="btn btn-primary" type="submit"><i data-feather="filter"></i>Filtrer</button>
+                </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+    <div class="block block--bordered block--rounded">
+        {% for label, message in app.flashes %}
+            <div class="alert alert-{{label}} p-3 text-center" role="alert">
+                <div class="alert-body">
+                    {{message}}
+                </div>
+            </div>
+        {% endfor %}
+        <div class="block__header mb-1" >
+            <h1 class="block__title">Liste des produits :</h1>
+            <div class="fab-btn-wrap">
+                <a  href="{{path('admin_productdd_new')}}" class="btn btn-primary btn--rounded fab-btn"><i data-feather="plus"></i>Nouveau produit</a>
+            </div>
+        </div>
+        {% if productList|length ==0 %}
+                <div class="alert alert-primary p-3 text-center" role="alert">
+                    <div class="alert-body">
+                        Aucun produit disponible pour le moment.
+                    </div>
+                </div>
+        {% endif %}
+        {% if productList|length !=0 %}
+        <div class="table-responsive mb-1">
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Nom</th>
+                        <th>Catégorie</th>
+                        <th>Description</th>
+                        <th>Image</th>
+                        <th></th>
+                        <th></th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in productList %}
+                    <tr>
+                        <td>{{product.id}}</td>
+                        <td>{{product.nom}}</td>
+                        <td>{{product.categorie.nom}}</td>
+                        <td>{{product.description | raw}}</td>
+                        <td class="text-center w-25" >
+                            {% if product.photo != null %}
+                                <img class="img-fluid card-img-top ecommerce-card-img" style="width: auto; object-fit: cover" src="{{ asset( filesDirectory ~ product.photo) }}" alt="Image pour {{product.nom}}" />
+                            {% endif %}
+                        </td>
+
+                        <td class="col-action col-action--edit">
+                            <a href="{{path('admin_productdd_fiche', {'id': product.id})}}">
+                                 <i data-feather="eye"></i>
+                            </a>
+                        </td>
+                        <td class="col-action col-action--remove">
+                            <a href="{{path('admin_productdd_delete', {'id': product.id})}}">
+                                 <i data-feather="trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <div class="d-flex justify-content-end align-items-center">
+                <div class="btn-wrap mx-2">
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addNewCard">
+                        Exporter
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex justify-content-center scale-up-center">
+            {{ knp_pagination_render(productList) }}
+        <div>
+        {% endif %}
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        {# function deleteProduct($id){
+            let confirmed = confirm("Voulez-vous vraiment continuer ?");
+            console.log($id);
+            if(confirmed){
+                $.ajax({
+                url:        '/admin/product/delete/'+$id,
+                type:       'DELETE',
+                dataType:   'json',
+                async:      true,
+
+                success: function(data, status) {
+                    console.log("Success");
+                    console.log(data);
+                    location.reload();
+
+                },
+                error : function(xhr, textStatus, errorThrown) {
+                    let errMessage = xhr.responseJSON.message;
+                    console.log(errMessage);
+                }
+                });
+            }
+
+        } #}
+
+         $(document).ready(function () {
+            $('#exportBtn').click(function (e){
+                let form = $('#addNewCardValidation');
+                let page = {{page}};
+                let dataType = $(form).find('input[name="typeData"]:checked').val();
+                let fileType = $(form).find('input[name="typeFile"]:checked').val();
+                let href = "{{path('admin_productdd_export')}}?{{queryString | raw}}&page="+page+"&dataType="+dataType+"&fileType="+fileType;
+                $(this).attr('href', href);
+            });
+         });
+    </script>
+{% endblock %}
+

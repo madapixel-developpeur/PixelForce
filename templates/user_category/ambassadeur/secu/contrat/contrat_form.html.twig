@@ -1,0 +1,73 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	Formulaire Contrat
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+
+{% block body %} 
+    <div class="block block--bordered block--rounded">
+        <h1 class="block__text block__text--center mt-2" >Formulaire Contrat :</h1>
+            
+            {{ form_start(form, {'attr': {'class': 'my-form', 'id': 'category-form'}}) }}
+                {# {% if error %}
+                <div class="alert alert-danger" role="alert">
+                    <div class="alert-body">
+                        {{error}}
+                    </div>
+                </div>
+                {% endif %} #}
+                <div class="my-form-widget">
+                    {{form_label(form.nom)}}
+                    {{form_widget(form.nom)}}
+                    {{form_errors(form.nom)}}
+                </div>
+                <div class="my-form-widget">
+                    {{form_label(form.file)}}
+                    {{form_widget(form.file)}}
+                    {{form_errors(form.file)}}
+                    <div class="mt-2 d-none" id="file-show"><i class="fa fa-file-pdf fa-2x" aria-hidden="true"></i>&nbsp;<span id="filename">file/doc</span></div>
+                </div>
+                <div class="btn-wrap">
+                    <button class="btn btn-primary" type="submit"><i data-feather="save"></i>{{ isEdit ? 'Enregistrer les modifications' : 'Créer' }}</button>
+                </div>
+            {{ form_end(form) }}
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script>
+    let contrat;
+    {% if contrat.fichier %}
+        contrat = '{{contrat.fichier}}';
+    {% endif %}
+
+    function checkSelected(selected){
+        let fileShowDOM = document.getElementById('file-show');
+        if(!selected) selected = contrat;
+        if(selected){
+            document.getElementById('filename').innerHTML = selected;
+            fileShowDOM.classList.remove('d-none');
+            fileShowDOM.classList.add('d-block');
+        } else{
+            fileShowDOM.classList.remove('d-block');
+            fileShowDOM.classList.add('d-none');
+        }
+    }
+
+    document.getElementById('contrat_secu_form_file').onchange = function () {
+        checkSelected(this.value);
+    };
+
+    checkSelected(null);
+</script>
+{% endblock %}
+
+
+

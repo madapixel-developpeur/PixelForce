@@ -1,0 +1,30 @@
+.bg-image {
+    background-image: url("../vuexy/images/pages/login-images.png");
+    background-size: cover; /* Ajuste l'image pour couvrir toute la div */
+    background-position: center; /* Centre l'image */
+    width: 100%; /* Assurez-vous que la div prend toute la largeur possible */
+    height: 100%; /* Ajustez selon la hauteur souhaitée */
+}
+.pixelforce-logo{
+    margin: auto;
+    padding-bottom: 50px;
+}
+
+.pixelforce-logo img{
+    width: 40px;
+}
+.pixelforce-logo h2{
+    font-size:medium;
+    font-family:Arial, Helvetica, sans-serif;
+    color:black
+}
+.login-button{
+    background-color: #371fa6;
+    color: white;
+    border-width: 1px; /* Width of the border */
+    border-style: solid; /* Style of the border */
+    border-color: #371fa6; /* Color of the border */
+}
+.login-other-button{
+    color:black
+}

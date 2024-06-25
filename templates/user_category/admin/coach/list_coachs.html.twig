@@ -119,13 +119,13 @@
                                     <i class="fa-solid fa-eye"></i>
                                 </a>
                                 {% if coach.active == 1 %}
-                                <form method="post" action="{{path('admin_coach_delete', {id: coach.id})}}" style="display: inline-block;" onsubmit="return confirm('Êtes vous vraiment sûr de bannir ce coach ?')">
+                                <form id="form_{{coach.id}}" method="post" action="{{path('admin_coach_delete', {id: coach.id})}}" style="display: inline-block;" onclick="confirmationForm('form_{{coach.id}}','{{path('admin_coach_delete', {id: coach.id})}}','Êtes-vous sûr(e) de vouloir supprimer ce Coach?')">
                                     <input type="hidden" name="_method" value="DELETE">
                                     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ coach.id) }}">
                                     <button class="btn btn-danger"><i class="fas fa-trash-alt"></i></button>
                                 </form>
                                 {% elseif coach.active == -1 %}
-                                    <a href="{{ path('admin_coach_reactiver', {'id': coach.id}) }}" class="btn btn-success">
+                                    <a href="{{ path('admin_coach_reactiver', {'id': coach.id}) }}" class="btn btn-success" onclick="confirmation('{{ path('admin_coach_reactiver', {'id': coach.id}) }}','Êtes-vous sûr(e) de vouloir réactiver ce Coach?')">
                                         <i class="fa-solid fa-sync"></i>
                                     </a>
                                 {% endif %}

@@ -1,0 +1,195 @@
+{% set ORDER_STATUS_PAIED = constant('App\\Entity\\Order::PAIED') %}
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	Commande
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+<!-- BEGIN: Content-->
+    <div class="app-content content client ecommerce-application">
+        <div class="content-overlay"></div>
+        <div class="header-navbar-shadow"></div>
+        <div class="content-wrapper container-xxl p-0">
+            <div class="content-header row">
+                <div class="content-header-left col-md-9 col-12 mb-2">
+                    <div class="row breadcrumbs-top">
+                        <div class="col-12">
+                            <h2 class="content-header-title float-start mb-0">Commande</h2>
+                            <div class="breadcrumb-wrapper">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="index.html">Home</a>
+                                    </li>
+                                    <li class="breadcrumb-item"><a href="#">eCommerce</a>
+                                    </li>
+                                    <li class="breadcrumb-item active">Commande
+                                    </li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="content-body">
+                <div class="bs-stepper checkout-tab-steps">
+                    <div class="bs-stepper-content">
+                        <div class="content client active dstepper-block" role="tabpanel" >
+                        {% for message in app.flashes('error') %}
+                            <div class="alert alert-danger p-3 text-center" role="alert">
+                                <div class="alert-body">
+                                    {{message}}
+                                </div>
+                            </div>
+                        {% endfor %}
+                        {% for message in app.flashes('success') %}
+                            <div class="alert alert-success p-3 text-center" role="alert">
+                                <div class="alert-body">
+                                    {{message}}
+                                </div>
+                            </div>
+                        {% endfor %}
+
+                        {% if error %}
+                            <div class="alert alert-danger p-3 text-center" role="alert">
+                                <div class="alert-body">
+                                    {{error}}
+                                </div>
+                            </div>
+                        {% else %}
+                        <div id="place-order" class="">
+                            <!-- Checkout Place Order Left starts -->
+                            <div class="card">
+                                    {# <div class="item-img">
+                                        <a href="#">
+                                            <img src="{{ asset( filesDirectory ~ op.product.photo) }}" alt="Image pour {{op.product.nom}}" />
+                                        </a>
+                                    </div> #}
+                                    <div class="card-body">
+                                        {# <div class="item-name"> #}
+                                            <h6 class="mb-0"><a href="#" class="text-body">{{order.package.name}} - ({{order.package.service}})</a></h6>
+                                        
+                                        {# </div> #}
+                                        {# <span class="text-success mb-1">En stock</span> #}
+                                        {# <div class="item-quantity">
+                                            <span class="quantity-title">Quantité:</span>
+                                            <div class="input-group quantity-counter-wrapper bootstrap-touchspin">
+                                                <span class="input-group-btn input-group-prepend bootstrap-touchspin-injected">{{op.qty}}</span>
+                                            </div>
+                                        </div> #}
+                                        {# <span class="delivery-date text-muted">Delivery by, Wed Apr 25</span> #}
+                                        {# <span class="text-success">Remise de 20%</span> #}
+                                    {# </div> #}
+                                    {# <div class="item-options text-center">
+                                        <div class="item-wrapper">
+                                            <div class="item-cost"> #}
+                                                <h4 class="item-price mt-2" >{{order.amount | number_format(2, ',', ' ')}} €</h4>
+                                                {# <p class="card-text shipping">
+                                                    <span class="badge rounded-pill badge-light-success">Free Shipping</span>
+                                                </p> #}
+                                            {# </div>
+                                        </div> #}
+                                        {# <button type="button" class="btn btn-light mt-1 remove-wishlist" onclick="removeBasketItem({{basketItem.produit.id}})">
+                                            <i data-feather="x" class="align-middle me-25"></i>
+                                            <span>Retirer du panier</span>
+                                        </button>
+                                        <button type="button" class="btn btn-primary btn-cart move-cart" onclick="updateBasketItem({{basketItem.produit.id}})">
+                                            <i data-feather="shopping-cart" class="align-middle me-25"></i>
+                                            <span class="text-truncate">Modifier le panier</span>
+                                        </button> #}
+                                    </div>
+                                </div>
+                            <!-- Checkout Place Order Left ends -->
+
+                            <!-- Checkout Place Order Right starts -->
+                            <div class="checkout-options">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <label class="section-label form-label mb-1">Informations sur le client</label>
+                                        <hr />
+                                        <div class="price-details" style="margin-bottom: 30px;">
+                                            <ul class="list-unstyled">
+                                                <li class="price-detail">
+                                                    <div class="detail-title">Nom et prénom(s)</div>
+                                                    <div class="detail-amt">{{order.infoClient.lastName}} {{order.infoClient.firstName}}</div>
+                                                </li>
+                                                <li class="price-detail">
+                                                    <div class="detail-title">Téléphone</div>
+                                                    <div class="detail-amt discount-amt">{{order.infoClient.phone}}</div>
+                                                </li>
+                                                <li class="price-detail">
+                                                    <div class="detail-title">Email</div>
+                                                    <div class="detail-amt discount-amt">{{order.infoClient.email}}</div>
+                                                </li>
+                                                
+                                            </ul>
+                                            
+                                        </div>
+                                        <label class="section-label form-label mb-1">Informations sur la livraison</label>
+                                        <hr />
+                                        <div class="price-details" style="margin-bottom: 30px;">
+                                            <ul class="list-unstyled">
+                                                <li class="price-detail">
+                                                    <div class="detail-title">Pays/région</div>
+                                                    <div class="detail-amt">{{order.infoClient.country}}</div>
+                                                </li>
+                                                
+                                                <li class="price-detail">
+                                                    <div class="detail-title">Adresse</div>
+                                                    <div class="detail-amt discount-amt">{{order.infoClient.address}}</div>
+                                                </li>
+                                                
+                                            
+                                                
+                        
+                                            </ul>
+                                        </div>
+                                        <label class="section-label form-label mb-1">Détails de la commande</label>
+                                        <hr />
+                                        <div class="price-details">
+                                            <ul class="list-unstyled">
+                                                <li class="price-detail">
+                                                    <div class="detail-title">Date</div>
+                                                    <div class="detail-amt">{{order.createdAt | date("d/m/Y H:i")}}</div>
+                                                </li>
+                                                <li class="price-detail">
+                                                    <div class="detail-title">Statut</div>
+                                                    <div class="detail-amt discount-amt text-primary">{{order.statusStr}}</div>
+                                                </li>
+                                                
+                                            </ul>
+                                            <hr />
+                                            <ul class="list-unstyled">
+                                                
+                                                <li class="price-detail">
+                                                    <div class="detail-title detail-total">Montant total (TVA incluse) :</div>
+                                                    <div class="detail-amt fw-bolder" id="total-cost" >{{order.amount | number_format(2, ',', ' ')}} €</div>
+                                                </li>
+                                            </ul>
+                                            
+                                        </div>
+                                            
+                                    </div>
+                                </div>
+                                <!-- Checkout Place Order Right ends -->
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                    
+                    <!-- Checkout Place order Ends -->
+                </div>
+                    
+            </div>
+        </div>
+    </div>
+    <!-- END: Content-->
+{% endblock %}
+
+
+

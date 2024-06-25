@@ -1,0 +1,109 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    Rendez-vous
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/templates/meeting/meeting.style.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="block block--bordered block--rounded">
+        <h1 class="block__text block__text--center mt-2" >Options de filtre :</h1>
+        <div class="filter-wrap">
+            <!-- Formulaire de recherche -->
+            <div class="search-form">
+                {{form_start(searchForm)}}
+                <div class="row text-center">
+                    <div class="col-12 col-sm-6 col-md-6">
+                        {{form_row(searchForm.title)}}
+                    </div>
+                    <div class="col-12 col-sm-6 col-md-6">
+                        {{form_row(searchForm.status)}}
+                    </div>
+                    <div class="col-6">
+                        <label for="dateInscriptionMin" class="form-label">Date debut</label>
+                        {{form_widget(searchForm.startDate)}}
+                    </div>
+                    <div class="col-6">
+                        <label for="dateInscriptionMax" class="form-label">Date fin</label>
+                        {{form_widget(searchForm.endDate)}}
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-12 mt-3">
+                        <button class="btn btn-primary "><i class="fa-solid fa-magnifying-glass"></i> Rechercher</button>
+                    </div>
+                </div>
+                {{form_end(searchForm)}}
+            </div>
+        </div>
+    </div>
+     <div class="block block--bordered block--rounded">
+        <div class="block__header mb-1" >
+            <h1 class="block__title">Liste de mes rendez-vous :</h1>
+            
+        </div>
+        {% if meetings|length ==0 %}
+                <div class="alert alert-primary p-3 text-center" role="alert">
+                    <div class="alert-body">
+                        Aucun rendez-vous.
+                    </div>
+                </div>
+        {% endif %}
+        {% if meetings|length !=0 %}
+        <div class="table-responsive mb-1">
+            <table class="table table-bordered table-hover sortable-sortDefault-Desc">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Date de début</th>
+                        <th>Date de fin</th>
+                        <th>Libellé</th>
+                        <th>Invité</th>
+                        <th>Téléphone</th>
+                        <th>Email</th>
+                        <th>Statut</th>
+                        <th class="table-th-notSortable"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for meeting in meetings %}
+                    <tr>
+                        <td>{{meeting.id}}</td>
+                        <td>{{meeting.start | date("d/m/Y H:i")}}</td>
+                        <td>{{meeting.end | date("d/m/Y H:i")}}</td>
+                        <td><b>{{meeting.title}}</b></td>
+                        <td> <a href="{{ path('coach_agent_contact_view', { id: meeting.userToMeet.information.contact.id }) }}">{{ meeting.userToMeet.information.lastname }} {{ meeting.userToMeet.information.firstname }}</a> </td>
+                        <td> <a href="{{ path('coach_agent_contact_view', { id: meeting.userToMeet.information.contact.id }) }}">{{ meeting.userToMeet.information.phone|default('-') }}</a> </td>
+                        <td> <a href="{{ path('coach_agent_contact_view', { id: meeting.userToMeet.information.contact.id }) }}">{{ meeting.userToMeet.information.email|default('-') }}</a> </td>
+                        <td>
+                            {% if meeting.meetingState.name == 'Annulé' %}
+                                <span class="text-danger">{{meeting.meetingState.name}}</span>
+                            {% else %}
+                                {{meeting.meetingState.name}}
+                            {% endif %}
+                        </td>
+                        <td class="col-action ">
+                            <a href="{{path('coach_contact_meeting_fiche', {'id': meeting.id})}}">
+                                <i data-feather="eye"></i>
+                            </a>
+                        </td>
+
+                       
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="d-flex justify-content-center scale-up-center">
+            {{ knp_pagination_render(meetings) }}
+        <div>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('assets/templates/meeting/meeting.js') }}"></script>
+{% endblock %}

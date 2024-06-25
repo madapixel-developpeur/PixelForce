@@ -6,6 +6,8 @@ use App\Entity\AccountValidation;
 use App\Entity\ForgotPassword;
 use App\Entity\User;
 use App\Repository\AccountValidationRepository;
+use App\Repository\AgentSecteurRepository;
+use App\Repository\CategorieFormationRepository;
 use App\Repository\ForgotPasswordRepository;
 use App\Repository\UserRepository;
 use DateInterval;
@@ -13,8 +15,6 @@ use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class AuthService 
@@ -34,8 +34,8 @@ class AuthService
         ValidatorInterface $validator,
         AccountValidationRepository $accountValidationRepository,
         MailerService $mailerService,
-        private TokenStorageInterface $tokenStorage
-        )
+        private CategorieFormationRepository $categorieFormationRepository,
+        private AgentSecteurRepository $agentSecteurRepository)
     {
         $this->entityManager = $entityManager;
         $this->userRepository = $userRepository;
@@ -43,6 +43,14 @@ class AuthService
         $this->validator = $validator;
         $this->accountValidationRepository = $accountValidationRepository;
         $this->mailerService = $mailerService;
+    }
+
+    public function getAccessibleFonctionnalites(User $user, $secteurId){
+        if(!$user->getAccessibleFonctionnalites($secteurId)){
+            $agentSecteur = $this->agentSecteurRepository->findOneBy(["agent" => $user, "secteur" => $secteurId]);
+            if($agentSecteur) $user->setAccessibleFonctionnalites($secteurId, $this->categorieFormationRepository->getAccessibleFonctionnalites($agentSecteur->getCurrentFormationRank()));
+        }
+        return $user->getAccessibleFonctionnalites($secteurId);
     }
 
     public function checkNewAccount(User $user): User
@@ -103,12 +111,6 @@ class AuthService
             $code .= rand(0, 9);
         }
         return $code;
-    }
-
-    public function autoAuthenticate(User $user)
-    {
-        $token = new UsernamePasswordToken($user, 'main', $user->getRoles());
-        $token = $this->tokenStorage->setToken($token);
     }
 
 }

@@ -12,6 +12,9 @@ use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Repository\UserRepository;
+use App\Services\User\AgentService;
+use App\Repository\UserTransactionRepository;
 
 /**
  * @Route("/coach/dashboard")
@@ -22,7 +25,9 @@ class CoachDashboardController extends AbstractController
     private $repoContact;
     private $calendarEventRepository;
 
-    public function __construct(EntityManagerInterface $entityManager, ContactRepository $repoContact, CalendarEventRepository $calendarEventRepository){
+    public function __construct(EntityManagerInterface $entityManager, ContactRepository $repoContact, CalendarEventRepository $calendarEventRepository,
+        private AgentService $agentService
+    ){
         $this->entityManager = $entityManager;
         $this->repoContact = $repoContact;
         $this->calendarEventRepository = $calendarEventRepository;
@@ -31,7 +36,7 @@ class CoachDashboardController extends AbstractController
     /**
      * @Route("", name="coach_dashboard_index")
      */
-    public function index(Request $request, PaginatorInterface $paginator, StatAgentService $statAgentService, StatCoachService $statCoachService, SecteurRepository $secteurRepository)
+    public function index(Request $request, PaginatorInterface $paginator, StatAgentService $statAgentService, StatCoachService $statCoachService, SecteurRepository $secteurRepository, UserTransactionRepository $userTransactionRepository)
     {
       
         $user = (object)$this->getUser();
@@ -58,6 +63,7 @@ class CoachDashboardController extends AbstractController
         $revenuAnnee = $statAgentService->getRevenuAnnee($annee, $secteur->getId());
         $nbrRdv = $statAgentService->getNbrRdv($user->getId());
         $nbrAgents = $statCoachService->getNbrAgents($secteur->getId());
+        $soldeRemuneration = $userTransactionRepository->getSolde($user, [$secteur->getId()]);
 
         return $this->render('user_category/coach/dashboard/dashboard_index.html.twig', [
             'secteur' => $secteur,
@@ -71,7 +77,31 @@ class CoachDashboardController extends AbstractController
             'annee' => $annee,
             'anneeActuelle' => $anneeActuelle,
             'nbrRdv' => $nbrRdv,
-            'nbrAgents' => $nbrAgents
+            'nbrAgents' => $nbrAgents,
+            'soldeRemuneration' => $soldeRemuneration,
+            'formations'=>null,
+        ]);
+    }
+    /**
+     * @Route("/view", name="coach_view")
+     */
+    public function admin_agent_view(Request $request,UserRepository $repoUser, PaginatorInterface $paginator)
+    {
+        $ambassadeur = $this->getUser();
+        $result=$repoUser->findBy(['parrain'=>$ambassadeur->getId()]);
+        $filleul = $paginator->paginate(
+            $result,
+            $request->query->getInt('page', 1),
+            5
+        );
+
+        $countEquipe = $this->agentService->getNumberOfTeam($ambassadeur,1);
+        $countDirect = count($result);
+        return $this->render('user_category/coach/view_coach.html.twig', [
+            'ambassadeur' => $ambassadeur,
+            'filleul'=>$filleul,
+            'countEquipe' =>$countEquipe,
+            'countDirect' =>$countDirect,
         ]);
     }
 

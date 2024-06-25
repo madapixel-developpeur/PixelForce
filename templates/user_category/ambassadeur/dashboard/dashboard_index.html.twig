@@ -1,0 +1,1011 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title %}Tableau de bord{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('vuexy_dashboard_ecommerce') }}
+    {# {{ encore_entry_link_tags('vuexy_chart_apex') }} #}
+{% endblock %}
+
+{% set typeSecteurId = app.user.uniqueCoachSecteur.type.id %}
+{% set estSecurite = typeSecteurId == constant('App\\Entity\\TypeSecteur::SECURITE') %}
+{% set estDemandeDevis = typeSecteurId == constant('App\\Entity\\TypeSecteur::DEMANDE_DEVIS') %}
+{% set estEcommerce = typeSecteurId == constant('App\\Entity\\TypeSecteur::ECOMMERCE') %}
+
+{% block body %}
+    <section id="dashboard-ecommerce">
+        <div class="row match-height">
+            <!-- Medal Card -->
+            <div class="col-xl-4 col-md-6 col-12">
+                <div class="card card-congratulation-medal">
+                    <div class="card-body">
+                        <h5>Félicitation 🎉 {{ app.user.prenom }}!</h5>
+                        <p class="card-text font-small-3">Vous avez gagné la médaille d'or</p>
+                        {# {% if (estSecurite or estEcommerce) %} #}
+                        <h3 class="mb-75 mt-2 pt-50">
+                            <a href="#">{#{{statVente.ca | number_format(2, ',', ' ')}} €#}</a>
+                        </h3>
+                        {# {% endif %} #}
+                        <img src="{{asset('assets/vuexy/images/illustration/badge.svg')}}" class="congratulation-medal" alt="Medal Pic" />
+                    </div>
+                </div>
+            </div>
+            <!--/ Medal Card -->
+
+            <!-- Statistics Card -->
+            <div class="col-xl-8 col-md-6 col-12">
+                <div class="card card-statistics">
+                    <div class="card-header">
+                        <h4 class="card-title">Statistiques</h4>
+                        {# <div class="d-flex align-items-center">
+                            <p class="card-text font-small-2 me-25 mb-0">Mis à jour il y a 1 mois</p>
+                        </div> #}
+                    </div>
+                    <div class="card-body statistics-body">
+                        <div class="row">
+                            <div class="col-xl-3 col-sm-6 col-12 mb-2 mb-xl-0">
+                                <div class="d-flex flex-row">
+                                    <div class="avatar bg-light-primary me-2">
+                                        <div class="avatar-content">
+                                            <i data-feather="trending-up" class="avatar-icon"></i>
+                                        </div>
+                                    </div>
+                                    <div class="my-auto">
+                                        <h4 class="fw-bolder mb-0">{#{{statVente.nbr_ventes | number_format(0, ',', ' ')}}#}</h4>
+                                        <p class="card-text font-small-3 mb-0">Ventes</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-sm-6 col-12 mb-2 mb-xl-0">
+                                <div class="d-flex flex-row">
+                                    <div class="avatar bg-light-info me-2">
+                                        <div class="avatar-content">
+                                            <a href="{{ path('coach_agent_list') }}"><i data-feather="user" class="avatar-icon"></i></a>
+                                        </div>
+                                    </div>
+                                    <div class="my-auto">
+                                        <h4 class="fw-bolder mb-0">{{nbrAgents | number_format(0, ',', ' ')}}</h4>
+                                        <a href="{{ path('coach_agent_list') }}"><p class="card-text font-small-3 mb-0 text-black">Les agents</p></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-sm-6 col-12 mb-2 mb-xl-0">
+                                <div class="d-flex flex-row">
+                                    <div class="avatar bg-light-info me-2">
+                                        <div class="avatar-content">
+                                            <i data-feather="user" class="avatar-icon"></i>
+                                        </div>
+                                    </div>
+                                    <div class="my-auto">
+                                        <h4 class="fw-bolder mb-0">{{nbrClients | number_format(0, ',', ' ')}}</h4>
+                                        <p class="card-text font-small-3 mb-0">Les clients</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-sm-6 col-12 mb-2 mb-sm-0">
+                                <div class="d-flex flex-row">
+                                    <div class="avatar bg-light-danger me-2">
+                                        <div class="avatar-content">
+                                            <a href="{{path('agent_contact_meeting_list')}}"><i data-feather="box" class="avatar-icon"></i></a>
+                                        </div>
+                                    </div>
+                                    <div class="my-auto">
+                                        <h4 class="fw-bolder mb-0">{{nbrRdv | number_format(0, ',', ' ')}}</h4>
+                                        <p class="card-text font-small-3 mb-0">Rendez-vous</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--/ Statistics Card -->
+        </div>
+
+        <div class="row match-height">
+            <div class="col-lg-8 col-12">
+                <div class="card card-company-table">
+                    {# <div class="card-body p-0">
+                        <div class="card-body p-0">
+                            {% if formations == null %}
+                                <div class="alert alert-primary text-center m-5">
+                                    Il n'y a plus de formation à terminer
+                                </div>
+                            {% else %}
+                                {% if currentCategorie and currentCategorie.ordreCatFormation == constant('App\\Entity\\CategorieFormation::ORDRE_LISTE_DE_CONTACT') and nbrAllMyContacts < constant('App\\Entity\\CategorieFormation::CONDITION_LISTE_DE_CONTACT') %}
+                                    <h3 class="fw-bolder text-center mt-2">{{ firstFormation.titre}} </h3>    
+                                    <div class="alert alert-warning m-5 text-center h2">
+                                        Pour débloquer cette formation, assurez-vous d’avoir enregistré plus de 100 contacts dans votre liste de prospection.
+                                    </div>
+                                {% else %}
+                                    <h3 class="fw-bolder text-center mt-2">{{ firstFormation.titre}} </h3>
+                                    <div class="border d-flex bg-white">
+                                        <iframe src="https://player.vimeo.com/video/{{ firstFormation.videoId }}" width="700" height="400" class="m-auto" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+                                    </div>
+                                    <div class="text-center m-2 p-2">
+                                        <div class="row">
+                                            <div class="col">
+                                                <a href="{{ path('agent_formation_fiche', {id:firstFormation.id}) }}" class="btn btn-primary fw-bolder mt-4"><i class="fa-solid fa-file me-2"></i> Fiche formation</a>
+                                            </div>
+                                            <div class="col">
+                                                <a href="{{ path('agent_formation_terminer', {id:firstFormation.id, path: 'fromDashboard'}) }}" class="btn btn-success fw-bolder mt-4"><i class="fa fa-check"></i> J'ai terminé cette formation</a>
+                                            </div>
+                                            <div class="col">
+                                                <a href="{{ path('agent_formation_list') }}" class="btn btn-secondary fw-bolder mt-4"><i class="fa-solid fa-list me-2"></i> Liste des formations</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            {% endif %}
+                            
+                        </div>
+                    </div> #}
+                </div>
+            </div>
+
+            <!-- Developer Meetup Card -->
+            <div class="col-lg-4 col-md-6 col-12">
+                <div class="card card-developer-meetup position-relative">
+                    <div class="position-absolute right-0 top-0 m-3">
+                        <a href="{{ path('calendar_index') }}" class="btn btn-primary d-flex justify-content-center align-items-center">Mon Agenda <i data-feather="calendar" class="ms-3"></i></a>
+                    </div>
+                    <div class="meetup-img-wrapper rounded-top text-center">
+                        <img src="{{asset('assets/vuexy/images/illustration/email.svg')}}" alt="Meeting Pic" height="170" />
+                    </div>
+                    <div class="card-body">
+                        {% set day_of_week = { 
+                                "Monday": "Lundi", 
+                                "Tuesday": "Mardi", 
+                                "Wednesday": "Mercredi", 
+                                "Thursday": "Jeudi", 
+                                "Friday": "Vendredi", 
+                                "Saturday": "Samedi", 
+                                "Sunday": "Dimanche" 
+                            } 
+                        %}
+                        {% for event in eventsOfTheDay %}
+                        <div class="meetup-header d-flex align-items-center">
+                            <div class="meetup-day">
+                                <h6 class="mb-0 text-uppercase">{{day_of_week[event.start|date("l")]}}</h6>
+                                <h3 class="mb-0">{{event.start|date("d")}}</h3>
+                            </div>
+                            <div class="my-auto">
+                                <h4 class="card-title mb-25">{{event.title}}</h4>
+                                <p class="card-text mb-0">{{event.start|date("\\à g\\hi")}}</p>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        {% for event in upcomingEvents %}
+                        <div class="mt-0">
+                            <div class="avatar float-start bg-light-primary rounded me-1">
+                                <div class="avatar-content">
+                                    <i data-feather="calendar" class="avatar-icon font-medium-3"></i>
+                                </div>
+                            </div>
+                            <div class="more-info">
+                                <h6 class="mb-0">{{event.title}}</h6>
+                                <small>{{event.start|date("d/m/Y \\à g\\hi")}}</small>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        {% if upcomingEvents|length == 0 %}
+                            <div class="alert alert-secondary">Aucun évenement à venir.</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <!--/ Developer Meetup Card -->
+
+            <div class="col-lg-12 col-12">
+                <h6 class="display-6" style="font-size : 20px;">Votre liste de contact :</h6>
+                <div class="card card-company-table pb-5" style="min-height: 300px;">
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr class="text-center">
+                                        <th scope="col" class="p-3"></th>
+                                        <th scope="col" class="p-3">Prénoms</th>
+                                        <th scope="col" class="p-3">Email</th>
+                                        <th scope="col" class="p-3">Téléphone</th>
+                                        <th scope="col" class="p-3">Adresse</th>
+                                        <th scope="col" class="p-3">Tags</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% if contacts|length < 1 %}
+                                        <div class="d-flex justify-content-center my-2">
+                                            <a href="{{ path('agent_contact_info_add') }}" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> Ajouter un contact</a>
+                                        </div>
+                                    {% else %}
+                                        {% for contact in contacts %}
+                                        {% set information = contact.information %}
+                                            <tr class="text-center">
+                                                <td class="text-center"><i class="fa-solid fa-address-card"></i></td>
+                                                <td><a href="{{ path('agent_contact_view', {'id': contact.id}) }}" class="text-black"> {{ information.lastname }}</a></td>
+                                                <td><a href="{{ path('agent_contact_view', {'id': contact.id}) }}" class="text-black" > {{ information.email }}</a></td>
+                                                <td>{{ information.phone }}</td>
+                                                <td>{{ information.address }}</td>
+                                                <td class="d-flex justify-content-center">
+                                                    {% set tags = information.contact.tags.toArray %}
+                                                    {% for tag in tags %}
+                                                        <div class="caret caret-shadow caret-hoverable rounded-3 d-inline-block bg-{{ tag.couleur }}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="{{ tag.libelle }}"></div>
+                                                    {% endfor %}
+                                                </td>
+
+                                            </tr>
+                                        {% endfor %}
+                                    {% endif %}
+                                </tbody>
+                            </table>
+                        </div>
+                        {% if contacts|length > 0 %}
+                        <div class="position-absolute bottom-0 start-50 translate-middle-x mb-3">
+                            <a href="{{ path('agent_contact_list') }}" class="btn btn-primary float-bottom">Voir plus <i class="fa-solid fa-circle-arrow-right ms-1"></i></a>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row match-height">
+            <div class="col-lg-4 col-12">
+                <div class="row match-height">
+                    <!-- Bar Chart - Orders -->
+                    <div class="col-lg-6 col-md-3 col-6">
+                        <div class="card">
+                            <div class="card-body pb-50">
+                                <h6>Commandes</h6>
+                                <h2 class="fw-bolder mb-1">2,76k</h2>
+                                <div id="statistics-order-chart"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--/ Bar Chart - Orders -->
+
+                    <!-- Line Chart - Profit -->
+                    <div class="col-lg-6 col-md-3 col-6">
+                        <div class="card card-tiny-line-stats">
+                            <div class="card-body pb-50">
+                                <h6>Profit</h6>
+                                <h2 class="fw-bolder mb-1">6,24k</h2>
+                                <div id="statistics-profit-chart"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--/ Line Chart - Profit -->
+
+                    <!-- Earnings Card -->
+                    <div class="col-lg-12 col-md-6 col-12">
+                        <div class="card earnings-card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <h4 class="card-title mb-1">Gains</h4>
+                                        <div class="font-small-2">Ce mois-ci</div>
+                                        <h5 class="mb-1">$4055.56</h5>
+                                        <p class="card-text text-muted font-small-2">
+                                            <span class="fw-bolder">68.2%</span><span> plus de revenus que le mois dernier.</span>
+                                        </p>
+                                    </div>
+                                    <div class="col-6">
+                                        <div id="earnings-chart"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--/ Earnings Card -->
+                </div>
+            </div>
+
+            <!-- Revenue Report Card -->
+            {# {% if estDemandeDevis %}d-none{% endif %} #}
+            <div class="col-lg-8 col-12 ">
+                <div class="card card-revenue-budget">
+                    <div class="row mx-0">
+                        <div class="col-md-8 col-12 revenue-report-wrapper">
+                            <div class="d-sm-flex justify-content-between align-items-center mb-3">
+                                <h4 class="card-title mb-50 mb-sm-0">Rapport sur les revenus</h4>
+                                {# <div class="d-flex align-items-center">
+                                    <div class="d-flex align-items-center me-2">
+                                        <span class="bullet bullet-primary font-small-3 me-50 cursor-pointer"></span>
+                                        <span>Gain</span>
+                                    </div>
+                                    <div class="d-flex align-items-center ms-75">
+                                        <span class="bullet bullet-warning font-small-3 me-50 cursor-pointer"></span>
+                                        <span>Frais</span>
+                                    </div>
+                                </div> #}
+                            </div>
+                            <div id="revenue-report-chart"></div>
+                        </div>
+                        <div class="col-md-4 col-12 budget-wrapper" >
+                            <div class="btn-group">
+                                <form method="get" id="form-annee">
+                                    <input name="annee" type="hidden" value="{{annee}}" />
+                                </form>
+                                <button type="button" class="btn btn-outline-primary btn-sm dropdown-toggle budget-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <span id="anneeSelected">{{annee}}</span>
+                                </button>
+                                <div class="dropdown-menu" id="anneeContainer">
+                                    {% for i in 2020..anneeActuelle %}
+                                        <div class="dropdown-item annee-item" data-annee="{{i}}">{{i}}</div>
+                                    {% endfor %}
+                                    
+                                </div>
+                                
+                                
+                            </div>
+                            <h2 class="mb-25">{{revenuAnnee.total | number_format(2, ',', ' ')}} €</h2>
+                            {# <div class="d-flex justify-content-center">
+                                <span class="fw-bolder me-25">Budget:</span>
+                                <span>56,800</span>
+                            </div>
+                            <div id="budget-chart"></div>
+                            <button type="button" class="btn btn-primary">Augmenter le budget</button> #}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--/ Revenue Report Card -->
+        </div>
+
+        <div class="row match-height">
+            <!-- Company Table Card -->
+            <div class="col-lg-8 col-12">
+                <div class="card card-company-table">
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Société</th>
+                                        <th>Catégorie</th>
+                                        <th>Vues</th>
+                                        <th>Revenu</th>
+                                        <th>Ventes</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="avatar rounded">
+                                                    <div class="avatar-content">
+                                                        <img src="{{asset('assets/vuexy/images/icons/toolbox.svg')}}" alt="Toolbar svg" />
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <div class="fw-bolder">Dixons</div>
+                                                    <div class="font-small-2 text-muted">meguc@ruj.io</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="avatar bg-light-primary me-1">
+                                                    <div class="avatar-content">
+                                                        <i data-feather="monitor" class="font-medium-3"></i>
+                                                    </div>
+                                                </div>
+                                                <span>Technologie</span>
+                                            </div>
+                                        </td>
+                                        <td class="text-nowrap">
+                                            <div class="d-flex flex-column">
+                                                <span class="fw-bolder mb-25">23.4k</span>
+                                                <span class="font-small-2 text-muted">en 24 heures</span>
+                                            </div>
+                                        </td>
+                                        <td>$891.2</td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <span class="fw-bolder me-1">68%</span>
+                                                <i data-feather="trending-down" class="text-danger font-medium-1"></i>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="avatar rounded">
+                                                    <div class="avatar-content">
+                                                        <img src="{{asset('assets/vuexy/images/icons/parachute.svg')}}" alt="Parachute svg" />
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <div class="fw-bolder">Motels</div>
+                                                    <div class="font-small-2 text-muted">vecav@hodzi.co.uk</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="avatar bg-light-success me-1">
+                                                    <div class="avatar-content">
+                                                        <i data-feather="coffee" class="font-medium-3"></i>
+                                                    </div>
+                                                </div>
+                                                <span>Épicerie</span>
+                                            </div>
+                                        </td>
+                                        <td class="text-nowrap">
+                                            <div class="d-flex flex-column">
+                                                <span class="fw-bolder mb-25">78k</span>
+                                                <span class="font-small-2 text-muted">in 2 days</span>
+                                            </div>
+                                        </td>
+                                        <td>$668.51</td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <span class="fw-bolder me-1">97%</span>
+                                                <i data-feather="trending-up" class="text-success font-medium-1"></i>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="avatar rounded">
+                                                    <div class="avatar-content">
+                                                        <img src="{{asset('assets/vuexy/images/icons/brush.svg')}}" alt="Brush svg" />
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <div class="fw-bolder">Zipcar</div>
+                                                    <div class="font-small-2 text-muted">davcilse@is.gov</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="avatar bg-light-warning me-1">
+                                                    <div class="avatar-content">
+                                                        <i data-feather="watch" class="font-medium-3"></i>
+                                                    </div>
+                                                </div>
+                                                <span>Mode</span>
+                                            </div>
+                                        </td>
+                                        <td class="text-nowrap">
+                                            <div class="d-flex flex-column">
+                                                <span class="fw-bolder mb-25">162</span>
+                                                <span class="font-small-2 text-muted">in 5 days</span>
+                                            </div>
+                                        </td>
+                                        <td>$522.29</td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <span class="fw-bolder me-1">62%</span>
+                                                <i data-feather="trending-up" class="text-success font-medium-1"></i>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="avatar rounded">
+                                                    <div class="avatar-content">
+                                                        <img src="{{asset('assets/vuexy/images/icons/star.svg')}}" alt="Star svg" />
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <div class="fw-bolder">Posséder</div>
+                                                    <div class="font-small-2 text-muted">us@cuhil.gov</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="avatar bg-light-primary me-1">
+                                                    <div class="avatar-content">
+                                                        <i data-feather="monitor" class="font-medium-3"></i>
+                                                    </div>
+                                                </div>
+                                                <span>Technologie</span>
+                                            </div>
+                                        </td>
+                                        <td class="text-nowrap">
+                                            <div class="d-flex flex-column">
+                                                <span class="fw-bolder mb-25">214</span>
+                                                <span class="font-small-2 text-muted">en 24 heures</span>
+                                            </div>
+                                        </td>
+                                        <td>$291.01</td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <span class="fw-bolder me-1">88%</span>
+                                                <i data-feather="trending-up" class="text-success font-medium-1"></i>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="avatar rounded">
+                                                    <div class="avatar-content">
+                                                        <img src="{{asset('assets/vuexy/images/icons/book.svg')}}" alt="Book svg" />
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <div class="fw-bolder">Cafés</div>
+                                                    <div class="font-small-2 text-muted">pudais@jife.com</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="avatar bg-light-success me-1">
+                                                    <div class="avatar-content">
+                                                        <i data-feather="coffee" class="font-medium-3"></i>
+                                                    </div>
+                                                </div>
+                                                <span>Épicerie</span>
+                                            </div>
+                                        </td>
+                                        <td class="text-nowrap">
+                                            <div class="d-flex flex-column">
+                                                <span class="fw-bolder mb-25">208</span>
+                                                <span class="font-small-2 text-muted">en 1 semaine</span>
+                                            </div>
+                                        </td>
+                                        <td>$783.93</td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <span class="fw-bolder me-1">16%</span>
+                                                <i data-feather="trending-down" class="text-danger font-medium-1"></i>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="avatar rounded">
+                                                    <div class="avatar-content">
+                                                        <img src="{{asset('assets/vuexy/images/icons/rocket.svg')}}" alt="Rocket svg" />
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <div class="fw-bolder">Kmart</div>
+                                                    <div class="font-small-2 text-muted">bipri@cawiw.com</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="avatar bg-light-warning me-1">
+                                                    <div class="avatar-content">
+                                                        <i data-feather="watch" class="font-medium-3"></i>
+                                                    </div>
+                                                </div>
+                                                <span>Mode</span>
+                                            </div>
+                                        </td>
+                                        <td class="text-nowrap">
+                                            <div class="d-flex flex-column">
+                                                <span class="fw-bolder mb-25">990</span>
+                                                <span class="font-small-2 text-muted">en 1 mois</span>
+                                            </div>
+                                        </td>
+                                        <td>$780.05</td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <span class="fw-bolder me-1">78%</span>
+                                                <i data-feather="trending-up" class="text-success font-medium-1"></i>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="avatar rounded">
+                                                    <div class="avatar-content">
+                                                        <img src="{{asset('assets/vuexy/images/icons/speaker.svg')}}" alt="Speaker svg" />
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <div class="fw-bolder">Payeurs</div>
+                                                    <div class="font-small-2 text-muted">luk@izug.io</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="avatar bg-light-warning me-1">
+                                                    <div class="avatar-content">
+                                                        <i data-feather="watch" class="font-medium-3"></i>
+                                                    </div>
+                                                </div>
+                                                <span>Mode</span>
+                                            </div>
+                                        </td>
+                                        <td class="text-nowrap">
+                                            <div class="d-flex flex-column">
+                                                <span class="fw-bolder mb-25">12.9k</span>
+                                                <span class="font-small-2 text-muted">en 12 heures</span>
+                                            </div>
+                                        </td>
+                                        <td>$531.49</td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <span class="fw-bolder me-1">42%</span>
+                                                <i data-feather="trending-up" class="text-success font-medium-1"></i>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--/ Company Table Card -->
+
+            <!-- Developer Meetup Card -->
+            <div class="col-lg-4 col-md-6 col-12">
+                <div class="card card-developer-meetup">
+                    <div class="meetup-img-wrapper rounded-top text-center">
+                        <img src="{{asset('assets/vuexy/images/illustration/email.svg')}}" alt="Meeting Pic" height="170" />
+                    </div>
+                    <div class="card-body">
+                        <div class="meetup-header d-flex align-items-center">
+                            <div class="meetup-day">
+                                <h6 class="mb-0">MARDI</h6>
+                                <h3 class="mb-0">24</h3>
+                            </div>
+                            <div class="my-auto">
+                                <h4 class="card-title mb-25">Rencontre de développeurs</h4>
+                                <p class="card-text mb-0">Rencontrez des développeurs de renommée mondiale</p>
+                            </div>
+                        </div>
+                        <div class="mt-0">
+                            <div class="avatar float-start bg-light-primary rounded me-1">
+                                <div class="avatar-content">
+                                    <i data-feather="calendar" class="avatar-icon font-medium-3"></i>
+                                </div>
+                            </div>
+                            <div class="more-info">
+                                <h6 class="mb-0">Samedi, Mai 25, 2020</h6>
+                                <small>10:AM to 6:PM</small>
+                            </div>
+                        </div>
+                        <div class="mt-2">
+                            <div class="avatar float-start bg-light-primary rounded me-1">
+                                <div class="avatar-content">
+                                    <i data-feather="map-pin" class="avatar-icon font-medium-3"></i>
+                                </div>
+                            </div>
+                            <div class="more-info">
+                                <h6 class="mb-0">Parc central</h6>
+                                <small>Manhattan, New York</small>
+                            </div>
+                        </div>
+                        <div class="avatar-group">
+                            <div data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="bottom" title="Billy Hopkins" class="avatar pull-up">
+                                <img src="{{asset('assets/vuexy/images/portrait/small/avatar-s-9.jpg')}}" alt="Avatar" width="33" height="33" />
+                            </div>
+                            <div data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="bottom" title="Amy Carson" class="avatar pull-up">
+                                <img src="{{asset('assets/vuexy/images/portrait/small/avatar-s-6.jpg')}}" alt="Avatar" width="33" height="33" />
+                            </div>
+                            <div data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="bottom" title="Brandon Miles" class="avatar pull-up">
+                                <img src="{{asset('assets/vuexy/images/portrait/small/avatar-s-8.jpg')}}" alt="Avatar" width="33" height="33" />
+                            </div>
+                            <div data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="bottom" title="Daisy Weber" class="avatar pull-up">
+                                <img src="{{asset('assets/vuexy/images/portrait/small/avatar-s-20.jpg')}}" alt="Avatar" width="33" height="33" />
+                            </div>
+                            <div data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="bottom" title="Jenny Looper" class="avatar pull-up">
+                                <img src="{{asset('assets/vuexy/images/portrait/small/avatar-s-20.jpg')}}" alt="Avatar" width="33" height="33" />
+                            </div>
+                            <h6 class="align-self-center cursor-pointer ms-50 mb-0">+42</h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--/ Developer Meetup Card -->
+
+            <!-- Browser States Card -->
+            <div class="col-lg-3 col-md-6 col-12">
+                <div class="card card-browser-states">
+                    <div class="card-header">
+                        <div>
+                            <h4 class="card-title">États du navigateur</h4>
+                            <p class="card-text font-small-2">Compteur août 2020</p>
+                        </div>
+                        <div class="dropdown chart-dropdown">
+                            <i data-feather="more-vertical" class="font-medium-3 cursor-pointer" data-bs-toggle="dropdown"></i>
+                            <div class="dropdown-menu dropdown-menu-end">
+                                <a class="dropdown-item" href="#">28 derniers jours</a>
+                                <a class="dropdown-item" href="#">Le mois dernier</a>
+                                <a class="dropdown-item" href="#">L'année dernière</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="browser-states">
+                            <div class="d-flex">
+                                <img src="{{asset('assets/vuexy/images/icons/google-chrome.png')}}" class="rounded me-1" height="30" alt="Google Chrome" />
+                                <h6 class="align-self-center mb-0">Google Chrome</h6>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <div class="fw-bold text-body-heading me-1">54.4%</div>
+                                <div id="browser-state-chart-primary"></div>
+                            </div>
+                        </div>
+                        <div class="browser-states">
+                            <div class="d-flex">
+                                <img src="{{asset('assets/vuexy/images/icons/mozila-firefox.png')}}" class="rounded me-1" height="30" alt="Mozila Firefox" />
+                                <h6 class="align-self-center mb-0">Mozila Firefox</h6>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <div class="fw-bold text-body-heading me-1">6.1%</div>
+                                <div id="browser-state-chart-warning"></div>
+                            </div>
+                        </div>
+                        <div class="browser-states">
+                            <div class="d-flex">
+                                <img src="{{asset('assets/vuexy/images/icons/apple-safari.png')}}" class="rounded me-1" height="30" alt="Apple Safari" />
+                                <h6 class="align-self-center mb-0">Apple Safari</h6>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <div class="fw-bold text-body-heading me-1">14.6%</div>
+                                <div id="browser-state-chart-secondary"></div>
+                            </div>
+                        </div>
+                        <div class="browser-states">
+                            <div class="d-flex">
+                                <img src="{{asset('assets/vuexy/images/icons/internet-explorer.png')}}" class="rounded me-1" height="30" alt="Internet Explorer" />
+                                <h6 class="align-self-center mb-0">Internet Explorer</h6>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <div class="fw-bold text-body-heading me-1">4.2%</div>
+                                <div id="browser-state-chart-info"></div>
+                            </div>
+                        </div>
+                        <div class="browser-states">
+                            <div class="d-flex">
+                                <img src="{{asset('assets/vuexy/images/icons/opera.png')}}" class="rounded me-1" height="30" alt="Opera Mini" />
+                                <h6 class="align-self-center mb-0">Opera Mini</h6>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <div class="fw-bold text-body-heading me-1">8.4%</div>
+                                <div id="browser-state-chart-danger"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--/ Browser States Card -->
+
+            <!-- Goal Overview Card -->
+            <div class="col-lg-3 col-md-6 col-12">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h4 class="card-title">Aperçu des objectifs</h4>
+                        <i data-feather="help-circle" class="font-medium-3 text-muted cursor-pointer"></i>
+                    </div>
+                    <div class="card-body p-0">
+                        <div id="goal-overview-radial-bar-chart" class="my-2"></div>
+                        <div class="row border-top text-center mx-0">
+                            <div class="col-6 border-end py-1">
+                                <p class="card-text text-muted mb-0">Terminé</p>
+                                <h3 class="fw-bolder mb-0">786,617</h3>
+                            </div>
+                            <div class="col-6 py-1">
+                                <p class="card-text text-muted mb-0">En cours</p>
+                                <h3 class="fw-bolder mb-0">13,561</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--/ Goal Overview Card -->
+
+            <!-- Transaction Card -->
+            <div class="col-lg-3 col-md-6 col-12">
+                <div class="card card-transaction">
+                    <div class="card-header">
+                        <h4 class="card-title">Transactions</h4>
+                        <div class="dropdown chart-dropdown">
+                            <i data-feather="more-vertical" class="font-medium-3 cursor-pointer" data-bs-toggle="dropdown"></i>
+                            <div class="dropdown-menu dropdown-menu-end">
+                                <a class="dropdown-item" href="#">28 derniers jours</a>
+                                <a class="dropdown-item" href="#">Le mois dernier</a>
+                                <a class="dropdown-item" href="#">L'année dernière</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="transaction-item">
+                            <div class="d-flex">
+                                <div class="avatar bg-light-primary rounded float-start">
+                                    <div class="avatar-content">
+                                        <i data-feather="pocket" class="avatar-icon font-medium-3"></i>
+                                    </div>
+                                </div>
+                                <div class="transaction-percentage">
+                                    <h6 class="transaction-title">Porte monnaie</h6>
+                                    <small>Starbuck</small>
+                                </div>
+                            </div>
+                            <div class="fw-bolder text-danger">- $74</div>
+                        </div>
+                        <div class="transaction-item">
+                            <div class="d-flex">
+                                <div class="avatar bg-light-success rounded float-start">
+                                    <div class="avatar-content">
+                                        <i data-feather="check" class="avatar-icon font-medium-3"></i>
+                                    </div>
+                                </div>
+                                <div class="transaction-percentage">
+                                    <h6 class="transaction-title">Virement</h6>
+                                    <small>Ajouter de l'argent</small>
+                                </div>
+                            </div>
+                            <div class="fw-bolder text-success">+ $480</div>
+                        </div>
+                        <div class="transaction-item">
+                            <div class="d-flex">
+                                <div class="avatar bg-light-danger rounded float-start">
+                                    <div class="avatar-content">
+                                        <i data-feather="dollar-sign" class="avatar-icon font-medium-3"></i>
+                                    </div>
+                                </div>
+                                <div class="transaction-percentage">
+                                    <h6 class="transaction-title">Paypal</h6>
+                                    <small>Ajouter de l'argent</small>
+                                </div>
+                            </div>
+                            <div class="fw-bolder text-success">+ $590</div>
+                        </div>
+                        <div class="transaction-item">
+                            <div class="d-flex">
+                                <div class="avatar bg-light-warning rounded float-start">
+                                    <div class="avatar-content">
+                                        <i data-feather="credit-card" class="avatar-icon font-medium-3"></i>
+                                    </div>
+                                </div>
+                                <div class="transaction-percentage">
+                                    <h6 class="transaction-title">Mastercard</h6>
+                                    <small>Nourriture commandée</small>
+                                </div>
+                            </div>
+                            <div class="fw-bolder text-danger">- $23</div>
+                        </div>
+                        <div class="transaction-item">
+                            <div class="d-flex">
+                                <div class="avatar bg-light-info rounded float-start">
+                                    <div class="avatar-content">
+                                        <i data-feather="trending-up" class="avatar-icon font-medium-3"></i>
+                                    </div>
+                                </div>
+                                <div class="transaction-percentage">
+                                    <h6 class="transaction-title">Transférer</h6>
+                                    <small>Rembourser</small>
+                                </div>
+                            </div>
+                            <div class="fw-bolder text-success">+ $98</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--/ Transaction Card -->
+             <!--/ Liens Card -->
+            <div class="col-lg-3 col-md-6 col-12">
+                <div class="card text-center col-lg-12 col-12 align-items-center">
+                    
+                    <div class="card-body m-12">
+                        <h5 class="card-title">Copier mon lien</h5>
+                        <p class="card-text">Pour inviter d'autres personnes à se joindre à vous via ce lien, veuillez cliquer ici.</p>
+                         <a class="btn btn-primary w-100 font-weight-bold" href="#" onclick="copyLink('{{ url('agent_inscription', {'ambassador_username':  app.user.username != "" ?  app.user.username : ' '}) }}') " >Prendre rdv </a>
+                    </div>
+                      
+                </div>
+            </div>
+             <!--/ Liens Card -->
+        </div>
+    </section>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{asset('app-assets/vendors/js/charts/apexcharts.min.js')}}" defer></script> 
+    {# {{ encore_entry_script_tags('vuexy_dashboard_ecommerce_js') }} #}
+    <script type="text/javascript">
+        $(window).on('load', function () {
+            var revenuAnnee = {{revenuAnnee.result |json_encode() | raw}};
+            var data = [];
+            var label = [];
+            for(let i=0;i<revenuAnnee.length; i++){
+                data.push(parseInt(revenuAnnee[i]['montant']));
+                label.push(revenuAnnee[i]['mois_str']);
+            }
+
+            var $revenueReportChart = document.querySelector('#revenue-report-chart');
+            var formAnnee = $('#form-annee');
+            var revenueReportChartOptions;
+            var revenueReportChart;
+            var $textMutedColor = '#b9b9c3';
+            var anneeSelected = $('#anneeSelected');
+
+
+            $('#anneeContainer .annee-item').click(function (e){
+                let val = $(this).attr('data-annee');
+                anneeSelected.html(val);
+                formAnnee.find('input[name="annee"]').val(val);
+                formAnnee.submit();
+            });
+
+            //------------ Revenue Report Chart ------------
+            //----------------------------------------------
+            revenueReportChartOptions = {
+                chart: {
+                height: 230,
+                stacked: true,
+                type: 'bar',
+                toolbar: { show: false }
+                },
+                plotOptions: {
+                bar: {
+                    columnWidth: '17%',
+                    endingShape: 'rounded'
+                },
+                distributed: true
+                },
+                colors: [window.colors.solid.primary, window.colors.solid.warning],
+                series: [
+                {
+                    name: 'Revenu',
+                    data: data
+                }
+                ],
+                dataLabels: {
+                enabled: false
+                },
+                legend: {
+                show: false
+                },
+                grid: {
+                padding: {
+                    top: -20,
+                    bottom: -10
+                },
+                yaxis: {
+                    lines: { show: false }
+                }
+                },
+                xaxis: {
+                categories: label,
+                labels: {
+                    style: {
+                    colors: $textMutedColor,
+                    fontSize: '0.86rem'
+                    }
+                },
+                axisTicks: {
+                    show: false
+                },
+                axisBorder: {
+                    show: false
+                }
+                },
+                yaxis: {
+                labels: {
+                    style: {
+                    colors: $textMutedColor,
+                    fontSize: '0.86rem'
+                    }
+                }
+                }
+            };
+            revenueReportChart = new ApexCharts($revenueReportChart, revenueReportChartOptions);
+            revenueReportChart.render();
+
+            
+        });
+    </script>
+{% endblock %}

@@ -94,7 +94,7 @@
                             <td> 
                                 {# On récupère les secteurs reliés par l'agent  #}
                                 {% set secteurs = repoAgentSecteur.findBy({'agent' : agent}) %}
-                                {{ agent.allSecteursOfUser(secteurs)|default('-') }}                                
+                                {# {{ agent.allSecteursOfUser(secteurs)|default('-') }}                                 #}
                             </td>
                             <td>
                                 {% if agent.orderPacks | length == 0 %}
@@ -128,13 +128,13 @@
                                     <i class="fa-solid fa-eye"></i>
                                 </a>
                                 {% if agent.active == 1 %}
-                                <form method="post" action="{{path('admin_agent_delete', {id: agent.id})}}" class="d-inline ms-1" onsubmit="return confirm('Êtes vous vraiment sûr de bannir cet agent ?')">
+                                <form id ="form_{{agent.id}}" method="post" action="{{path('admin_agent_delete', {id: agent.id})}}" class="d-inline ms-1" onclick="confirmationForm('form_{{agent.id}}','{{path('admin_agent_delete', {id: agent.id})}}','Êtes-vous sûr(e) de vouloir supprimer cet Agent?')">
                                     <input type="hidden" name="_method" value="DELETE">
                                     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ agent.id) }}">
                                     <button class="btn btn-danger"><i class="fas fa-trash-alt"></i></button>
                                 </form>
                                 {% elseif agent.active == -1 %}
-                                    <a href="{{ path('admin_agent_reactiver', {'id': agent.id}) }}" class="btn btn-success d-inline ms-1">
+                                    <a href="{{ path('admin_agent_reactiver', {'id': agent.id}) }}" class="btn btn-success d-inline ms-1" onclick="confirmation('{{path('admin_agent_reactiver', {id: agent.id})}}','Êtes-vous sûr(e) de vouloir réactiver cet Agent?')">
                                         <i class="fa-solid fa-sync"></i>
                                     </a>
                                 {% endif %}

@@ -2,31 +2,34 @@
 
 namespace App\Controller;
 
-use App\Entity\AgentSecteur;
-use App\Entity\CoachAgent;
-use App\Entity\SearchEntity\UserSearch;
-use App\Entity\Secteur;
 use App\Entity\User;
-use App\Form\InscriptionAgentType;
-use App\Form\MultipleSecteurType;
-use App\Form\ResetPasswordType;
-use App\Form\UserLoginType;
-use App\Form\UserSearchType;
 use App\Form\UserType;
-use App\Manager\EntityManager;
+use App\Entity\Secteur;
+use App\Entity\CoachAgent;
+use App\Form\UserLoginType;
+use App\Entity\AgentSecteur;
+use App\Form\UserSearchType;
 use App\Manager\UserManager;
-use App\Repository\AgentSecteurRepository;
-use App\Repository\CoachAgentRepository;
-use App\Repository\CoachSecteurRepository;
-use App\Repository\SecteurRepository;
+use App\Manager\EntityManager;
+use App\Form\ResetPasswordType;
+use App\Form\MultipleSecteurType;
+use App\Form\InscriptionAgentType;
 use App\Repository\UserRepository;
-use App\Services\AgentSecteurService;
 use App\Services\FormationService;
+use App\Repository\SecteurRepository;
+use App\Services\AgentSecteurService;
+use App\Entity\SearchEntity\UserSearch;
+use App\Repository\FormationRepository;
+use App\Services\Stat\StatAgentService;
+use App\Repository\CoachAgentRepository;
+use App\Repository\AgentSecteurRepository;
+use App\Repository\CoachSecteurRepository;
 use Knp\Component\Pager\PaginatorInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Repository\CategorieFormationRepository;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class CoachAgentController extends AbstractController
 {
@@ -48,7 +51,8 @@ class CoachAgentController extends AbstractController
                                 UserManager $userManager,
                                 EntityManager $entityManager,
                                 CoachSecteurRepository $repoCoachSecteur,
-                                AgentSecteurRepository $repoAgentSecteur)
+                                AgentSecteurRepository $repoAgentSecteur,
+                                private FormationRepository $repoFormation)
     {
         $this->coachAgentRepository = $coachAgentRepository;
         $this->repoUser = $repoUser;
@@ -164,18 +168,42 @@ class CoachAgentController extends AbstractController
     /**
      * @Route("/coach/agent/{id}/secteur/view", name="coach_agent_view")
      */
-    public function coach_agent_view(User $agent,  AgentSecteurService $agentSecteurService)
+    public function coach_agent_view(User $agent,  AgentSecteurService $agentSecteurService, CategorieFormationRepository $categorieFormationRepository,StatAgentService $statAgentService)
     {
         $mySector = $this->repoCoachSecteur->findOneBy(['coach' => $this->getUser()])->getSecteur();
         $agentSecteur = $this->repoAgentSecteur->findOneBy(['secteur' => $mySector, 'agent' => $agent]);
         $agentSecteurs = $this->repoAgentSecteur->findBy(['agent' => $agent]);
         $secteurs = $agentSecteurService->getSecteurs($agentSecteurs);
+      
+        $positionSteps = [
+            ['position' => 1, 'label' => 'Avoir au moins 5 filleuls directs et au moins 1000 € de CA'],
+            ['position' => 2, 'label' => 'Avoir au moins 25 membres dans son équipe'],
+            ['position' => 3, 'label' => 'Avoir au moins 100 membres dans son équipe'],
+        ];
+
+        $formationCategoriesOrdered = $categorieFormationRepository->getValidCategoriesOrdered();
+        
+        $firstFormation = $this->repoFormation->findOrderedNonFinishedFormations($mySector, $agent);
+
+        $chiffreAffaireTotal = 0;
+        if($mySector->getId() == $this->getParameter('secteur_digital_id')){
+            $chiffreAffaireTotal = $statAgentService->getPbbStat($agent->getId())['totalAmount'];
+        }
+        else{
+            $statVente = $statAgentService->getStatVente($agent->getId(), $mySector->getId(), $mySector->getType()->getId());
+            $pbb_summary = $statAgentService->getPbbSummary($agent->getId(), $agent->getNom());
+            $chiffreAffaireTotal = $pbb_summary['chiffreAffaire'] + ($statVente != null ? $statVente['ca'] : 0);
+        }
 
         return $this->render('user_category/coach/agent/view_agent.html.twig', [
             'agent' => $agent,
             'agentSecteur' => $agentSecteur,
             'secteurs' => $secteurs,
             'repoCoachSecteur' =>  $this->repoCoachSecteur,
+            'positionSteps' => $positionSteps,
+            'formationCategoriesOrdered' => $formationCategoriesOrdered,
+            'firstFormation' => $firstFormation,
+            'chiffreAffaireTotal' => $chiffreAffaireTotal
         ]);
     }
 

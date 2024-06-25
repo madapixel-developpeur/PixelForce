@@ -1,0 +1,32 @@
+
+{% extends 'base_error.html.twig' %}
+
+
+{% block title %}
+	Error {{ code }}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('vuexy_dashboard_ecommerce') }}
+{% endblock %}
+
+{% block body %}
+ <div class="d-flex align-items-center justify-content-center vh-100">
+        <div class="text-center">
+            <h1 class="display-1 fw-bold">Error {{ code }}</h1>
+            <p class="fs-3"> <span class="text-danger">Opps!</span></p>
+            <p class="lead">
+                {{ message }}
+            </p>
+            <a href="/" class="btn btn-primary">Revenir à la page d'accueil</a>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+  
+{% endblock %}
+
+

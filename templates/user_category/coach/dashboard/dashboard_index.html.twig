@@ -15,98 +15,55 @@
 
 {% block body %}
     <section id="dashboard-ecommerce">
-        <div class="row match-height">
-            <!-- Medal Card -->
-            <div class="col-xl-4 col-md-6 col-12">
-                <div class="card card-congratulation-medal">
-                    <div class="card-body">
-                        <h5>Félicitation {{ app.user.prenom }}</h5>
-                        <p class="card-text font-small-3"></p>
-                        <h3 class="mb-75 mt-2 mb-2 pt-50 text-greenlife fs-1">
-                            {{statVente.ca | number_format(2, ',', ' ')}} €              
-                        </h3>
-                        <img src="{{asset('assets/img/greenlife/trophee-min.png')}}" class="congratulation-medal" alt="Medal Pic" />
-                    </div>
-                </div>
-            </div>
-            <!--/ Medal Card -->
 
-            <!-- Statistics Card -->
-            <div class="col-xl-8 col-md-6 col-12">
-                <div class="card card-statistics">
-                    <div class="card-header">
-                        <h4 class="card-title">Statistiques</h4>
-                        {# <div class="d-flex align-items-center">
-                            <p class="card-text font-small-2 me-25 mb-0">Mis à jour il y a 1 mois</p>
-                        </div> #}
-                    </div>
-                    <div class="card-body statistics-body">
-                        <div class="row">
-                            <div class="col-xl-3 col-sm-6 col-12 mb-2 mb-xl-0">
-                                <div class="d-flex flex-row">
-                                    <div class="avatar bg-white me-2 border border-primary text-greenlife">
-                                        <div class="avatar-content">
-                                            <i class="fa-solid fa-chart-line fa-xl"></i>
+        <div class="row match-height">
+            <div class="col-lg-8 col-12">
+                <div class="card card-company-table">
+                    <div class="card-body p-0">
+                        <div class="card-body p-0">
+                            {% if formations == null %}
+                                <div class="alert alert-primary text-center m-5">
+                                    Il n'y a plus de formation à terminer
+                                </div>
+                            {% else %}
+                                {% if currentCategorie and currentCategorie.ordreCatFormation == constant('App\\Entity\\CategorieFormation::ORDRE_LISTE_DE_CONTACT') and nbrAllMyContacts < constant('App\\Entity\\CategorieFormation::CONDITION_LISTE_DE_CONTACT') %}
+                                    <h3 class="fw-bolder text-center mt-2">{{ firstFormation.titre}} </h3>    
+                                    <div class="alert alert-warning m-5 text-center h2">
+                                        Pour débloquer cette formation, assurez-vous d’avoir enregistré plus de 100 contacts dans votre liste de prospection.
+                                    </div>
+                                {% else %}
+                                    <h3 class="fw-bolder text-center mt-2">{{ firstFormation.titre}} </h3>
+                                    <div class="border d-flex bg-white">
+                                        <iframe src="https://player.vimeo.com/video/{{ firstFormation.videoId }}" width="700" height="400" class="m-auto" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+                                    </div>
+                                    <div class="text-center m-2 p-2">
+                                        <div class="row">
+                                            <div class="col">
+                                                <a href="{{ path('agent_formation_fiche', {id:firstFormation.id}) }}" class="btn btn-primary fw-bolder mt-4"><i class="fa-solid fa-file me-2"></i> Fiche formation</a>
+                                            </div>
+                                            <div class="col">
+                                                <a href="{{ path('agent_formation_terminer', {id:firstFormation.id, path: 'fromDashboard'}) }}" class="btn btn-success fw-bolder mt-4"><i class="fa fa-check"></i> J'ai terminé cette formation</a>
+                                            </div>
+                                            <div class="col">
+                                                <a href="{{ path('agent_formation_list') }}" class="btn btn-secondary fw-bolder mt-4"><i class="fa-solid fa-list me-2"></i> Liste des formations</a>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="my-auto">
-                                        <h4 class="fw-bolder mb-0">{{statVente.nbr_ventes | number_format(0, ',', ' ')}}</h4>
-                                        <p class="card-text font-small-3 mb-0">Ventes</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xl-3 col-sm-6 col-12 mb-2 mb-xl-0">
-                                <div class="d-flex flex-row">
-                                    <div class="avatar bg-white me-2 border border-primary">
-                                        <div class="avatar-content">
-                                            <a class="text-greenlife" href="{{ path('coach_agent_list') }}">
-                                                <i data-feather="user" class="avatar-icon"></i>
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <div class="my-auto">
-                                        <h4 class="fw-bolder mb-0">{{nbrAgents | number_format(0, ',', ' ')}}</h4>
-                                        <a href="{{ path('coach_agent_list') }}"><p class="card-text font-small-3 mb-0 text-black">Les agents</p></a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xl-3 col-sm-6 col-12 mb-2 mb-xl-0">
-                                <div class="d-flex flex-row">
-                                    <div class="avatar bg-white me-2 border border-primary text-greenlife">
-                                        <div class="avatar-content">
-                                            <i data-feather="user" class="avatar-icon"></i>
-                                        </div>
-                                    </div>
-                                    <div class="my-auto">
-                                        <h4 class="fw-bolder mb-0">{{nbrClients | number_format(0, ',', ' ')}}</h4>
-                                        <p class="card-text font-small-3 mb-0">Les clients</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xl-3 col-sm-6 col-12 mb-2 mb-sm-0">
-                                <div class="d-flex flex-row">
-                                    <div class="avatar bg-white me-2 border border-primary text-greenlife">
-                                        <div class="avatar-content">
-                                            <a class="text-greenlife" href="{{path('agent_contact_meeting_list')}}"><i data-feather="box" class="avatar-icon"></i></a>
-                                        </div>
-                                    </div>
-                                    <div class="my-auto">
-                                        <h4 class="fw-bolder mb-0">{{nbrRdv | number_format(0, ',', ' ')}}</h4>
-                                        <p class="card-text font-small-3 mb-0">Rendez-vous</p>
-                                    </div>
-                                </div>
-                            </div>
+                                {% endif %}
+                            {% endif %}
                             
                         </div>
                     </div>
                 </div>
             </div>
-            <!--/ Statistics Card -->
-        </div>
 
-        <div class="row match-height">
             <!-- Developer Meetup Card -->
             <div class="col-lg-4 col-md-6 col-12">
+                <div class="card-body position-relative mb-2">
+					<h5 class="card-title">Copier le lien d'affiliation</h5>
+					<p class="card-text">Pour inviter d'autres personnes à se joindre à vous, veuillez cliquer ici.</p>
+					<a class="btn btn-primary w-100 font-weight-bold" href="#" onclick="copyLink('{{ url('agent_inscription', {'ambassador_username':  app.user.username != "" ?  app.user.username : ' '}) }}') " >Copier</a>
+				</div>
                 <div class="card card-developer-meetup position-relative">
                     <div class="position-absolute right-0 top-0 m-3">
                         <a href="{{ path('calendar_index') }}" class="btn btn-primary d-flex justify-content-center align-items-center">Mon Agenda <i data-feather="calendar" class="ms-3"></i></a>
@@ -157,57 +114,7 @@
                 </div>
             </div>
             <!--/ Developer Meetup Card -->
-            <!-- Revenue Report Card -->
-            {# {% if estDemandeDevis %}d-none{% endif %} #}
-            <div class="col-lg-8 col-12 ">
-                <div class="card card-revenue-budget">
-                    <div class="row mx-0">
-                        <div class="col-md-8 col-12 revenue-report-wrapper">
-                            <div class="d-sm-flex justify-content-between align-items-center mb-3">
-                                <h4 class="card-title mb-50 mb-sm-0">Rapport sur les revenus</h4>
-                                {# <div class="d-flex align-items-center">
-                                    <div class="d-flex align-items-center me-2">
-                                        <span class="bullet bullet-primary font-small-3 me-50 cursor-pointer"></span>
-                                        <span>Gain</span>
-                                    </div>
-                                    <div class="d-flex align-items-center ms-75">
-                                        <span class="bullet bullet-warning font-small-3 me-50 cursor-pointer"></span>
-                                        <span>Frais</span>
-                                    </div>
-                                </div> #}
-                            </div>
-                            <div id="revenue-report-chart"></div>
-                        </div>
-                        <div class="col-md-4 col-12 budget-wrapper" >
-                            <div class="btn-group">
-                                <form method="get" id="form-annee">
-                                    <input name="annee" type="hidden" value="{{annee}}" />
-                                </form>
-                                <button type="button" class="btn btn-outline-secondary btn-sm dropdown-toggle budget-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <span id="anneeSelected">{{annee}}</span>
-                                </button>
-                                <div class="dropdown-menu" id="anneeContainer">
-                                    {% for i in 2020..anneeActuelle %}
-                                        <div class="dropdown-item annee-item" data-annee="{{i}}">{{i}}</div>
-                                    {% endfor %}
-                                    
-                                </div>
-                                
-                                
-                            </div>
-                            <h2 class="mb-25">{{revenuAnnee.total | number_format(2, ',', ' ')}} €</h2>
-                            {# <div class="d-flex justify-content-center">
-                                <span class="fw-bolder me-25">Budget:</span>
-                                <span>56,800</span>
-                            </div>
-                            <div id="budget-chart"></div>
-                            <button type="button" class="btn btn-primary">Augmenter le budget</button> #}
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!--/ Revenue Report Card -->
-
+             {#
             <div class="col-lg-12 col-12">
                 <h6 class="display-6" style="font-size : 20px;">Votre liste de contact :</h6>
                 <div class="card card-company-table pb-5" style="min-height: 300px;">
@@ -260,7 +167,9 @@
                     </div>
                 </div>
             </div>
+             #}
         </div>
+        
     </section>
 {% endblock %}
 
@@ -284,7 +193,7 @@
             var revenueReportChart;
             var $textMutedColor = '#b9b9c3';
             var anneeSelected = $('#anneeSelected');
-            var colorGreenLife = "#a9d82e";
+
 
             $('#anneeContainer .annee-item').click(function (e){
                 let val = $(this).attr('data-annee');
@@ -309,7 +218,7 @@
                 },
                 distributed: true
                 },
-                colors: [colorGreenLife, colorGreenLife],
+                colors: [window.colors.solid.primary, window.colors.solid.warning],
                 series: [
                 {
                     name: 'Revenu',

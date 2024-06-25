@@ -1,0 +1,77 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title %}
+	Visualisation utilisateur admin
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+	<div class="mt-2">
+		<a href="{{ path('admin_coach_list') }}" class="btn btn-secondary"> <i class="fa-solid fa-circle-arrow-left"></i> Retour </a>
+
+		<div class="content-card-user-information mt-3">
+			<section class="app-user-view-account">
+				<div class="row">
+					<!-- User Sidebar -->
+					<div class="col-7  order-1 order-md-0">
+						{{ include ('global/card/_card_user_information.html.twig', {user : ambassadeur}) }}
+					</div>
+					<!--/ User Sidebar -->
+					<div class="col-lg-5 col-12">
+						<div class="card text-center col-lg-12 col-12 align-items-center">
+							
+							<div class="card-body m-12">
+								<h5 class="card-title">Copier le lien d'affiliation</h5>
+								<p class="card-text">Pour inviter d'autres personnes à se joindre à vous, veuillez cliquer ici.</p>
+								<a class="btn btn-primary w-100 font-weight-bold" href="#" onclick="copyLink('{{ url('agent_inscription', {'ambassador_username':  app.user.username != "" ?  app.user.username : ' '}) }}') " >Copier</a>
+							</div>
+							
+						</div>
+					</div>
+				</div>
+				<div class="card">
+						<h4 class="card-header">Liste des utilisateurs par recommandation.</h4>
+						<div class="table-responsive">
+							<table class="table table-striped table-hover text-center sortable">
+								<thead>
+									<tr style="white-space:nowrap" >
+										<th scope="col" class="text-center">#</th>
+										<th scope="col" class="text-center">Nom et prénoms</th>
+										<th scope="col" class="text-center">Username</th>
+										<th scope="col" class="text-center">Email</th>
+										<th scope="col" class="text-center">Téléphone</th>
+										<th scope="col" class="text-center">Date inscription</th>
+									</tr>
+								</thead>
+								<tbody>
+									{% for fils in filleul %}
+										<tr>
+											<td>{{ fils.id }}</td>
+											<td>{{ fils.fullName }}</td>
+											<td>{{ fils.username }}</td>
+											<td>{{ fils.email }}</td>
+											<td>{{ fils.telephone|default('-') }}</td>
+											<td>{{ fils.createdAt|date('d/m/Y') }}</td>
+										</tr>
+									{% endfor %}
+
+								</tbody>
+							</table>
+						</div>
+						<div class="pagination d-flex justify-content-center">
+							{{ knp_pagination_render(filleul)}}
+						</div>
+				</div>
+			</section>
+			
+		</div>
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+	{{ encore_entry_script_tags('vuexy_app_user_view_js') }}
+{% endblock %}

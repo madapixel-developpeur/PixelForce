@@ -1,0 +1,86 @@
+<!-- User Card -->
+<div class="card rounded-3">
+    <div class="card-body">
+        <div class="row"> 
+            <div class="col-5">
+                <div class="img">
+                    <img src="{{ path('user_avatar', {id:user.id}) }}" class="w-100 rounded-3" alt="">
+                </div>
+            </div>
+            <div class="col-7">
+                <div class="user-avatar-section">
+                    <div class="d-flex">
+                    
+                        <div class="user-info">
+                            <h2 class="general-primary-text">{{ user.nom }}</h2>
+                            <h2 class="general-primary-text">{{ user.prenom }}</h2>
+                            <span class="badge bg-light-success ">{{ user.roles[0]|slice(5)}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="divider my-2">
+                    <hr/>
+                </div>
+                <div class="info-container">
+                    <ul class="list-unstyled">
+                        
+                        <li class="mb-50">
+                            <span class="fw-bolder me-25">Email:</span>
+                            <span>{{ user.email }}</span>
+                        </li>
+                        <li class="mb-50">
+                            <span class="fw-bolder me-25">Statut:</span>
+                            <span class="badge bg-light-success">{{ user.active == 1 ? 'Active' : 'Banni' }}</span>
+                        </li>
+                        <li class="mb-50">
+                            <span class="fw-bolder me-25">Contact:</span>
+                            <span>{% if user.telephone %} {{ user.telephone }} {% else %} Pas de numero {% endif %}</span>
+                        </li>
+                        <li class="mb-50">
+                            <span class="fw-bolder me-25">Adresse:</span>
+                            <span>{{ user.adresse }}</span>
+                        </li>
+                        {% if detailAgentCoach is defined  %}
+                        <li class="mb-50">
+                            <span class="fw-bolder me-25">Chiffre d'affaires:</span>
+                            <span>{{ chiffreAffaireTotal | number_format(2, ',', ' ') }} € </span>
+                        </li>
+                        {% endif %}
+                    </ul>
+                    <div class="d-flex justify-content-center pt-2">
+                        {# {% if is_granted('ROLE_ADMINISTRATEUR') and user.roles[0] == 'ROLE_AGENT' %}
+                            <a class="btn btn-outline-primary me-1" href="{{ path('admin_agent_attribuerFormation', {id: user.id}) }}" >
+                                Attribuer formation
+                            </a>
+                        {% endif %} #}
+                        {% if is_granted('ROLE_COACH') and user.roles[0] == 'ROLE_AGENT' %}
+                            {# <a class="btn btn-outline-primary me-1" href="{{ path('coach_formation_list', {agent: user.id}) }}" >
+                                Attribuer formation
+                            </a> #}
+                            {% set chatCanal =  render(controller(
+                                'App\\Controller\\ChatController::getSingleCanalBy_idUser',
+                                {
+                                    id: agent.id
+                                }
+                                ))
+                            %}
+
+                            {# <a href="#" class="btn btn-primary chat-choose-canal me-2" data-canal="{{ chatCanal|url_encode }}">
+                                <i class="fa-brands fa-facebook-messenger"> </i> envoyer un message
+                            </a> #}
+                        {% endif %}
+                        {% if is_granted('ROLE_ADMINISTRATEUR')  %}
+                            <a href="{{ path('admin_agent_edit', {id:user.id}) }}" class="btn btn-primary me-1 d-none" >
+                                Modifier
+                            </a>
+                        {% endif %}
+                    
+                    {#                <a href="javascript:;" class="btn btn-outline-danger suspend-user">Suspendu</a>#}
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</div>
+<!-- /User Card -->

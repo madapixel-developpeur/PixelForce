@@ -1,0 +1,100 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Quiz {% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+	<style>
+		
+	</style>
+{% endblock %}
+
+{% block body %}
+	<div class="container my-5">
+		<div class="content-body-form">
+			<div class="row">
+
+						<h1 class="fw-bolder text-center mb-5">QUIZ: {{result.lastResultSnapshot.titre}} </h1>
+                        <div class="col-12">
+                        <div class="mb-3">
+                            <label><b>Catégorie:</b></label>
+                            <p>{{result.lastResultSnapshot.categorie}}</p>
+                        </div>
+                        {% if result.lastResultSnapshot.description %}
+                        <div class="mb-3">
+									<label><b>Description:</b></label>
+                                    <p>{{result.lastResultSnapshot.description}}</p>
+                            </div>
+                        {% endif %}
+                        <div class="mb-3">
+                            <label><b>Dernier résultat:</b></label>
+                            <p>{{result.lastResultScore | number_format(2, ',', ' ')}} %</p>
+                        </div>
+                        <div class="mb-3">
+                            <label><b>Résultat maximum:</b></label>
+                            <p>{{result.maxResultScore | number_format(2, ',', ' ')}} %</p>
+                        </div>
+                        <div class="mb-3">
+                            <label><b>Statut:</b></label>
+                            {% if result.statut == constant('App\\Entity\\Formation::STATUT_TERMINER') %}
+                            <p class="text-success"><b>RÉUSSI</b></p>
+                            {% else %}
+                            <p class="text-danger"><b>ÉCHOUÉ</b></p>
+                            {% endif %}
+                        </div>
+                        </div>
+							
+								
+						
+							</div>
+						
+			</div>
+            <h3 class="mt-3">Questions</h3>
+            <div class="mt-2">
+            {% for item in result.lastResultSnapshot.items %}
+            <div class="mb-2">
+                <h4 class="mt-3">{{loop.index }} - {{item.question}}
+                {% if item.result %}
+                <i class="fa fa-check fa-lg text-success"></i>
+                {% else %}
+                <i class="fa fa-times fa-lg text-danger"></i>
+                {% endif %}
+                </h4>
+                {% for choice in item.choices %}
+                <div class="form-check">
+                    <input class="form-check-input my-custom-choice" type="{% if item.multipleChoix %}checkbox{% else %}radio{% endif %}" {% if choice.checked %}checked{% endif %}  disabled>
+                    <label class="form-check-label" >
+                        {{choice.choix}} &nbsp;&nbsp;
+                        {% if choice.vrai %}
+                        <i class="fa fa-check text-success"></i>
+                        {% else %}
+                        <i class="fa fa-times text-danger"></i>
+                        {% endif %}
+                    </label>
+                    </div>
+                {% endfor %}
+
+            </div>
+            
+            {% endfor %}
+            </div>
+            <div class="d-flex align-items-center mt-3">
+                
+                <a class="btn btn-primary me-2" role="button" href="{{path('agent_quiz_begin', {'id': result.formation.id})}}">
+                    <i class="fa fa-repeat"></i>&nbsp;Réessayer
+                </a>
+                {% if result.statut == constant('App\\Entity\\Formation::STATUT_TERMINER') %}
+                <a class="btn btn-success me-2" role="button" href="{{path('agent_dashboard_secteur', {'id': result.formation.secteur.id})}}">
+                    Suivant&nbsp;<i class="fa fa-arrow-right"></i>
+                </a>
+                {% endif %}
+            </div>
+            
+            
+			
+        </div>
+	</div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}

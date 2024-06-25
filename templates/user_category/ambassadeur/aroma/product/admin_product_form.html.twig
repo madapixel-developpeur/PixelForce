@@ -1,0 +1,82 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	Formulaire Produit
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %} 
+    <div class="block block--bordered block--rounded">
+        <h1 class="block__text block__text--center mt-2" >Formulaire Produit :</h1>
+            
+            {{ form_start(form, {'attr': {'class': 'my-form', 'id': 'category-form'}}) }}
+                
+                <div class="my-form-widget">
+                    {{form_label(form.nom)}}
+                    {{form_widget(form.nom)}}
+                    {{form_errors(form.nom)}}
+                </div>
+                <div class="my-form-widget">
+                    {{form_label(form.description)}}
+                    {{form_widget(form.description)}}
+                    {{form_errors(form.description)}}
+                </div>
+                <div class="my-form-widget">
+                    {{form_label(form.prix)}}
+                    {{form_widget(form.prix)}}
+                    {{form_errors(form.prix)}}
+                </div>
+                <div class="my-form-widget">
+                    {{form_label(form.imageFile)}}
+                    {{form_widget(form.imageFile, {'attr': {'class': 'my-image-file'}})}}
+                    {{form_errors(form.imageFile)}}
+                </div>
+                <div class="my-form-img-preview-container">
+                    {% if product != null and product.image != null %}
+                        <img class="my-form-img-preview" id="my-form-img-preview" src="{{ asset( files_directory_relative ~ product.image) }}" alt="Image pour {{product.nom}}" />
+                    {% endif %}
+                </div>
+               
+                <div class="btn-wrap">
+                    <button class="btn btn-primary" type="submit"><i data-feather="save"></i>{{ isEdit ? 'Enregistrer les modifications' : 'Créer' }}</button>
+                </div>
+            {{ form_end(form) }}
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $(document).ready(function() {
+            let imgViewer = document.getElementById("my-form-img-preview");
+            let imgViewerContainer = document.querySelector(".my-form-img-preview-container");
+            let productImgInput = document.querySelector(".my-image-file");
+
+            function previewImage(data){
+                let input = data.target;
+                let file = input.files[0];
+                var reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onloadend = () => {
+                    let base64 = reader.result;
+                    if(!imgViewer){
+                        imgViewerContainer.innerHTML = `<img class="my-form-img-preview" id="my-form-img-preview" src="${base64}" alt="Image preview" />`;
+                    }
+                    else{
+                        imgViewer.src = base64;
+                    }
+                };
+            }
+
+            if(productImgInput){
+                productImgInput.addEventListener("change", previewImage);
+            }
+        });
+    </script>
+
+{% endblock %}
+

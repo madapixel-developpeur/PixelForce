@@ -3,8 +3,10 @@
 namespace App\Entity;
 
 use App\Repository\FormationRepository;
+use App\Util\Status;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -19,6 +21,9 @@ class Formation
     const STATUT_BLOQUEE = 'bloquee';
     const STATUT_DISPONIBLE = 'disponible';
     const STATUT_TERMINER = 'terminer';
+    const STATUT_IN_PROGRESS = 'inprogress';
+
+    const TYPE_QUIZ = 2;
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -96,10 +101,22 @@ class Formation
      */
     private $statut;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $type;
+
+
+    /**
+     * @ORM\OneToMany(targetEntity=FormationQuizItem::class, mappedBy="formation")
+     */
+    private $formationQuizItems;
+
     public function __construct()
     {
         $this->medias = new ArrayCollection();
         $this->formationAgents = new ArrayCollection();
+        $this->formationQuizItems = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -331,5 +348,69 @@ class Formation
 
     public function testStatut(){
         $this->setStatut($this->getBrouillonVal() ? self::STATUS_DRAFT : self::STATUS_CREATED);
+    }
+
+    public function isDebloqueAgent(): ?bool
+    {
+        return $this->debloqueAgent;
+    }
+
+    public function isBrouillon(): ?bool
+    {
+        return $this->brouillon;
+    }
+
+
+    public function getType(): ?int
+    {
+        return $this->type;
+    }
+
+    public function setType(?int $type): self
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, FormationQuizItem>
+     */
+    public function getFormationQuizItems(): Collection
+    {
+        return $this->formationQuizItems;
+    }
+
+    public function addFormationQuizItem(FormationQuizItem $formationQuizItem): self
+    {
+        if (!$this->formationQuizItems->contains($formationQuizItem)) {
+            $this->formationQuizItems[] = $formationQuizItem;
+            $formationQuizItem->setFormation($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFormationQuizItem(FormationQuizItem $formationQuizItem): self
+    {
+        if ($this->formationQuizItems->removeElement($formationQuizItem)) {
+            // set the owning side to null (unless already changed)
+            if ($formationQuizItem->getFormation() === $this) {
+                $formationQuizItem->setFormation(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getValidFormationQuizItems()
+    {
+        $result = [];
+        foreach ($this->getFormationQuizItems() as $formationQuizItem) {
+            if($formationQuizItem->getStatut() === Status::VALID){
+                $result[] = $formationQuizItem;
+            }
+        }
+        return $result;
     }
 }

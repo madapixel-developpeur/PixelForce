@@ -1,0 +1,96 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	Visualisation utilisateur Agent
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+	<div class="mt-2">
+		<a href="{{ path('coach_agent_list') }}" class="btn btn-secondary"> <i class="fa-solid fa-circle-arrow-left"></i> Retour </a>
+		<div class="content-card-user-information mt-3">
+			<section class="app-user-view-account">
+				<div class="row">
+					<!-- User Sidebar -->
+					<div class="col-12 col-md-7 order-1 order-md-0">
+						{{ include ('global/card/_card_user_information.html.twig', {user : agent, secteurs: secteurs}) }}
+					</div>
+					<!--/ User Sidebar -->
+
+					<!-- User Content -->
+					<div class="col-12 col-md-5 order-0 order-md-1">
+						<!-- User Pills -->
+						<ul class="nav nav-pills mb-2">
+							<li class="nav-item  me-2">
+								<a class="nav-link active" href="#">
+									<i class="fa-solid fa-cube"></i>
+									<span class="fw-bold">Secteur</span>
+								</a>
+							</li>
+							<li class="nav-item  me-2">							
+								<a class="nav-link" href="{{ path('coach_agent_contact_list', {agent: agent.id}) }}">
+									<i class="fa-solid fa-users"></i>
+									<span class="fw-bold">Contact</span>
+								</a>
+							</li>
+						</ul>
+						<!--/ User Pills -->
+
+						<!-- Project table -->
+						<div class="card">
+							<h4 class="card-header">Liste des secteurs de l'agent</h4>
+							<div class="table-responsive">
+								<table class="table datatable-project">
+									<thead>
+										<tr>
+											<th></th>
+											<th>Secteur</th>
+											<th>Date de validation</th>
+											<th>Statut</th>
+											<th>Action</th>
+										</tr>
+									</thead>
+									<tbody class="body-sector-list">
+										<tr>
+											<td></td>
+											<td>{{ agentSecteur.secteur.nom }}</td>
+											{% set coachtSecteur = repoCoachSecteur.findOneBy({'secteur' : agentSecteur.secteur}) %}
+											<td>{{ agentSecteur.dateValidation|date('d/m/Y') }}</td>
+											<td>
+												{% if agentSecteur.statut == false %}
+													<button class="btn btn-warning btn-sm">Bloqué</button>
+												{% else %}
+													<button class="btn  btn-success btn-sm"> Validé</button>
+												{% endif %}
+											</td>
+											<td>
+												{% if agentSecteur.statut == false or agentSecteur.statut == null or agentSecteur.dateValidation == null %}
+													<button data-agentSecteur-id="{{ agentSecteur.id }}" class="btn btn-sm  btn-outline-primary js-validate-secteur-agent btn-validate-sector">Valider</button>
+												{% else %}
+													<button data-agentSecteur-id="{{ agentSecteur.id }}" type="button" class="btn btn-sm  btn-outline-primary js-invalidate-secteur-agent">Bloquer</button>
+												{% endif %}
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+						<!-- /Project table -->
+
+					</div>
+					<!--/ User Content -->
+				</div>
+			</section>
+		</div>
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="application/json" id="agent-id">{{agent.id}}</script>
+	{{ encore_entry_script_tags('vuexy_app_user_view_js') }}
+	{{ encore_entry_script_tags('validationSecteur') }}
+{% endblock %}

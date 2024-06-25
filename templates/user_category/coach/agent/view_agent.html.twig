@@ -6,7 +6,11 @@
 
 {% block stylesheets %}
     {{ parent() }}
+    {{ encore_entry_link_tags('vuexy_dashboard_ecommerce') }}
+    <link rel="stylesheet" href="{{asset('assets/css/stepper.css')}}">
+		<link rel='stylesheet prefetch' href="{{ asset('app-assets/css/arbre/arbol.css')}}">
 {% endblock %}
+
 
 {% block body %}
 	<div class="mt-2">
@@ -16,6 +20,7 @@
 				<div class="row">
 					<!-- User Sidebar -->
 					<div class="col-12 col-md-7 order-1 order-md-0">
+						{% set detailAgentCoach = true %}
 						{{ include ('global/card/_card_user_information.html.twig', {user : agent, secteurs: secteurs}) }}
 					</div>
 					<!--/ User Sidebar -->
@@ -83,6 +88,50 @@
 					</div>
 					<!--/ User Content -->
 				</div>
+				<div class="">
+                <div class="card card-statistics">
+                    <div class="card-header">
+                        <h4 class="card-title">Progression</h4>
+                    </div>
+                    <div class="card-body statistics-body">
+                        <h4 class="text-center">Position</h4>
+                        {% include 'partials/stepper-progression-agent.html.twig' %}
+                        
+                        <h4 class="text-center mt-2">Formation</h4>
+                        <div class="mt-1 steps formation-progression d-flex flex-wrap flex-sm-nowrap justify-content-between padding-top-2x padding-bottom-1x">
+                            {% set isCompletedBefore = true %}
+                            {% for step in formationCategoriesOrdered %}
+                            {% set isCompleted = (not firstFormation or (firstFormation and step.ordreCatFormation < firstFormation.CategorieFormation.ordreCatFormation)) %}
+                            {% set isCurrent = (isCompletedBefore and not isCompleted) %}
+                            <div class="step {% if isCompleted %} completed {% endif %} {% if isCurrent %} current {% endif %}">
+                                <div class="step-icon-wrap">
+                                <div class="step-icon">{% if isCompleted %}<i class="fa fa-check"></i>{% else %}{{loop.index}}{% endif %}</div>
+                                </div>
+                                <h4 class="step-title">{{step.nom}}</h4>
+                            </div>
+                            {% set isCompletedBefore = isCompleted %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+				<div class="row mb-5">
+					<!-- User Sidebar -->
+					<div class="col-12  col-md-12 order-1 order-md-0">
+						<div id="card-arbol" class="card full-height">
+							<div class="card-body position-relative">
+								<div id="full-container">
+									
+									<div id="svgChart" style="overflow: hidden;" ></div>
+									<!-- <button class="btn btn-expand" onclick="params.funcs.expandAll()">Expandir árbol <i class="fa fa-sitemap"></i></button> -->
+								</div>
+							</div>
+						</div>
+					</div>
+					<!--/ User Sidebar -->
+				</div>
+            </div>
+
 			</section>
 		</div>
 	</div>
@@ -93,4 +142,53 @@
     <script type="application/json" id="agent-id">{{agent.id}}</script>
 	{{ encore_entry_script_tags('vuexy_app_user_view_js') }}
 	{{ encore_entry_script_tags('validationSecteur') }}
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js'></script>
+	<script src="{{asset('app-assets/js/arbre/arbol.js')}}"></script>
+	<script>
+		const agentId  = {{ agent.id }};
+		$(document).ready(function() {
+			getDataLineaire();
+		});
+
+		function getDataLineaire(){
+			$.ajax({
+				url: '{{ path('app_agent_data_lineaire') }}',
+				method: 'GET',
+				data: { 
+					agentId: agentId, // Example parameter
+				},
+				success: function(response) {
+					let data = response.equipe;
+					showUnilevelGraph(data);
+				},
+				error: function(error) {
+					console.error('AJAX request failed:', error);
+				}
+			});
+		}
+		function showUnilevelGraph(data){
+			var params = {
+				selector: "#svgChart",
+				chartWidth: window.innerWidth-80,
+				chartHeight: window.innerHeight + 200,
+				funcs: {
+				showMySelf: null,
+				expandAll: null,
+				search: null,
+				closeSearchBox: null,
+				clearResult: null,
+				findInTree: null,
+				reflectResults: null,
+				departmentClick: null,
+				back: null,
+				toggleFullScreen: null,
+				locate:null
+				},
+				data: data,
+				pristinaData : data
+
+			}
+			drawOrganizationChart(params);
+		}
+	</script>
 {% endblock %}

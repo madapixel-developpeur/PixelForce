@@ -1,0 +1,104 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	Stock
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+
+{% block body %} 
+    <div class="block block--bordered block--rounded">
+        <h1 class="block__text block__text--center mt-2" >Options de filtre :</h1>
+        <div class="filter-wrap">
+            {{ form_start(form, {'attr': {'class': 'filter-form'}}) }}
+                <div class="my-form-widget me-2">
+                    {{form_label(form.qteStockMin)}}
+                    {{form_widget(form.qteStockMin)}}
+                    {{form_errors(form.qteStockMin)}}
+                </div>
+                <div class="my-form-widget me-2">
+                    {{form_label(form.qteStockMax)}}
+                    {{form_widget(form.qteStockMax)}}
+                    {{form_errors(form.qteStockMax)}}
+                </div>
+                <div class="my-form-widget me-2">
+                    {{form_label(form.nom)}}
+                    {{form_widget(form.nom)}}
+                    {{form_errors(form.nom)}}
+                </div>
+                
+                <div class="my-form-widget me-2">
+                    {{form_label(form.categorie)}}
+                    {{form_widget(form.categorie)}}
+                    {{form_errors(form.categorie)}}
+                </div>
+                
+                <div class="my-form-widget me-2">
+                    {{form_label(form.sort)}}
+                    {{form_widget(form.sort)}}
+                    {{form_errors(form.sort)}}
+                </div>
+                <div class="my-form-widget me-2">
+                    {{form_label(form.direction)}}
+                    {{form_widget(form.direction)}}
+                    {{form_errors(form.direction)}}
+                </div>
+                <div class="my-form-widget me-2">
+                    <div class="btn-wrap">
+                        <button class="btn btn-primary" type="submit"><i data-feather="filter"></i>Filtrer</button>
+                    </div>
+                </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+    <div class="block block--bordered block--rounded">
+        <div class="block__header mb-1" >
+            <h1 class="block__title">Liste des produits :</h1>
+            <div class="fab-btn-wrap">
+                <a  href="{{path('admin_stock_entree')}}" class="btn btn-primary btn--rounded fab-btn"><i data-feather="plus"></i>Saisie entrée stock</a>
+            </div>
+        </div>
+        {% if productList|length ==0 %}
+                <div class="alert alert-primary p-3 text-center" role="alert">
+                    <div class="alert-body">
+                        Aucun produit disponible pour le moment.
+                    </div>
+                </div>
+        {% endif %}
+        {% if productList|length !=0 %}
+        <div class="table-responsive mb-1">
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Nom</th>
+                        <th>Catégorie</th>
+                        <th>Quantité stock</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in productList %}
+                    <tr >
+                        <td >{{product.produit.id}}</td>
+                        <td >{{product.produit.nom}}</td>
+                        <td >{{product.produit.categorie.nom}}</td>
+                        <td class="text-right">{{product.qteStock}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="d-flex justify-content-center scale-up-center">
+            {{ knp_pagination_render(productList) }}
+        <div>
+        {% endif %}
+    </div>
+
+{% endblock %}
+
+
+
+

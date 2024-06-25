@@ -2,12 +2,13 @@
 
 namespace App\Repository;
 
-use App\Entity\Meeting;
-use App\Entity\SearchEntity\MeetingSearch;
-use App\Entity\User;
 use DateInterval;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Entity\User;
+use App\Entity\Contact;
+use App\Entity\Meeting;
 use Doctrine\Persistence\ManagerRegistry;
+use App\Entity\SearchEntity\MeetingSearch;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @extends ServiceEntityRepository<Meeting>
@@ -42,57 +43,65 @@ class MeetingRepository extends ServiceEntityRepository
         }
     }
 
-    public function getSearchQuery($meeting, $options = null){
+    public function getSearchQuery($meeting, $options = null)
+    {
         $qb = $this->createQueryBuilder('p');
         $parameters = [];
-        if($meeting->getTitle()!=null) {
+        if ($meeting->getTitle() != null) {
             $qb->andWhere('LOWER(p.title) LIKE LOWER(:title)');
-            $parameters['title'] = '%'.$meeting->getTitle(). '%';
+            $parameters['title'] = '%' . $meeting->getTitle() . '%';
         }
-        if($meeting->getStart()!=null) {
+        if ($meeting->getStart() != null) {
             $qb->andWhere("DATE(p.start) >= DATE(:start)");
             $parameters['start'] = $meeting->getStart();
         }
-        if($meeting->getEnd()!=null) {
+        if ($meeting->getEnd() != null) {
             $qb->andWhere("DATE(p.end) <= DATE(:end)");
             $parameters['end'] = $meeting->getEnd();
         }
-        if($meeting->getMeetingState()!=null) {
+        if ($meeting->getMeetingState() != null) {
             $qb->andWhere('p.meetingState = :meetingState');
             $parameters['meetingState'] = $meeting->getMeetingState();
         }
-        if($meeting->getUser()!=null && $meeting->getUserToMeet()!=null) {
+        if ($meeting->getUser() != null && $meeting->getUserToMeet() != null) {
             $qb->andWhere('p.user = :user or p.userToMeet = :userToMeet');
             $parameters['user'] = $meeting->getUser();
             $parameters['userToMeet'] = $meeting->getUserToMeet();
         }
-        if($options != null){
-            if($options['orderBy']!=null && $options['order']!=null) {
-                $qb->orderBy('p.'.$options['orderBy'], $options['order']);
-            } 
+        if ($options != null) {
+            if ($options['orderBy'] != null && $options['order'] != null) {
+                $qb->orderBy('p.' . $options['orderBy'], $options['order']);
+            }
         }
 
         $qb->setParameters($parameters);
         return $qb->getQuery();
-
     }
 
     /**
      * @param MeetingSearch $search
      * @return Query
      */
-    public function findMeetingByUser(MeetingSearch $search, User $user)
+    public function findMeetingByUser(MeetingSearch $search, User $user, Contact $contact = null, array $options = null, $search_gal = null)
     {
-        $query = $this->createQueryBuilder('m');
-        $query = $query
-            ->andwhere('m.user = :user')
-            ->setParameter('user', $user)
-        ;
+        $query = $this->createQueryBuilder('m')
+            ->join('m.userToMeet', 'u');
+
+
+        if ($options && isset($options['secteur'])) {
+            $query = $query
+                ->andwhere('m.secteur = :secteur')
+                ->setParameter('secteur', $options['secteur']);
+        } else {
+            $query = $query
+                ->andwhere('m.user = :user')
+                ->setParameter('user', $user);
+        }
 
         if ($search->getTitle()) {
             $query = $query
                 ->andwhere('m.title LIKE :title')
-                ->setParameter('title', '%'.$search->getTitle().'%');
+                ->setParameter('title', '%' . $search->getTitle() . '%');
         }
         if ($search->getStartDate()) {
             $query = $query
@@ -114,35 +123,46 @@ class MeetingRepository extends ServiceEntityRepository
                 ->setParameter('status', $search->getStatus());
         }
 
+
+        if ($contact) {
+            $query = $query
+                ->andwhere('m.userToMeet = :userToMeet')
+                ->setParameter('userToMeet', $contact);
+        }
+        if ($search_gal) {
+            $query->andwhere('m.id LIKE :keyword OR  m.title LIKE :keyword OR m.note LIKE :keyword OR u.nom LIKE :keyword OR u.prenom LIKE :keyword OR u.email LIKE :keyword OR u.telephone LIKE :keyword')
+                // Ajoutez autant de champs que nécessaire pour la recherche
+                ->setParameter('keyword', '%' . $search_gal . '%');
+        }
+
         return $query
             ->orderBy('m.id', 'DESC')
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
 
-//    /**
-//     * @return Meeting[] Returns an array of Meeting objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('p')
-//            ->andWhere('p.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('p.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    //    /**
+    //     * @return Meeting[] Returns an array of Meeting objects
+    //     */
+    //    public function findByExampleField($value): array
+    //    {
+    //        return $this->createQueryBuilder('p')
+    //            ->andWhere('p.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->orderBy('p.id', 'ASC')
+    //            ->setMaxResults(10)
+    //            ->getQuery()
+    //            ->getResult()
+    //        ;
+    //    }
 
-//    public function findOneBySomeField($value): ?Meeting
-//    {
-//        return $this->createQueryBuilder('p')
-//            ->andWhere('p.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    //    public function findOneBySomeField($value): ?Meeting
+    //    {
+    //        return $this->createQueryBuilder('p')
+    //            ->andWhere('p.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->getQuery()
+    //            ->getOneOrNullResult()
+    //        ;
+    //    }
 }

@@ -17,7 +17,7 @@ use App\Repository\SecteurRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityRepository;
 use Knp\Component\Pager\PaginatorInterface;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use App\Services\FileHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -30,6 +30,7 @@ class AdminSecteurController extends AbstractController
     protected $repoCoachAgent;
     protected $repoSecteur;
     protected $repoCoachSecteur;
+    private $fileHandler;
 
     public function __construct(
         UserRepository $repoUser,
@@ -37,6 +38,7 @@ class AdminSecteurController extends AbstractController
         UserManager $userManager,
         CoachAgentRepository $repoCoachAgent,
         SecteurRepository $repoSecteur,
+        FileHandler $fileHandler,
         CoachSecteurRepository $repoCoachSecteur)
     {
         $this->repoUser = $repoUser;
@@ -45,6 +47,7 @@ class AdminSecteurController extends AbstractController
         $this->repoCoachAgent = $repoCoachAgent;
         $this->repoSecteur = $repoSecteur;
         $this->repoCoachSecteur = $repoCoachSecteur;
+        $this->fileHandler = $fileHandler;
     }
 
     /**
@@ -91,6 +94,16 @@ class AdminSecteurController extends AbstractController
 
         $formSecteur->handleRequest($request);
         if ($formSecteur->isSubmitted() && $formSecteur->isValid()) {
+            $imageCouverture = $formSecteur->get('couverture')->getData();
+            if ($imageCouverture) {
+                $photo = $this->fileHandler->upload($imageCouverture, "images\secteur\couverture");
+                $sector->setCouverture($photo);
+            }
+            $affiche = $formSecteur->get('affiche')->getData();
+            if ($affiche) {
+                $photo = $this->fileHandler->upload($affiche, "images\secteur\affiche");
+                $sector->setAffiche($photo);
+            }
             $sector->setActive(1);
             $this->entityManager->save($sector);
             
@@ -119,6 +132,16 @@ class AdminSecteurController extends AbstractController
 
         $formSecteur->handleRequest($request);
         if ($formSecteur->isSubmitted() && $formSecteur->isValid()) {
+            $imageCouverture = $formSecteur->get('couverture')->getData();
+            if ($imageCouverture) {
+                $photo = $this->fileHandler->upload($imageCouverture, "images\secteur\couverture");
+                $sector->setCouverture($photo);
+            }
+            $affiche = $formSecteur->get('affiche')->getData();
+            if ($affiche) {
+                $photo = $this->fileHandler->upload($affiche, "images\secteur\affiche");
+                $sector->setAffiche($photo);
+            }
             $this->entityManager->save($sector);
             $this->addFlash('success', "Modification secteur avec succès");
             return $this->redirectToRoute('admin_sector_list');    
@@ -141,6 +164,17 @@ class AdminSecteurController extends AbstractController
 
             $this->addFlash( 'danger', 'Secteur supprimé');
         }
+        return $this->redirectToRoute('admin_sector_list');    
+    }
+    /**
+     * @Route("/admin/secteur/{id}/reactiver", name="admin_sector_reactiver")
+     */
+    public function admin_sector_reactiver(Secteur $sector, Request $request)
+    {  
+            $sector->setActive(1);
+            $this->entityManager->save($sector);
+
+            $this->addFlash( 'success', 'Secteur restauré');
         return $this->redirectToRoute('admin_sector_list');    
     }
 }
