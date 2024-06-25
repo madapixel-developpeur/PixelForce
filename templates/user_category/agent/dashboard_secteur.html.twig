@@ -116,8 +116,13 @@
                 <!-- Actual position Card -->
                 <h4 class="general-primary-text">Progression</h4>
                 <div class="col-xl-4 col-md-6 col-12">
-                    {% include 'partials/stepper-progression-agent.html.twig' %}
-                    
+                    {% set isCompletedBefore = true %}
+                    {% set positionSteps = remunerationService.getPositionSteps() %}
+                    {% set temoin = false %}
+                    {% for step in positionSteps %}
+                        {% set index = loop.index %}
+                        {% include 'partials/stepper-progression-agent_V2.html.twig' %}
+                    {% endfor %}
                 </div>
                 <!--/ Actual position Card -->
                 <!-- Formation Card -->
@@ -219,25 +224,20 @@
                                     </div>
                                     {% else %}
                                     <div class="row m-3">
-                                        <div class="col-6">
-                                            <h5 class="m-2 general-primary-text fs-1">{{ firstFormation.titre}} </h5>
-                                            <p class="m-2">
-                                                {# Notre équipe de super-héros du numérique déploie des stratégies audacieuses et utilise les dernières tendances technologiques pour propulser nos clients vers le succès mondial. #}
-                                            {{ (firstFormation.description??'')|slice(0, 300) }}
-                                            </p>
+
+                                        <div class="col-12 p-3">
+                                            <div class="border ratio ratio-16x9 ">
+                                                <iframe id="formationVideo" src="https://player.vimeo.com/video/{{ firstFormation.videoId }}?loop=0&byline=0&portrait=0&title=0&muted=1" width="700" height="400" class="m-auto" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen allow="autoplay; encrypted-media"></iframe>
+                                            </div>  
+                                            <h5 class=" text-center m-2 general-primary-text fs-5">{{ firstFormation.titre}} </h5>
                                             <div class="text-center">
                                                 <div class="row">
                                                     <div class="col">
-                                                        <a href="{{ path('agent_formation_fiche', {id:firstFormation.id}) }}" class="regular-button w-75 mt-2 rounded-3"><i class="fa-solid fa-file me-2"></i> Fiche formation</a>
+                                                        <a href="{{ path('agent_formation_fiche', {id:firstFormation.id}) }}" class="regular-button w-50 mt-2 rounded-3"><i class="fa-solid fa-file me-2"></i> Fiche formation</a>
                                                     </div>
                                                     
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="col-6 p-3">
-                                            <div class="border ratio ratio-16x9 ">
-                                                <iframe id="formationVideo" src="https://player.vimeo.com/video/{{ firstFormation.videoId }}?loop=0&byline=0&portrait=0&title=0&muted=1" width="700" height="400" class="m-auto" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen allow="autoplay; encrypted-media"></iframe>
-                                            </div>  
                                         </div>
                                     </div>
                                     

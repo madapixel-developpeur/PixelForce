@@ -52,9 +52,25 @@ class AgentAccountController extends AbstractController
     private $repoCoachSecteur;
     private $repoUser;
 
-    public function __construct(SecteurRepository $repoSecteur, AgentSecteurRepository $repoAgentSecteur, FormationRepository $repoFormation, SessionInterface $session, ContactRepository $repoContact, FormationAgentRepository $repoFormationAgent, CategorieFormationRepository $repoCatFormation, RFormationCategorieRepository $repoRelationFormationCategorie, CategorieFormationAgentService $categorieFormationAgentService, CalendarEventRepository $calendarEventRepository, StripeService $stripeService, StripeManager $stripeManager, AgentService $agentService, PlanAgentAccountRepository $repoPlanAgentAccount, UserRepository $repoUser,
-        private EntityManager $entityManager, CoachSecteurRepository $repoCoachSecteur)
-    {
+    public function __construct(
+        SecteurRepository $repoSecteur,
+        AgentSecteurRepository $repoAgentSecteur,
+        FormationRepository $repoFormation,
+        SessionInterface $session,
+        ContactRepository $repoContact,
+        FormationAgentRepository $repoFormationAgent,
+        CategorieFormationRepository $repoCatFormation,
+        RFormationCategorieRepository $repoRelationFormationCategorie,
+        CategorieFormationAgentService $categorieFormationAgentService,
+        CalendarEventRepository $calendarEventRepository,
+        StripeService $stripeService,
+        StripeManager $stripeManager,
+        AgentService $agentService,
+        PlanAgentAccountRepository $repoPlanAgentAccount,
+        UserRepository $repoUser,
+        private EntityManager $entityManager,
+        CoachSecteurRepository $repoCoachSecteur
+    ) {
         $this->repoSecteur = $repoSecteur;
         $this->repoAgentSecteur = $repoAgentSecteur;
         $this->repoFormation = $repoFormation;
@@ -70,7 +86,7 @@ class AgentAccountController extends AbstractController
         $this->agentService = $agentService;
         $this->repoPlanAgentAccount = $repoPlanAgentAccount;
         $this->repoCoachSecteur = $repoCoachSecteur;
-        $this->repoUser=$repoUser;
+        $this->repoUser = $repoUser;
     }
 
     /**
@@ -156,7 +172,7 @@ class AgentAccountController extends AbstractController
         $agentSecteur->setDateValidation(new \DateTime());
         $this->entityManager->save($agentSecteur);
 
-        return $this->redirectToRoute('agent_generate_sessionSecteur_before_redirect_to_route_dahsboard', ['id'=>$secteur->getId()]);
+        return $this->redirectToRoute('agent_generate_sessionSecteur_before_redirect_to_route_dahsboard', ['id' => $secteur->getId()]);
     }
 
     /**
@@ -217,6 +233,8 @@ class AgentAccountController extends AbstractController
         $nbVentesTotal = count($pbb_summary['orders']) + ($statVente != null ? $statVente['nbr_ventes'] : 0);
 
         $formationCategoriesOrdered = $categorieFormationRepository->getValidCategoriesOrdered();
+        //progression
+        $visible = $request->query->get('visible', 1);
 
         return $this->render('user_category/agent/dashboard_secteur.html.twig', [
             'secteur' => $secteur,
@@ -225,8 +243,8 @@ class AgentAccountController extends AbstractController
             'CategorieFormation' => CategorieFormation::class,
             'nbrAllMyContacts' => count($this->repoContact->findAll()),
             'repoRelationFormationCategorie' => $this->repoRelationFormationCategorie,
-            'upcomingEvents'=> $upcomingEvents,
-            'eventsOfTheDay'=> $eventsOfTheDay,
+            'upcomingEvents' => $upcomingEvents,
+            'eventsOfTheDay' => $eventsOfTheDay,
             'statVente' => $statVente,
             'nbrClients' => $nbrClients,
             'topClients' => $topClients,
@@ -237,14 +255,15 @@ class AgentAccountController extends AbstractController
             'chiffreAffaireTotal' => $chiffreAffaireTotal,
             'nbVentesTotal' => $nbVentesTotal,
             'coachs' => $coachs,
-            'agent'=> $agent,
+            'agent' => $agent,
             'statDigital' => $statDigital,
             'soldeRemuneration' => $soldeRemuneration,
             'formationCategoriesOrdered' => $formationCategoriesOrdered,
             'repoFormationAgent' => $this->repoFormationAgent,
-            'pixelforce_url'=>$_ENV['BASE_URL'],
-            'pbb_url'=>$_ENV['PBB_WS_URL'],
+            'pixelforce_url' => $_ENV['BASE_URL'],
+            'pbb_url' => $_ENV['PBB_WS_URL'],
             'repoCoachSecteur' => $this->repoCoachSecteur,
+            'visible' => $visible
         ]);
     }
 
@@ -254,7 +273,7 @@ class AgentAccountController extends AbstractController
     public function admin_agent_view(Request $request, AgentSecteurService $agentSecteurService, UserRepository $repoUser, PaginatorInterface $paginator)
     {
         $ambassadeur = $this->getUser();
-        $result=$this->repoUser->findBy(['parrain'=>$ambassadeur->getId()]);
+        $result = $this->repoUser->findBy(['parrain' => $ambassadeur->getId()]);
         $filleul = $paginator->paginate(
             $result,
             $request->query->getInt('page', 1),
@@ -266,9 +285,9 @@ class AgentAccountController extends AbstractController
 
         return $this->render('user_category/agent/view_agent.html.twig', [
             'ambassadeur' => $ambassadeur,
-            'filleul'=>$filleul,
-            'countEquipe' =>$countEquipe,
-            'countDirect' =>$countDirect,
+            'filleul' => $filleul,
+            'countEquipe' => $countEquipe,
+            'countDirect' => $countDirect,
         ]);
     }
 
@@ -284,7 +303,7 @@ class AgentAccountController extends AbstractController
             $user = (object) $this->getUser();
         }
         if (in_array('ROLE_AGENT', $user->getRoles())) {
-            $limit = ($user->getPosition()??0) + 1;
+            $limit = ($user->getPosition() ?? 0) + 1;
         }
         $unilevel = $this->agentService->getUnilevelChildren($user, 1, true, $limit);
         $data = ['equipe' => $unilevel];

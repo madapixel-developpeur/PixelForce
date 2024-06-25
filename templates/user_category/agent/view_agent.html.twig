@@ -73,10 +73,18 @@
 					<!--/ User Sidebar -->
 				</div>
 				<h4 class="card-title">Progression</h4>
-                <div class=" d-flex mb-4">
-                    {% include 'partials/stepper-progression-agent_V2.html.twig' %}
-                    {% include 'partials/stepper-progression-agent_V2.html.twig' %}
-                    {% include 'partials/stepper-progression-agent_V2.html.twig' %}
+                <div class=" d-flex mb-4">  
+					
+                    {% set isCompletedBefore = true %}
+                    {% set positionSteps = remunerationService.getPositionSteps() %}
+                        {% set visible = 0 %}
+                        {% set temoin = true %}
+                    {% for step in positionSteps %}
+                        {% set index = loop.index %}
+						<div class="col-xl-4 col-md-6 col-12">
+                        {% include 'partials/stepper-progression-agent_V2.html.twig' %}
+                		</div>
+                    {% endfor %}
                 </div>
 				<div class="row mb-5">
 					<!-- User Sidebar -->
