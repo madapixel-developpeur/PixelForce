@@ -401,6 +401,10 @@ a, a:hover{
 	display:inline-block;
 	border-radius: 7px !important;
 }
+.regular-button:hover {
+	background-color:white ;
+    color:#7d78e1;
+}
 .general-primary-text{
 	color:#192030;
 	font-weight: bold;
@@ -518,11 +522,12 @@ a, a:hover{
 .vision-button{
     background-color: #ebedf5;
     color: #192030;
-    border-width: 1px; /* Width of the border */
-    border-style: solid; /* Style of the border */
-    border-color: #192030; /* Color of the border */
-	padding:5px 20px;
+	padding:7px 20px;
 	display:inline-block
+}
+.vision-button:hover {
+    color:#ebedf5 !important;
+	background-color:#192030;
 }
 /* Gestion projet */
 .gestion-projet{
