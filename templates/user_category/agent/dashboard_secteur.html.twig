@@ -23,11 +23,11 @@
                 <div class="col-xl-4 col-md-6 col-12">
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="general-primary-text">Invité des personnes</h5>
-                            {% if app.user.canAccessFonct('RDV', app.session.get('secteurId')) %}
+                            <h5 class="general-primary-text">Inviter des personnes</h5>
+                            {# {% if app.user.canAccessFonct('RDV', app.session.get('secteurId')) %} #}
                             <p >Pour inviter d'autres personnes à se joindre à vous, veuillez cliquer ici.</p>
 							<a class="regular-button w-100 text-center" href="#" onclick="copyLink('{{ url('agent_inscription', {'ambassador_username':  app.user.username != "" ?  app.user.username : ' '}) }}') " >Copier votre lien</a>    
-                            {% endif %}
+                            {# {% endif %} #}
                         </div>
                     </div>
                 </div>
@@ -35,11 +35,11 @@
                 <!-- Statistics Card -->
                 <div class="col-xl-8 col-md-6 col-12">
                    
-                            <h4 class="card-title">Statistiques</h4>             
+                        <h4 class="card-title general-primary-text">Statistiques</h4>             
                         <div class="statistics-body">
                             <div class="row statistics-section">
                                 <div class="col-xl-3 col-sm-6 col-12  ">
-                                    <div class="d-flex flex-row align-items-center m-2 p-3 card">
+                                    <div class="d-flex flex-row align-items-center m-2 p-4 card">
                                         <div class="">
                                             <div class="text-center avatar-statistique rounded-circle bg-light-warning me-2">
                                                 <a {% if app.user.canAccessFonct('VENTE', app.session.get('secteurId')) %}href="{% if estSecurite %}{{path('admin_ordersecu_list')}}{% elseif estEcommerce %}{% if app.session.get('secteurId') == secteurDigitalId  %}{{path('agent_order_list_digital')}}{% else %}{{path('agent_order_list')}}{% endif %}{% elseif estDemandeDevis %}{{path('agent_demandedevis_list')}}{% else %}#{% endif %}"{% endif %}>
@@ -57,7 +57,7 @@
                                     </div>
                                 </div>
                                 <div class="col-xl-3 col-sm-6 col-12 ">
-                                    <div class="d-flex flex-row align-items-center m-2 p-3 card">
+                                    <div class="d-flex flex-row align-items-center m-2 p-4 card">
                                         <div class="">
                                             <div class="text-center avatar-statistique rounded-circle bg-light-primary me-2">
                                                 <a {% if app.user.canAccessFonct('RDV', app.session.get('secteurId')) %}href="{{path('agent_contact_meeting_list')}}"{% endif %}>
@@ -73,7 +73,7 @@
                                 </div>
                                 {# {% if (estSecurite or estEcommerce) %} #}
                                 <div class="col-xl-3 col-sm-6 col-12 ">
-                                    <div class="d-flex flex-row align-items-center m-2 p-3 card">
+                                    <div class="d-flex flex-row align-items-center m-2 p-4 card">
                                         <div class="">
                                             <div class="avatar-statistique rounded-circle bg-light-danger me-2 text-center">
                                                 <a class="" {% if app.user.canAccessFonct('VENTE', app.session.get('secteurId')) %}href="{% if estSecurite %}{{path('admin_ordersecu_list')}}{% elseif estEcommerce %}{% if app.session.get('secteurId') == secteurDigitalId  %}{{path('agent_order_list_digital')}}{% else %}{{path('agent_order_list')}}{% endif %}{% elseif estDemandeDevis %}{{path('agent_demandedevis_list')}}{% else %}#{% endif %}"{% endif %}>
@@ -91,7 +91,7 @@
                                 </div>
                                 {# {% endif %} #}
                                 <div class="col-xl-3 col-sm-6 col-12 ">
-                                    <div class="d-flex flex-row  align-items-center m-2 p-3 card">
+                                    <div class="d-flex flex-row  align-items-center m-2 p-4 card">
                                         <div class=" ">
                                             <div class="text-center avatar-statistique rounded-circle bg-light-success me-2">
                                                 <a href="#"><i class="fa-solid fa-dollar-sign fs-4 mt-2 text-success"></i></a>
@@ -131,8 +131,8 @@
                         <div class="card card-statistics">
                             <div class="card-body ">
                                
-                                <h4 class="  choix-secteur-primary">Formation</h4>
-                                <p class="w-50">Une priève description sur le déroulement de la formation</p>
+                                <h5 class="  choix-secteur-primary mb-4">Formation</h5>
+                                <p class="w-50">Une brève description sur le déroulement de la formation</p>
                                
                                 
                                 <div class="mt-1 steps formation-progression d-flex flex-wrap flex-sm-nowrap justify-content-between padding-top-2x padding-bottom-1x">
@@ -156,9 +156,9 @@
                 <!--/ Formation Card -->
             </div>
 
-            <div class="row match-height">
+            <div class="row match-height mt-4">
                 <div class="col-lg-8 col-12">
-                    <h4 class=" mt-2 choix-secteur-primary">Liste des formations</h4>
+                    <h4 class=" mt-2 mb-3 choix-secteur-primary">Liste des formations</h4>
                     <div class="card ">
                         <div class="card-body p-0">
                             {% if firstFormation == null %}
@@ -223,10 +223,10 @@
                                         </div>
                                     </div>
                                     {% else %}
-                                    <div class="row m-3">
+                                    <div class="row">
 
-                                        <div class="col-12 p-3">
-                                            <div class="border ratio ratio-16x9 ">
+                                        <div class="col-12 pb-3">
+                                            <div class="border ratio ratio-16x9 rounded-3">
                                                 <iframe id="formationVideo" src="https://player.vimeo.com/video/{{ firstFormation.videoId }}?loop=0&byline=0&portrait=0&title=0&muted=1" width="700" height="400" class="m-auto" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen allow="autoplay; encrypted-media"></iframe>
                                             </div>  
                                             <h5 class=" text-center m-2 general-primary-text fs-5">{{ firstFormation.titre}} </h5>
@@ -258,20 +258,20 @@
                         <div class="vision-section rounded-3 pb-1" style="">
                             <div class=" p-0">
                                 <div class="row p-5 align-items-center">
-                                    <h4 class="general-primary-text fs-1">{{secteur.title}}</h4>
-                                    <div class="col-md-6 vision-section-1">
+                                    <div class="col-md-7 vision-section-1">
+                                        <h4 class="general-primary-text fs-2 mb-3">{{secteur.title}}</h4>
                                         <p>
                                             {{secteur.longDescription | raw}}  
                                         </p>
                                         <h6 class="mt-3">
                                         <span class="text-white">Référence :</span> 
-                                        <a class="text-dark-template fs-4" href="{{ path('agent_order_list_digital',{'referenceVente' : generateReference(app.user.id,app.user.id) }) }}" >  {{ generateReference(app.user.id,app.user.id) }} </a>
-                                        <a class="p-2 text-dark-template fs-4" href="#" onclick="copyLink('{{generateReference(app.user.id,app.user.id) }}','Liens de la référence {{ generateReference(app.user.id,app.user.id) }} copié avec succès') "><i class="fa-solid fa-copy"></i></a> 
+                                        <a class="text-dark-template fs-5" href="{{ path('agent_order_list_digital',{'referenceVente' : generateReference(app.user.id,app.user.id) }) }}" >  {{ generateReference(app.user.id,app.user.id) }} </a>
+                                        <a class="p-2 text-dark-template fs-5" href="#" onclick="copyLink('{{generateReference(app.user.id,app.user.id) }}','Liens de la référence {{ generateReference(app.user.id,app.user.id) }} copié avec succès') "><i class="fa-solid fa-copy"></i></a> 
                                         </h6>
-                                        <a class="vision-button w-100 text-center rounded-3" href="#" onclick="copyLink('{{ url('agent_inscription', {'ambassador_username':  app.user.username != "" ?  app.user.username : ' '}) }}') " >Voir les catalogues pour le digital</a>    
+                                        <a class="vision-button w-100 text-center rounded-3 mt-4 p-3" href="#" onclick="copyLink('{{ url('agent_inscription', {'ambassador_username':  app.user.username != "" ?  app.user.username : ' '}) }}') " >Voir les catalogues pour le digital</a>    
                                         {# <a target="_blank" href="{{secteur.liens}}" class="card-link">Lien vers {{secteur.nom}}</strong></a> #}
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-5">
                                             <img src="{{ asset('files/')}}/{{secteur.couverture}}" class="w-100 rounded-3" alt="">
                                     </div>
                                 </div>
@@ -283,7 +283,7 @@
                 {% if app.user.canAccessFonct('AGENDA', app.session.get('secteurId')) %}
                 <!-- Developer Meetup Card -->
                 <div class="col-lg-4 col-md-6 col-12">
-                    <h4 class=" mt-2 choix-secteur-primary">Mon agenda</h4>
+                    <h4 class=" mt-2 mb-3 choix-secteur-primary">Mon agenda</h4>
                     <div class="card card-developer-meetup position-relative">
                         <div class="position-absolute right-0 top-0 m-3">
                             <a href="{{ path('calendar_index') }}" class="btn btn-primary d-flex justify-content-center align-items-center">Mon Agenda <i data-feather="calendar" class="ms-3"></i></a>
@@ -364,11 +364,11 @@
                             </div> #}
                         </div>
                     </div>
-                    <div class="card" style="max-height:170px;">
+                    <div class="card" style="max-height:190px;">
                         <div class="card-body">
                          <div class="row">
                             <div class="col-8">
-                                <h5 class="general-primary-text">Gestion de projet</h5>
+                                <h5 class="general-primary-text mb-4">Gestion de projet</h5>
                                 <p>Accèder à la plateforme pour la suivie de vos projets.</p>
                             </div>
                             <div class="col-4 text-center">
@@ -377,7 +377,7 @@
                                 </a>
                             </div>
                          </div>
-                            <a class="regular-button w-100 text-center mt-4 rounded-3" href="{{pbb_url }}">Accèder à la plateforme</a>    
+                            <a class="regular-button w-100 text-center mt-3 rounded-3 p-3" href="{{pbb_url }}">Accéder à la plateforme</a>    
                         </div>
                     </div>
                 </div>

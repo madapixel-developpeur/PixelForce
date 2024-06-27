@@ -15,43 +15,36 @@
             <div class="m-3">
                 <div class="d-flex">
                     <div class="">
-                        <h4 class=" general-primary-text">Position actuelle</h4>
+                        <h5 class=" general-primary-text mb-4">Position {{step.position}}</h5>
                         <div class="d-flex  ">
-                            <div clas="progression-positon-part1">
-                                <a class="progression-positon-chiffre rounded-circle d-block " href="" >
-                                <p class="text-center pt-4 fs-1 text-white">{{step.position}}</p>
+                            <div clas="progression-positon-part1 progression-positon-part1">
+                                <a class="progression-positon-chiffre rounded-circle d-block  d-flex justify-content-center align-items-center" href="" >
+                                    <p class="text-center fs-1 text-white">{{step.position}}</p>
                                 </a>
                             </div>
                             <div class="progression-positon-part1 progression-positon-part1-b">
-                                <h6 class="general-primary-text">Position {{step.position}}</h6>
+                                {# <h6 class="general-primary-text">Position {{step.position}}</h6> #}
                                 <p class="">{{step.label}}</p>
                             </div>
                         </div>
                     </div>
-                    <div class="">
-                        <h1 class="progression-positon-part2 text-center">{{step.position}}</h1>
-                    </div>
                 </div>
-                <div class="row ">
-                    <div class=" col-9">
-                        <p class="m-0"><i class="fa fa-usd" aria-hidden="true"></i>   Chiffre d'affaire:  <span class="text-tableau fw-bolder">-</span></p>
-                        <p class="p-0"><i class="fa fa-usd" aria-hidden="true"></i>  Atelier directe:  <span class="text-tableau fw-bolder">-</span></p>
-                    </div>
-                    <div class=" col-2">
-                    <h6 class="text-center p-0">{{pourcentage}}%</h6>
+                <div class="row mt-1">
+                    <div class="col-12">
+                    <h6 class="text-end p-0">{{pourcentage}}%</h6>
                     </div>
                 </div>
                 <div class="progress" role="progressbar" aria-label="Default striped example" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100">
                     <div class="vision-section" style="width: {{pourcentage}}%"></div>
                 </div>
-                <div class="row align-items-center">
+                <div class="row align-items-center mt-2">
                    
                     
                     <div class=" col-6 ">
                         {% if not isFirstStep and not temoin  %}
                             <form action="" method="get">
                             <input type="hidden" name="visible" value="{{prevVisible}}">
-                            <button type="submit" class="btn btn-link text-right text-dark-template">Position Précédente</button>
+                            <button type="submit" class="btn btn-link text-right text-dark-template">Position précédente</button>
                             </form>
                         {% endif %}
                     </div>
@@ -59,7 +52,7 @@
                     {% if not isLastStep and not temoin %}
                         <form action="" method="get">
                         <input type="hidden" name="visible" value="{{nextVisible}}">
-                        <button type="submit" class="btn btn-link text-right text-dark-template">Position Suivante</button>
+                        <button type="submit" class="btn btn-link text-right text-dark-template">Position suivante</button>
                         </form>
                     {% endif %}
                     </div>

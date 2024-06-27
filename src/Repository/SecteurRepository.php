@@ -118,7 +118,7 @@ class SecteurRepository extends ServiceEntityRepository
 
         if (empty($_GET)) {
             $queryBuilder
-            ->orWhere('s.active = 1')
+            ->orWhere('s.active >= 0')
             ->orWhere('s.active is null');
         }
 

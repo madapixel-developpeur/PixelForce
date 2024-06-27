@@ -25,7 +25,7 @@
 							<div class="row">
 								<div class="card text-center col-lg-12 col-12 align-items-center mb-3">
 									<div class="card-body">
-										<h5 class="general-primary-text">Invité des personnes</h5>
+										<h5 class="general-primary-text">Inviter des personnes</h5>
 										{% if app.user.canAccessFonct('RDV', app.session.get('secteurId')) %}
 										<p >Pour inviter d'autres personnes à se joindre à vous, veuillez cliquer ici.</p>
 										<a class="regular-button w-100 text-center" href="#" onclick="copyLink('{{ url('agent_inscription', {'ambassador_username':  app.user.username != "" ?  app.user.username : ' '}) }}') " >Copier votre lien</a>    

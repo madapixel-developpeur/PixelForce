@@ -515,9 +515,7 @@ a, a:hover{
 }
 .vision-section-1 p{
 	color: white;
-	line-height: 16px;
 	font-size: 12px;
-	margin: 0px auto;
 }
 .vision-button{
     background-color: #ebedf5;
@@ -543,10 +541,6 @@ a, a:hover{
 }
 .progression-positon-part1{
 	margin: 0 10px;
-}
-.progression-positon-part1-b p{
-	font-size: 12px;
-	line-height: 12px;
 }
 .progression-positon-part2{
 	font-size: 150px;

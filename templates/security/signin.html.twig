@@ -13,7 +13,7 @@
         <link rel="stylesheet" href="/assets/fontawesome-free-6.0.0-web/css/all.css" />
         <link rel="stylesheet" href="{{ asset('/assets/vuexy/css/pages/authentication.css') }}" />
         <link rel="stylesheet" type="text/css" href="{{asset('assets/css/animations.css')}}">
-        <link rel="stylesheet" type="text/css" href="{{asset('assets/css/style.css')}}">
+        <link rel="stylesheet" type="text/css" href="{{asset('assets/css/style.css?date=202406271222')}}">
         <link rel="stylesheet" type="text/css" href="{{asset('assets/css/inscription.css')}}">
         {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
         {% block stylesheets %}
@@ -59,7 +59,7 @@
                                     </h2>
                                     
                                     {% block form %}
-                                    <h2 class="text-center fw-bold ">Inscription</h2>
+                                    <h2 class="text-center fw-bold mb-3">Inscription</h2>
                                         <!-- Message alert -->
                                             <div class="alert-message">
                                                 {% for label, messages in app.flashes %}
@@ -111,7 +111,7 @@
                                                 {% endfor %}
                                             </div> #}
 
-                                            <h5 class="mb-1">Information sur la connexion</h5>
+                                            <h5 class="mt-4 mb-3">Information sur la connexion</h5>
                                             {% if form.ambassador_username is defined %}
                                                 {{ form_row(form.ambassador_username) }}
                                             {% endif %}
@@ -137,7 +137,7 @@
                                                 <div class="col-12 ">
                                                     <div class=" text-center">
                                                         <a class=" w-100 font-weight-bold login-other-button " href="{{ path('app_login') }}">
-                                                            Se connecter
+                                                            Déjà un compte ? Connectez-vous
                                                         </a>
                                                     </div>
                                                 </div>
