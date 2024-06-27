@@ -268,7 +268,7 @@
                                         <a class="text-dark-template fs-5" href="{{ path('agent_order_list_digital',{'referenceVente' : generateReference(app.user.id,app.user.id) }) }}" >  {{ generateReference(app.user.id,app.user.id) }} </a>
                                         <a class="p-2 text-dark-template fs-5" href="#" onclick="copyLink('{{generateReference(app.user.id,app.user.id) }}','Liens de la référence {{ generateReference(app.user.id,app.user.id) }} copié avec succès') "><i class="fa-solid fa-copy"></i></a> 
                                         </h6>
-                                        <a class="vision-button w-100 text-center rounded-3 mt-4 p-3" href="#" onclick="copyLink('{{ url('agent_inscription', {'ambassador_username':  app.user.username != "" ?  app.user.username : ' '}) }}') " >Voir les catalogues pour le digital</a>    
+                                        <a target="_blank" class="vision-button w-100 text-center rounded-3 mt-4 p-3" href="{{secteur.liens}}">Voir les catalogues pour le digital</a>    
                                         {# <a target="_blank" href="{{secteur.liens}}" class="card-link">Lien vers {{secteur.nom}}</strong></a> #}
                                     </div>
                                     <div class="col-md-5">
@@ -377,7 +377,7 @@
                                 </a>
                             </div>
                          </div>
-                            <a class="regular-button w-100 text-center mt-3 rounded-3 p-3" href="{{pbb_url }}">Accéder à la plateforme</a>    
+                            <a target="_blank" class="regular-button w-100 text-center mt-3 rounded-3 p-3" href="{{pbbAccesClient }}">Accéder à la plateforme</a>    
                         </div>
                     </div>
                 </div>
