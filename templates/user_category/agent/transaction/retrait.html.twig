@@ -13,8 +13,8 @@
 	<div class="container my-5">
 		<div class="content-body-form">
 			<div class="row align-items-center justify-content-center">
-				<div class="col-sm-12 col-md-6">
-						<h1 class="fw-bolder text-center mb-2 general-primary-text">Demande de retrait </h1>
+				<div class="col-sm-12 col-md-8">
+						<h1 class="fw-bolder mb-2 general-primary-text">Demande de retrait </h1>
 						{{ form_start(form) }}
 						<div class="row">
 							<div class="col-12 retrait-form">
@@ -33,11 +33,11 @@
 							</div>
 						</div>
 						<div class="row">
-							<div class="col-md-12 text-center"><button class="btn btn-success w-100" type="submit">Enregistrer</button></div>
+							<div class="col-md-12 text-center"><button class="btn btn-primary w-100" type="submit">Enregistrer</button></div>
 						</div>					
 						{{ form_end(form) }}
 					</div>
-				<div class="col-sm-12 col-md-6 text-center">
+				<div class="col-sm-12 col-md-4">
 					<div class="card w-75 m-5 rounded-4" >
 						<div class="card-body d-flex align-items-center justify-content-center">
 							<div class=" text-center m-2">
@@ -45,8 +45,8 @@
                                     <i class="fa-solid fa-dollar-sign fs-1 mt-3" aria-hidden="true"></i>
                                 </a>
                             </div>
-							<div class=" text-center m-2">
-                                <h4 class="fs-5 fw-bolder general-primary-text">Votre solde Actuelle</h4>
+							<div class="m-2">
+                                <h4 class="fs-5 fw-bolder general-primary-text">Votre solde actuel</h4>
 								<h4 class="mb-3 fs-1 general-primary-text"> <span>  {{ solde }} €  </span></h4>
                             </div>
 						</div>
@@ -55,7 +55,7 @@
 			</div>
 
 
-			<div class="row mb-3">
+			<div class="row mb-3 mt-4">
 				<div class="col-12  mt-2 mt-md-3">
 					<h4 class="my-auto general-primary-text">Historique</h4>
 					
@@ -66,7 +66,6 @@
 					<div class="card-head mb-3">
 						<div class="row">
 							<div class="col-7">
-                        	<p class="w-50 fs-6 lh-sm">Avoir au moin 5 filleuil directs avec au moins 1000 € de CA au Total</p>
 							</div>
 							<div class="col-5 d-flex justify-content-center">
 								<form action="{{path('agent_transaction_retrait')}}" class="input-group rounded-3 m-2 w-75">

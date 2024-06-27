@@ -12,8 +12,6 @@
 
 {% block body %}
 	<div class="mt-2">
-		<a href="{{ path('admin_coach_list') }}" class="btn btn-secondary"> <i class="fa-solid fa-circle-arrow-left"></i> Retour </a>
-
 		<div class="content-card-user-information mt-3">
 			<section class="app-user-view-account">
 				<div class="row">
@@ -23,18 +21,18 @@
 					</div>
 					<div class="col-12  col-md-5 order-1 order-md-0">
 							<div class="row">
-								<div class="card text-center col-lg-12 col-12 align-items-center mb-3">
+								<div class="card text-center col-lg-12 col-12 align-items-center mb-3 p-4">
 									<div class="card-body">
 										<h5 class="general-primary-text">Inviter des personnes</h5>
-										{% if app.user.canAccessFonct('RDV', app.session.get('secteurId')) %}
+										{# {% if app.user.canAccessFonct('RDV', app.session.get('secteurId')) %} #}
 										<p >Pour inviter d'autres personnes à se joindre à vous, veuillez cliquer ici.</p>
 										<a class="regular-button w-100 text-center" href="#" onclick="copyLink('{{ url('agent_inscription', {'ambassador_username':  app.user.username != "" ?  app.user.username : ' '}) }}') " >Copier votre lien</a>    
-										{% endif %}
+										{# {% endif %} #}
 									</div>
 								</div>
 							</div>
 					  		<div class="row">
-								<h4 class="general-primary-text">Equipe</h4>
+								<h4 class="general-primary-text mt-2 mb-2">Equipe</h4>
 								<div class="card card-statistics rounde">
 									<div class="card-body m-2">
 										<div class="row">
@@ -104,9 +102,6 @@
 				<div class="col-lg-12 col-12">
 					<h2 class="general-primary-text">Liste des utilisateurs par recommandation.</h2>
                     <div class="card card-company-table p-5" style="min-height: 300px;">
-                        <div class="card-head mb-3">
-                            <h5>Prenez rendez-vous avec un expert</h5>
-                        </div>
                         <div class="card-body p-0">
                             <div class="table-responsive">
                                 <table class="table table-hover text-center">

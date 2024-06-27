@@ -128,14 +128,14 @@
                 <!-- Formation Card -->
                 <div class="col-xl-8 col-md-6 col-12">
                     <div class="">
-                        <div class="card card-statistics">
+                        <div class="card card-statistics p-4">
                             <div class="card-body ">
                                
                                 <h5 class="  choix-secteur-primary mb-4">Formation</h5>
                                 <p class="w-50">Une brève description sur le déroulement de la formation</p>
                                
                                 
-                                <div class="mt-1 steps formation-progression d-flex flex-wrap flex-sm-nowrap justify-content-between padding-top-2x padding-bottom-1x">
+                                <div class="mt-4 steps formation-progression d-flex flex-wrap flex-sm-nowrap justify-content-between padding-top-2x padding-bottom-1x">
                                     {% set isCompletedBefore = true %}
                                     {% for step in formationCategoriesOrdered %}
                                     {% set isCompleted = (not firstFormation or (firstFormation and step.ordreCatFormation < firstFormation.CategorieFormation.ordreCatFormation)) %}
