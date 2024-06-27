@@ -85,7 +85,8 @@ class MeetingRepository extends ServiceEntityRepository
     public function findMeetingByUser(MeetingSearch $search, User $user, Contact $contact = null, array $options = null, $search_gal = null)
     {
         $query = $this->createQueryBuilder('m')
-            ->join('m.userToMeet', 'u');
+            ->join('m.userToMeet', 'u')
+            ->join('u.information', 'i');
 
 
         if ($options && isset($options['secteur'])) {
@@ -130,7 +131,7 @@ class MeetingRepository extends ServiceEntityRepository
                 ->setParameter('userToMeet', $contact);
         }
         if ($search_gal) {
-            $query->andwhere('m.id LIKE :keyword OR  m.title LIKE :keyword OR m.note LIKE :keyword OR u.nom LIKE :keyword OR u.prenom LIKE :keyword OR u.email LIKE :keyword OR u.telephone LIKE :keyword')
+            $query->andwhere('m.id LIKE :keyword OR  m.title LIKE :keyword OR m.note LIKE :keyword OR i.firstname LIKE :keyword OR i.lastname LIKE :keyword OR i.email LIKE :keyword OR i.phone LIKE :keyword')
                 // Ajoutez autant de champs que nécessaire pour la recherche
                 ->setParameter('keyword', '%' . $search_gal . '%');
         }
