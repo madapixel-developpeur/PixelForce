@@ -56,7 +56,7 @@
         {% endblock %}
 
     </head>
-    <body class="pace-done vertical-layout vertical-menu-modern navbar-floating footer-static menu-collapsed" data-open="click" data-menu="vertical-menu-modern" data-col="">
+    <body class="vertical-layout vertical-menu-modern  navbar-floating footer-static  " data-open="click" data-menu="vertical-menu-modern" data-col="">
         <!-- Navbar -->
         {% include '/partials/header-navbar.html.twig' %}
 
@@ -66,7 +66,7 @@
         <div class="app-content content ">
             <div class="content-overlay"></div>
             <div class="header-navbar-shadow"></div>
-            <div class="content-wrapper container-xxl p-0">
+            <div class="content-wrapper  p-0">
                 <div class="content-header row">
                 </div>
                 <div class="content-body">
@@ -106,7 +106,7 @@
             <script src='https://meet.jit.si/external_api.js' id='meet-live-video'></script>
             <script src="{{ asset('assets/vuexy/vendors/js/vendors.min.js') }}" ></script>
             <script src="{{ asset('assets/vuexy/vendors/js/extensions/toastr.min.js') }}"></script>
-
+            
             
 
             {# {{ encore_entry_script_tags('vuexy_calendar_fullcalendar') }} #}
@@ -130,7 +130,12 @@
             <script src="{{ asset('assets/vuexy/vendors/js/forms/select/select2.full.min.js') }}" defer></script>
             <script src="{{ asset('assets/vuexy/vendors/js/forms/validation/jquery.validate.min.js') }}" defer></script>
             <script src="{{ asset('assets/vuexy/vendors/js/pickers/flatpickr/flatpickr.min.js') }}" defer></script>
-        
+            <!-- Inclusion de jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <!-- Inclusion de Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <!-- Inclusion du fichier JavaScript de Bootstrap -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
         
         {% endblock %}
     </body>
