@@ -10,7 +10,7 @@
                     )  : ( is_granted('ROLE_COACH') ? path('app_dashboard') : '#' ))
                 }}">
                     <span><img src="/assets/img/logo/pixelforce/logo-pixelforce-00.png" class="img-fluid" alt="logo-pixelforce" width="35"></span>
-                    <h2 class="brand-text text-black fw-bolder" style="font-size: 2vw">PIXELFORCE</h2>
+                    <h2 class="brand-text text-black fw-bolder" style="font-size: 3vw">PIXELFORCE</h2>
                 </a>
             </li>
             <li class="nav-item">
@@ -32,7 +32,7 @@
                                     alt="avatar" >
                         </div>
 
-                        <div class="user-nav  me-2 ">
+                        <div class="user-nav  me-2 d-none d-md-block">
                             <ul class="list-unstyled p-0">
                                 <li class="p-0">
                                     <span class="user-status header-user">{{ app.user.prenom|default(' ') }}</span>
