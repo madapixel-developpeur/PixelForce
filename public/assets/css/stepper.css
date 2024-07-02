@@ -65,16 +65,16 @@
 }
 
 .steps .step.completed .step-icon-wrap::before {
-    background-color: #88C90D;
+    background-color: #e1bf58;
 }
 
 .steps .step.current .step-icon-wrap::before {
-    background-color: #0da9ef
+    background-color: #e1bf58
 }
 
 .steps .step.completed .step-icon {
-    border-color: #88C90D;
-    background-color: #88C90D;
+    border-color: #e1bf58;
+    background-color: #e1bf58;
     color: #fff
 }
 

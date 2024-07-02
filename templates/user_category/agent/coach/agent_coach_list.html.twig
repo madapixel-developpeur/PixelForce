@@ -22,24 +22,20 @@
         <div class="row mb-3">
             <div class="col-12  mt-2 mt-md-3">
                 <div class=" w-100 h-100 ps-3 py-3  bg-white border pe-3">
-                    <div class="row h-100">
-                        <div class="col-md-6">
-                            <h4 class="my-auto">Liste des coachs</h4>
+                    <div class="row h-100 mb-sm-5 mb-md-0">
+                        <div class="col-md-5 mt-2">
+                           <h4><i class="fa fa-book-atlas"></i> Liste de mes coachs</h4>
                         </div>
-                        <div class="col-md-4">
-                            <form  role="search" id="search-form" action="">
-                                <div class="row g-3">
-                                    <div class="col-md-8 search-form">
-                                        <input name="search" value="{{ app.request.get('search') | default('') }}" class="form-control " type="search mt-1" aria-label="Search">
-                                    </div>
-                                    <div class="col  mb-2 text-end">
-                                        <button class="btn btn-outline-primary ml-2" type="submit" >Rechercher</button>
-                                    </div>
-                                </div>
+                        <div class="col-md-4 mt-2">
+                            <form action="" class="input-group rounded-3 ">
+                                <button class="input-group-text border-0" id="search-addon" type="submit">
+									<i class="fas fa-search"></i>
+								</button>
+                                <input type="search"name="search" class="form-control  input-group-text border-0" placeholder="Chercher" aria-label="Search" aria-describedby="search-addon" />
                             </form>	
-                        </div>	
-                        <div class="col">
-                            <a href="#" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample" id="collapseButton" class="btn btn-primary  waves-effect waves-float waves-light fw-bolder d-flex float-end d-flex align-items-center"><span >Options</span> <i id='option-text' class="fas fa-chevron-down"></i></a>
+                        </div>		
+                        <div class="col-md-3 mt-2 text-center">
+                            <a href="#" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample" id="collapseButton" class="btn btn-outline-primary w-50"><span >Filter</span> <i id='option-text' class="fas fa-chevron-down"></i></a>
                         </div>	
                     </div>
                 </div>

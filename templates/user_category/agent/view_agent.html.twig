@@ -12,61 +12,53 @@
 
 {% block body %}
 	<div class="mt-2">
-		<a href="{{ path('admin_coach_list') }}" class="btn btn-primary"> <i class="fa-solid fa-circle-arrow-left"></i> Retour </a>
-
 		<div class="content-card-user-information mt-3">
 			<section class="app-user-view-account">
 				<div class="row">
 					<!-- User Sidebar -->
-					<div class="col-7  col-md-7 order-1 order-md-0">
-						{{ include ('global/card/_card_user_information.html.twig', {user : ambassadeur}) }}
+					<div class="col-12  col-md-7 order-1 order-md-0">
+						{{ include ('global/card/_card_agent_information.html.twig', {user : ambassadeur}) }}
 					</div>
-					<div class="col-lg-5 col-5">
-						<div class="row">
-							<div class="card text-center col-lg-12 col-12 align-items-center mb-2">
-								
-								<div class="card-body m-12">
-									<h5 class="card-title">Copier le lien d'affiliation</h5>
-									<p class="card-text">Pour inviter d'autres personnes à se joindre à vous, veuillez cliquer ici.</p>
-									<a class="btn btn-primary w-100 font-weight-bold" href="#" onclick="copyLink('{{ url('agent_inscription', {'ambassador_username':  app.user.username != "" ?  app.user.username : ' '}) }}') " >Copier</a>
-								</div>
-								
-							</div>
-						</div>
-					  		<div class="row">
-								<div class="card card-statistics">
-									<div class="card-header">
-										<h4 class="card-title">Equipe</h4>
-										{# <div class="d-flex align-items-center">
-											<p class="card-text font-small-2 me-25 mb-0">Mis à jour il y a 1 mois</p>
-										</div> #}
+					<div class="col-12  col-md-5 order-1 order-md-0">
+							<div class="row">
+								<div class="card text-center col-lg-12 col-12 align-items-center mb-3 p-4">
+									<div class="card-body">
+										<h5 class="general-primary-text">Inviter des personnes</h5>
+										{# {% if app.user.canAccessFonct('RDV', app.session.get('secteurId')) %} #}
+										<p >Pour inviter d'autres personnes à se joindre à vous, veuillez cliquer ici.</p>
+										<a class="regular-button w-100 text-center" href="#" onclick="copyLink('{{ url('agent_inscription', {'ambassador_username':  app.user.username != "" ?  app.user.username : ' '}) }}') " >Copier votre lien</a>    
+										{# {% endif %} #}
 									</div>
-									<div class="card-body statistics-body">
+								</div>
+							</div>
+					  		<div class="row">
+								<h4 class="general-primary-text mt-2 mb-2">Equipe</h4>
+								<div class="card card-statistics rounde">
+									<div class="card-body m-2">
 										<div class="row">
-										
 											<div class="col-xl-6 col-sm-12 col-12 mb-2 mb-xl-0">
-												<div class="d-flex flex-row">
-													<div class="avatar bg-light-info me-2">
-														<div class="avatar-content">
-															<a href="#"><i data-feather="user" class="avatar-icon mether-theme" ></i></a>
+												<div class="d-flex flex-row m-2">
+													<div class="rounded-circle bg-light-secondary me-2 detail-agent-equipe">
+														<div class="text-center">
+															<a href="#"><i class="fa-solid fa-people-arrows fs-4 pt-3"></i></a>
 														</div>
 													</div>
 													<div class="my-auto">
-														<h4 class="fw-bolder mb-0">{{ countDirect  }}</h4>
 														<a href="#"><p class="card-text font-small-3 mb-0 text-black">Filleul direct</p></a>
+														<h4 class="fw-bolder mb-0">{{ countDirect  }}</h4>
 													</div>
 												</div>
 											</div>
-											<div class="col-xl-6 col-sm-12 col-12 mb-1 mb-xl-0">
-												<div class="d-flex flex-row">
-													<div class="avatar bg-light-info me-2">
-														<div class="avatar-content">
-															<a href="#"><i data-feather="user" class="avatar-icon  mether-theme"></i></a>
+											<div class="col-xl-6 col-sm-12 col-12 mb-1 mb-xl-0 border-start border-3">
+												<div class="d-flex flex-row m-2">
+													<div class="rounded-circle bg-light-secondary me-2 detail-agent-equipe">
+														<div class="text-center">
+															<a href="#"><i class="fa fa-users fs-4 pt-3" aria-hidden="true"></i></a>
 														</div>
 													</div>
 													<div class="my-auto">
-														<h4 class="fw-bolder mb-0">{{ countEquipe  }}</h4>
 														<a href="#"><p class="card-text font-small-3 mb-0 text-black">Equipe</p></a>
+														<h4 class="fw-bolder mb-0">{{ countEquipe  }}</h4>
 													</div>
 												</div>
 											</div>                
@@ -78,7 +70,7 @@
 					</div>
 					<!--/ User Sidebar -->
 				</div>
-
+				
 				<div class="row mb-5">
 					<!-- User Sidebar -->
 					<div class="col-12  col-md-12 order-1 order-md-0">
@@ -94,41 +86,56 @@
 					</div>
 					<!--/ User Sidebar -->
 				</div>
-
-
-				<div class="card">
-						<h4 class="card-header">Liste des utilisateurs par recommandation.</h4>
-						<div class="table-responsive">
-							<table class="table table-striped table-hover text-center sortable">
-								<thead>
-									<tr style="white-space:nowrap" >
-										<th scope="col" class="text-center">#</th>
-										<th scope="col" class="text-center">Nom et prénoms</th>
-										<th scope="col" class="text-center">Username</th>
-										<th scope="col" class="text-center">Email</th>
-										<th scope="col" class="text-center">Téléphone</th>
-										<th scope="col" class="text-center">Date inscription</th>
-									</tr>
-								</thead>
-								<tbody>
-									{% for fils in filleul %}
-										<tr>
-											<td>{{ fils.id }}</td>
-											<td>{{ fils.fullName }}</td>
-											<td>{{ fils.username }}</td>
-											<td>{{ fils.email }}</td>
-											<td>{{ fils.telephone|default('-') }}</td>
-											<td>{{ fils.createdAt|date('d/m/Y') }}</td>
+				<div class="col-lg-12 col-12">
+					<h2 class="general-primary-text">Liste des utilisateurs par recommandation.</h2>
+                    <div class="card card-company-table p-5" style="min-height: 300px;">
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-hover text-center">
+                                    <tbody class="align-items-center ">
+										<tr class="table-header-custom">
+											<th scope="col" class="text-center">#</th>
+											<th scope="col" class="text-center">Profil</th>
+											<th scope="col" class="text-center">Nom et prénoms</th>
+											<th scope="col" class="text-center">Username</th>
+											<th scope="col" class="text-center">Email</th>
+											<th scope="col" class="text-center">Téléphone</th>
+											<th scope="col" class="text-center">Date inscription</th>
 										</tr>
-									{% endfor %}
+										{% for fils in filleul %}
+											<tr class="align-items-center">
+												<td class=" text-tableau">{{ fils.id }}</td>
+												<td>
+													<div class="d-flex align-items-center justify-content-center ">
+														<div class="img">
+															<img src="{{ path('user_avatar', {id:fils.id}) }}" class="w-25 rounded-3" alt="">
+														</div>
+													</div>
+												</td>
+												<td class="text-tableau w-25">{{ fils.fullName }}</td>
+												<td class="text-tableau">{{ fils.username }}</td>
+												<td class="text-tableau">{{ fils.email }}</td>
+												<td class="text-tableau">{{ fils.telephone|default('-') }}</td>
+												<td class="text-tableau">{{ fils.createdAt|date('d/m/Y') }}</td>
+											</tr>
+										{% else %}
+                                        <tr>
+                                            <td class="text-center" colspan="7">Aucun Filleul trouvé</td>
+                                        </tr>
+                                    {% endfor %}
 
-								</tbody>
-							</table>
-						</div>
-						<div class="pagination d-flex justify-content-center">
-							{{ knp_pagination_render(filleul)}}
-						</div>
-				</div>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="pagination d-flex justify-content-center">
+                                    {{ knp_pagination_render(filleul)}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+	
 			</section>
 			
 		</div>

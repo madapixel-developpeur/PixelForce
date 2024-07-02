@@ -271,9 +271,7 @@ a, a:hover{
 	min-height : 150px;
 	display : none;
 }
-.searchbar-wrap:focus-within .suggestion-wrap{
-	/*display : block;*/
-}
+
 
 .searchbar-wrap .suggestion-wrap .suggestion-wrap-title{
 	margin : 0px;
@@ -392,23 +390,194 @@ a, a:hover{
 	border-left: inherit;
 	cursor: pointer;
 }
-
-.icon.mether {
-	stroke: #e5c259;
+/* css general */
+.regular-button{
+    background-color: #e1bf58;
+    color: white;
+    border-width: 1px; /* Width of the border */
+    border-style: solid; /* Style of the border */
+    border-color: #e1bf58; /* Color of the border */
+	padding:8px 20px;
+	display:inline-block;
+	border-radius: 7px !important;
+}
+.regular-button:hover {
+	background-color:white ;
+    color:#e1bf58;
+}
+.general-primary-text{
+	color:#192030;
+	font-weight: bold;
+}
+.text-dark-template{
+	color:#192030;
+}
+.text-tableau{
+	color:#192030;
+}
+.table-header-custom th{
+	color:#192030;
+	font-weight:600;
+}
+.user-nav{
+	margin-left:10px;
+}
+/* css utile dans la partie choix de secteur */
+.choix-secteur-primary{
+	color:#192030;
+	font-weight:bold;
+}
+.choix-secteur-video{
+	border: 1px solid rgba(0, 0, 0, 0.125);
+	background-color: #192030;
+	padding: 10px 0;
+}
+.choix-secteur-video iframe{
+	position:absolute;
+	top:0;
+	left:0;
+	width:100%;
+	height:100%;
+}
+.choix-secteur-card {
+	background-color: #192030;
+	color:white;
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	min-width: 0;
+	word-wrap: break-word;
+	background-clip: border-box;
+	border-radius: 0.25rem;
+	padding: 0px 0px;
+	margin:10px 1;
 }
 
-.avatar-icon {
-    stroke: #e5c259 !important;
+.choix-secteur-card p{
+	color: white;
+	line-height: 14px;
+	font-size: 12px;
+	margin: 0px auto;
 }
-
-.page-link{
-	background-color: #e5c259 !important;
+.choix-secteur-card-body {
+	background-color: #192030;
+	color:white;
 }
+.card{
+	border-radius: 7px !important;
+}
+/* Header */
+.header-user{
+	font-size: small;
+	color:#192030;
+}
+/* Navbar */
+.left-sidebar{
+	background-color: #192030;
+}
+.left-sidebar .navigation li a{
+	color: #a3a5ac;
+	padding: 10px 15px 10px 15px;
+	line-height: 1.45;	
+}
+.main-menu{
+	background-color: #192030;
+}
+/* Agent-home */
+.statistics-section{
+	margin-top: 10px;
+}
+.statistics-section div {
+	padding:6px 0;
+	color:#192030
+}
+.statistics-section h6{
+	font-size: small;
+}
+.avatar{
+	width:50px;
+	height:50px;
+}
+.avatar-statistique{
+	width:50px;
+	height:50px;
+}
+.avatar a{
+	margin-left:18px;
+	margin-top:7px;
+}
+.avatar i{
+	font-size:40px;
+}
+/* Partie vision */
+.vision-section{
+	background-color: #e1bf58;
+}
+.vision-section-1 p{
+	color: white;
+	font-size: 12px;
+}
+.vision-button{
+    background-color: #ebedf5;
+    color: #192030;
+	padding:7px 20px;
+	display:inline-block
+}
+.vision-button:hover {
+    color:#ebedf5 !important;
+	background-color:#192030;
+}
+/* Gestion projet */
+.gestion-projet{
+	width:70px;
+	height:70px;
+	display:inline-block;
+}
+/* Progression */
+.progression-positon-chiffre{	
+	background-color: #e1bf58;
+	width: 75px;
+	height: 75px;
+}
+.progression-positon-part1{
+	margin: 0 10px;
+}
+.progression-positon-part2{
+	font-size: 150px;
+	color: #f8f8f8;
+	font-weight: 900;
+	line-height:45%;
+	float: right;
+	font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.progression-positon-pourcentage{
+	margin-top:px;
+}
+/* Detail agent */
+.detail-agent-equipe{
+	width:50px;
+	height:50px;
+	display:inline-block;
+}
+/* modal */
+.modal-coach-titre{
+	margin-left:30px;
+	margin-top: 30px;
+}
+.modal-coach-exit{
+	margin-right:20px;
+}
+/* Retrait */
+.retrait-form label{
+	color: #192030;
+	font-size:small;
 
-.main-menu.menu-light .navigation > li.active > a {
-	background: linear-gradient(118deg, #e5c259, rgba(229, 194, 89, 0.7)) !important;
-	box-shadow: 0 0 10px 1px rgba(229, 194, 89, 0.7) !important ;
-	color: #fff;
-	font-weight: 400;
-	border-radius: 4px;
+}
+/* fitres */
+.search-filter{
+	margin-left: 10px;
+	display:inline-block;
+}
+body{
+	background-color:#eceef5 !important;
 }

@@ -3,7 +3,7 @@
 {% block title %}Inscription agent{% endblock %}
 
 {% block form %}
-    <h5 class="my-4">Inscription</h5>
+    <h3 class="general-primary-text text-center p-2">Inscription</h3>
     <!-- Message alert -->
         <div class="alert-message">
             {% for label, messages in app.flashes %}
@@ -55,7 +55,7 @@
             {% endfor %}
         </div> #}
 
-        <h5 class="mb-4">Information sur la connexion</h5>
+        <h5 class="general-primary-text text-center p-2">Information sur la connexion</h5>
         {% if form.ambassador_username is defined %}
             {{ form_row(form.ambassador_username) }}
         {% endif %}
@@ -63,7 +63,7 @@
         {{ form_row(form.username) }}
         {{ form_row(form.password) }}
         <div class="w-100 text-center">
-{#            <button class="btn btn-primary" type="submit" id="btn-next">Procéder au paiement <i class="fa-solid fa-angles-right"></i></button>#}
+        {#<button class="btn btn-primary" type="submit" id="btn-next">Procéder au paiement <i class="fa-solid fa-angles-right"></i></button>#}
             <button class="btn btn-primary w-100" type="submit" id="btn-next">S’inscrire</button>
         </div>
         <div class=" text-center mt-3">

@@ -14,6 +14,7 @@
         <link rel="stylesheet" href="{{ asset('/assets/vuexy/css/pages/authentication.css') }}" />
         <link rel="stylesheet" type="text/css" href="{{asset('assets/css/animations.css')}}">
         <link rel="stylesheet" type="text/css" href="{{asset('assets/css/style.css')}}">
+        <link rel="stylesheet" type="text/css" href="{{asset('assets/css/login.css')}}">
         {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
         {% block stylesheets %}
             {{ encore_entry_link_tags('vuexy_colors') }}
@@ -48,74 +49,67 @@
                         <!-- /Brand logo-->
 
                         <!-- Left Text-->
-                        <div class="d-none d-lg-flex col-lg-8 align-items-center p-5">
-                            <div class="w-100 d-lg-flex align-items-center justify-content-center px-5"><img class="img-fluid" src="{{asset('assets/vuexy/images/pages/login-v2.svg')}}" alt="Login V2" /></div>
+                        <div class="d-none d-lg-flex col-lg-8 align-items-center p-0 bg-image bg-image">
+                            {# <div class="w-100 d-lg-flex align-items-center justify-content-center ">
+                            <img class="img-fluid" src="{{asset('assets/vuexy/images/pages/Inscription-photo.png')}}" alt="Login V2" />
+                            </div> #}
                         </div>
                         <!-- /Left Text-->
                         <!-- Login-->
-                        <div class="d-flex col-lg-4 align-items-center auth-bg px-2 p-lg-5">
+                        <div class="d-flex col-lg-4 align-items-center auth-bg px-2 ">
                             <div class="col-12 col-sm-8 col-md-6 col-lg-12 px-xl-2 mx-auto">
-                                <h2 class="card-title fw-bold mb-1 text-center p-2">
+                                <h2 class="card-title fw-bold  text-center ">
                                     <a href="{{ path('app_dashboard') }}" class="text-center text-muted text-decoration-none">
-                                        <img src="/assets/img/logo/mether/2x/Mether-Gold.png" class="img-fluid w-50 m-2" alt="logo-mether">
+                                        <img src="/assets/img/logo/mether/2x/Mether-Gold.png" class="img-fluid w-25" alt="logo-mether">
                                     </a>
                                 </h2>
 
                                 {% block form %}
-                                    <form class="auth-login-form mt-2" method="POST">
-                                        <!-- Affichage des messages flash -->
-                                        {% for label, messages in app.flashes %}
-                                            {% for message in messages %}
-                                                <div id="msgFlash" class="alert alert-{{ label }} msgFlash mb-2 ">
-                                                    {{ message | raw }}
-                                                </div>
+                                <h2 class="general-primary-text text-center p-2">Connexion</h2>
+                                <div class="row">                            
+                                    <div class="col-1"></div>
+                                    <div class="col-10">
+                                        <form class="auth-login-form" method="POST">
+                                            <!-- Affichage des messages flash -->
+                                            {% for label, messages in app.flashes %}
+                                                {% for message in messages %}
+                                                    <div id="msgFlash" class="alert alert-{{ label }} msgFlash mb-2 ">
+                                                        {{ message | raw }}
+                                                    </div>
+                                                {% endfor %}
+                                            {% else %}
+                                                {% if error %}
+                                                    <div class="mt-3 alert alert-danger">Email ou mot de passe invalide</div>
+                                                {% endif %}
                                             {% endfor %}
-                                        {% else %}
-                                            {% if error %}
-                                                <div class="mt-3 alert alert-danger">Email ou mot de passe invalide</div>
-                                            {% endif %}
-                                        {% endfor %}
-                                        <div class="mb-1">
-                                            <label class="form-label" for="login-email">Adresse mail</label>
-                                            <input type="text" class="form-control"  placeholder="Nom d'utilisateur/Email" value="{{ last_username }}" name="email" id="inputMail_users"  required autofocus>
-                                        </div>
-                                        <div class="mb-1">
-                                            <div class="d-flex justify-content-between">
-                                                <label class="form-label" for="login-password">Mot de passe</label>
+                                            <div class="mb-3">
+                                                <input type="text" class="form-control"  placeholder="Nom d'utilisateur/Email" value="{{ last_username }}" name="email" id="inputMail_users"  required autofocus>
                                             </div>
-                                            <div class="input-group input-group-merge form-password-toggle">
-                                                <input class="form-control form-control-merge" id="login-password" type="password" name="password" placeholder="Mot de passe" aria-describedby="login-password" tabindex="2" required/><span class="input-group-text cursor-pointer"><i data-feather="eye"></i></span>
+                                            <div class="mt-2">
+                                                <div class="input-group input-group-merge form-password-toggle">
+                                                    <input class="form-control form-control-merge" id="login-password" type="password" name="password" placeholder="Mot de passe" aria-describedby="login-password" tabindex="2" required/><span class="input-group-text cursor-pointer"><i data-feather="eye"></i></span>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <input type="hidden" name="agentToken" value="{{agentToken}}" />
-                                        {# <div class="mb-3  mt-3 form-check">
-                                            <input type="checkbox" class="form-check-input" id="remember_me" name="_remember_me">
-                                            <label class="form-check-label" for="exampleCheck1">Se souvenir de moi</label>
-                                        </div> #}
-                                        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                                            <input type="hidden" name="agentToken" value="{{agentToken}}" />
+                                        
+                                            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
-                                        <div class=" text-center mt-4">
-                                            <button class="btn btn-primary w-100 font-weight-bold" type="submit">
-                                                S'authentifier
-                                            </button>
-                                        </div>
-                                         <div class=" text-center mt-3">
-                                             <a href="{{ path('app_forgetPassword') }}">  Mot de passe oublié ?</a>
-                                        </div>                          
-                                        <div class=" text-center mt-3">
-                                             <a href="{% if agentToken %} {{ path('signup_client', {'token': agentToken}) }} {% else %} {{ path('agent_inscription') }} {% endif %}">S'inscrire</a>
-                                        </div>
-                                    </form>
-                                    
-                                    {# <div class="divider my-2">
-                                        <div class="divider-text">or</div>
+                                            <div class=" text-center mt-4">
+                                                <button class="btn btn-primary w-100 font-weight-bold" type="submit">
+                                                    S'authentifier
+                                                </button>
+                                            </div>
+                                            <div><hr></div>
+                                            <div class=" text-center mt-3 text-dark-template">
+                                                <a class="text-dark-template" href="{{ path('app_forgetPassword') }}">  Mot de passe oublié ?</a>
+                                            </div>                          
+                                            <div class=" text-center mt-3">
+                                                <a class="text-dark-template" href="{% if agentToken %} {{ path('signup_client', {'token': agentToken}) }} {% else %} {{ path('agent_inscription') }} {% endif %}">S'inscrire</a>
+                                            </div>
+                                        </form>
                                     </div>
-                                    <div class="auth-footer-btn d-flex justify-content-center">
-                                        <a class="btn btn-facebook me-2" href="#"><i class="fa-brands fa-facebook"></i></a>
-                                        <a class="btn btn-twitter white me-2" href="#"><i class="fa-brands fa-twitter"></i></a>
-                                        <a class="btn btn-google me-2" href="#"><i class="fa-brands fa-google"></i></a>
-                                        <a class="btn btn-github" href="#"><i class="fa-brands fa-github"></i></a>
-                                    </div> #}
+                                    <div class="col-1"></div>
+                                </div>     
                                 {% endblock %}
 
                             </div>

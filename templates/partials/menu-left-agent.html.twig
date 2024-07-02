@@ -9,7 +9,7 @@
     {% endif %}bra
 {% else %}
     {% if app.session.get('secteurId') and app.session.get('enabledContent') == true  %}
-        <li class=" navigation-header mt-3"><span data-i18n="User Interface">Espace agent</span><i data-feather="more-horizontal"></i></li>
+        <li class=" navigation-header mt-3 text-white"><span data-i18n="User Interface">Espace agent</span><i data-feather="more-horizontal"></i></li>
         <li class=" nav-item"><a class="d-flex align-items-center" href="{{ path('agent_dashboard_secteur', {id:app.session.get('secteurId')}) }}"><i class="fa fa-dashboard"></i><span class="menu-title text-truncate" data-i18n="Dashboards">Tableau de bord</span></a></li>
         <li class=" nav-item {% if not app.user.canAccessFonct('FORMATION', app.session.get('secteurId')) %}disabled{% endif %}"><a class="d-flex align-items-center" href="{{ path('agent_formation_list') }}"><i data-feather="eye"></i><span class="menu-title text-truncate" data-i18n="Feather">Formation</span></a></li>
         <li class=" nav-item "><a class="d-flex align-items-center" href="{{path('agent_view')}}"><i class="fa-solid fa-child"></i><span class="menu-title text-truncate" data-i18n="Calendar">Filleul</span></a></li>

@@ -1,5 +1,5 @@
-<nav class="header-navbar navbar navbar-expand-lg align-items-center floating-nav navbar-light navbar-shadow container-xxl">
-    <div class="navbar-container d-flex content">
+<nav class="header-navbar navbar navbar-expand-lg align-items-center floating-nav navbar-light navbar-shadow ">
+    <div class="navbar-container d-flex justify-content-center align-items-center">
         <ul class="nav navbar-nav d-block d-xl-none">
             <li class="nav-item pt-2">
                 <a class="navbar-brand" href="{{
@@ -9,30 +9,56 @@
                             path('agent_dashboard_secteur', {id:app.request.session.get('secteurId')}) : path('agent_home')
                     )  : ( is_granted('ROLE_COACH') ? path('app_dashboard') : '#' ))
                 }}">
-                    <span><img src="/assets/img/logo/mether/favicon-mether-2.png" class="img-fluid" alt="logo-pixelforce" width="35"></span>
-                    <h2 class="brand-text text-black fw-bolder" style="font-size: 2vw">METHER</h2>
+                    <span><img src="/assets/img/logo/pixelforce/logo-pixelforce-00.png" class="img-fluid" alt="logo-pixelforce" width="35"></span>
+                    <h2 class="brand-text text-black fw-bolder" style="font-size: 3vw">PIXELFORCE</h2>
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link modern-nav-toggle pe-0" data-bs-toggle="collapse"><i class="fa fa-bars fs-5" aria-hidden="true"></i></a>
             </li>
         </ul>
+        <ul class="nav navbar-nav d-none d-xl-block">
+            <li class="nav-item">
+               <h3 class="general-primary-text">Ravi de vous revoir, {{app.user.prenom|default(' ')}} 👋</h3>
+            </li>
+        </ul>
         <ul class="nav navbar-nav align-items-center ms-auto">
-            <li class="nav-item dropdown dropdown-user">
-                <a class="nav-link dropdown-toggle dropdown-user-link" id="dropdown-user" href="#" data-bs-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                    <div class="user-nav d-sm-flex d-none">
-                        <span class="user-name fw-bolder">{{app.user.nom}}</span><span class="user-status">{{app.user.prenom|default(' ')}}</span>
-                    </div>
-                    <span class="avatar">
-                        <img class="round"
-                             src="{{ path('user_avatar', {id:app.user.id}) }}"
-                             onerror='this.onerror=null; this.src="{{ asset('assets/vuexy/images/portrait/small/avatar-s-11.jpg') }}"'
-                             alt="avatar" height="40"
-                             width="40"><span class="avatar-status-online">
+            <li class="nav-item dropdown dropdown-user">      
+                   <div class="d-flex align-items-center">
+                        <div class="avatar me-3 ml-5">
+                                <img class="round"
+                                    src="{{ path('user_avatar', {id:app.user.id}) }}"
+                                    onerror='this.onerror=null; this.src="{{ asset('assets/vuexy/images/portrait/small/avatar-s-11.jpg') }}"'
+                                    alt="avatar" >
+                        </div>
 
-                        </span>
-                    </span>
-                </a>
+                        <div class="user-nav  me-2 d-none d-md-block">
+                            <ul class="list-unstyled p-0">
+                                <li class="p-0">
+                                    <span class="user-status header-user">{{ app.user.prenom|default(' ') }}</span>
+                                    <span class="user-name header-user" >{{ app.user.nom }}</span>
+                                </li>
+                                <li class="d-flex p-0">
+                                    <span class="header-user">Ref :</span>
+                                    <span class="ms-2">
+                                        <a class="header-user" href="{{ path('agent_order_list_digital', {'referenceVente' : generateReference(app.user.id, app.user.id) }) }}">
+                                            {{ generateReference(app.user.id, app.user.id) }}
+                                        </a>
+                                        <a href="#" class="ms-2 header-user" onclick="copyLink('{{ generateReference(app.user.id, app.user.id) }}', 'Liens de la référence {{ generateReference(app.user.id, app.user.id) }} copié avec succès')">
+                                            <i class="fa-solid fa-copy"></i>
+                                        </a>
+                                    </span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div>
+                            <a class="nav-link dropdown-toggle dropdown-user-link" id="dropdown-user" href="#" data-bs-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa-solid fa-caret-down"></i></a>
+                        </div>
+                    </div>
+
+
+                
                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdown-user">
                     <a class="dropdown-item" href="{{ path('user_accountSetting', {id:app.user.id}) }}"><i class="me-50" data-feather="user"></i> Mon compte</a>
                     <a class="dropdown-item" href="{{ path('app_logout') }}"><i class="me-50" data-feather="power"></i> Se déconnecter</a>
