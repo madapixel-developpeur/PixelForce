@@ -2,7 +2,6 @@
 
 namespace App\Form;
 
-use App\Entity\Product;
 use App\Entity\ProduitAroma;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -19,7 +18,7 @@ class ProduitAromaFormType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-       
+
         $builder
             ->add('nom', TextType::class, [
                 "label" => "Nom",
@@ -40,10 +39,10 @@ class ProduitAromaFormType extends AbstractType
                 "required" => false,
                 "constraints" => [
                     new NotBlank(["message" => "Prix obligatoire"]),
-                    new Regex(["pattern"=>'/^[0-9]*([\.])?[0-9]*$/',"match"=>true,"message" => "Le prix n'est pas valide"]),
+                    new Regex(["pattern" => '/^[0-9]*([\.])?[0-9]*$/', "match" => true, "message" => "Le prix n'est pas valide"]),
                 ]
             ])
-            
+
             ->add('imageFile', FileType::class, [
                 "label" => "Image",
                 'mapped' => false,
@@ -56,12 +55,10 @@ class ProduitAromaFormType extends AbstractType
                             'image/png',
                         ],
                         'mimeTypesMessage' => 'Image invalide. Le format doit être: .jpeg ou .png',
-                    ]) ,
+                    ]),
 
                 ]
-            ])
-            
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

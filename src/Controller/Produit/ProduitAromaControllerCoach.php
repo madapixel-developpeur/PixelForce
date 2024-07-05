@@ -2,7 +2,6 @@
 
 namespace App\Controller\Produit;
 
-use App\Entity\Product;
 use App\Entity\ProduitAroma;
 use App\Form\ProduitAromaFilterType;
 use App\Form\ProduitAromaFormType;
@@ -26,10 +25,11 @@ class ProduitAromaControllerCoach extends AbstractController
     private $entityManager;
     private $fileHandler;
 
-    
-    public function __construct(EntityManagerInterface $entityManager, 
-        FileHandler $fileHandler)
-    {
+
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        FileHandler $fileHandler
+    ) {
         $this->entityManager = $entityManager;
         $this->fileHandler = $fileHandler;
     }
@@ -57,11 +57,10 @@ class ProduitAromaControllerCoach extends AbstractController
         $query = $this->entityManager
             ->createQueryBuilder()
             ->select('p')
-            ->from(ProduitAroma::class, 'p')
-        ;  
+            ->from(ProduitAroma::class, 'p');
 
-        $where =  $searchService->getWhere($filter, new MyCriteriaParam($criteria, 'p'));   
-        $query->where($where["where"]." and p.statut != 0 ");
+        $where =  $searchService->getWhere($filter, new MyCriteriaParam($criteria, 'p'));
+        $query->where($where["where"] . " and p.statut != 0 ");
         $searchService->setAllParameters($query, $where["params"]);
         $searchService->addOrderBy($query, $filter, ['sort' => 'p.nom', 'direction' => 'asc']);
 
@@ -88,7 +87,7 @@ class ProduitAromaControllerCoach extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            try{
+            try {
                 $imageFile = $form->get('imageFile')->getData();
                 if ($imageFile) {
                     $photo = $this->fileHandler->upload($imageFile, "images\products\aroma");
@@ -99,18 +98,17 @@ class ProduitAromaControllerCoach extends AbstractController
                 $this->entityManager->flush();
                 $this->addFlash('success', 'Produit ajouté');
                 return $this->redirectToRoute('admin_aroma_product_index');
-            } catch(Exception $ex){
+            } catch (Exception $ex) {
                 $this->addFlash('danger', $ex->getMessage());
             }
         }
 
-        
-        return $this->render('user_category/coach/aroma/product/admin_product_form.html.twig',[
+
+        return $this->render('user_category/coach/aroma/product/admin_product_form.html.twig', [
             'form' => $form->createView(),
             'isEdit' => $isEdit,
             'product' => $product
         ]);
-        
     }
 
     #[Route('/edit/{id}', name: 'admin_aroma_product_edit')]
@@ -123,7 +121,7 @@ class ProduitAromaControllerCoach extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            try{
+            try {
                 $imageFile = $form->get('imageFile')->getData();
                 if ($imageFile) {
                     $photo = $this->fileHandler->upload($imageFile, "images\products\aroma");
@@ -133,29 +131,28 @@ class ProduitAromaControllerCoach extends AbstractController
                 $this->entityManager->flush();
                 $this->addFlash('success', 'Produit modifié');
                 return $this->redirectToRoute('admin_aroma_product_index');
-            } catch(Exception $ex){
+            } catch (Exception $ex) {
                 $this->addFlash('danger', $ex->getMessage());
             }
         }
 
-        
-        return $this->render('user_category/coach/aroma/product/admin_product_form.html.twig',[
+
+        return $this->render('user_category/coach/aroma/product/admin_product_form.html.twig', [
             'form' => $form->createView(),
             'isEdit' => $isEdit,
             'product' => $product
         ]);
-        
     }
 
     #[Route('/delete/{id}', name: 'admin_aroma_product_delete')]
     public function delete(ProduitAroma $product): Response
     {
-        try{
+        try {
             $product->setStatut(Status::INVALID);
             $this->entityManager->persist($product);
             $this->entityManager->flush();
-            $this->addFlash('success', 'Produit supprimé');    
-        } catch(Exception $ex){
+            $this->addFlash('success', 'Produit supprimé');
+        } catch (Exception $ex) {
             $this->addFlash('danger', $ex->getMessage());
         }
         return $this->redirectToRoute('admin_aroma_product_index');
@@ -196,11 +193,10 @@ class ProduitAromaControllerCoach extends AbstractController
         $query = $this->entityManager
             ->createQueryBuilder()
             ->select('p')
-            ->from(ProduitAroma::class, 'p')
-        ;  
+            ->from(ProduitAroma::class, 'p');
 
-        $where =  $searchService->getWhere($filter, new MyCriteriaParam($criteria, 'p'));   
-        $query->where($where["where"]." and p.statut != 0 ");
+        $where =  $searchService->getWhere($filter, new MyCriteriaParam($criteria, 'p'));
+        $query->where($where["where"] . " and p.statut != 0 ");
         $searchService->setAllParameters($query, $where["params"]);
         $searchService->addOrderBy($query, $filter, ['sort' => 'p.nom', 'direction' => 'asc']);
 
@@ -217,7 +213,5 @@ class ProduitAromaControllerCoach extends AbstractController
             'opener' => $opener,
             'popup' => $popup
         ]);
-
     }
-    
 }
