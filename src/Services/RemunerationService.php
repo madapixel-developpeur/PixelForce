@@ -25,8 +25,9 @@ class RemunerationService
     ];
 
     public const CONDITIONS = [
-        ["type" => "vente", "condition" => "\$userVenteId == \$user->getId()", "gain" => "\$amount * 1 * 0.15"],
+        ["type" => "vente", "condition" => "\$userVenteId == \$user->getId()", "gain" => "\$amount * 1 * 0.1"],
         ["type" => "audit", "condition" => "\$auditAgentId == \$user->getId()", "gain" => "\$amount * 1 * 0.05"],
+        ["type" => "meeting", "condition" => "\$userMeetingMakerId == \$user->getId()", "gain" => "\$amount * 1 * 0.05"],
         [
             "type" => "position",
             "position" => 1,
@@ -88,21 +89,24 @@ class RemunerationService
             $orderId = intval($orderData['order']["id"]);
             $auditAgentId = intval($orderData['order']["auditAgentId"]);
             $userVenteId = intval($orderData['order']["userVenteId"]);
+            $userMeetingMakerId = intval($orderData['order']["userMeetingMakerId"]);
             $amount = floatval($orderData['order']["amount"]);
-            // $amount = 1000;
 
             $secteur = $this->secteurRepository->find($secteurId);
             $auditAgent = $this->userRepository->find($auditAgentId);
             $userVente = $auditAgentId == $userVenteId ? $auditAgent : $this->userRepository->find($userVenteId);
+            $userMeetingMaker = $this->userRepository->find($userMeetingMakerId);
 
             $auditAgentIn = false;
             $venteUserIn = false;
+            $userMeetingMakerIn = false;
             $usersCheck =  [];
             foreach ($orderData['filsParrainNiveau'] as $item) {
                 $item['user'] = $this->userRepository->find(intval($item['userId']));
                 $item['niveau'] = intval($item['niveau']);
                 if (!$auditAgentIn) $auditAgentIn = $auditAgent->getId() == $item['user']->getId();
                 if (!$venteUserIn) $venteUserIn = $userVente->getId() == $item['user']->getId();
+                if (!$userMeetingMakerIn) $userMeetingMakerIn = $userMeetingMaker->getId() == $item['user']->getId();
                 $usersCheck[] = $item;
             }
 
@@ -110,9 +114,14 @@ class RemunerationService
             if (!$auditAgentIn) {
                 $usersCheck[] = ['user' => $auditAgent];
                 if (!$venteUserIn) $venteUserIn = $userVente->getId() == $auditAgent->getId();
+                if (!$userMeetingMakerIn) $userMeetingMakerIn = $userMeetingMaker->getId() == $auditAgent->getId();
             }
             if (!$venteUserIn) {
                 $usersCheck[] = ['user' => $userVente];
+                if (!$userMeetingMakerIn) $userMeetingMakerIn = $userMeetingMaker->getId() == $userVente->getId();
+            }
+            if (!$userMeetingMakerIn) {
+                $usersCheck[] = ['user' => $userMeetingMaker];
             }
 
             foreach ($usersCheck as $dataCheck) {
