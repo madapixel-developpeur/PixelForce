@@ -36,13 +36,13 @@ class RemunerationService
         [
             "type" => "position",
             "position" => 2,
-            "condition" => "\$user->getPosition() >= 2 || ((count(\$filsNiveau[0]) + count(\$filsNiveau[1]) + count(\$filsNiveau[2])) >= 25 )",
+            "condition" => "\$user->getPosition() >= 2 || (count(\$filsNiveau[1]) >= 25 )",
             "gain" => "\$niveau == 2 ? \$amount * 1 * 0.04 : 0",
         ],
         [
             "type" => "position",
             "position" => 3,
-            "condition" => "\$user->getPosition() >= 3 || ((count(\$filsNiveau[0]) + count(\$filsNiveau[1]) + count(\$filsNiveau[2])) >= 100 )",
+            "condition" => "\$user->getPosition() >= 3 || (count(\$filsNiveau[2]) >= 100 )",
             "gain" => "(\$niveau == 1 ? ((\$caNiveau[0] - \$amount) < 1000 && !(\$positionBefore >= 1) ? (\$caNiveau[0] - \$amount) : \$amount) : \$amount  ) * 1 * 0.05 ",
         ],
     ];
