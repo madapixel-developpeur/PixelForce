@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Twig;
 
 
@@ -14,16 +15,16 @@ class HelperFunction extends AbstractExtension
         ];
     }
 
-    public function generateReference($agentId,$rendezVousUserId,$contactId = null,$auditId = null)
+    public function generateReference($agentId, $rendezVousUserId, $contactId = null, $meetingId = null)
     {
         // Your custom logic here
-        $ref = "PBB-".$agentId."-".$rendezVousUserId;
-        if(!is_null($contactId)){
-            $ref.="-".$contactId;
+        $ref = "PBB-" . $agentId . "-" . $rendezVousUserId;
+        if (!is_null($contactId)) {
+            $ref .= "-" . $contactId;
         }
-        if($auditId){
-            $ref.="-".$auditId;
-        }   
+        if ($meetingId) {
+            $ref .= "-" . $meetingId;
+        }
         return $ref;
     }
 }

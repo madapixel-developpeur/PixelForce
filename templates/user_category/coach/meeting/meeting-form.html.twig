@@ -1,0 +1,78 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/templates/meeting/meeting.style.css') }}">
+{% endblock %}
+
+{% block body %}
+    {% if userToMeet == null %}
+        <div class="alert alert-danger" role="alert">
+            <div class="alert-body">
+                Contact indéfini.
+            </div>
+        </div>
+    {% else %}
+    <div class="block block--bordered block--rounded">
+        <h1 class="block__text block__text--center mt-2 h6 text-center" style="max-width:500px; margin : 0 auto;">Prendre un rendez-vous avec "{{userToMeet.information.email|default(userToMeet.information.firstname)}}" :</h1>
+            
+            {{ form_start(form, {'attr': {'class': 'my-form', 'id': 'category-form'}}) }}
+                {% if error %}
+                <div class="alert alert-danger" role="alert">
+                    <div class="alert-body">
+                        {{error}}
+                    </div>
+                </div>
+                {% endif %}
+                <div class="my-form-widget">
+                    {{form_label(form.title)}}
+                    {{form_widget(form.title)}}
+                    {{form_errors(form.title)}}
+                </div>
+                <div class="my-form-widget">
+                    <label for="meeting_title" class="form-label">Type</label>
+                    <input type="text" id="type" name="type" value="Audit" class="form-control" disabled>
+                </div>
+                <div class="my-form-wigdet">
+                    <div class="row">
+                        <div class="col">
+                            {{form_label(form.start)}}
+                            {{form_widget(form.start)}}
+                            {{form_errors(form.start)}}
+                        </div>
+                        <div class="col">
+                            {{form_label(form.end)}}
+                            {{form_widget(form.end)}}
+                            {{form_errors(form.end)}}
+                        </div>
+                    </div>
+                </div>
+                <div class="my-form-widget">
+                    {{form_label(form.note)}}
+                    {{form_widget(form.note)}}
+                    {{form_errors(form.note)}}
+                </div>
+                <div class="btn-wrap">
+                    <button class="btn btn-primary" type="submit">{{button}}</button>
+                </div>
+            {{ form_end(form) }}
+    </div>
+    {% endif %}
+{% endblock %}
+
+{% block title %}
+    Rendez-vous
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('assets/templates/meeting/meeting.js') }}"></script>
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', function () {
+            $('.datetime-local').flatpickr({
+                enableTime: true,
+                dateFormat: "Y-m-d H:i",
+            });
+        });
+
+    </script>
+{% endblock %}
