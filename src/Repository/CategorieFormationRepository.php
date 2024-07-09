@@ -46,7 +46,6 @@ class CategorieFormationRepository extends ServiceEntityRepository
     public function findCategorieFormationQuery(CategorieFormationSearch $search)
     {
         $query = $this->createQueryBuilder('cf');
-
         if (empty($_GET)) {
             $query
                 ->andWhere('cf.statut=:statut')
@@ -68,6 +67,12 @@ class CategorieFormationRepository extends ServiceEntityRepository
             $query = $query
                 ->andwhere('cf.statut = :statut')
                 ->setParameter('statut', $search->getStatut());
+        }
+        if (!is_null($search->getIsInProgression())) {
+            $param = ($search->getIsInProgression())? true :false;
+            $query = $query
+                ->andwhere('cf.isInProgression = :isInProgression')
+                ->setParameter('isInProgression', $param);
         }
         if ($search->getOrdre()) {
             $query = $query
@@ -104,7 +109,9 @@ class CategorieFormationRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('cf')
             ->select('cf')
             ->andwhere('cf.statut = :statut')
+            ->andwhere('cf.isInProgression = :isInProgression')
             ->setParameter('statut', Status::VALID)
+            ->setParameter('isInProgression',true)
             ->addOrderBy('cf.ordreCatFormation','ASC')
             ->getQuery()
             ->getResult()

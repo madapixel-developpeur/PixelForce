@@ -51,6 +51,16 @@ class CategorieFormationSearchType extends AbstractType
                 ],
                 'data' => 1
             ])
+            ->add('isInProgression', ChoiceType::class, [
+                'required' => false,
+                'label' => false,
+                'placeholder' => 'STATUT PROGRESSION',
+                'choices' => [
+                    'Tout' => null,
+                    "Prise en compte" => true,
+                    "Non prise en compte" => false
+                ],
+            ])
             
             ->add('ordre', EntityType::class, [
                 'placeholder' => 'ORDRE',

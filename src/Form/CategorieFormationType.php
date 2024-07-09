@@ -3,11 +3,12 @@
 namespace App\Form;
 
 use App\Entity\CategorieFormation;
-use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 
 class CategorieFormationType extends AbstractType
 {
@@ -20,6 +21,11 @@ class CategorieFormationType extends AbstractType
                  'required' => false,
                  'label' => 'Ordre'
              ])
+             ->add('isInProgression', CheckboxType::class, [
+                'label'    => 'Ajouter à la progression', 
+                'required' => false,
+                'data'     => true, 
+            ])
         ;
     }
 

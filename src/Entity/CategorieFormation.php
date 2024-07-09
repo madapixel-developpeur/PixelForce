@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use phpDocumentor\Reflection\Types\Boolean;
 
 /**
  * @ORM\Entity(repositoryClass=CategorieFormationRepository::class)
@@ -75,6 +76,12 @@ class CategorieFormation
      * @ORM\Column(type="json", nullable=true)
      */
     private $fonctionnalites = [];
+
+     /**
+     * @ORM\Column(type="boolean", nullable=false , options={"default": true})
+     * 
+     */
+    private $isInProgression;
 
     public function __construct()
     {
@@ -245,4 +252,24 @@ class CategorieFormation
         return $this;
     }
 
+
+
+    public function getIsInProgression()
+    {
+        return $this->isInProgression;
+    }
+
+    public function setIsInProgression(string $isInProgression): self
+    {
+        $this->isInProgression = $isInProgression;
+
+        return $this;
+    }
+
+    public function getIsInProgressionStateString(){
+        if($this->getIsInProgression()){
+            return "Prise en compte";
+        }
+        return "Non prise en compte";
+    }
 }

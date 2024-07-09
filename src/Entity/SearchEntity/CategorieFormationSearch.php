@@ -24,6 +24,12 @@ class CategorieFormationSearch {
      */
     private $statut;
 
+
+       /**
+     * @var boolean|null
+     */
+    private $isInProgression;
+
     /**
      * Get the value of nom
      *
@@ -116,6 +122,17 @@ class CategorieFormationSearch {
     public function setStatut($statut)
     {
         $this->statut = $statut;
+
+        return $this;
+    }
+    public function getIsInProgression()
+    {
+        return $this->isInProgression;
+    }
+
+    public function setIsInProgression(string $isInProgression): self
+    {
+        $this->isInProgression = $isInProgression;
 
         return $this;
     }

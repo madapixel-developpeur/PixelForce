@@ -25,14 +25,17 @@
         <div class="search-form">
             {{form_start(searchForm)}}
             <div class="row text-center">
-                <div class="col-12 col-sm-6 col-md-3">
+                <div class="col-12 col-sm-6 col-md-2">
                     {{form_row(searchForm.nom)}}
                 </div>
 				<div class="col-12 col-sm-6 col-md-3">
                     {{form_row(searchForm.description)}}
                 </div>
-                <div class="col-12 col-sm-6 col-md-3">
+                <div class="col-12 col-sm-6 col-md-2">
                     {{form_row(searchForm.statut)}}
+                </div>
+                 <div class="col-12 col-sm-6 col-md-2">
+                    {{form_row(searchForm.isInProgression)}}
                 </div>
                 <div class="col-12 col-sm-12 col-md-3">
                     <button class="btn btn-primary "><i class="fa-solid fa-magnifying-glass"></i> Rechercher</button>
@@ -64,6 +67,7 @@
 						<th scope="col" class="text-center">Description</th>
 						<th scope="col" class="text-center">Ordre</th>
 						<th scope="col" class="text-center">Statut</th>
+						<th scope="col" class="text-center">Progression</th>
 						<th scope="col" class="text-center table-th-notSortable">ACTION</th>
 					</tr>
 				</thead>
@@ -74,6 +78,7 @@
                             <td>{{ categorie.description|slice(0, 50)|raw }}...</td>
                             <td>{{ categorie.ordreCatFormation }}</td>
                             <td>{{ categorie.statutType }}</td>
+                            <td>{{ categorie.isInProgressionStateString }}</td>
                             <td style="white-space:nowrap">
                                 {% if categorie.statut == 1 %}
                                     <a href="{{ path('admin_formation_categorie_edit', {'id': categorie.id}) }}" class="btn btn-success">
