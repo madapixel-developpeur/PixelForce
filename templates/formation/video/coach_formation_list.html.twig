@@ -10,6 +10,7 @@
             </div>
             <div class="col-12 col-md-6 d-flex align-items-center justify-content-end">
                 {% if is_granted('ROLE_COACH') %}
+                <a href="{{ path('coach_video_formation_add')}}" class="btn bg-info text-white ms-2"><i class="fa fa-plus"></i> Video fin de formation</a>
                 <a href="{{ path('coach_formation_add') }}" class="btn bg-princ text-white ms-2"><i class="fa fa-plus"></i> Ajouter une formation</a>
                 <a href="{{ path('coach_quiz_add') }}" class="btn btn-warning text-white ms-2"><i class="fa fa-plus"></i> Ajouter un quiz</a>
                 {% endif %}

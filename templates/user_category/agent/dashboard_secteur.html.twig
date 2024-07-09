@@ -161,7 +161,15 @@
                     <h4 class=" mt-2 mb-3 choix-secteur-primary">Liste des formations</h4>
                     <div class="card ">
                         <div class="card-body p-0">
-                            {% if firstFormation == null %}
+                            {% if firstFormation == null and videoFinFormation is not null %}
+                                <div class="row">
+                                    <div class="col-12 pb-3">
+                                        <div class="border ratio ratio-16x9 rounded-3">
+                                            <iframe src="{{ videoFinFormation.urlVideo ~"?loop=0&byline=0&portrait=0&title=0&muted=1" }}" width="700" height="400" class="m-auto" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen allow="autoplay; encrypted-media"></iframe>
+                                        </div>  
+                                    </div>
+                                </div>
+                            {% elseif firstFormation == null %}    
                                 <div class="alert alert-primary text-center m-5">
                                     Il n'y a plus de formation à terminer
                                 </div>

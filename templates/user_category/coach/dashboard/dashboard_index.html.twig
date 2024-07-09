@@ -21,7 +21,15 @@
                 <div class="card card-company-table">
                     <div class="card-body p-0">
                         <div class="card-body p-0">
-                            {% if formations == null %}
+                            {% if formations == null and videoFinFormation is not null %}
+                                <div class="row">
+                                    <div class="col-12 pb-3">
+                                        <div class="border ratio ratio-16x9 rounded-3">
+                                            <iframe src="{{ videoFinFormation.urlVideo ~"?loop=0&byline=0&portrait=0&title=0&muted=1" }}" width="700" height="400" class="m-auto" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen allow="autoplay; encrypted-media"></iframe>
+                                        </div>  
+                                    </div>
+                                </div>
+                            {% elseif formations == null %}
                                 <div class="alert alert-primary text-center m-5">
                                     Il n'y a plus de formation à terminer
                                 </div>

@@ -2,36 +2,37 @@
 
 namespace App\Controller;
 
-use App\Entity\AgentSecteur;
-use App\Entity\CategorieFormation;
-use App\Entity\SearchEntity\UserSearch;
-use App\Entity\Secteur;
 use App\Entity\User;
+use App\Entity\Secteur;
+use App\Entity\AgentSecteur;
 use App\Manager\EntityManager;
 use App\Manager\StripeManager;
-use App\Repository\AgentSecteurRepository;
-use App\Repository\CalendarEventRepository;
-use App\Repository\CategorieFormationRepository;
-use App\Repository\CoachSecteurRepository;
-use App\Repository\ContactRepository;
-use App\Repository\FormationAgentRepository;
-use App\Repository\FormationRepository;
-use App\Repository\PlanAgentAccountRepository;
-use App\Repository\RFormationCategorieRepository;
-use App\Repository\SecteurRepository;
-use App\Repository\UserRepository;
-use App\Repository\UserTransactionRepository;
-use App\Services\AgentSecteurService;
-use App\Services\CategorieFormationAgentService;
-use App\Services\Stat\StatAgentService;
 use App\Services\StripeService;
+use App\Entity\CategorieFormation;
+use App\Repository\UserRepository;
 use App\Services\User\AgentService;
+use App\Repository\ContactRepository;
+use App\Repository\SecteurRepository;
+use App\Services\AgentSecteurService;
+use App\Entity\SearchEntity\UserSearch;
+use App\Repository\FormationRepository;
+use App\Services\Stat\StatAgentService;
+use App\Repository\AgentSecteurRepository;
+use App\Repository\CoachSecteurRepository;
+use App\Repository\CalendarEventRepository;
 use Knp\Component\Pager\PaginatorInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use App\Repository\FormationAgentRepository;
+use App\Repository\UserTransactionRepository;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use App\Repository\PlanAgentAccountRepository;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Repository\CategorieFormationRepository;
+use App\Services\CategorieFormationAgentService;
+use App\Repository\RFormationCategorieRepository;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use App\Repository\SecteurVideoFormationRepository;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class AgentAccountController extends AbstractController
 {
@@ -69,7 +70,8 @@ class AgentAccountController extends AbstractController
         PlanAgentAccountRepository $repoPlanAgentAccount,
         UserRepository $repoUser,
         private EntityManager $entityManager,
-        CoachSecteurRepository $repoCoachSecteur
+        CoachSecteurRepository $repoCoachSecteur,
+        private SecteurVideoFormationRepository $secteurVideoFormationRepository
     ) {
         $this->repoSecteur = $repoSecteur;
         $this->repoAgentSecteur = $repoAgentSecteur;
@@ -237,6 +239,9 @@ class AgentAccountController extends AbstractController
         $visible = $request->query->get('visible', 1);
         $expert = $this->repoUser->getFirstCoachBySecteur($secteur);
 
+
+        $videoFinFormation = $this->secteurVideoFormationRepository->findOneBy(['secteur'=> $sessionSecteurId ]);
+
         return $this->render('user_category/agent/dashboard_secteur.html.twig', [
             'secteur' => $secteur,
             'firstFormation' => $firstFormation,
@@ -265,7 +270,8 @@ class AgentAccountController extends AbstractController
             'pbb_url' => $_ENV['PBB_WS_URL'],
             'repoCoachSecteur' => $this->repoCoachSecteur,
             'visible' => $visible,
-            'expert' => $expert
+            'expert' => $expert,
+            'videoFinFormation' => $videoFinFormation
         ]);
     }
 

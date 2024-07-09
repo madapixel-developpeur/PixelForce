@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Repository\CalendarEventRepository;
 use App\Repository\ContactRepository;
 use App\Repository\SecteurRepository;
+use App\Repository\SecteurVideoFormationRepository;
 use App\Services\Stat\StatAgentService;
 use App\Services\Stat\StatCoachService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -26,7 +27,8 @@ class CoachDashboardController extends AbstractController
     private $calendarEventRepository;
 
     public function __construct(EntityManagerInterface $entityManager, ContactRepository $repoContact, CalendarEventRepository $calendarEventRepository,
-        private AgentService $agentService
+        private AgentService $agentService,
+        private SecteurVideoFormationRepository $secteurVideoFormationRepository
     ){
         $this->entityManager = $entityManager;
         $this->repoContact = $repoContact;
@@ -38,7 +40,6 @@ class CoachDashboardController extends AbstractController
      */
     public function index(Request $request, PaginatorInterface $paginator, StatAgentService $statAgentService, StatCoachService $statCoachService, SecteurRepository $secteurRepository, UserTransactionRepository $userTransactionRepository)
     {
-      
         $user = (object)$this->getUser();
         $secteur = $user->getUniqueCoachSecteur();
         
@@ -64,6 +65,7 @@ class CoachDashboardController extends AbstractController
         $nbrRdv = $statAgentService->getNbrRdv($user->getId());
         $nbrAgents = $statCoachService->getNbrAgents($secteur->getId());
         $soldeRemuneration = $userTransactionRepository->getSolde($user, [$secteur->getId()]);
+        $videoFinFormation = $this->secteurVideoFormationRepository->findOneBy(['secteur'=> $secteur ]);
 
         return $this->render('user_category/coach/dashboard/dashboard_index.html.twig', [
             'secteur' => $secteur,
@@ -80,6 +82,7 @@ class CoachDashboardController extends AbstractController
             'nbrAgents' => $nbrAgents,
             'soldeRemuneration' => $soldeRemuneration,
             'formations'=>null,
+            'videoFinFormation' => $videoFinFormation
         ]);
     }
     /**

@@ -4,28 +4,33 @@
 namespace App\Controller;
 
 
-use App\Entity\Formation;
+use Exception;
 use App\Entity\Media;
-use App\Entity\RFormationCategorie;
+use App\Entity\Formation;
 use App\Form\FormationType;
+use App\Entity\VideoFormation;
 use App\Manager\EntityManager;
-use App\Repository\CategorieFormationRepository;
-use App\Repository\FormationAgentRepository;
-use App\Repository\FormationRepository;
+use App\Services\FileUploader;
+use App\Repository\UserRepository;
+use App\Services\FormationService;
+use App\Entity\RFormationCategorie;
+use App\Entity\SecteurVideoFormation;
 use App\Repository\MediaRepository;
 use App\Repository\SecteurRepository;
-use App\Repository\UserRepository;
 use App\Services\DirectoryManagement;
-use App\Services\FileUploader;
-use App\Services\FormationService;
-use Exception;
+use App\Repository\FormationRepository;
 use Knp\Component\Pager\PaginatorInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Repository\FormationAgentRepository;
+use App\Repository\VideoFormationRepository;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
+use App\Form\SecteurVideoFinFormationFormType;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Repository\CategorieFormationRepository;
+use App\Repository\SecteurVideoFormationRepository;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class CoachFormationController extends AbstractController
 {
@@ -84,7 +89,8 @@ class CoachFormationController extends AbstractController
                                 EntityManager $entityManager,
                                 SecteurRepository $secteurRepository,
                                 PaginatorInterface $paginator,
-                                CategorieFormationRepository $repoCatFormation
+                                CategorieFormationRepository $repoCatFormation,
+                                private SecteurVideoFormationRepository $secteurVideoFormationRepository
     )
    {
        $this->fileUploader = $fileUploader;
@@ -378,4 +384,34 @@ class CoachFormationController extends AbstractController
         }
         return $this->redirectToRoute('coach_formation_list');
     }
+
+      /**
+     * @Route("/coach/formation/fin/add", name="coach_video_formation_add", options={"expose"=true})
+     */
+   public function coach_vdeo_fin_formation(Request $request)
+   {
+        $secteur = $this->getUser()->getSecteurByCoach();
+        $video = $this->secteurVideoFormationRepository->findOneBy(['secteur'=> $secteur ]);
+        if(is_null($video)){
+            $video = new SecteurVideoFormation();
+            $video->setSecteur($secteur);
+        }
+        $form = $this->createForm(SecteurVideoFinFormationFormType::class, $video);
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid()) {
+            try {
+                $this->entityManager->persist($video);
+                $this->entityManager->flush();
+                $this->addFlash('success', 'Video ajoutée avec succès');
+            } catch (\Throwable $th) {
+                //throw $th;
+                $this->addFlash('danger', $_ENV['CUSTOM_ERROR_MESSAGE']);
+            }
+        }
+
+        return $this->render('formation/video/fin_formation_add.html.twig', [
+            'form' => $form->createView(),
+            'video' => $video
+        ]);
+   }
 }
