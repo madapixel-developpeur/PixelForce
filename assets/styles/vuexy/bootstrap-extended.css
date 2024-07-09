@@ -1020,7 +1020,8 @@ select:-webkit-autofill {
 
 @media (max-width: 767.98px) {
   .header-navbar.floating-nav {
-    width: calc( 100vw - (100vw - 100%) - calc(2rem + 0.4rem)) !important;
+    width: calc(
+ 100vw - (100vw - 100%) - calc(2rem + 0.4rem)) !important;
     margin-left: calc(2rem - 0.8rem);
     margin-right: calc(2rem - 0.8rem); }
   .header-navbar .navbar-container ul.navbar-nav li .selected-language {
@@ -1040,7 +1041,7 @@ select:-webkit-autofill {
 
 @media (max-width: 1201px) {
   .header-navbar.fixed-top, .header-navbar.floating-nav {
-    left: 0; }
+    left: 0 !important; }
   .horizontal-layout .header-navbar .navbar-container {
     padding-left: 0.8rem;
     padding-right: 0.8rem; } }
