@@ -71,7 +71,7 @@
 					<!--/ User Sidebar -->
 				</div>
 				<h4 class="card-title">Progression</h4>
-                <div class=" d-flex mb-4">  
+                <div class="row d-flex mb-4">  
 					
                     {% set isCompletedBefore = true %}
                     {% set positionSteps = remunerationService.getPositionSteps() %}
@@ -79,7 +79,7 @@
                         {% set temoin = true %}
                     {% for step in positionSteps %}
                         {% set index = loop.index %}
-						<div class="col-xl-4 col-md-6 col-12">
+						<div class="col-xl-4 col-md-6 col-12 mt-4">
                         {% include 'partials/stepper-progression-agent_V2.html.twig' %}
                 		</div>
                     {% endfor %}
