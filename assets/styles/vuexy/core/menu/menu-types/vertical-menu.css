@@ -274,3 +274,14 @@
   opacity: 1;
   transform: translate3d(260px, 0, 0);
   transition: width 0.25s, opacity 0.25s, transform 0.25s; }
+
+
+@media (min-width: 987px) and (max-width: 1197px) {
+  .vertical-layout.vertical-menu-modern.menu-collapsed .navbar.fixed-top, .vertical-layout.vertical-menu-modern.menu-collapsed .navbar.floating-nav {
+    left: 0px !important;
+  }
+
+  .vertical-layout.vertical-menu-modern.menu-collapsed .header-navbar.floating-nav {
+    width: calc(100vw - (100vw - 100%) - 4.4rem ); }
+
+}
