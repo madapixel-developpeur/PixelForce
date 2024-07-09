@@ -479,4 +479,22 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->getQuery()
             ->getSingleScalarResult();
     }
+
+    public function getFirstCoachBySecteur(Secteur $secteur){
+
+        $query = $this->createQueryBuilder('a')
+            ->where('a.roles LIKE :role')
+            ->andWhere('a.active=1')
+            ->setParameter('role', '%' . User::ROLE_COACH . '%');
+
+        $query = $query
+        ->join('a.coachSecteurs', 'aSec')
+        ->andwhere('aSec.secteur = :secteur')
+        ->setParameter('secteur', $secteur)
+        ->setMaxResults(1)
+        ->orderBy('a.id', 'DESC');
+
+        return $query->getQuery()
+            ->getSingleResult();
+        }
 }

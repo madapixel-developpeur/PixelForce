@@ -235,6 +235,7 @@ class AgentAccountController extends AbstractController
         $formationCategoriesOrdered = $categorieFormationRepository->getValidCategoriesOrdered();
         //progression
         $visible = $request->query->get('visible', 1);
+        $expert = $this->repoUser->getFirstCoachBySecteur($secteur);
 
         return $this->render('user_category/agent/dashboard_secteur.html.twig', [
             'secteur' => $secteur,
@@ -263,7 +264,8 @@ class AgentAccountController extends AbstractController
             'pixelforce_url' => $_ENV['BASE_URL'],
             'pbb_url' => $_ENV['PBB_WS_URL'],
             'repoCoachSecteur' => $this->repoCoachSecteur,
-            'visible' => $visible
+            'visible' => $visible,
+            'expert' => $expert
         ]);
     }
 
