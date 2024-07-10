@@ -405,6 +405,20 @@ a, a:hover{
 	background-color:white ;
     color:#7d78e1;
 }
+.regular-white-button{
+    background-color: white;
+    color: #7d78e1;
+    border-width: 1px; /* Width of the border */
+    border-style: solid; /* Style of the border */
+    border-color: white; /* Color of the border */
+	padding:8px 20px;
+	display:inline-block;
+	border-radius: 7px !important;
+}
+.regular-white-button:hover {
+	background-color:white ;
+    color:#7d78e1;
+}
 .general-primary-text{
 	color:#192030;
 	font-weight: bold;
@@ -460,8 +474,9 @@ a, a:hover{
 	margin: 0px auto;
 }
 .choix-secteur-card-body {
-	background-color: #192030;
+	background-color: #7d78e1;
 	color:white;
+	min-height: 70px;
 }
 .card{
 	border-radius: 7px !important;
