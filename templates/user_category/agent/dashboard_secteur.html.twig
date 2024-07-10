@@ -433,7 +433,7 @@
                 <!--/ Browser States Card -->
                 <!-- Browser States Card -->
                 {% if app.user.canAccessFonct('RDV', app.session.get('secteurId')) %}
-                <div class="col-lg-12 col-12">
+                {# <div class="col-lg-12 col-12">
                     <div class="card card-company-table p-5" style="min-height: 300px;">
                         <div class="card-head mb-3">
                             <h5>Prenez rendez vous avec un expert</h5>
@@ -471,7 +471,6 @@
                                                 <td ><a class="text-tableau" href= "mailto: {{ coach.email }}"> {{ coach.email }} </a></td>
                                                 <td ><a class="text-tableau" href="tel:{{ coach.telephone|default('-') }}">{{ coach.telephone|default('-') }}</a></td>
                                                  <td>
-                                                    {# On récupère les secteurs reliés par l'agent  #}
                                                     <span class="badge bg-light-warning ">{{ coach.allSecteursOfUser(secteurs)|default('-') }}</span>     
                                                 </td>
                                                 <td>
@@ -493,7 +492,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> #}
                 {% endif %}
                 <!--/ Browser States Card -->
     

@@ -582,6 +582,10 @@ body{
 	background-color:#eceef5 !important;
 }
 
+.rounded-custom{
+	border-radius: 0.6rem !important;
+}
+
 @media (min-width: 987px) and (max-width: 1197px) {
    .container-page{
 		margin-top: 60px !important;

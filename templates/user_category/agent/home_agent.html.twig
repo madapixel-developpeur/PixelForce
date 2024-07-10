@@ -46,8 +46,8 @@
                 </div>
                 <div class="col-0 col-md-7"></div>
             </div>
-            <div class="ratio ratio-16x9 mt-3 choix-secteur-video rounded-3" >
-                <iframe src="{{video_information_vimeo_src}}"  allow="autoplay; fullscreen; picture-in-picture; clipboard-write"  ></iframe>
+            <div class="ratio ratio-16x9 mt-3" >
+                <iframe class="rounded-custom" src="{{video_information_vimeo_src}}"  allow="autoplay; fullscreen; picture-in-picture; clipboard-write"  ></iframe>
                 <script src="https://player.vimeo.com/api/player.js"></script>
             </div>
             
@@ -71,32 +71,21 @@
                                                     <img src="{{ asset('files/')}}/{{s.affiche}}" class="card-img-top" alt="...">
                                                     <div class="card-body choix-secteur-card-body rounded-bottom">
                                                         <div class="row card-body-part-a" >
-                                                            <div class="col-8">
-                                                                <h5 class=" text-white fw-bold pb-1">{{ s.nom }}</h5>
-                                                                <p class="card-text">{{ s.description }}</p>
+                                                            <div class="col-8 d-flex align-items-center">
+                                                                <h5 class=" text-white fw-bold">{{ s.nom }}</h5>
+                                                                {# <p class="card-text">{{ s.description }}</p> #}
                                                             </div>
                                                             <div class="col-4">
+                                                                {% if agentSecteur is null and s.active > 0 %}
+                                                                    <!-- <a href="" class="btn btn-primary" disabled><i class="fa-solid fa-location-arrow"></i> Découvrir</a> -->
+                                                                    <a href="{{ path('agent_add_sector', {id: s.id}) }}" class="regular-button   font-weight-bold rounded-3 pl-3 pr-3"> Ajouter </a>
+                                                                    {% elseif agentSecteur and agentSecteur.statut == true %}
+                                                                        <a href="{{ path('agent_generate_sessionSecteur_before_redirect_to_route_dahsboard', {id: s.id}) }}" class="regular-button  font-weight-bold rounded-3 pl-3 pr-3"> Accéder </a>
+                                                                    {% elseif agentSecteur and agentSecteur.statut == false %}
+                                                                        <a class="regular-button   font-weight-bold rounded-3 pl-3 pr-3"> En attente de validation</a>
+                                                                {% endif %}
                                                             </div>
                                                         </div>
-                                                        <div class="row">
-                                                            <div class="col-7">
-                                                            
-                                                            </div>
-                                                            <div class="col-5  text-center " >
-                                                            
-                                                                        {% if agentSecteur is null and s.active > 0 %}
-                                                                            <!-- <a href="" class="btn btn-primary" disabled><i class="fa-solid fa-location-arrow"></i> Découvrir</a> -->
-                                                                            <a href="{{ path('agent_add_sector', {id: s.id}) }}" class="regular-button   font-weight-bold rounded-3 pl-3 pr-3"> Ajouter </a>
-                                                                            {% elseif agentSecteur and agentSecteur.statut == true %}
-                                                                                <a href="{{ path('agent_generate_sessionSecteur_before_redirect_to_route_dahsboard', {id: s.id}) }}" class="regular-button  font-weight-bold rounded-3 pl-3 pr-3"> Accéder </a>
-                                                                            {% elseif agentSecteur and agentSecteur.statut == false %}
-                                                                                <a class="regular-button   font-weight-bold rounded-3 pl-3 pr-3"> En attente de validation</a>
-                                                                        {% endif %}
-                                                            </div>
-                                                        </div>
-                                            
-                                            
-                                            
                                         </div>
                                     </div>
                                     </div>
