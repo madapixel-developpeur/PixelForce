@@ -268,7 +268,7 @@ $(document).ready(function () {
                           fileDeleted.append('deleted_media[]', $(this).val());
                         });
                         _context4.next = 5;
-                        return axios__WEBPACK_IMPORTED_MODULE_16___default().post(Routing.generate('coach_formation_deleteMedia'), fileDeleted);
+                        return axios__WEBPACK_IMPORTED_MODULE_16___default().post(Routing.generate('coach_formation_delete_media'), fileDeleted);
 
                       case 5:
                         if (!addVideo) {

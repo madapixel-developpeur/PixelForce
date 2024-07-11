@@ -156,7 +156,7 @@ $(document).ready(function () {
             $('.hidden_media_deleted').each(function() {
                 fileDeleted.append('deleted_media[]', $(this).val())
             });
-            (await axios.post(Routing.generate('coach_formation_deleteMedia'),fileDeleted))
+            (await axios.post(Routing.generate('coach_formation_delete_media'),fileDeleted))
              if(addVideo && !$('#check_url')[0].checked) {
                  $('.hiddenVideoData').remove();
                  sendVideoToVimeo({

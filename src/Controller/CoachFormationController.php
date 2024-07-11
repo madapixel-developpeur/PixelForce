@@ -293,9 +293,9 @@ class CoachFormationController extends AbstractController
     }
 
     /**
-     * @Route("/coach/formation/delete/media", name="coach_formation_deleteMedia", options={"expose"=true})
+     * @Route("/coach/formation/delete/media", name="coach_formation_delete_media", options={"expose"=true})
      */
-    public function coach_formation_deleteMedia(Request $request)
+    public function coach_formation_delete_media(Request $request)
     {
         if($deleted_medias = $request->request->get('deleted_media')) {
             foreach($deleted_medias as $deleted_media) {
