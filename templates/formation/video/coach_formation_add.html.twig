@@ -26,12 +26,11 @@
             <div class="col-12 col-md-4">
                 <h5>Vidéo</h5>
                 <div class="my-3" id="formation-video">
-                    <button class="btn btn-primary btn-sm"  id="btn-add-video"><i class="fa fa-plus"></i> Uploader une video</button>
+                    {# <button class="btn btn-primary btn-sm"  id="btn-add-video"><i class="fa fa-plus"></i> Uploader une video</button> #}
                     <br/>
-                    <a href="#">Insérer directement le lien de la video</a>
-                    <br/>
-                    <input type="checkbox" id="check_url" onchange="toggleInputUrl(event)" />
-                    <input type="text" class="form-control" id="input-url-video" disabled="disabled" placeholder="Veuillez collez ici l'url de la video (Vimeo)" />
+                    <input type="checkbox" id="check_url" onchange="toggleInputUrl(event)" checked/>
+                    <span>Ajouter ici le "embed code" de vimeo ou le lien de votre video</span>
+                    <input type="text" class="form-control" id="input-url-video" placeholder="Veuillez collez ici l'url de la video (Vimeo)" />
                     <div>
                         <span id="video-upload-name" class="badge bg-light-info text-dark mt-2 d-none"><i class="fa-solid fa-video me-2"></i></span>
                     </div>

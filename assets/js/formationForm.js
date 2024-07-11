@@ -28,7 +28,7 @@ $(document).ready(function () {
                     }
                 })
             } else {
-                const videoId = getIdVideoByUrl($('#input-url-video').val())
+                const videoId = extractIdFromSrcValues($('#input-url-video').val())
                 await save(videoId)
             }
 
@@ -186,7 +186,7 @@ $(document).ready(function () {
                      }
                  })
              } else {
-                 const videoId = getIdVideoByUrl($('#input-url-video').val())
+                 const videoId = extractIdFromSrcValues($('#input-url-video').val())
                  await saveData(videoId);
                  progressionContainer.remove()
                  progressionLabel.html(
@@ -364,7 +364,8 @@ function validationFormulaire(callback)
             const alert = '<div class="alert alert-danger my-2" role="alert">\n' +
                 '  La vidéo est obligatoire\n' +
                 '</div>';
-            if(!$('#btn-add-video')[0].disabled) {
+            let btnAddVideo = $('#btn-add-video')[0];
+            if(btnAddVideo && !btnAddVideo.disabled) {
                 if($('#inputVideo').length === 0) {
                     $('#formation').prepend(alert);
                 } else {
@@ -387,6 +388,30 @@ function getIdVideoByUrl(url)
 {
     let partUrl = url.split('/')
     return partUrl.length > 0 ? partUrl[partUrl.length - 1] : '';
+}
+
+function extractIdFromSrcValues(htmlString){
+    let src = extractFirstIframeSrc(htmlString);
+    return getIdInfo(src);
+}
+
+function extractFirstIframeSrc(htmlString) {
+    const regex = /<iframe[^>]+src="([^"]+)"/;
+    const match = regex.exec(htmlString);
+
+    if (match) {
+        return match[1];
+    } else {
+        return null;
+    }
+}
+
+function getIdInfo(url) {
+    const baseUrl = "https://player.vimeo.com/video/";
+    if (url && url.startsWith(baseUrl)) {
+        return url.substring(baseUrl.length);
+    }
+    return url;
 }
 
 (function(i, s, o, g, r, a, m) {

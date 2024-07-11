@@ -400,6 +400,13 @@ class CoachFormationController extends AbstractController
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()) {
             try {
+                preg_match('/<iframe[^>]+src="([^"]+)"/', $video->getUrlVideo(), $matches);
+
+                if (!empty($matches[1])) {
+                    $src = $matches[1];
+                    $video->setUrlVideo($src);
+                }
+
                 $this->entityManager->persist($video);
                 $this->entityManager->flush();
                 $this->addFlash('success', 'Video ajoutée avec succès');
