@@ -601,6 +601,10 @@ body{
 	border-radius: 0.6rem !important;
 }
 
+.object-fit-cover{
+	object-fit: cover;
+}
+
 @media (min-width: 987px) and (max-width: 1197px) {
    .container-page{
 		margin-top: 60px !important;
