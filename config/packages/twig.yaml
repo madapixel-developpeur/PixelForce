@@ -15,6 +15,7 @@ twig:
         authService: '@util.auth'
         secteurDigitalId: '%env(SECTEUR_DIGITAL_ID)%'
         pbbAccesClient: '%env(PBB_ACCESCLIENT_WS_URL)%'
+        pbb_ws_url: '%env(PBB_WS_URL)%'
     paths:
         # pour spécifier le namespace des image. Exemple d'utilisation : email.image('@images/logo.png')
         '%kernel.project_dir%/assets/images': images

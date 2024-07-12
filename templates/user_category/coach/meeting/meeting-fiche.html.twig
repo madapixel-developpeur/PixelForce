@@ -51,7 +51,7 @@
                 <td> 
                         <div class="d-flex justify-content-start">
                             <a class="btn btn-outline-primary w-50" href="{{ path('agent_order_list_digital',{'referenceVente' : generateReference(meeting.userToMeet.agent.id,app.user.id,meeting.userToMeet.id,meeting.user.id)  }) }}"> {{ generateReference(meeting.userToMeet.agent.id,app.user.id,meeting.userToMeet.id,meeting.user.id) }} </a>
-                            <a class="p-2" href="#" onclick="copyLink('{{ generateReference(meeting.userToMeet.agent.id,app.user.id,meeting.userToMeet.id,meeting.user.id) }}','Liens de la référence {{  generateReference(meeting.userToMeet.agent.id,app.user.id,meeting.userToMeet.id,meeting.user.id) }} copié avec succès') "><i class="fa-solid fa-copy"></i></a> 
+                            <a class="p-2" href="#" onclick="copyLink('{{ configSecteurService.getRefUrl(generateReference(meeting.userToMeet.agent.id,app.user.id,meeting.userToMeet.id,meeting.user.id)) }}','Liens de la référence {{  generateReference(meeting.userToMeet.agent.id,app.user.id,meeting.userToMeet.id,meeting.user.id) }} copié avec succès') "><i class="fa-solid fa-copy"></i></a> 
                         </div>
                 </a> </td>
             </tr>

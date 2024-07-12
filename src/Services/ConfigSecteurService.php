@@ -5,6 +5,7 @@ namespace App\Services;
 
 use App\Entity\Secteur;
 use App\Repository\ConfigSecteurRepository;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class ConfigSecteurService
 {
@@ -12,10 +13,12 @@ class ConfigSecteurService
     const CONFIG_NUM_FRAIS_LIVRAISON = 2;
     const CONFIG_NUM_PRIX_MIN_FRAIS_LIVRAISON_GRATUIT = 3;
     protected $configSecteurRepository;
+    protected $parameterBag;
 
-    public function __construct(ConfigSecteurRepository $configSecteurRepository)
+    public function __construct(ConfigSecteurRepository $configSecteurRepository, ParameterBagInterface $parameterBag)
     {
         $this->configSecteurRepository = $configSecteurRepository;
+        $this->parameterBag = $parameterBag;
     }
 
     public function findTva(?Secteur $secteur = null){
@@ -41,5 +44,9 @@ class ConfigSecteurService
             $fraisLivraison = $this->findFraisLivraison($secteur);
         }
         return $fraisLivraison;
+    }
+
+    public function getRefUrl($ref){
+        return $this->parameterBag->get('pbb_ws_url').'/?ref='.$ref;
     }
 }

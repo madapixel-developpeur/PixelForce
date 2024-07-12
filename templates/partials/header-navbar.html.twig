@@ -49,7 +49,7 @@
                                         <a class="header-user" href="{{ path('agent_order_list_digital', {'referenceVente' : generateReference(app.user.id, app.user.id) }) }}">
                                             {{ generateReference(app.user.id, app.user.id) }}
                                         </a>
-                                        <a href="#" class="ms-2 header-user" onclick="copyLink('{{ generateReference(app.user.id, app.user.id) }}', 'Liens de la référence {{ generateReference(app.user.id, app.user.id) }} copié avec succès')">
+                                        <a href="#" class="ms-2 header-user" onclick="copyLink('{{ configSecteurService.getRefUrl(generateReference(app.user.id, app.user.id)) }}', 'Liens de la référence {{ generateReference(app.user.id, app.user.id) }} copié avec succès')">
                                             <i class="fa-solid fa-copy"></i>
                                         </a>
                                     </span>
