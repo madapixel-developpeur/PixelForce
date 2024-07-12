@@ -73,10 +73,10 @@
                                         {{ form_start(form) }}
                                             <div class="row">
                                                 <div class="col-md-6 col-12">
-                                                    {{ form_row(form.nom) }}
+                                                    {{ form_row(form.prenom) }}
                                                 </div>
                                                 <div class="col-md-6 col-12">
-                                                    {{ form_row(form.prenom) }}
+                                                    {{ form_row(form.nom) }}
                                                 </div>
                                             </div>
                                             <div class="row">
@@ -89,16 +89,21 @@
                                             </div>
                                             <div class="row">
                                                 <div class="col-md-6 col-12">
-                                                    {{ form_row(form.adresse) }}
+                                                    {{ form_row(form.numero_rue) }}
                                                 </div>
                                                 <div class="col-md-6 col-12">
-                                                    {{ form_row(form.numero_rue) }}
+                                                    {{ form_row(form.adresse) }}
                                                 </div>
                                                 <div class="col-md-6 col-12">
                                                     {{ form_row(form.codePostal) }}
                                                 </div>
                                                 <div class="col-md-6 col-12">
                                                     {{ form_row(form.ville) }}
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-12 col-12">
+                                                    {{ form_row(form.pays) }}
                                                 </div>
                                             </div>
                                             {# <h5 class="mt-4">Choix du secteur</h5>

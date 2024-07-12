@@ -337,6 +337,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
      */
     private $ville;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $pays;
+
     /*
      * @ORM\OneToMany(targetEntity=DevisCompany::class, mappedBy="agent")
      */
@@ -1705,5 +1710,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
 
     public function canAccessFonct(string $fonct, $secteurId): bool{
         return in_array($fonct, $this->getAccessibleFonctionnalites($secteurId) ?? [] );
+    }
+
+
+    public function getPays(): ?string
+    {
+        return $this->pays;
+    }
+
+    public function setPays(?string $pays): self
+    {
+        $this->pays = $pays;
+
+        return $this;
     }
 }

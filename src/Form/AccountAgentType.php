@@ -33,29 +33,10 @@ class AccountAgentType extends AbstractType
                     new NotNull([],'champ obligatoire')
                 ]
             ])
-
-            ->add('adresse', TextType::class, [
-                'label' => 'Adresse',
-                'attr' => [
-                    'placeholder' => 'Votre Adresse'
-                ],
-                'constraints' => [
-                    new NotNull([],'champ obligatoire')
-                ]
-            ])
             ->add('telephone', TelType::class, [
                 'label' => 'Numero Téléphone',
                 'attr' => [
                     'placeholder' => 'Numéro Téléphone'
-                ],
-                'constraints' => [
-                    new NotNull([],'champ obligatoire')
-                ]
-            ])
-            ->add('codePostal', TextType::class, [
-                'label' => 'Code postal',
-                'attr' => [
-                    'placeholder' => 'Code postal'
                 ],
                 'constraints' => [
                     new NotNull([],'champ obligatoire')
@@ -82,14 +63,50 @@ class AccountAgentType extends AbstractType
                 'disabled' => true,
                 'required' => false,
             ])
+
+            ->add('numero_rue', TextType::class, [
+                'label' => 'Numéro de rue',
+                'attr' => [
+                    'placeholder' => 'Numéro de rue'
+                ],
+                "required" => false
+            ])
+            ->add('ville', TextType::class, [
+                'label' => 'Ville',
+                'attr' => [
+                    'placeholder' => 'Ville'
+                ],
+                "required" => false
+            ])
+            ->add('pays', TextType::class, [
+                'label' => 'Pays',
+                'attr' => [
+                    'placeholder' => 'Pays'
+                ],
+                "required" => false
+            ])
+            ->add('codePostal', TextType::class, [
+                'label' => 'Code postal',
+                'attr' => [
+                    'placeholder' => 'Code postal'
+                ],
+                "required" => false
+            ])
+
+
+            ->add('adresse', TextType::class, [
+                'label' => 'Votre adresse',
+                'attr' => [
+                    'placeholder' => 'Votre adresse'
+                ],
+                "required" => false
+            ])
             ->add('rib', TextType::class, [
                 'label' => 'RIB',
                 'attr' => [
                     'placeholder' => 'Votre RIB'
                 ],
-                'constraints' => [
-                    new NotNull([],'champ obligatoire')
-                ]
+                "required" => false
             ])
         ;
     }

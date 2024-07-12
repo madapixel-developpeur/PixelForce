@@ -130,6 +130,13 @@ class InscriptionAgentType extends AbstractType
                 ],
                 "required" => false
             ])
+            ->add('pays', TextType::class, [
+                'label' => false,
+                'attr' => [
+                    'placeholder' => 'Pays'
+                ],
+                "required" => false
+            ])
             ->addEventSubscriber(new SecteurChoiceListListener())
         ;
         // Ajoutez le champ 'ambassador_username' si la valeur est différente de null
