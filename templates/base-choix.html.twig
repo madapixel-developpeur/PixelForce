@@ -32,6 +32,8 @@
         <link rel="stylesheet" type="text/css" href="{{asset('assets/css/style.css?date=202407101840')}}">
         <link rel="stylesheet" type="text/css" href="{{asset('app-assets/css/pages/app-invoice.css')}}">
         <link rel="stylesheet" type="text/css" href="{{asset('app-assets/css/pages/app-ecommerce.css')}}">
+        <link rel="stylesheet" href="{{ asset('assets/css/sweetalert2/sweetalert2.min.css')}}">
+
         <!-- Calendly link widget begin -->
 		<link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
 		<script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript" async></script>
@@ -71,6 +73,8 @@
                 </div>
                 <div class="content-body">
                     {# Affichage des messages flash #}
+                    {% set excluded_flash_types = ['congratulation_message'] %}
+                    {% set congratulation_message = app.flashes('congratulation_message') %}
                     {% for label, messages in app.flashes %}
                         {% for message in messages %}
                             <div id="msgFlash" class="alert alert-{{ label }} msgFlash mb-2 mt-4 mb-4">
@@ -130,7 +134,20 @@
             <script src="{{ asset('assets/vuexy/vendors/js/forms/select/select2.full.min.js') }}" defer></script>
             <script src="{{ asset('assets/vuexy/vendors/js/forms/validation/jquery.validate.min.js') }}" defer></script>
             <script src="{{ asset('assets/vuexy/vendors/js/pickers/flatpickr/flatpickr.min.js') }}" defer></script>
-        
+            <script  src="{{asset('assets/js/sweetalert2/sweetalert2.all.min.js')}}"></script>
+            <script  src="{{asset('assets/js/sweetalert2/sweetalerts.js')}}"></script>
+            
+            {% for message in congratulation_message %}
+                <script>
+                    Swal.fire({ 
+                        title: "Félicitation!",
+                        text: "{{ message  | raw }}",
+                        type: "success", 
+                        confirmButtonClass: "btn btn-success", 
+                        buttonsStyling: !1 
+                    });
+                </script>
+            {% endfor %}
         
         {% endblock %}
     </body>

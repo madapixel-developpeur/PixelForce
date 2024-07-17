@@ -6,6 +6,7 @@ namespace App\Controller;
 use App\Entity\CategorieFormationAgent;
 use App\Entity\Formation;
 use App\Entity\FormationAgent;
+use App\Entity\User;
 use App\Manager\EntityManager;
 use App\Repository\AgentSecteurRepository;
 use App\Repository\CategorieFormationAgentRepository;
@@ -369,5 +370,24 @@ class AgentFormationController extends AbstractController
        return $this->render('formation/quiz/agent_quiz_result.html.twig', [
            'result' => $result,
        ]);
+    }
+
+       /**
+     * @Route("/agent/video-secteur/terminer", name="agent_video_secteur_terminer", options={"expose"=true})
+     * @IsGranted("ROLE_AGENT")
+     */
+    public function video_secteur_terminer(Request $request)
+    {
+        try{
+           $agent  = $this->getUser();
+           $agent->setHaveSeenSectorVideo(User::HAVE_SEEN_SECTOR_VIDEO);
+           $this->entityManager->persist($agent);
+           $this->entityManager->flush();
+            $this->addFlash('congratulation_message', 'Vous venez de terminer la video sur le choix de secteur');
+        } catch(Exception $ex){
+            $this->addFlash('danger', $ex->getMessage());
+        }
+        return $this->redirectToRoute('agent_home');
+        
     }
 }

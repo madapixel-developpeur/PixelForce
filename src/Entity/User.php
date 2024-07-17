@@ -45,7 +45,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
     ];
 
     const INACTIVE_STATE = -1 ;
-
+    const HAVENT_SEEN_SECTOR_VIDEO = 0;
+    const HAVE_SEEN_SECTOR_VIDEO = 1;
 
     /**
      *  Clés disponibles :
@@ -358,6 +359,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
      * @ORM\Column(type="integer", nullable=true)
      */
     private $position;
+
+     /**
+     * @ORM\Column(type="integer", nullable=true ,options={"default"=0})
+     */
+    private $haveSeenSectorVideo = self::HAVENT_SEEN_SECTOR_VIDEO;
 
     public function __construct()
     {
@@ -1721,6 +1727,26 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
     public function setPays(?string $pays): self
     {
         $this->pays = $pays;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of haveSeenSectorVideo
+     */ 
+    public function getHaveSeenSectorVideo()
+    {
+        return $this->haveSeenSectorVideo;
+    }
+
+    /**
+     * Set the value of haveSeenSectorVideo
+     *
+     * @return  self
+     */ 
+    public function setHaveSeenSectorVideo($haveSeenSectorVideo)
+    {
+        $this->haveSeenSectorVideo = $haveSeenSectorVideo;
 
         return $this;
     }
