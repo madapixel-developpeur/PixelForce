@@ -246,7 +246,7 @@ class AgentFormationController extends AbstractController
         try{
             $this->terminer_formation($formation);
             // $this->mailerService->sendMailAfterDoneFormation($agent, $coach, $formation);
-            $this->addFlash('success', '<h2 class="text-secondary text-center"> 🎉 Félicitations! Vous venez de terminer la formation : '.$formation->getTitre().' 🎉</h2>');
+            $this->addFlash('congratulation_message', 'Vous venez de terminer la formation : '.$formation->getTitre());
         } catch(Exception $ex){
             $this->addFlash('danger', $ex->getMessage());
         }
