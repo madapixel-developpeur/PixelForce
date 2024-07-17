@@ -6,26 +6,8 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <style>
-    .carousel-control-prev,
-.carousel-control-next {
-    width: 5%; /* Adjust width as needed */
-}
+    <link rel="stylesheet" type="text/css" href="{{asset('app-assets/css/pages/app-home-agent.css')}}">
 
-.carousel-control-prev span,
-.carousel-control-next span {
-    font-size: 2rem; /* Adjust icon size as needed */
-}
-
-.carousel-control-prev {
-    left: -4%; /* Adjust position as needed */
-}
-
-.carousel-control-next {
-    right: -4%; /* Adjust position as needed */
-}
-
-</style>
 {% endblock %}
 
 {% block body %}
@@ -58,8 +40,16 @@
                 </div>
                 <div class="col-0 col-md-7"></div>
             </div>
-            {% if app.user.haveSeenSectorVideo != constant('App\\Entity\\User::HAVENT_SEEN_SECTOR_VIDEO') %}
                 <div id="secteurCarousel" class="carousel carousel-dark slide slide mt-5" data-ride="carousel">
+                    {% if app.user.haveSeenSectorVideo == constant('App\\Entity\\User::HAVENT_SEEN_SECTOR_VIDEO') %}
+                    <div class="dark-overlay"></div> <!-- Dark overlay to cover the carousel content -->
+                    <div class="locked-icon">
+                        <img src=" {{ asset('assets/img/utilitaire/locker.png') }}" alt="Lock Icon"> <!-- Lock icon image -->
+                    </div>
+                    <form method="get" action="{{ path('agent_video_secteur_terminer') }}" id="finishVideoSecteur">
+                        <input type="hidden" name="path" value="fromDashboard">
+                    </form>
+                    {% endif %}
                     <div class="carousel-inner">
                         {% for secteur in allSecteurs|batch(3) %}
                             <div class="carousel-item {% if loop.first %}active{% endif %}">
@@ -104,13 +94,8 @@
                         <span class="sr-only">Next</span>
                     </a>
                 </div>
-            {% else %}
-               <br>
-               <br>
-                <form method="get" action="{{ path('agent_video_secteur_terminer') }}" id="finishVideoSecteur">
-                    <input type="hidden" name="path" value="fromDashboard">
-                </form>
-            {% endif %}
+           
+                
             
         {% else %}
             <div class="row mt-3">
