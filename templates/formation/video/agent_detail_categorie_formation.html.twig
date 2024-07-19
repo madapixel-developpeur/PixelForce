@@ -91,7 +91,7 @@
 																{% if isQuiz %}
 																		<img src="{{ asset('assets/vuexy/images/pages/login-images.png' )}}" alt="Image" width="100" height="100">
 																{% else %}
-																	<iframe class="rounded-custom formationVideo" data-status="{{ statut }}" data-formation-id="{{ formation.id }}" src="https://player.vimeo.com/video/{{ formation.videoId }}?loop=0&byline=0&portrait=0&title=0&muted=1" allow="autoplay; fullscreen; picture-in-picture; clipboard-write"  data-path="{{ path('agent_formation_terminer', {id: formation.id}) }}" allowfullscreen></iframe>
+																	<iframe class="rounded-custom formationVideo" data-status="{{ statut }}" data-formation-id="{{ formation.id }}" src="https://player.vimeo.com/video/{{ formation.videoId }}?loop=0&byline=0&portrait=0&title=0&muted=1" allow="autoplay; fullscreen; picture-in-picture; clipboard-write"  data-path="{{ path('agent_formation_terminer', {id: formation.id}) }}" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe>
 																{% endif %}
 																
 																</div>
