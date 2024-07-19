@@ -1,0 +1,65 @@
+{% extends 'base.html.twig' %}
+{% block title %}Coach - Configuration page formation{% endblock %}
+{% block body %}
+
+    <div class="p-5 pb-5 mb-5 bg-white border position-relative" id="form-formation">
+        <h3 class="mb-3"><i class="fa fa-gear"></i> Paramètres</h3>
+        <input type="hidden" id="inputVideo" class="hiddenVideoData">
+            {{ form_start(form) }}
+                {{ form_row(form.introductionVideo) }}
+                {{ form_row(form.heureFormation) }}
+                {{ form_row(form.introductionPhoto) }}
+                {{ form_row(form.description) }}
+                {% if configuration is defined and configuration.introductionVideo is not empty %}
+                    <div class="row">
+                        <div class="col-12 col-md-6">
+                            <div>
+                                <div class="fw-bold text-decoration-underline mb-3">
+                                Video
+                                </div>
+                                <div class="border p-0 d-flex bg-black">
+                                    <iframe src="{{ configuration.introductionVideo ~"?autoplay=1" }}" style="width:100%; height:400px" class="m-auto" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+                                </div>
+                            </div>
+                        </div>
+                         <div class="col-12 col-md-6">
+                            <div>
+                                <div class="fw-bold text-decoration-underline mb-3">
+                                    Photo
+                                </div>
+                                <div class="ratio ratio-16x9 mt-3 ">
+                                    <img class="img-fluid w-100" style="border-radius:20px" src="{{ asset( filesDirectory ~ configuration.introductionPhoto) }}" alt=""/>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                {% endif %}
+          
+            
+                <div class="mt-4 d-flex align-items-center justify-content-start">
+                    <button type="submit"  class="btn bg-princ text-white">Enregistrer</button>
+                </div>
+            {{ form_end(form) }}
+    </div>
+
+
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    
+    {{ encore_entry_script_tags('formationForm')}}
+    {# {{ encore_entry_script_tags('ckeditorForm')}} #}
+    <script>
+        function toggleInputUrl(e)
+        {
+            if(e.target.checked) {
+                $('#input-url-video').removeAttr('disabled');
+                $('#btn-add-video').attr('disabled','disabled');
+            } else {
+                $('#input-url-video').attr('disabled','disabled');
+                $('#btn-add-video').removeAttr('disabled');
+            }
+        }
+    </script>
+{% endblock %}

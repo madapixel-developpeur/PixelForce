@@ -8,17 +8,19 @@ use Exception;
 use App\Entity\Media;
 use App\Entity\Formation;
 use App\Form\FormationType;
+use App\Services\FileHandler;
 use App\Entity\VideoFormation;
 use App\Manager\EntityManager;
 use App\Services\FileUploader;
 use App\Repository\UserRepository;
 use App\Services\FormationService;
 use App\Entity\RFormationCategorie;
-use App\Entity\SecteurVideoFormation;
 use App\Repository\MediaRepository;
+use App\Entity\SecteurVideoFormation;
 use App\Repository\SecteurRepository;
 use App\Services\DirectoryManagement;
 use App\Repository\FormationRepository;
+use App\Entity\FormationPageConfiguration;
 use Knp\Component\Pager\PaginatorInterface;
 use App\Repository\FormationAgentRepository;
 use App\Repository\VideoFormationRepository;
@@ -26,8 +28,10 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use App\Form\SecteurVideoFinFormationFormType;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Form\FormationPageConfigurationFormType;
 use App\Repository\CategorieFormationRepository;
 use App\Repository\SecteurVideoFormationRepository;
+use App\Repository\FormationPageConfigurationRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -90,7 +94,10 @@ class CoachFormationController extends AbstractController
                                 SecteurRepository $secteurRepository,
                                 PaginatorInterface $paginator,
                                 CategorieFormationRepository $repoCatFormation,
-                                private SecteurVideoFormationRepository $secteurVideoFormationRepository
+                                private SecteurVideoFormationRepository $secteurVideoFormationRepository,
+                                private FormationPageConfigurationRepository $formationPageConfigurationRepository,
+                                private FileHandler $fileHandler,
+
     )
    {
        $this->fileUploader = $fileUploader;
@@ -421,4 +428,47 @@ class CoachFormationController extends AbstractController
             'video' => $video
         ]);
    }
+
+      /**
+     * @Route("/coach/formation/configure-page", name="coach_configure_formation_page", options={"expose"=true})
+     */
+    public function coach_formation_page_configuration(Request $request)
+    {
+        $secteur = $this->getUser()->getSecteurByCoach();
+        $configuration = $this->formationPageConfigurationRepository->findOneBy(['secteur'=> $secteur ]);
+        if(is_null($configuration)){
+            $configuration = new FormationPageConfiguration();
+            $configuration->setSecteur($secteur);
+        }
+        $isCreation = true;
+        $form = $this->createForm(FormationPageConfigurationFormType::class, $configuration,[ 'isCreation' => $isCreation]);
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid()) {
+            try {
+                preg_match('/<iframe[^>]+src="([^"]+)"/', $configuration->getIntroductionVideo(), $matches);
+
+                if (!empty($matches[1])) {
+                    $src = $matches[1];
+                    $configuration->setIntroductionVideo($src);
+                }
+                $introductionPhoto = $form->get('introductionPhoto')->getData();
+                if ($introductionPhoto) {
+                    $photo = $this->fileHandler->upload($introductionPhoto, "/images/formation/".$secteur->getId());
+                    $configuration->setIntroductionPhoto($photo);
+                }
+                $this->entityManager->persist($configuration);
+                $this->entityManager->flush();
+                $textSuccess = $isCreation ? 'Configuration ajoutée avec succès':'Configuration modifiée avec succès' ;
+                $this->addFlash('success', 'Configuration ajoutée avec succès');
+            } catch (\Throwable $th) {
+                // throw $th;
+                $this->addFlash('danger', $_ENV['CUSTOM_ERROR_MESSAGE']);
+            }
+        }
+        return $this->render('formation/configuration/set_configuration.html.twig', [
+           'form' => $form->createView(),
+           'configuration' => $configuration,
+           'filesDirectory' => $this->getParameter('files_directory_relative'),
+        ]);
+    }
 }

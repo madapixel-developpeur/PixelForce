@@ -1,0 +1,112 @@
+		.course-meta i {
+			margin-right: 5px;
+		}
+		.course-meta span {
+			margin-right: 15px;
+		}
+
+		.pricing-section {
+			text-align: center;
+			margin-top: 20px;
+		}
+		.pricing-section h1 {
+			font-size: 4rem;
+			color: #007bff;
+		}
+		.btn-join-course {
+			background-color: #007bff;
+			color: #fff;
+			border-radius: 25px;
+		}
+		.week-section {
+			border: 1px solid #007bff;
+			border-radius: 10px;
+			padding: 20px;
+			margin-top: 20px;
+		}
+		.week-section h4 {
+			color: #007bff;
+			padding: 10px;
+			border-radius: 5px;
+			display: inline-block;
+		}
+		.week-item {
+			border-radius: 25px;
+			padding: 5px;
+			margin: 10px;
+			display: flex;
+			align-items: center;
+			background-color: #f8f9fa;
+			position: relative;
+		}
+		.week-item img {
+			border-radius: 10px;
+			margin-right: 20px;
+		}
+		.course-overview {
+			margin-top: 20px;
+		}
+		.btn-link {
+			text-align: left;
+			width: 100%;
+			padding-left: 0;
+		}
+		.btn-link:hover {
+			text-decoration: none;
+		}
+		.collapse-content {
+			border-top: 1px solid #ddd;
+			padding-top: 10px;
+			margin-top: 10px;
+		}
+		.week-item button.btn-link {
+			position: absolute;
+			right: 10px;
+			top: 10px;
+			text-decoration: none;
+		}
+		.week-item button.btn-link:hover {
+			text-decoration: none;
+		}
+		.card {
+			border: 1px solid #7367f0 !important;
+			border-radius: 10px;
+			margin-bottom: 10px;
+		}
+		.card-body-custom{
+			border: none !important;
+			border-radius: 10px;
+			margin-bottom: 10px;
+		}
+		.card-header {
+			color: #007bff;
+		}
+		.card-header h4,
+		.card-header h5 {
+			margin-bottom: 0;
+		}
+		.outline-none {
+			outline: none !important;
+		}
+
+		.btn:focus {
+			outline: none !important;
+			box-shadow: none !important;
+		}
+		.value-text {
+			font-size: 1.2rem; /* Increase the font size */
+		}
+		{
+			.ratio {
+				border: 1px solid #ddd; /* Add border to the frame */
+				padding: 10px; /* Add space between the text and frame */
+				border-radius: 10px; /* Add rounded corners to the frame */
+				box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add subtle shadow */
+			}
+			.week-item h5 {
+				margin-top: 15px; /* Add space between the video and the heading */
+			}
+			.week-item p {
+				margin-top: 10px; /* Add space between the heading and the paragraph */
+			}
+		}

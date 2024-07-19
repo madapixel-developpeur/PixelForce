@@ -3,29 +3,30 @@
 
 namespace App\Controller;
 
-use App\Entity\CategorieFormationAgent;
+use Exception;
+use App\Entity\User;
 use App\Entity\Formation;
 use App\Entity\FormationAgent;
-use App\Entity\User;
 use App\Manager\EntityManager;
-use App\Repository\AgentSecteurRepository;
-use App\Repository\CategorieFormationAgentRepository;
-use App\Repository\CategorieFormationRepository;
-use App\Repository\ContactRepository;
-use App\Repository\FormationAgentRepository;
-use App\Repository\FormationRepository;
-use App\Repository\RFormationCategorieRepository;
-use App\Repository\SecteurRepository;
-use App\Services\CategorieFormationAgentService;
 use App\Services\MailerService;
+use App\Repository\ContactRepository;
+use App\Repository\SecteurRepository;
+use App\Entity\CategorieFormationAgent;
+use App\Repository\FormationRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
+use App\Repository\AgentSecteurRepository;
 use Knp\Component\Pager\PaginatorInterface;
+use App\Repository\FormationAgentRepository;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
+use App\Repository\CategorieFormationRepository;
+use App\Services\CategorieFormationAgentService;
+use App\Repository\RFormationCategorieRepository;
+use App\Repository\CategorieFormationAgentRepository;
+use App\Repository\FormationPageConfigurationRepository;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\Routing\Annotation\Route;
 
 class AgentFormationController extends AbstractController
 {
@@ -71,7 +72,9 @@ class AgentFormationController extends AbstractController
     /** @var CategorieFormationAgentRepository $repoCategorieAgent */
     protected $repoCategorieAgent;
 
-    public function __construct(EntityManager $entityManager, SecteurRepository $secteurRepository, PaginatorInterface $paginator, FormationRepository $formationRepository, FormationAgentRepository $formationAgentRepository, MailerService $mailerService, RFormationCategorieRepository $repoRelationFormationCategorie, CategorieFormationAgentService $categorieFormationAgentService, SessionInterface $sessionInterface, CategorieFormationRepository $repoCatFormation, ContactRepository $repoContact, CategorieFormationAgentRepository $repoCategorieAgent, private AgentSecteurRepository $agentSecteurRepository)
+    public function __construct(EntityManager $entityManager, SecteurRepository $secteurRepository, PaginatorInterface $paginator, FormationRepository $formationRepository, FormationAgentRepository $formationAgentRepository, MailerService $mailerService, RFormationCategorieRepository $repoRelationFormationCategorie, CategorieFormationAgentService $categorieFormationAgentService, SessionInterface $sessionInterface, CategorieFormationRepository $repoCatFormation, ContactRepository $repoContact, CategorieFormationAgentRepository $repoCategorieAgent, private AgentSecteurRepository $agentSecteurRepository,
+        private FormationPageConfigurationRepository $formationPageConfigurationRepository,
+    )
     {
         $this->paginator = $paginator;
         $this->formationRepository = $formationRepository;
@@ -110,15 +113,24 @@ class AgentFormationController extends AbstractController
                 $request->query->getInt('page', 1),
                 20
             );
-
-            // dd($formationsInCategory);
-            return $this->render('formation/video/agent_formation_list.html.twig', [
+            // return $this->render('formation/video/agent_formation_list.html.twig', [
+            //     'formations' => $formations,
+            //     'criteres' => $criteres,
+            //     'formationAgentRepository' => $this->formationAgentRepository,
+            //     'categories' => $this->repoCatFormation->findBy(['statut' => 1]),
+            //     'nbrAllMyContacts' => count($this->repoContact->findAll()),
+            //     'agentSecteur' => $agentSecteur
+            // ]);
+            $configuration = $this->formationPageConfigurationRepository->findOneBy(['secteur'=> $secteur ]);
+            return $this->render('formation/video/agent_detail_categorie_formation.html.twig', [
                 'formations' => $formations,
                 'criteres' => $criteres,
                 'formationAgentRepository' => $this->formationAgentRepository,
                 'categories' => $this->repoCatFormation->findBy(['statut' => 1]),
                 'nbrAllMyContacts' => count($this->repoContact->findAll()),
-                'agentSecteur' => $agentSecteur
+                'agentSecteur' => $agentSecteur,
+                'filesDirectory' => $this->getParameter('files_directory_relative'),
+                'configuration' => $configuration,
             ]);
         }
 
@@ -389,5 +401,16 @@ class AgentFormationController extends AbstractController
         }
         return $this->redirectToRoute('agent_home');
         
+    }
+
+     /**
+     * @Route("/agent/formation/detail/categorie-formation", name="agent_formation_categorie_detail", options={"expose"=true})
+     * @IsGranted("ROLE_AGENT")
+     */
+    public function categorie_formation_fiche(Request $request)
+    {
+       return $this->render('formation/video/agent_detail_categorie_formation.html.twig', [
+          
+       ]);
     }
 }

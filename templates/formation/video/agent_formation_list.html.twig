@@ -1,128 +1,76 @@
 {% extends 'base.html.twig' %}
-{% block title %}Agent - Liste Formations Video {% endblock %}
+{% block title %}Agent - Liste Formations Video
+{% endblock %}
 {% block body %}
-    <div>
-        <div class="row mt-4">
-            <div class="col-12 col-md-6">
-                <h3>Liste des formations</h3>
-            </div>
-        </div>
+	<div>
+		<div class="row mt-4">
+			<div class="col-12 col-md-6"></div>
+		</div>
 
-        <form action="" method="get">
-            <div class="row">
-                <div class="col-12 col-md-4 mt-4">
-                    <input type="text" name="q[titre]" value="{{ criteres ? criteres.titre }}" class="form-control" placeholder="Titre"/>
-                </div>
-                <div class="col-12 col-md-4 mt-4">
-                    <input type="text" name="q[description]"  value="{{ criteres ? criteres.description }}" class="form-control" placeholder="Déscription"/>
-                </div>
-                <div class="col-12 col-md-4 mt-4">
-                    <input type="text" name="q[auteur]" value="{{ criteres ? criteres.auteur }}" class="form-control" placeholder="Nom de l'auteur"/>
-                </div>
-                <div class="col-12 col-md-4 mt-4">
-                    <select class="form-select" name="q[trie]">
-                        <option value="titre" selected>Trier par</option>
-                        <option value="titre" {{ criteres and criteres.trie == 'titre' ? 'selected' : '' }}>Titre</option>
-                        <option value="description" {{ criteres and criteres.trie == 'description' ? 'selected' : '' }}>Description</option>
-                        <option value="auteur" {{ criteres and criteres.trie == 'auteur' ? 'selected' : '' }}>Auteur</option>
-                    </select>
-                </div>
-                <div class="col-12 col-md-3 mt-4">
-                    <select class="form-select" name="q[ordre]">
-                        <option value="ASC"selected>Ordre</option>
-                        <option value="ASC" {{ criteres and criteres.ordre == 'ASC' ? 'selected' : '' }}>ASC</option>
-                        <option value="DESC" {{ criteres and criteres.ordre == 'DESC' ? 'selected' : '' }}>DESC</option>
-                    </select>
-                </div>
-                <div class="col-12 col-md-4 mt-4">
-                    <select class="form-select" name="q[categorie]">
-                        <option value="" selected>Catégorie</option>
-                        {% for categorie in categories %}
-                            <option value="{{ categorie.nom}}">{{ categorie.nom}}</option>
-                        {% endfor %}
-                    </select>
-                </div>
+      
+		<div>
+			{% for categorie in categories  %}
+				<div class="row px-3">
+					<div class="card">
+						<div class="row" style="min-height:300px">
+							<div class="col-md-6 p-3">
+								<div class="position-relative mb-5 mb-lg-0">
 
-                <div class="col-12 col-md-1  mt-4">
-                    <button class="btn bg-princ text-white"><i class="fa fa-search"></i></button>
-                </div>
-            </div>
-        </form>
+									<img class="img-fluid w-100 rounded" src="{{ asset('assets/vuexy/images/pages/login-images.png' )}}" alt="{{ categorie.nom }}"/>
+								</div>
+							</div>
 
-        <div>
+							<div
+								class="col-md-6 d-flex align-items-center p-5">
+								<!-- Product Details Content -->
+								<div
+									class="py-3 w-100">
+									<!-- Product Title -->
+									<h3>{{ categorie.nom }}</h3>
+									<!-- End Product Title -->
 
-                {% for categorie in categories  %}
-                    <div class="bg-white border p-4 my-5">
-                        <h1>{{ categorie.nom }}</h1>
-                        {% for formation in formations %}
-                            {% if formation.categorieFormation ==  categorie %}
-                                {% set isQuiz = formation.type == constant('App\\Entity\\Formation::TYPE_QUIZ') %}
-                                {% set formationAgentRelation = formationAgentRepository.findOneBy({agent:app.user.id, formation:formation}) %}
-                                {# {% set statut = formationAgentRelation ? formationAgentRelation.statut : constant('App\\Entity\\Formation::STATUT_BLOQUEE') %} #}
-                                {% set statut = formationAgentRelation ? formationAgentRelation.statut : constant('App\\Entity\\Formation::STATUT_DISPONIBLE') %}
-                                {% if formation.categorieFormation.ordreCatFormation > (agentSecteur.currentFormationRank ?? 1)  %}
-                                {% set statut = constant('App\\Entity\\Formation::STATUT_BLOQUEE') %}
-                                {% endif %}
-                                <hr class="my-5" style="height: 2px;">
-                                <h5 class="{{isQuiz ? 'text-warning': 'text-primary'}}">{{isQuiz ? 'QUIZ: ': ''}}{{ formation.titre }} {% if formation.brouillon %}<small class="text-danger">[ brouillon ]</small>{% endif %}</h5>
-                                <div class="row mt-3">
-                                    <div class="col-12  col-md-8">
-                                        <p>{{ (formation.description??'')|slice(0, 300) }}</p>
-                                        {% if formationAgentRelation and isQuiz and statut != constant('App\\Entity\\Formation::STATUT_BLOQUEE') %}
-                                        <p><b>Dernièr résultat:</b> {{formationAgentRelation.lastResultScore | number_format(2, ',', ' ')}} %</p>
-                                        <p><b>Résultat maximum:</b> {{formationAgentRelation.maxResultScore | number_format(2, ',', ' ')}} %</p>
-                                            
-                                            <p><b>Statut:</b>&nbsp;
-                                            {% if formationAgentRelation.statut == constant('App\\Entity\\Formation::STATUT_TERMINER') %}
-                                            <b class="text-success">RÉUSSI</b>
-                                            {% else %}
-                                            <b class="text-danger">ÉCHOUÉ</b>
-                                            {% endif %}
-                                            </p>
-                                                                                    
-                                        {% endif %}
-                                        {# {% if formation.categorieFormation.ordreCatFormation == constant('App\\Entity\\CategorieFormation::ORDRE_LISTE_DE_CONTACT') and nbrAllMyContacts < constant('App\\Entity\\CategorieFormation::CONDITION_LISTE_DE_CONTACT') %}
-                                            <div class="alert alert-warning">
-                                                Pour débloquer cette formation, assurez-vous d’avoir enregistré plus de 100 contacts dans votre liste de prospection.
-                                            </div>
-                                        {% endif %} #}
+									<div class="d-flex align-items-center my-3">
+										<i class="fas fa-tv me-2"></i>
+										<span class="total-student me-4">7 formations</span>
+										<i class="fas fa-clock me-2"></i>
+										<span class="total-student">~ 99h</span>
+									</div>
+
+									<!-- Product Description -->
+									<div class="mt-3">
+										<h5>Description</h5>
+										<p>
+											Mauris imperdiet orci dapibus, commodo libero nec, interdum tortor. Morbi in nibh faucibus, 
+											        iaculis lorem vitae, cursus velit. Etiam non blandit ex. Mauris in fringilla velit. Fusce eu 
+											        dictum neque. Maecenas tristique sem neque, vel congue libero efficitur at. Cras molestie 
+											        ipsum at sem sollicitudin consectetur. type and scrambled it to make a type specimen book. 
+											        It has survived not only five centuries, but also the leap into electronic typesetting, 
+											        remaining essentially unchanged.
+										</p>
+									</div>
+
+                                    <div class="ratio ratio-16x9 mt-3" >
+                                        <iframe id="secteurVideo" class="rounded-custom" src="{{video_information_vimeo_src}}"  allow="autoplay; fullscreen; picture-in-picture; clipboard-write"  ></iframe>
                                     </div>
-                                    <div class="col-12 col-md-4 align-items-center justify-content-end d-flex">
-                                        {# {% if formation.categorieFormation.ordreCatFormation == constant('App\\Entity\\CategorieFormation::ORDRE_LISTE_DE_CONTACT') and nbrAllMyContacts < constant('App\\Entity\\CategorieFormation::CONDITION_LISTE_DE_CONTACT') %} #}
-                                            
-                                        {# {% else %} #}
-                                            
-                                            {% if isQuiz %}
-                                                {% if statut == constant('App\\Entity\\Formation::STATUT_BLOQUEE') %}
-                                                    {# title="Information de déblocage" data-bs-content="{{formation.DescriptionDeblocage}}" data-trigger="hover" data-bs-toggle="popover" data-bs-placement="left" #}
-                                                    <button type="button" class="btn btn-sm btn-danger" ><i class="fa fa-lock"></i> Quiz bloqué</button>
-                                                {% elseif statut == constant('App\\Entity\\Formation::STATUT_DISPONIBLE')%}
-                                                    <a href="{{ path('agent_quiz_begin', {id:formation.id}) }}" class="btn btn-primary btn-sm"><i class="fa fa-chevron-right"></i> Commencer</a>
-                                                {% elseif statut == constant('App\\Entity\\Formation::STATUT_IN_PROGRESS') or statut == constant('App\\Entity\\Formation::STATUT_TERMINER') %}
-                                                    <a href="{{ path('agent_quiz_begin', {id:formation.id}) }}" class="btn btn-primary btn-sm"><i class="fa fa-repeat"></i> Réessayer</a>
-                                                    <a href="{{ path('agent_quiz_result', {id:formationAgentRelation.id}) }}" class="btn btn-success btn-sm ms-2"><i class="fa fa-chevron-right"></i> Voir le dérnier résultat</a>
-                                                {% endif %}
-                                            {% else %}
-                                                {% if statut == constant('App\\Entity\\Formation::STATUT_BLOQUEE') %}
-                                                    <button type="button" class="btn btn-sm btn-danger"><i class="fa fa-lock"></i> Formation bloquée</button>
-                                                {% elseif statut == constant('App\\Entity\\Formation::STATUT_DISPONIBLE')%}
-                                                    <a href="{{ path('agent_formation_fiche', {id:formation.id}) }}" class="btn btn-primary btn-sm"><i class="fa fa-chevron-right"></i> Fiche formation</a>
-                                                {% elseif statut == constant('App\\Entity\\Formation::STATUT_TERMINER')%}
-                                                    <a href="{{ path('agent_formation_fiche', {id:formation.id}) }}" class="btn btn-success btn-sm"><i class="fa fa-check"></i> Formation terminée</a>
-                                                {% endif %}
-                                            {% endif %}
-                                        {# {% endif %} #}
-                                    </div>
-                                </div>
-                            {% endif %}
-                        {% endfor %}
-                    </div>
-                {% endfor %}
-            
 
-        {# display navigation #}
-        <div class="navigation">
-            {{ knp_pagination_render(formations) }}
-        </div>
-    </div>
+                                 
+									<!-- End Product Description -->
+                                    <div class="mt-4 text-end">
+                                        <a href="{{ path('agent_formation_categorie_detail') }}" class="btn btn-primary">Check Course</a>
+                                    </div>
+								</div>
+								<!-- End Product Details Content -->
+							</div>
+
+						</div>
+					</div>
+				</div>
+
+			{% endfor %}
+		</div>
+		{# display navigation #}
+		<div class="navigation">
+			{{ knp_pagination_render(formations) }}
+		</div>
+	</div>
 {% endblock %}
