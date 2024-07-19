@@ -134,7 +134,7 @@ class AgentFormationController extends AbstractController
             ]);
         }
 
-        $this->addFlash('danger', 'Vous \'avez pas renseigné le secteur');
+        $this->addFlash('danger', 'Vous n\'avez pas renseigné le secteur');
         return $this->redirectToRoute('agent_accueil');
     }
     // public function agent_formation_list(Request $request, SessionInterface $session)
@@ -395,7 +395,7 @@ class AgentFormationController extends AbstractController
            $agent->setHaveSeenSectorVideo(User::HAVE_SEEN_SECTOR_VIDEO);
            $this->entityManager->persist($agent);
            $this->entityManager->flush();
-            $this->addFlash('congratulation_message', 'Vous venez de terminer la video sur le choix de secteur');
+            $this->addFlash('congratulation_message', "Félicitations ! Vous venez de terminer la première vidéo de présentation de Pixelforce. Vous pouvez maintenant choisir le secteur qui vous convient.");
         } catch(Exception $ex){
             $this->addFlash('danger', $ex->getMessage());
         }
