@@ -19,11 +19,11 @@
     color:black
 }
 .login-button{
-    background-color: #371fa6;
+    background-color: #c77b28;
     color: white;
     border-width: 1px; /* Width of the border */
     border-style: solid; /* Style of the border */
-    border-color: #371fa6; /* Color of the border */
+    border-color: #c77b28; /* Color of the border */
 }
 .login-other-button{
     color:black

@@ -392,22 +392,22 @@ a, a:hover{
 }
 /* css general */
 .regular-button{
-    background-color: #7d78e1;
+    background-color: #c77b28;
     color: white;
     border-width: 1px; /* Width of the border */
     border-style: solid; /* Style of the border */
-    border-color: #7d78e1; /* Color of the border */
+    border-color: #c77b28; /* Color of the border */
 	padding:8px 20px;
 	display:inline-block;
 	border-radius: 7px !important;
 }
 .regular-button:hover {
 	background-color:white ;
-    color:#7d78e1;
+    color:#c77b28;
 }
 .regular-white-button{
     background-color: white;
-    color: #7d78e1;
+    color: #c77b28;
     border-width: 1px; /* Width of the border */
     border-style: solid; /* Style of the border */
     border-color: white; /* Color of the border */
@@ -417,7 +417,7 @@ a, a:hover{
 }
 .regular-white-button:hover {
 	background-color:white ;
-    color:#7d78e1;
+    color:#c77b28;
 }
 .general-primary-text{
 	color:#192030;
@@ -427,7 +427,7 @@ a, a:hover{
 	color:#192030;
 }
 .text-tableau{
-	color:#7d78e1;
+	color:#c77b28;
 }
 .table-header-custom th{
 	color:#192030;
@@ -474,7 +474,7 @@ a, a:hover{
 	margin: 0px auto;
 }
 .choix-secteur-card-body {
-	background-color: #7d78e1;
+	background-color: #c77b28;
 	color:white;
 	min-height: 70px;
 }
@@ -526,7 +526,7 @@ a, a:hover{
 }
 /* Partie vision */
 .vision-section{
-	background-color: #7d78e1;
+	background-color: #c77b28;
 }
 .vision-section-1 p{
 	color: white;
@@ -550,7 +550,7 @@ a, a:hover{
 }
 /* Progression */
 .progression-positon-chiffre{	
-	background-color: #7d78e1;
+	background-color: #c77b28;
 	width: 75px;
 	height: 75px;
 }
