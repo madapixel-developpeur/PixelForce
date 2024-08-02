@@ -392,22 +392,22 @@ a, a:hover{
 }
 /* css general */
 .regular-button{
-    background-color: #c77b28;
+    background-color: #7d78e1;
     color: white;
     border-width: 1px; /* Width of the border */
     border-style: solid; /* Style of the border */
-    border-color: #c77b28; /* Color of the border */
+    border-color: #7d78e1; /* Color of the border */
 	padding:8px 20px;
 	display:inline-block;
 	border-radius: 7px !important;
 }
 .regular-button:hover {
 	background-color:white ;
-    color:#c77b28;
+    color:#7d78e1;
 }
 .regular-white-button{
     background-color: white;
-    color: #c77b28;
+    color: #7d78e1;
     border-width: 1px; /* Width of the border */
     border-style: solid; /* Style of the border */
     border-color: white; /* Color of the border */
@@ -417,7 +417,7 @@ a, a:hover{
 }
 .regular-white-button:hover {
 	background-color:white ;
-    color:#c77b28;
+    color:#7d78e1;
 }
 .general-primary-text{
 	color:#192030;
@@ -427,7 +427,7 @@ a, a:hover{
 	color:#192030;
 }
 .text-tableau{
-	color:#c77b28;
+	color:#7d78e1;
 }
 .table-header-custom th{
 	color:#192030;
@@ -473,8 +473,16 @@ a, a:hover{
 	font-size: 12px;
 	margin: 0px auto;
 }
+.choix-secteur-card-img{
+	width: 100%;
+    height: 398px; /* Hauteur fixée pour toutes les images */
+    overflow: hidden; /* Cache les débordements d'image */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 .choix-secteur-card-body {
-	background-color: #c77b28;
+	background-color: #7d78e1;
 	color:white;
 	min-height: 70px;
 }
@@ -526,7 +534,7 @@ a, a:hover{
 }
 /* Partie vision */
 .vision-section{
-	background-color: #c77b28;
+	background-color: #7d78e1;
 }
 .vision-section-1 p{
 	color: white;
@@ -550,7 +558,7 @@ a, a:hover{
 }
 /* Progression */
 .progression-positon-chiffre{	
-	background-color: #c77b28;
+	background-color: #7d78e1;
 	width: 75px;
 	height: 75px;
 }

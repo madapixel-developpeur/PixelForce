@@ -38,7 +38,8 @@
 		<link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
 		<script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript" async></script>
 		<!-- Calendly link widget end -->
-
+        {# Bootstrap link #}
+         <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 
         {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
         {% block stylesheets %}
@@ -72,7 +73,7 @@
             <div class="content-wrapper  p-0">
                 <div class="content-header row">
                 </div>
-                <div class="content-body">
+                <div class="content-body mt-5 mt-md-1">
                     {# Affichage des messages flash #}
                     {% set excluded_flash_types = ['congratulation_message'] %}
                     {% set congratulation_message = app.flashes('congratulation_message') %}
@@ -136,12 +137,10 @@
             <script src="{{ asset('assets/vuexy/vendors/js/forms/select/select2.full.min.js') }}" defer></script>
             <script src="{{ asset('assets/vuexy/vendors/js/forms/validation/jquery.validate.min.js') }}" defer></script>
             <script src="{{ asset('assets/vuexy/vendors/js/pickers/flatpickr/flatpickr.min.js') }}" defer></script>
-            <!-- Inclusion de jQuery -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <!-- Inclusion de Popper.js -->
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
-    <!-- Inclusion du fichier JavaScript de Bootstrap -->
-    {# <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> #}
+            <!-- Inclusion du fichier JavaScript de Bootstrap -->
+            <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+            <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script  src="{{asset('assets/js/sweetalert2/sweetalert2.all.min.js')}}"></script>
     <script  src="{{asset('assets/js/sweetalert2/sweetalerts.js')}}"></script>
         {% for message in congratulation_message %}

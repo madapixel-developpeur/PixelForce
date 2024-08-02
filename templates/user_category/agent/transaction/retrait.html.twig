@@ -10,10 +10,10 @@
 {% endblock %}
 
 {% block body %}
-	<div class="container my-5">
+	<div class="">
 		<div class="content-body-form">
 			<div class="row align-items-center justify-content-center">
-				<div class="col-sm-12 col-md-8">
+				<div class="col-12 col-md-8">
 						<h1 class="fw-bolder mb-2 general-primary-text">Demande de retrait </h1>
 						{{ form_start(form) }}
 						<div class="row">
@@ -37,12 +37,12 @@
 						</div>					
 						{{ form_end(form) }}
 					</div>
-				<div class="col-sm-12 col-md-4">
+				<div class="col-12 col-md-4">
 					<div class="card w-75 m-5 rounded-4" >
 						<div class="card-body d-flex align-items-center justify-content-center">
 							<div class=" text-center m-2">
-                                <a class="gestion-projet bg-light-primary rounded-circle" href="#" >
-                                    <i class="fa-solid fa-dollar-sign fs-1 mt-3" aria-hidden="true"></i>
+                                <a class="gestion-projet bg-light-primary rounded-circle d-flex justify-content-center align-items-center" href="#" >
+                                    <i class="fa-solid fa-dollar-sign fs-1" aria-hidden="true"></i>
                                 </a>
                             </div>
 							<div class="m-2">
@@ -65,9 +65,9 @@
 				<div class="card-body p-0">
 					<div class="card-head mb-3">
 						<div class="row">
-							<div class="col-7">
+							<div class="col-0 col-md-7">
 							</div>
-							<div class="col-5 d-flex justify-content-center">
+							<div class="col-12 col-md-5 d-flex justify-content-center">
 								<form action="{{path('agent_transaction_retrait')}}" class="input-group rounded-3 m-2 w-75">
                                         <button class="input-group-text border-0" id="search-addon" type="submit">
 											<i class="fas fa-search"></i>
