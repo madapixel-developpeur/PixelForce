@@ -18,10 +18,9 @@
 	<div class="card card-company-table p-5 rounded-3" style="">
 				<div class="card-body p-0">
 					<div class="card-head mb-3">
-						<div class="row">
-							<div class="col-0 col-md-6">
-							</div>
-							<div class="col-12 col-md-6 row">
+                        <div class="row">
+                            <div class="col-0 col-md-6"></div>
+                            <div class="col-12 col-md-6 row">
                                 <div class="col-6 col-md-8">
                                     <form action="{{ path('agent_coach_list') }}" class="input-group rounded-3 m-2 w-100 w-sm-75">
                                         <button class="input-group-text border-0" id="search-addon" type="submit">
@@ -31,43 +30,45 @@
                                     </form>
                                 </div>
                                 <div class="col-6 col-md-4">
-                                    <div class="input-group rounded-3 m-2 " data-bs-toggle="collapse" data-bs-target="#filters" aria-expanded="false" aria-controls="filters">
-                                        <span class="input-group-text border-0 w-25 rounded-4" id="search-addon">
-                                            <i class="fa-solid fa-bars-staggered"></i>
-                                        </span>
-                                        <a type="search" class="input-group-text border-0 w-75">Filtres</a>
+                                    <div class="input-group rounded-3 m-2">
+                                        <button class="input-group-text border-0 w-100" type="button" data-toggle="collapse" data-target="#filters" aria-expanded="false" aria-controls="filters">
+                                            <span class="input-group-text border-0 w-25 rounded-4 me-4" id="filter-toggle">
+                                                <i class="fa-solid fa-bars-staggered"></i>
+                                            </span>
+                                            Filtres
+                                        </button>
                                     </div>
                                 </div>
                             </div>
-
-						</div>
+                        </div>
                     </div>
                     <div class="collapse" id="filters">
                         <div class="block block--bordered block--rounded">
-                             <h1 class="block__text block__text--center mt-2" >Options de filtre :</h1>
-                             <div class="filter-wrap">
-                                    <!-- Formulaire de recherche -->
-                                    <div class="search-form">
-                                        {{form_start(searchForm)}}
-                                            <div class="row text-center">
-                                                <div class="col-12 col-sm-6 col-md-4">
-                                                    {{form_row(searchForm.prenom)}}
-                                                </div>
-                                                <div class="col-12 col-sm-6 col-md-4">
-                                                    {{form_row(searchForm.email)}}
-                                                </div>
-                                                <div class="col-12 col-sm-6 col-md-4">
-                                                    {{form_row(searchForm.telephone)}}
-                                                </div>
-                                                <div class="col-12 col-sm-12 col-md-12 mt-3">
-                                                    <button class="btn btn-primary "><i class="fa-solid fa-magnifying-glass"></i> Rechercher</button>
-                                                </div>
-                                            </div>
-                                        {{form_end(searchForm)}}
+                            <h1 class="block__text block__text--center mt-2">Options de filtre :</h1>
+                            <div class="filter-wrap">
+                                <!-- Formulaire de recherche -->
+                                <div class="search-form">
+                                    {{ form_start(searchForm) }}
+                                    <div class="row text-center">
+                                        <div class="col-12 col-sm-6 col-md-4">
+                                            {{ form_row(searchForm.prenom) }}
+                                        </div>
+                                        <div class="col-12 col-sm-6 col-md-4">
+                                            {{ form_row(searchForm.email) }}
+                                        </div>
+                                        <div class="col-12 col-sm-6 col-md-4">
+                                            {{ form_row(searchForm.telephone) }}
+                                        </div>
+                                        <div class="col-12 col-sm-12 col-md-12 mt-3">
+                                            <button class="btn btn-primary"><i class="fa-solid fa-magnifying-glass"></i> Rechercher</button>
+                                        </div>
                                     </div>
-                             </div>
+                                    {{ form_end(searchForm) }}
+                                </div>
+                            </div>
                         </div>
                     </div>
+
                     
                     {% if coachs|length ==0 %}
                         <div class="alert alert-primary p-3 text-center" role="alert">
