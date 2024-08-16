@@ -41,7 +41,7 @@
                 <div class="col-0 col-md-7"></div>
             </div>
                 <div id="secteurCarousel" class="carousel carousel-dark slide slide mt-5" data-ride="carousel">
-                    {% if app.user.haveSeenSectorVideo == constant('App\\Entity\\User::HAVENT_SEEN_SECTOR_VIDEO') %}
+                    {# {% if app.user.haveSeenSectorVideo == constant('App\\Entity\\User::HAVENT_SEEN_SECTOR_VIDEO') %}
                     <div class="dark-overlay"></div> <!-- Dark overlay to cover the carousel content -->
                     <div class="locked-icon">
                         <img src=" {{ asset('assets/img/utilitaire/locker.png') }}" alt="Lock Icon"> <!-- Lock icon image -->
@@ -49,7 +49,7 @@
                     <form method="get" action="{{ path('agent_video_secteur_terminer') }}" id="finishVideoSecteur">
                         <input type="hidden" name="path" value="fromDashboard">
                     </form>
-                    {% endif %}
+                    {% endif %} #}
                     <div class="carousel-inner">
                         {% for secteur in allSecteurs|batch(3) %}
                             <div class="carousel-item {% if loop.first %}active{% endif %}">
