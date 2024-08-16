@@ -627,3 +627,11 @@ body{
 		margin-top: 50px !important;
    }
 }
+
+
+
+@media screen and (max-width: 768px) {
+    h4.only-on-large-screens {
+		display: none;
+	}
+}

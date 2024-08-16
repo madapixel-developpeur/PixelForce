@@ -257,8 +257,14 @@ class AgentFormationController extends AbstractController
     public function coach_formation_terminer(Formation $formation, Request $request)
     {
         try{
+            $user = $this->getUser();
             $this->terminer_formation($formation);
             // $this->mailerService->sendMailAfterDoneFormation($agent, $coach, $formation);
+            if(!$user->getFinishedOneVideoFormation()){
+                $user->setFinishedOneVideoFormation(true);
+                $this->entityManager->persist($user);
+                $this->entityManager->flush();
+            }
             $this->addFlash('congratulation_message', 'Vous venez de terminer la formation : '.$formation->getTitre());
         } catch(Exception $ex){
             $this->addFlash('danger', $ex->getMessage());

@@ -365,6 +365,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
      */
     private $haveSeenSectorVideo = self::HAVENT_SEEN_SECTOR_VIDEO;
 
+
+    
+     /**
+     * @ORM\Column(type="integer", nullable=true ,options={"default"=0})
+     */
+    private $finishedOneVideoFormation = true;
+
     public function __construct()
     {
         $this->coachAgents = new ArrayCollection();
@@ -1747,6 +1754,26 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
     public function setHaveSeenSectorVideo($haveSeenSectorVideo)
     {
         $this->haveSeenSectorVideo = $haveSeenSectorVideo;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of finishedOneVideoFormation
+     */ 
+    public function getFinishedOneVideoFormation()
+    {
+        return $this->finishedOneVideoFormation;
+    }
+
+    /**
+     * Set the value of finishedOneVideoFormation
+     *
+     * @return  self
+     */ 
+    public function setFinishedOneVideoFormation($finishedOneVideoFormation)
+    {
+        $this->finishedOneVideoFormation = $finishedOneVideoFormation;
 
         return $this;
     }
