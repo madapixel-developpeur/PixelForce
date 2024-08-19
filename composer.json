@@ -22,6 +22,7 @@
         "gregwar/captcha-bundle": "^2.2",
         "knplabs/knp-paginator-bundle": "^5.8",
         "knplabs/knp-snappy-bundle": "^1.9",
+        "lexik/jwt-authentication-bundle": "2.21.0",
         "mikehaertl/php-pdftk": "^0.12.1",
         "monolog/monolog": "2.7.0",
         "nucleos/dompdf-bundle": "^3.2",

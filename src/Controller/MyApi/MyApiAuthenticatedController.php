@@ -21,7 +21,7 @@ class MyApiAuthenticatedController extends AbstractController
     }
 
     /**
-     * @Route("/user-details/{userId}", name="my_api_user_details", defaults={"userId": null})
+     * @Route("/user-details/{userId}", name="myapi_user_details", defaults={"userId": null}, methods={"GET"})
      */
     public function userDetails(Request $request, int|null $userId)
     {
@@ -40,7 +40,7 @@ class MyApiAuthenticatedController extends AbstractController
     }
 
     /**
-     * @Route("/chat-users/search", name="my_api_search_chat_users")
+     * @Route("/chat-users/search", name="myapi_search_chat_users", methods={"GET"})
      */
     public function searchChatUsers(Request $request)
     {

@@ -50,6 +50,6 @@ services:
         tags: ['twig.extension']
     
      # Configuration du contrôleur d'erreur personnalisé
-    App\Controller\ErrorController:
-        tags: ['controller.service_arguments']
+    # App\Controller\ErrorController:
+    #     tags: ['controller.service_arguments']
 

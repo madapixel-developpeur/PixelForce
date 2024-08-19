@@ -71,7 +71,7 @@ security:
     - { path: ^/boutique, roles: IS_AUTHENTICATED_ANONYMOUSLY }
     - { path: ^/api, roles: IS_AUTHENTICATED_ANONYMOUSLY }
     - { path: ^/myapi/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-    - { path: ^/myapi/authenticated, roles: IS_AUTHENTICATED_FULLY }
+    - { path: ^/myapi/authenticated, roles: ROLE_USER }
     - { path: ^/myapi, roles: IS_AUTHENTICATED_ANONYMOUSLY }
     - { path: ^/*, roles: IS_AUTHENTICATED_REMEMBERED }
     # - { path: ^/profile, roles: ROLE_USER }
