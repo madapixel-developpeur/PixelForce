@@ -38,4 +38,25 @@ class MyApiAuthenticatedController extends AbstractController
             "roles" => $user->getRoles()
         ]);
     }
+
+    /**
+     * @Route("/chat-users/search", name="my_api_search_chat_users")
+     */
+    public function searchChatUsers(Request $request)
+    {
+        $result = [];
+        $search = $request->get('search', '');
+        $chatUsers = $this->userRepository->searchChatUsers($this->getUser(), $search);
+        foreach ($chatUsers as $user) {
+            $result[] = [
+                "userId" => $user->getId(),
+                "lastname" => $user->getNom(),
+                "firstname" => $user->getPrenom(),
+                "email" => $user->getEmail(),
+                "username" => $user->getUsername(),
+                "roles" => $user->getRoles()
+            ];
+        }
+        return $this->json($result);
+    }
 }

@@ -497,4 +497,18 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         return $query->getQuery()
             ->getSingleResult();
         }
+
+        public function searchChatUsers($currentUser, $search = ''){
+
+            $query = $this->createQueryBuilder('u')
+                ->andWhere('u.id != :userId')
+                ->andWhere("lower(concat(concat(coalesce(u.prenom, ''), ' '), coalesce(u.nom, ''))) like :search ")
+                ->addOrderBy('coalesce(u.prenom, u.nom)', 'ASC');
+                ->setParameter('userId', $currentUser)
+                ->setParameter('search', '%' . strtolower($search) . '%');
+
+    
+            return $query->getQuery()
+                ->getResult();
+        }
 }
