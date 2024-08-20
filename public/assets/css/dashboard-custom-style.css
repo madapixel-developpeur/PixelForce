@@ -1,0 +1,112 @@
+.bd-services-2__item {
+    justify-content: center;
+    /* Center horizontally */
+    align-items: center;
+    padding: 40px;
+    box-shadow: 0px 3px 36px 0px rgba(6, 6, 6, 0.08);
+    position: relative;
+}
+
+.bd-services-2__item::before {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    height: 3px;
+    width: 0;
+    display: inline-block;
+    background-color: var(--bd-theme-primary);
+    -webkit-transition: all 0.3s ease-out 0s;
+    -moz-transition: all 0.3s ease-out 0s;
+    -ms-transition: all 0.3s ease-out 0s;
+    -o-transition: all 0.3s ease-out 0s;
+    transition: all 0.3s ease-out 0s;
+}
+
+.bd-services-2__item:hover::before {
+    right: auto;
+    width: 100%;
+    left: 0;
+}
+
+.bd-services-2__item a {
+    color: #7d78e1;
+    /* Set link color to red */
+    text-decoration: none;
+    /* Optional: remove underline from links */
+}
+
+/* Optional: style links on hover */
+.bd-services-2__item a:hover {
+    color: #3E4F9C;
+    /* Change color on hover if desired */
+}
+
+
+.bd-services-2__icon {
+    width: 60px;
+    height: 60px;
+    background-color: #3E4F9C;
+    font-size: 25px;
+    color: white;
+    line-height: 60px;
+    border-radius: 50%;
+    margin-bottom: 30px;
+}
+
+.bd-services-2__title {
+    font-size: 24px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-weight: 500;
+    margin-bottom: 30px;
+}
+
+.bd-services-2__title a {
+    background-image: linear-gradient(#000, #000), linear-gradient(#000, #000);
+    display: inline;
+    background-size: 0% 1px, 0 1px;
+    background-position: 100% 100%, 0 100%;
+    background-repeat: no-repeat;
+    transition: background-size 0.4s linear;
+}
+
+.bd-services-2__title a:hover {
+    background-size: 0% 1px, 100% 1px;
+}
+
+.bd-services-2__content p {
+    margin-bottom: 30px;
+}
+
+
+
+
+.carousel-container {
+    overflow: hidden;
+    padding-right: 40px;
+    padding-left: 40px;
+}
+
+
+.carousel-control-prev,
+.carousel-control-next {
+    width: 5%;
+    /* Adjust width as needed */
+}
+
+.carousel-control-prev span,
+.carousel-control-next span {
+    font-size: 2rem;
+    /* Adjust icon size as needed */
+}
+
+.carousel-control-next {
+    right: 0;
+    transform: translateX(50px);
+    /* Move the control further right without affecting layout */
+}
+
+.carousel-control-prev {
+    left: -4%;
+}

@@ -24,9 +24,89 @@
         </ul>
         <ul class="nav navbar-nav d-none d-xl-block">
             <li class="nav-item">
-               <h3 class="general-primary-text">Ravi de vous revoir, {{app.user.prenom|default(' ')}} 👋</h3>
+               <h3 class="general-primary-text">Bonjour {{app.user.prenom|default(' ')}} !</h3>
             </li>
         </ul>
+        {% if app.session.get('secteurId') %}
+        {% set data = get_stat() %}
+        {% set statDigitalGlobalVariable = data.statDigital %}
+        {% set nbVentesTotalGlobalVariable = data.nbVentesTotal %}
+        {% set nbrRdvGlobalVariable = data.nbrRdv %}
+        {% set chiffreAffaireTotalGlobalVariable = data.chiffreAffaireTotal %}
+        {% set soldeRemunerationGlobalVariable = data.soldeRemuneration %}
+       
+        <ul class="d-none d-xl-block">
+             <div class="d-flex align-items-center">
+                <div class="col-auto">
+                    <div class="d-flex flex-row align-items-center mx-2 ">
+                        <div class="">
+                            <div class="text-center avatar-statistique-nav-bar rounded-circle bg-light-warning me-2">
+                                <a {% if app.user.canAccessFonct('VENTE', app.session.get('secteurId')) %}href="{% if estSecurite %}{{path('admin_ordersecu_list')}}{% elseif estEcommerce %}{% if app.session.get('secteurId') == secteurDigitalId  %}{{path('agent_order_list_digital')}}{% else %}{{path('agent_order_list')}}{% endif %}{% elseif estDemandeDevis %}{{path('agent_demandedevis_list')}}{% else %}#{% endif %}"{% endif %}>
+                                    <i class="fa-solid fa-arrow-trend-up fs-4  text-warning"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="my-auto">
+                            <h4 class="card-text font-small-1 mb-0 d-none d-xl-block">Ventes</h4>
+                            <h6 class="fw-bolder mb-0">
+                                {{(statDigitalGlobalVariable ? statDigitalGlobalVariable.orderCount : nbVentesTotalGlobalVariable) | number_format(0, ',', ' ')}}
+                            </h6>
+                            
+                        </div>
+                    </div>
+                </div>
+                <div class="col-auto">
+                    <div class="d-flex flex-row align-items-center mx-2">
+                        <div class="">
+                            <div class="text-center avatar-statistique-nav-bar rounded-circle bg-light-primary me-2">
+                                <a {% if app.user.canAccessFonct('RDV', app.session.get('secteurId')) %}href="{{path('agent_contact_meeting_list')}}"{% endif %}>
+                                    <i class="fa fa-handshake fs-4 mt-2 text-primary"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="my-auto">
+                            <h4 class="card-text font-small-1 mb-0 d-none d-xl-block">Rendez-vous</h4>
+                            <h6 class=" mb-0 fw-bolder">{{nbrRdvGlobalVariable | number_format(0, ',', ' ')}}</h6>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-auto">
+                    <div class="d-flex flex-row align-items-center mx-2">
+                        <div class="">
+                            <div class="avatar-statistique-nav-bar rounded-circle bg-light-danger me-2 text-center">
+                                <a class="" {% if app.user.canAccessFonct('VENTE', app.session.get('secteurId')) %}href="{% if estSecurite %}{{path('admin_ordersecu_list')}}{% elseif estEcommerce %}{% if app.session.get('secteurId') == secteurDigitalId  %}{{path('agent_order_list_digital')}}{% else %}{{path('agent_order_list')}}{% endif %}{% elseif estDemandeDevis %}{{path('agent_demandedevis_list')}}{% else %}#{% endif %}"{% endif %}>
+                                    <i class="fa-solid fa-money-bill-wave fs-4 mt-2 text-danger"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="my-auto">
+                            <h4 class="card-text font-small-1 mb-0 d-none d-xl-block">Chiffre d’affaires</h4>
+                            <h6 class="fw-bolder mb-0 ">
+                                {{ (statDigitalGlobalVariable ? statDigitalGlobalVariable.totalAmount : chiffreAffaireTotalGlobalVariable ) | number_format(2, ',', ' ')}} €  
+                            </h6>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-auto">
+                    <div class="d-flex flex-row  align-items-center mx-2">
+                        <div class=" ">
+                            <div class="text-center avatar-statistique-nav-bar rounded-circle bg-light-success me-2">
+                                <a href="#"><i class="fa-solid fa-dollar-sign fs-4 mt-2 text-success"></i></a>
+                            </div>
+                        </div>
+                        <div class="my-auto">
+                            <h4 class="card-text font-small-1 mb-0 text-dark-template d-none d-xl-block">Rémunération</h4>
+                            <h6 class="fw-bolder mb-0 ">
+                                {{ soldeRemunerationGlobalVariable | number_format(2, ',', ' ')}} €  
+                            </h6>
+                            
+                        </div>
+                    </div>
+                </div>
+               
+            </div>
+        </ul>
+        {% endif %}
         <ul class="nav navbar-nav align-items-center ms-auto">
             <li class="nav-item dropdown dropdown-user">      
                    <div class="d-flex align-items-center">
@@ -44,12 +124,9 @@
                                     <span class="user-name header-user" >{{ app.user.nom }}</span>
                                 </li>
                                 <li class="d-flex p-0">
-                                    <span class="header-user">Ref :</span>
-                                    <span class="ms-2">
-                                        <a class="header-user" href="{{ path('agent_order_list_digital', {'referenceVente' : generateReference(app.user.id, app.user.id) }) }}">
-                                            {{ generateReference(app.user.id, app.user.id) }}
-                                        </a>
-                                        <a href="#" class="ms-2 header-user" onclick="copyLink('{{ configSecteurService.getRefUrl(generateReference(app.user.id, app.user.id)) }}', 'Liens de la référence {{ generateReference(app.user.id, app.user.id) }} copié avec succès')">
+                                    <span class="">
+                                        <a class="header-user text-primary" href="#"  onclick="copyLink('{{ url('agent_inscription', {'ambassador_username':  app.user.username != "" ?  app.user.username : ' '}) }}') " >
+                                            Lien de parrainage
                                             <i class="fa-solid fa-copy"></i>
                                         </a>
                                     </span>

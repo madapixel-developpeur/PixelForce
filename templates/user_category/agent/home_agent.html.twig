@@ -74,6 +74,8 @@
                                                                             <a href="{{ path('agent_generate_sessionSecteur_before_redirect_to_route_dahsboard', {id: s.id}) }}" class="regular-white-button  font-weight-bold rounded-3 pl-3 pr-3"> Accéder </a>
                                                                         {% elseif agentSecteur and agentSecteur.statut == false %}
                                                                             <a class="regular-white-button   font-weight-bold rounded-3 pl-3 pr-3"> En attente de validation</a>
+                                                                    {% else %}
+                                                                        <a href="#" class="btn btn-primary" disabled>Bientôt Disponible</a>
                                                                     {% endif %}
                                                                 </div>
                                                             </div>

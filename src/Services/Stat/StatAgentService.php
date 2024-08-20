@@ -3,10 +3,13 @@
 namespace App\Services\Stat;
 
 use Exception;
+use App\Entity\User;
+use App\Entity\Secteur;
 use App\Entity\TypeSecteur;
 use App\Services\RemunerationService;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\ResultSetMapping;
+use App\Repository\UserTransactionRepository;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
@@ -15,7 +18,8 @@ class StatAgentService
     private $entityManager;
     private  $remunerationService;
 
-    public function __construct(EntityManagerInterface $entityManager, private HttpClientInterface $client, private ParameterBagInterface $parameterBag, RemunerationService $remunerationService)
+    public function __construct(EntityManagerInterface $entityManager, private HttpClientInterface $client, private ParameterBagInterface $parameterBag, RemunerationService $remunerationService,
+    private  UserTransactionRepository $userTransactionRepository)
     {
         $this->entityManager = $entityManager;
         $this->remunerationService = $remunerationService;
@@ -154,6 +158,28 @@ class StatAgentService
         $content = json_decode($response->getContent(), true);
         return $content;
     }
+
+    public function getAgentStat(User $agent,Secteur $secteur){
+        $statDigital = null;
+        if ($secteur->getId() == $_ENV['SECTEUR_DIGITAL_ID']) {
+            $statDigital = $this->getPbbStat($agent->getId());
+        }
+        $pbb_summary = $this->getPbbSummary($agent->getId(), $agent->getNom());
+        $statVente = $this->getStatVente($agent->getId(), $secteur->getId(), $secteur->getType()->getId());
+        $chiffreAffaireTotal = $pbb_summary['chiffreAffaire'] + ($statVente != null ? $statVente['ca'] : 0);
+        $nbVentesTotal = count($pbb_summary['orders']) + ($statVente != null ? $statVente['nbr_ventes'] : 0);
+        $nbrRdv = $this->getNbrRdv($agent->getId());
+        $soldeRemuneration = $this->userTransactionRepository->getSolde($agent, [$secteur->getId()]);
+        return [
+            'statDigital' => $statDigital,
+            'nbrRdv' => $nbrRdv,
+            'chiffreAffaireTotal' => $chiffreAffaireTotal,
+            'soldeRemuneration' => $soldeRemuneration,
+            'nbVentesTotal' => $nbVentesTotal,
+        ];
+    }
+
+
     // public function progression()
     // {
     //     $reponse=[];
