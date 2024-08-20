@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Controller\MyApi;
+namespace App\Controller\Chat;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
