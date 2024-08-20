@@ -34,6 +34,10 @@
         {% set nbrRdvGlobalVariable = data.nbrRdv %}
         {% set chiffreAffaireTotalGlobalVariable = data.chiffreAffaireTotal %}
         {% set soldeRemunerationGlobalVariable = data.soldeRemuneration %}
+        {% set typeSecteurId = app.session.get('typeSecteurId') %}
+        {% set isSecurite = typeSecteurId == constant('App\\Entity\\TypeSecteur::SECURITE') %}
+        {% set isDemandeDevis = typeSecteurId == constant('App\\Entity\\TypeSecteur::DEMANDE_DEVIS') %}
+        {% set isEcommerce = typeSecteurId == constant('App\\Entity\\TypeSecteur::ECOMMERCE') %}
        
         <ul class="d-none d-xl-block">
              <div class="d-flex align-items-center">
@@ -41,7 +45,7 @@
                     <div class="d-flex flex-row align-items-center mx-2 ">
                         <div class="">
                             <div class="text-center avatar-statistique-nav-bar rounded-circle bg-light-warning me-2">
-                                <a {% if app.user.canAccessFonct('VENTE', app.session.get('secteurId')) %}href="{% if estSecurite %}{{path('admin_ordersecu_list')}}{% elseif estEcommerce %}{% if app.session.get('secteurId') == secteurDigitalId  %}{{path('agent_order_list_digital')}}{% else %}{{path('agent_order_list')}}{% endif %}{% elseif estDemandeDevis %}{{path('agent_demandedevis_list')}}{% else %}#{% endif %}"{% endif %}>
+                                <a {% if app.user.canAccessFonct('VENTE', app.session.get('secteurId')) %}href="{% if isSecurite %}{{path('admin_ordersecu_list')}}{% elseif isEcommerce %}{% if app.session.get('secteurId') == secteurDigitalId  %}{{path('agent_order_list_digital')}}{% else %}{{path('agent_order_list')}}{% endif %}{% elseif isDemandeDevis %}{{path('agent_demandedevis_list')}}{% else %}#{% endif %}"{% endif %}>
                                     <i class="fa-solid fa-arrow-trend-up fs-4  text-warning"></i>
                                 </a>
                             </div>
@@ -74,7 +78,7 @@
                     <div class="d-flex flex-row align-items-center mx-2">
                         <div class="">
                             <div class="avatar-statistique-nav-bar rounded-circle bg-light-danger me-2 text-center">
-                                <a class="" {% if app.user.canAccessFonct('VENTE', app.session.get('secteurId')) %}href="{% if estSecurite %}{{path('admin_ordersecu_list')}}{% elseif estEcommerce %}{% if app.session.get('secteurId') == secteurDigitalId  %}{{path('agent_order_list_digital')}}{% else %}{{path('agent_order_list')}}{% endif %}{% elseif estDemandeDevis %}{{path('agent_demandedevis_list')}}{% else %}#{% endif %}"{% endif %}>
+                                <a class="" {% if app.user.canAccessFonct('VENTE', app.session.get('secteurId')) %}href="{% if isSecurite %}{{path('admin_ordersecu_list')}}{% elseif isEcommerce %}{% if app.session.get('secteurId') == secteurDigitalId  %}{{path('agent_order_list_digital')}}{% else %}{{path('agent_order_list')}}{% endif %}{% elseif isDemandeDevis %}{{path('agent_demandedevis_list')}}{% else %}#{% endif %}"{% endif %}>
                                     <i class="fa-solid fa-money-bill-wave fs-4 mt-2 text-danger"></i>
                                 </a>
                             </div>
