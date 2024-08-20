@@ -1,3 +1,7 @@
+.custom-chat .my-loader {
+    animation: spin 2s linear infinite;
+}
+
 .custom-chat.wrapper {
     position: fixed;
     top: 0;

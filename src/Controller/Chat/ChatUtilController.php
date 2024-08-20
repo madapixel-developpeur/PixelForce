@@ -51,7 +51,8 @@ class ChatUtilController extends AbstractController
                 "firstname" => $user->getPrenom(),
                 "email" => $user->getEmail(),
                 "username" => $user->getUsername(),
-                "roles" => $user->getRoles()
+                "roles" => $user->getRoles(),
+                "roleLabel" => $user->getRoleLabel()
             ];
         }
         return $this->json([

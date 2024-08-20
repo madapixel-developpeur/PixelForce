@@ -1777,4 +1777,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
 
         return $this;
     }
+
+    public function getRoleLabel() {
+
+        if(in_array(self::ROLE_AGENT, $this->getRoles())){
+             return 'Agent';
+        } else if(in_array(self::ROLE_COACH, $this->getRoles())){
+            return 'Coach';
+        } else if(in_array(self::ROLE_ADMINISTRATEUR, $this->getRoles())){
+            return 'Administrateur';
+        } else if(in_array(self::ROLE_CLIENT, $this->getRoles())){
+            return 'Client';
+        } else if(in_array(self::ROLE_DOCUMENT_OWNER, $this->getRoles())){
+            return 'Propriétaire de document';
+        } else if(in_array(self::ROLE_AMBASSADEUR, $this->getRoles())){
+            return 'Ambassadeur';
+        } else if(in_array(self::ROLE_MADA, $this->getRoles())){
+            return 'Mada';
+        } 
+        return '';
+    }
 }
