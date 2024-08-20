@@ -1,10 +1,25 @@
 var myChatApp = angular.module("myChatApp", []);
+const applicationName = "pixelforce";
+const baseHeadersChatApi = {
+    'authorization': 'Bearer ' + document.jwtToken,
+    'x-application': applicationName
+};
 
 myChatApp.service('chat', function ($http) {
     this.searchUsersChat = async function (search = '', page = 1, nbrPerPage = 10) {
         const response = await $http({
             method: "GET",
             url: "/chatutil/users/search?search=" + search + "&page=" + page + "&nbrPerPage=" + nbrPerPage
+        });
+        return response.data;
+    }
+
+    this.addConversation = async function (data) {
+        const response = await $http({
+            method: "POST",
+            url: `${document.baseUrlChat}/chat/conversation`,
+            headers: baseHeadersChatApi,
+            data
         });
         return response.data;
     }
@@ -43,15 +58,25 @@ myChatApp.controller('chatWidget', function ($scope) {
         $scope.visible = !$scope.visible;
     }
 
+    $scope.setConversationId = function (conversationId) {
+        $scope.conversationId = conversationId;
+        $scope.changeView('USER');
+    }
+
+    $scope.changeView = function (newView) {
+        $scope.currentView = newView;
+    }
+
+
 })
 
 myChatApp.controller('chatUserList', function ($scope, chat) {
     $scope.addConversation = function () {
-        $scope.$parent.currentView = 'SEARCH';
+        $scope.$parent.changeView('SEARCH');
     }
 })
 
-myChatApp.controller('chatUserSearchList', function ($scope, chat) {
+myChatApp.controller('chatUserSearchList', function ($scope, $q, chat) {
     $scope.chatSearch = '';
     $scope.isLoading = false;
     $scope.page = 1;
@@ -66,27 +91,42 @@ myChatApp.controller('chatUserSearchList', function ($scope, chat) {
         else $scope.isLoadingMore = true;
         chat.searchUsersChat($scope.chatSearch, newPage, $scope.nbrPerPage)
             .then(result => {
-                $scope.total = result.total;
-                if (newPage == 1) $scope.data = result.data;
-                else $scope.data = [...$scope.data, ...result.data];
+                $scope.$apply(() => {
+                    $scope.total = result.total;
+                    if (newPage == 1) $scope.data = result.data;
+                    else $scope.data = [...$scope.data, ...result.data];
 
-                $scope.page = newPage;
-                $scope.showLoadingMore = ($scope.page + 1 <= Math.ceil($scope.total / $scope.nbrPerPage));
+                    $scope.page = newPage;
+                    $scope.showLoadingMore = ($scope.page + 1 <= Math.ceil($scope.total / $scope.nbrPerPage));
+                });
             }).catch(error => console.error(error))
             .finally(() => {
-                console.log('finally')
-                $scope.isLoading = false;
-                $scope.isLoadingMore = false;
-                $scope.$apply();
+                $scope.$apply(() => {
+                    $scope.isLoading = false;
+                    $scope.isLoadingMore = false;
+                });
             });
     }
 
     $scope.goBack = function () {
-        $scope.$parent.currentView = 'LIST';
+        $scope.$parent.$apply(() => {
+            $scope.$parent.changeView('LIST');
+        });
     }
 
     $scope.addConversation = function (user) {
-
+        $scope.isLoading = true;
+        chat.addConversation({ inviteeUserId: user.userId })
+            .then((result) => {
+                $scope.$apply(() => {
+                    $scope.$parent.setConversationId(result.id);
+                });
+            }).catch(error => console.error(error))
+            .finally(() => {
+                $scope.$apply(() => {
+                    $scope.isLoading = false;
+                });
+            })
     }
 
     $scope.loadMore = function () {

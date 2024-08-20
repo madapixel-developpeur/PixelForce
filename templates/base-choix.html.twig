@@ -161,6 +161,10 @@
         {% endblock %}
 
         {% block chatScripts %}
+            <script type="text/javascript">
+                document.baseUrlChat = '{{base_url_chat}}';
+                document.jwtToken = '{{configSecteurService.getUserJwtToken(app.user)}}';
+            </script>
             <script src="{{ asset('app-assets/js/chat/chat.js') }}"></script>
         {% endblock %}
     </body>

@@ -6,6 +6,9 @@
         <div ng-show="currentView == 'SEARCH'" style="height: 100%;">
             {% include '/partials/chat/chat-user-search-list.html.twig' %}
         </div>
+        <div ng-show="currentView == 'USER'" style="height: 100%;">
+            {% include '/partials/chat/chat-user.html.twig' %}
+        </div>
   </div>
   <button class="chat-button" ng-click="toggleChat()">
     <span ng-if="visible" >✕</span>

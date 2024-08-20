@@ -5,6 +5,7 @@ namespace App\Services;
 
 use App\Entity\Secteur;
 use App\Repository\ConfigSecteurRepository;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class ConfigSecteurService
@@ -15,7 +16,7 @@ class ConfigSecteurService
     protected $configSecteurRepository;
     protected $parameterBag;
 
-    public function __construct(ConfigSecteurRepository $configSecteurRepository, ParameterBagInterface $parameterBag)
+    public function __construct(ConfigSecteurRepository $configSecteurRepository, ParameterBagInterface $parameterBag, private JWTTokenManagerInterface $JWTManager)
     {
         $this->configSecteurRepository = $configSecteurRepository;
         $this->parameterBag = $parameterBag;
@@ -48,5 +49,9 @@ class ConfigSecteurService
 
     public function getRefUrl($ref){
         return $this->parameterBag->get('pbb_ws_url').'/?ref='.$ref;
+    }
+
+    public function getUserJwtToken($user){
+        return $this->JWTManager->create($user);
     }
 }
