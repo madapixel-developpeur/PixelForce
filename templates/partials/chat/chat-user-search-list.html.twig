@@ -1,0 +1,63 @@
+<div class="chat-user-search-list d-flex flex-column" style="height: 100%; position: relative;" ng-controller="chatUserSearchList">
+  <div class="chat-user-list-header">
+    <div class="d-flex align-items-center">
+
+      <i class="ti ti-chevron-left fs-2" style="cursor: pointer;" ng-click="goBack()"></i>
+
+      <div class="ms-2" style="margin-bottom: 0;">
+        <input type="text" class="form-control search-input" placeholder="Recherche" ng-model="chatSearch"
+          ng-change="search()">
+      </div>
+      <i class="ti ti-search fs-1 ms-2"></i>
+    </div>
+  </div>
+  <div class="chat-user-list-main">
+    <div style="height:100%;" ng-if="isLoading">
+      <div class="d-flex align-items-center justify-content-center" style="height: 100%;">
+        <i class="ti ti-loader fs-2 my-loader"></i>
+      </div>
+    </div>
+    <div style="height:100%;" ng-if="!isLoading">
+      <div style="height:100%;" ng-if="total == 0">
+        <div class="d-flex align-items-center justify-content-center" style="height: 100%;">
+          <span>Aucun résultat</span>
+        </div>
+      </div>
+
+
+      <div ng-repeat="user in data" class="d-flex p-3 chat-one-user new"
+        ng-click="addConversation(user)">
+        <img src="{{ asset('assets/img/avatar.webp') }}" class="chat-user-avatar" />
+        <div class="flex-grow-1 d-flex flex-column justify-content-between ms-2">
+          <div class="d-flex justify-content-between">
+            <span><b>{{ "{{user.firstname}} {{user.lastname}}" }}</b></span>
+          </div>
+          {# <div class="d-flex justify-content-between">
+            <span class="fs-6 message-text">{{ "{{authService.getRoleLabel(user.profileId, user.storeId) | truncate:
+              40}}" }}</span>
+
+          </div>
+          <div class="d-flex justify-content-between" ng-if="user.profileId == RoleEnum.company">
+            <span class="fs-6">{{ "{{(user.companyName + (user.storeName ? ': ' + user.storeName : '')) | truncate:
+              40}}" }}</span>
+
+          </div> #}
+        </div>
+
+      </div>
+
+      <div class="d-flex p-3 align-items-center justify-content-center mb-2">
+        <div class="d-flex flex-column align-items-center font-weight-bold" style="cursor: pointer;"
+          ng-if="showLoadingMore" ng-click="loadMore()">
+          <i class="ti ti-chevron-down fs-2 " style="cursor: pointer;"></i>
+          <span class="fs-6">Voir plus</span>
+
+        </div>
+
+        <i class="ti ti-loader fs-2 my-loader" ng-if="isLoadingMore"></i>
+      </div>
+    </div>
+  </div>
+
+
+</div>

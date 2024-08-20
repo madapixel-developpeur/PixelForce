@@ -33,6 +33,7 @@
         <link rel="stylesheet" type="text/css" href="{{asset('app-assets/css/pages/app-invoice.css')}}">
         <link rel="stylesheet" type="text/css" href="{{asset('app-assets/css/pages/app-ecommerce.css')}}">
         <link rel="stylesheet" href="{{ asset('assets/css/sweetalert2/sweetalert2.min.css')}}">
+        <link rel="stylesheet" href="{{ asset('app-assets/css/chat/chat.css')}}">
 
         <!-- Calendly link widget begin -->
 		<link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
@@ -98,6 +99,10 @@
 
         {% include 'live/video/liveVideoRapide.html.twig' %}
         {% include 'live/chat/mini_menu_chat.html.twig'  %}
+
+        {% block chat %}
+        {% include '/partials/chat-widget.html.twig' %}
+        {% endblock %}
         
         {% block javascripts %}
             <script type="application/json" id="live-call-topic">{{ mercure(constant('App\\Services\\LiveVideo::CALL_TOPIC')~(app.user.id|base64_encode))|json_encode(constant('JSON_UNESCAPED_SLASHES') b-or constant('JSON_HEX_TAG'))|raw }}</script>

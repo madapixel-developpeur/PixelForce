@@ -8,6 +8,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -18,7 +20,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class ChatUtilController extends AbstractController
 {
 
-    public function __construct(private UserRepository $userRepository)
+    public function __construct(private UserRepository $userRepository, private EntityManagerInterface $entityManager)
     {
         
     }
@@ -26,11 +28,22 @@ class ChatUtilController extends AbstractController
     /**
      * @Route("/users/search", name="myapi_search_chat_users", methods={"GET"})
      */
-    public function searchChatUsers(Request $request)
+    public function searchChatUsers(Request $request, PaginatorInterface $paginator)
     {
         $result = [];
         $search = $request->get('search', '');
-        $chatUsers = $this->userRepository->searchChatUsers($this->getUser(), $search);
+        $page = $request->get('page', 1);
+        $nbrPerPage = $request->get('nbrPerPage', 10);
+
+        $query = $this->userRepository->searchChatUsersQueryBuilder($this->getUser(), $search);
+
+        $chatUsers = $paginator->paginate(
+            $query,
+            $page,
+            $nbrPerPage
+        );
+
+        
         foreach ($chatUsers as $user) {
             $result[] = [
                 "userId" => $user->getId(),
@@ -41,7 +54,10 @@ class ChatUtilController extends AbstractController
                 "roles" => $user->getRoles()
             ];
         }
-        return $this->json($result);
+        return $this->json([
+            'total' => $chatUsers->getTotalItemCount(),
+            'data' => $result
+        ]);
     }
 
     /**

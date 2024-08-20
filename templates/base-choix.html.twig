@@ -34,6 +34,10 @@
         <link rel="stylesheet" type="text/css" href="{{asset('app-assets/css/pages/app-ecommerce.css')}}">
         <link rel="stylesheet" href="{{ asset('assets/css/sweetalert2/sweetalert2.min.css')}}">
 
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/1.35.0/iconfont/tabler-icons.min.css" integrity="sha512-tpsEzNMLQS7w9imFSjbEOHdZav3/aObSESAL1y5jyJDoICFF2YwEdAHOPdOr1t+h8hTzar0flphxR76pd0V1zQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel="stylesheet" href="{{ asset('app-assets/css/chat/chat.css')}}">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.8.3/angular.min.js" integrity="sha512-KZmyTq3PLx9EZl0RHShHQuXtrvdJ+m35tuOiwlcZfs/rE7NZv29ygNA8SFCkMXTnYZQK2OX0Gm2qKGfvWEtRXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
         <!-- Calendly link widget begin -->
 		<link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
 		<script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript" async></script>
@@ -95,6 +99,11 @@
 
         {% include 'live/video/liveVideoRapide.html.twig' %}
         {% include 'live/chat/mini_menu_chat.html.twig'  %}
+
+        {% block chat %}
+        {% include '/partials/chat/chat-widget.html.twig' %}
+        {% endblock %}
+        
         
         {% block javascripts %}
             <script type="application/json" id="live-call-topic">{{ mercure(constant('App\\Services\\LiveVideo::CALL_TOPIC')~(app.user.id|base64_encode))|json_encode(constant('JSON_UNESCAPED_SLASHES') b-or constant('JSON_HEX_TAG'))|raw }}</script>
@@ -149,6 +158,10 @@
                 </script>
             {% endfor %}
         
+        {% endblock %}
+
+        {% block chatScripts %}
+            <script src="{{ asset('app-assets/js/chat/chat.js') }}"></script>
         {% endblock %}
     </body>
 </html>
