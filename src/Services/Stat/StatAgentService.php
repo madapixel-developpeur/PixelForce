@@ -13,9 +13,9 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 class StatAgentService
 {
     private $entityManager;
-    private  $remunerationService;
+    private $remunerationService;
 
-    public function __construct(EntityManagerInterface $entityManager, private HttpClientInterface $client, private ParameterBagInterface $parameterBag, RemunerationService $remunerationService)
+    public function __construct(EntityManagerInterface $entityManager, private HttpClientInterface $client, private ParameterBagInterface $parameterBag, RemunerationService $remunerationService, private ConfigSecteurService $configSecteurService)
     {
         $this->entityManager = $entityManager;
         $this->remunerationService = $remunerationService;
@@ -32,8 +32,9 @@ class StatAgentService
             ';
         $stmt = $conn->prepare($sql);
         $resultSet = $stmt->executeQuery(['agentId' => $agentId, 'secteurId' => $secteurId]);
-        $result = (array)$resultSet->fetchAllAssociative();
-        if (count($result) == 0) return null;
+        $result = (array) $resultSet->fetchAllAssociative();
+        if (count($result) == 0)
+            return null;
         return $result[0];
     }
     public function getPbbSummary($pbb_id)
@@ -55,7 +56,7 @@ class StatAgentService
             ';
         $stmt = $conn->prepare($sql);
         $resultSet = $stmt->executeQuery(['agentId' => $agentId, 'secteurId' => $secteurId, 'annee' => $annee]);
-        $result = (array)$resultSet->fetchAllAssociative();
+        $result = (array) $resultSet->fetchAllAssociative();
         $total = array_sum(array_map(function ($item) {
             return $item['montant'];
         }, $result));
@@ -71,8 +72,9 @@ class StatAgentService
             ';
         $stmt = $conn->prepare($sql);
         $resultSet = $stmt->executeQuery(['agentId' => $agentId, 'secteurId' => $secteurId, 'annee' => $annee, 'mois' => $mois]);
-        $result = (array)$resultSet->fetchAllAssociative();
-        if (count($result) == 0) return null;
+        $result = (array) $resultSet->fetchAllAssociative();
+        if (count($result) == 0)
+            return null;
         return $result[0];
     }
 
@@ -174,4 +176,22 @@ class StatAgentService
     //     </div>
     //       isCompletedBefore = isCompleted 
     // }
+
+    public function updateChatUserData($user, $data)
+    {
+        $chat_url = $this->parameterBag->get('base_url_chat');
+        $response = $this->client->request(
+            'PATCH',
+            $chat_url . '/user/infos',
+            [
+                'headers' => [
+                    'x-application' => 'pixelforce'
+                ],
+                'auth_bearer' => $this->configSecteurService->getUserJwtToken($user),
+                'json' => $data,
+            ]
+        );
+        $content = json_decode($response->getContent(), true);
+        return $content;
+    }
 }
