@@ -3,37 +3,40 @@
 
 namespace App\Controller;
 
+use Exception;
+use DateInterval;
 use App\Entity\Contact;
-use App\Entity\ContactInformation;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Routing\Annotation\Route;
-use App\Repository\UserRepository;
-use App\Repository\MeetingStateRepository;
-use App\Repository\MeetingRepository;
-use App\Repository\AgentSecteurRepository;
-use App\Repository\CoachSecteurRepository;
-use App\Repository\SecteurRepository;
-
-
-
-use App\Repository\CalendarEventLabelRepository;
-
-
 use App\Entity\Meeting;
-use App\Services\MeetingService;
-
-use App\Entity\SearchEntity\MeetingSearch;
 use App\Form\MeetingType;
 use App\Form\MeetingFilterType;
 use App\Form\MeetingSearchType;
+use App\Services\MeetingService;
+use App\Entity\ContactInformation;
+use App\Repository\UserRepository;
+
+
+
+use App\Services\FormationService;
+
+
 use App\Repository\ContactRepository;
-use DateInterval;
-use Symfony\Component\HttpFoundation\Request;
+use App\Repository\MeetingRepository;
+
+use App\Repository\SecteurRepository;
+use App\Repository\FormationRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use App\Entity\SearchEntity\MeetingSearch;
+use App\Repository\AgentSecteurRepository;
+use App\Repository\CoachSecteurRepository;
+use App\Repository\MeetingStateRepository;
 use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
+use App\Repository\CalendarEventLabelRepository;
+use App\Repository\CategorieFormationRepository;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class AgentContactMeetingController extends AbstractController
 {
@@ -48,7 +51,10 @@ class AgentContactMeetingController extends AbstractController
     private $meetingService;
 
 
-    public function __construct(EntityManagerInterface $entityManager, MeetingRepository $meetingRepository, MeetingStateRepository $meetingStateRepository, CalendarEventLabelRepository $calendarEventLabelRepository, ContactRepository $contactRepository, CoachSecteurRepository $coachSecteurRepository, SecteurRepository $secteurRepository, SessionInterface $session, MeetingService $meetingService)
+    public function __construct(EntityManagerInterface $entityManager, MeetingRepository $meetingRepository, MeetingStateRepository $meetingStateRepository, CalendarEventLabelRepository $calendarEventLabelRepository, ContactRepository $contactRepository, CoachSecteurRepository $coachSecteurRepository, SecteurRepository $secteurRepository, SessionInterface $session, MeetingService $meetingService,
+        private  UserRepository $repoUser,
+        private FormationRepository $formationRepository
+    )
     {
         $this->entityManager = $entityManager;
         $this->meetingStateRepository = $meetingStateRepository;
@@ -235,8 +241,12 @@ class AgentContactMeetingController extends AbstractController
     /**
      * @Route("/agent/contact/meeting/list/{contact}", name="agent_contact_meeting_list")
      */
-    public function agent_contact_meeting_list(Request $request, PaginatorInterface $paginator, Contact $contact = null)
+    public function agent_contact_meeting_list(Request $request, PaginatorInterface $paginator,CategorieFormationRepository $categorieFormationRepo,FormationService $formationService, Contact $contact = null)
     {
+        $secteur = $this->secteurRepository->findOneBy(['id' => $this->session->get('secteurId')]);
+        if(is_null($secteur)){
+            return $this->redirectToRoute('agent_home');
+        }
         $agent = $this->getUser();
         $search = new MeetingSearch();
         $searchForm = $this->createForm(MeetingSearchType::class, $search);
@@ -247,10 +257,17 @@ class AgentContactMeetingController extends AbstractController
             20
         );
 
+        $categorie = $categorieFormationRepo->findOneBy(['id' => $_ENV['CATEGORIE_FORMATION_RENDEZ_VOUS_ID']]);
+        $formationData = $formationService->getRendezVousFormation($secteur, $request->query->get('formationId'),$categorie);
+        $expert = $this->repoUser->getFirstCoachBySecteur($secteur);
         return $this->render('user_category/agent/meeting/meeting-list.html.twig', [
             'meetings' => $meetings,
             'searchForm' => $searchForm->createView(),
-            'contact' => $contact
+            'contact' => $contact,
+            'expert' => $expert,
+            'firstFormation' => $formationData['formation'],
+            'previousFormation' => $formationData['previous'],
+            'nextFormation' => $formationData['next'],
         ]);
     }
 

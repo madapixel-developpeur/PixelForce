@@ -4,14 +4,15 @@
 namespace App\Services;
 
 
+use App\Entity\User;
+use App\Entity\Secteur;
 use App\Entity\Formation;
 use App\Entity\FormationAgent;
-use App\Entity\Secteur;
-use App\Entity\User;
 use App\Manager\EntityManager;
 use App\Manager\ObjectManager;
-use App\Repository\AgentSecteurRepository;
+use App\Entity\CategorieFormation;
 use App\Repository\FormationRepository;
+use App\Repository\AgentSecteurRepository;
 
 class FormationService
 {
@@ -84,5 +85,28 @@ class FormationService
         $categories = array_unique($categories, SORT_REGULAR);
         
         return $categories;
+    }
+
+    public function getRendezVousFormation(Secteur $secteur, int $formationId = null,CategorieFormation $categorie = null){
+        $formation = null;
+        if($formationId){
+            $formation = $this->repoFormation->findOneBy(['id' => $formationId]);
+        }
+        else{
+            $formation= $this->repoFormation->getSingleFormationByCategorie($secteur,$categorie);
+        }
+
+        if(is_null($formation)){
+            return [
+                'formation' => null,
+                'previous' => null,
+                'next' => null,
+            ];
+        }
+
+        $data['formation'] = $formation;
+        $data['previous'] = $this->repoFormation->getSingleFormationByCategorie($secteur,$categorie,['current' => $formation , 'previous' => true ]);
+        $data['next']  = $this->repoFormation->getSingleFormationByCategorie($secteur,$categorie,['current' => $formation , 'next' => true ]);
+        return $data;
     }
 }

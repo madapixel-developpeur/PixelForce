@@ -376,4 +376,46 @@ class FormationRepository extends ServiceEntityRepository
 
         return $queryBuilder->getQuery()->getResult();
     }
+
+    public function getSingleFormationByCategorie(Secteur $secteur,CategorieFormation $categorie,$options = []){
+        $queryBuilder = $this->createQueryBuilder('f');
+        
+        $queryBuilder
+            ->where('f.secteur=:secteur')
+            ->andWhere('f.brouillon IS NULL OR f.brouillon =0')
+            ->setParameter('secteur',$secteur->getId())
+            ->leftJoin('f.CategorieFormation', 'cf')
+        ;  
+        
+        if ($categorie) {
+            $queryBuilder
+                ->andWhere('cf.nom = :category')
+                ->setParameter('category', $categorie->getNom())
+            ;
+        }
+
+        if(isset($options['previous']) && isset($options['current'])){
+            $queryBuilder
+            ->andWhere('f.id < :formationId')
+            ->setParameter('formationId', $options['current']->getId())
+            ->orderBy('f.id','DESC'); 
+        }else if(isset($options['next']) && isset($options['current'])){
+            $queryBuilder
+            ->andWhere('f.id > :formationId')
+            ->setParameter('formationId', $options['current']->getId())
+            ->orderBy('f.id','ASC'); 
+        }
+        else{
+            $queryBuilder
+            ->orderBy('f.id','ASC');
+        }
+
+        return  $queryBuilder
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+
+
 }
