@@ -2,6 +2,7 @@
 
 namespace App\Services\Stat;
 
+use App\Services\ConfigSecteurService;
 use Exception;
 use App\Entity\TypeSecteur;
 use App\Services\RemunerationService;
@@ -188,7 +189,7 @@ class StatAgentService
                     'x-application' => 'pixelforce'
                 ],
                 'auth_bearer' => $this->configSecteurService->getUserJwtToken($user),
-                'json' => $data,
+                'json' => ['data' => $data],
             ]
         );
         $content = json_decode($response->getContent(), true);

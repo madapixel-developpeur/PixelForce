@@ -13,6 +13,7 @@ use App\Repository\CoachAgentRepository;
 use App\Repository\UserRepository;
 use App\Services\DirectoryManagement;
 use App\Services\FileUploader;
+use App\Services\Stat\StatAgentService;
 use App\Services\User\UserNormalizer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -127,7 +128,7 @@ class UserController extends AbstractController
     /**
      * @Route("/user/compte/parametre/{id}", name="user_accountSetting")
      */
-    public function accountSettingTemplate(User $user, Request $request)
+    public function accountSettingTemplate(User $user, Request $request, StatAgentService $statAgentService)
     {
         $form = $this->createForm(AccountAgentType::class, $user)->remove('secteur')->add('id');
         $form->handleRequest($request);
@@ -137,7 +138,17 @@ class UserController extends AbstractController
             $user->setPhoto($fileName);
             $this->entityManager->save($user);
             try {
-
+                $response = $statAgentService->updateChatUserData($this->getUser(), [
+                    [
+                        "userId" => $user->getId(),
+                        "lastname" => $user->getNom(),
+                        "firstname" => $user->getPrenom(),
+                        "email" => $user->getEmail(),
+                        "username" => $user->getUsername(),
+                        "roles" => $user->getRoles(),
+                        "roleLabel" => $user->getRoleLabel()
+                    ]
+                ]);
             } catch (\Exception $ex) {
 
             }
