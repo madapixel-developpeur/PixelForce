@@ -1,0 +1,18 @@
+<div ng-app="myChatApp" class="custom-chat wrapper d-none" ng-controller="chatWidget">
+  <div class="chat-box" ng-show="visible">
+        <div ng-show="currentView == 'LIST'" style="height: 100%;">
+            {% include '/partials/chat/chat-user-list.html.twig' %}
+        </div>
+        <div ng-show="currentView == 'SEARCH'" style="height: 100%;">
+            {% include '/partials/chat/chat-user-search-list.html.twig' %}
+        </div>
+        <div ng-show="currentView == 'USER'" style="height: 100%;">
+            {% include '/partials/chat/chat-user.html.twig' %}
+        </div>
+  </div>
+  <button class="chat-button" ng-click="toggleChat()">
+    <span ng-if="visible" >✕</span>
+    <span ng-if="!visible" ><i class="text-white ti ti-message"></i></span>
+    <span class="my-badge fs-4 font-weight-bold" ng-if="data.length > 0">{{ "{{data.length}}" }}</span>
+  </button>
+</div>

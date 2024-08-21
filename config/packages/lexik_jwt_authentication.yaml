@@ -1,0 +1,5 @@
+lexik_jwt_authentication:
+    secret_key: '%kernel.project_dir%/config/jwt/private.pem' # Path to your private key
+    public_key: '%kernel.project_dir%/config/jwt/public.pem'  # Path to your public key
+    pass_phrase: '%env(JWT_PASSPHRASE)%'                      # Your passphrase
+    user_identity_field: email

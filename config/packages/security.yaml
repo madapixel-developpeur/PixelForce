@@ -17,6 +17,22 @@ security:
     dev:
       pattern: ^/(_(profiler|wdt)|css|images|js)/
       security: false
+    login:
+      pattern: ^/myapi/login
+      stateless: true
+      json_login:
+        check_path: /myapi/login
+        username_path: email
+        password_path: password
+        success_handler: lexik_jwt_authentication.handler.authentication_success
+        failure_handler: lexik_jwt_authentication.handler.authentication_failure
+
+    myapi:
+      pattern:   ^/myapi
+      stateless: true
+      provider: app_user_provider
+      jwt: ~
+
     main:
       remember_me:
         secret: "%kernel.secret%" # required
@@ -54,6 +70,10 @@ security:
     - { path: ^/dc, roles: IS_AUTHENTICATED_ANONYMOUSLY }
     - { path: ^/boutique, roles: IS_AUTHENTICATED_ANONYMOUSLY }
     - { path: ^/api, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+    - { path: ^/myapi/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+    - { path: ^/myapi/authenticated, roles: ROLE_USER }
+    - { path: ^/myapi, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+    - { path: ^/chatutil, roles: ROLE_USER }
     - { path: ^/*, roles: IS_AUTHENTICATED_REMEMBERED }
     # - { path: ^/profile, roles: ROLE_USER }
 

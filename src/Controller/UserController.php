@@ -13,6 +13,7 @@ use App\Repository\CoachAgentRepository;
 use App\Repository\UserRepository;
 use App\Services\DirectoryManagement;
 use App\Services\FileUploader;
+use App\Services\Stat\StatAgentService;
 use App\Services\User\UserNormalizer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -58,15 +59,16 @@ class UserController extends AbstractController
      */
     private $passwordHasher;
 
-    public function __construct(UserPasswordHasherInterface $passwordHasher,
-                                UserManager $userManager,
-                                EntityManager $entityManager,
-                                FileUploader $fileUploader,
-                                DirectoryManagement $directoryManagement,
-                                UserRepository $userRepository,
-                                CoachAgentRepository $coachAgentRepository,
-                                UserNormalizer $userNormalizer)
-    {
+    public function __construct(
+        UserPasswordHasherInterface $passwordHasher,
+        UserManager $userManager,
+        EntityManager $entityManager,
+        FileUploader $fileUploader,
+        DirectoryManagement $directoryManagement,
+        UserRepository $userRepository,
+        CoachAgentRepository $coachAgentRepository,
+        UserNormalizer $userNormalizer
+    ) {
         $this->userRepository = $userRepository;
         $this->coachAgentRepository = $coachAgentRepository;
         $this->userNormalizer = $userNormalizer;
@@ -86,7 +88,7 @@ class UserController extends AbstractController
      */
     public function list()
     {
-        $relationCoachAgent = $this->coachAgentRepository->findBy(['coach'=> $this->getUser()]);
+        $relationCoachAgent = $this->coachAgentRepository->findBy(['coach' => $this->getUser()]);
 
         return $this->render('users/list.html.twig', [
             'relationCoachAgent' => $relationCoachAgent
@@ -99,9 +101,13 @@ class UserController extends AbstractController
      */
     public function addAgent(Request $request)
     {
-        switch($request->attributes->get('_route')){
-            case 'user_addAgent': return $this->render('users/form_addAgent.html.twig', ['role' => User::ROLE_AGENT]); break;
-            case 'user_addClient': return $this->render('users/form_addClient.html.twig', ['role' => User::ROLE_CLIENT]);break;
+        switch ($request->attributes->get('_route')) {
+            case 'user_addAgent':
+                return $this->render('users/form_addAgent.html.twig', ['role' => User::ROLE_AGENT]);
+                break;
+            case 'user_addClient':
+                return $this->render('users/form_addClient.html.twig', ['role' => User::ROLE_CLIENT]);
+                break;
         }
         return new Response(null, 404);
     }
@@ -122,15 +128,30 @@ class UserController extends AbstractController
     /**
      * @Route("/user/compte/parametre/{id}", name="user_accountSetting")
      */
-    public function accountSettingTemplate(User $user, Request $request)
+    public function accountSettingTemplate(User $user, Request $request, StatAgentService $statAgentService)
     {
         $form = $this->createForm(AccountAgentType::class, $user)->remove('secteur')->add('id');
         $form->handleRequest($request);
-        if($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             // upload profil
             $fileName = $this->fileUploader->upload($request->files->get('user_avatar'), $this->directoryManagement->getMediaFolder_UserAvatars(), $user->getPhoto());
             $user->setPhoto($fileName);
             $this->entityManager->save($user);
+            try {
+                $response = $statAgentService->updateChatUserData($this->getUser(), [
+                    [
+                        "userId" => $user->getId(),
+                        "lastname" => $user->getNom(),
+                        "firstname" => $user->getPrenom(),
+                        "email" => $user->getEmail(),
+                        "username" => $user->getUsername(),
+                        "roles" => $user->getRoles(),
+                        "roleLabel" => $user->getRoleLabel()
+                    ]
+                ]);
+            } catch (\Exception $ex) {
+
+            }
             $this->addFlash('success', 'Informations modifiées avec succès');
         }
 
@@ -145,12 +166,12 @@ class UserController extends AbstractController
      */
     public function UserAvatar(User $user)
     {
-        $file = $this->directoryManagement->getMediaFolder_UserAvatars().DIRECTORY_SEPARATOR.$user->getPhoto();
-        if(is_file($file)) {
+        $file = $this->directoryManagement->getMediaFolder_UserAvatars() . DIRECTORY_SEPARATOR . $user->getPhoto();
+        if (is_file($file)) {
             return new BinaryFileResponse($file);
         }
 
-        $file = $this->directoryManagement->getPublicDir().DIRECTORY_SEPARATOR.'assets/vuexy/images/portrait/small/avatar-s-11.jpg';
+        $file = $this->directoryManagement->getPublicDir() . DIRECTORY_SEPARATOR . 'assets/vuexy/images/portrait/small/avatar-s-11.jpg';
 
         return new BinaryFileResponse($file);
     }
@@ -162,12 +183,12 @@ class UserController extends AbstractController
     {
         $form = $this->createForm(ResetPasswordType::class);
         $form->handleRequest($request);
-        if($form->isSubmitted() && $form->isValid() && $this->passwordHasher->isPasswordValid($user, $request->request->get('password'))) {
-         $this->userManager->setUserPasword($user, $request->request->get('reset_password')['password']['first'],'',false);
-         $this->addFlash('success', 'Changement de mot de passe effectué');
-        } elseif($form->isSubmitted() && empty($request->request->get('password'))) {
+        if ($form->isSubmitted() && $form->isValid() && $this->passwordHasher->isPasswordValid($user, $request->request->get('password'))) {
+            $this->userManager->setUserPasword($user, $request->request->get('reset_password')['password']['first'], '', false);
+            $this->addFlash('success', 'Changement de mot de passe effectué');
+        } elseif ($form->isSubmitted() && empty($request->request->get('password'))) {
             $emptyPass = true;
-        } elseif($form->isSubmitted() && !$this->passwordHasher->isPasswordValid($user, $request->request->get('password'))) {
+        } elseif ($form->isSubmitted() && !$this->passwordHasher->isPasswordValid($user, $request->request->get('password'))) {
             $error_password = true;
         }
 
@@ -185,7 +206,8 @@ class UserController extends AbstractController
     public function findUser($id)
     {
         $user = $this->userRepository->find($id);
-        if($user==null) return $this->json(null, 404);
+        if ($user == null)
+            return $this->json(null, 404);
         return $this->json($user, 200);
     }
 
