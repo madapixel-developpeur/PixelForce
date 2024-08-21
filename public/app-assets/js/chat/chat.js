@@ -307,6 +307,7 @@ myChatApp.controller('chatUserSearchList', function ($scope, $q, chat) {
 })
 
 myChatApp.controller('chatUser', function ($scope, $q, chat) {
+    const vm = this;
     $scope.isLoading = false;
     $scope.page = 1;
     $scope.nbrPerPage = 10;
@@ -316,8 +317,37 @@ myChatApp.controller('chatUser', function ($scope, $q, chat) {
     $scope.total = 0;
     $scope.isHeaderLoading = false;
     $scope.conversation = null;
-    $scope.avatar1 = `assets/images/avatar.webp`;
-    $scope.avatar2 = `assets/images/avatar.webp`;
+    vm.message = '';
+    $scope.isSending = false;
+
+    $scope.scrollToBottom = function () {
+        document.getElementById('bottom').scrollIntoView();
+    }
+    $scope.addMessage = function (message) {
+        $scope.data = [message, ...$scope.data];
+        $scope.scrollToBottom()
+    }
+
+    $scope.onSubmit = function () {
+        console.log("message ===" + vm.message)
+        console.log('onsubmit', JSON.stringify(vm.message))
+        if (!vm.message?.trim()) {
+            return
+        }
+        $scope.isSending = true;
+        chat.sendMessage($scope.$parent.conversationId, { content: vm.message })
+            .then(result => {
+                $scope.$apply(() => {
+                    vm.message = '';
+                    $scope.addMessage(result);
+                });
+            }).catch(error => console.error(error))
+            .finally(() => {
+                $scope.$apply(() => {
+                    $scope.isSending = false;
+                });
+            });
+    }
 
     $scope.fetchConversation = function () {
         $scope.isHeaderLoading = true;
