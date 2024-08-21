@@ -161,11 +161,11 @@ myChatApp.filter('truncate', function () {
 
 myChatApp.filter('myTimeAgo', function () {
     return function (value, isOnlyTime = false) {
-        return isOnlyTime ? moment(value, 'HH:mm:ss').fromNow() : moment(value).fromNow();
+        return isOnlyTime ? moment(value, 'HH:mm:ss').locale('fr').fromNow() : moment(value).locale('fr').fromNow();
     };
 });
 
-myChatApp.controller('chatWidget', function ($scope, socket) {
+myChatApp.controller('chatWidget', function ($scope, socket, chat) {
     $scope.visible = false;
     $scope.currentView = null; // in [LIST, USER, SEARCH]
     $scope.conversationId = null;
@@ -181,6 +181,16 @@ myChatApp.controller('chatWidget', function ($scope, socket) {
         }
     }
 
+    $scope.fetchData = function () {
+        chat.findConversationNotViewedCount()
+            .then(result => {
+                $scope.$apply(() => {
+                    $scope.data = result;
+                });
+            }).catch(error => console.error(error))
+
+    }
+
     $scope.setConversationId = function (conversationId) {
         $scope.conversationId = conversationId;
         console.log('$scope.conversationId', $scope.conversationId)
@@ -190,6 +200,16 @@ myChatApp.controller('chatWidget', function ($scope, socket) {
     $scope.changeView = function (newView) {
         $scope.currentView = newView;
         $scope.$broadcast('changeView', { currentView: $scope.currentView });
+    }
+
+    $scope.viewConversationGlobal = function (conversationId) {
+        $scope.$broadcast('viewConversationGlobal', { conversationId });
+        const tempData = $scope.data;
+        const conversationIndex = tempData.findIndex((conversation) => conversation.id == conversationId);
+        if (conversationIndex >= 0) {
+            tempData.splice(conversationIndex, 1);
+        }
+        $scope.data = [...tempData];
     }
 
     socket.on('connect', function () {
@@ -203,6 +223,23 @@ myChatApp.controller('chatWidget', function ($scope, socket) {
     socket.on('reconnect', function () {
         console.log('Reconnected to server');
     });
+
+    socket.on('new-message', (data) => {
+        chat.findMessageById(data.messageId).then(result => {
+            $scope.$apply(() => {
+                $scope.$broadcast('newMessage', { message: result });
+                const conversationIndex = $scope.data.findIndex((conversation) => conversation.id == result.conversationId);
+
+                if (conversationIndex < 0) {
+                    $scope.data = [...$scope.data, result.conversation];
+                }
+
+            });
+        }).catch(error => console.error(error))
+
+    });
+
+    $scope.fetchData();
 
 })
 
@@ -267,6 +304,23 @@ myChatApp.controller('chatUserList', function ($scope, chat) {
     $scope.$on('changeView', function (event, data) {
         if (data.currentView == 'LIST') $scope.fetchData();
     });
+
+    $scope.$on('newMessage', function (event, data) {
+        if ($scope.$parent.currentView == 'LIST') {
+
+
+            const tempData = $scope.data;
+            const conversationIndex = tempData.findIndex((conversation) => conversation.id == data.message.conversationId);
+
+            if (conversationIndex >= 0) {
+                tempData.splice(conversationIndex, 1);
+            }
+            tempData.unshift(data.message.conversation);
+            $scope.data = [...tempData];
+        }
+    });
+
+
 
 })
 
@@ -348,8 +402,28 @@ myChatApp.controller('chatUser', function ($scope, $q, chat) {
     vm.message = '';
     $scope.isSending = false;
 
+    $scope.$on('newMessage', function (event, data) {
+        if ($scope.$parent.currentView == 'USER' && $scope.$parent.conversationId == data.message.conversationId) {
+            $scope.addMessage(data.message);
+            $scope.viewConversation();
+        }
+    });
+
+    $scope.viewConversation = function () {
+
+        chat.viewConversation($scope.$parent.conversationId, new Date())
+            .then(() => {
+                $scope.$apply(() => {
+                    $scope.$parent.viewConversationGlobal($scope.$parent.conversationId);
+                });
+            }).catch(error => console.error(error));
+    }
+
     $scope.scrollToBottom = function () {
-        document.getElementById('bottom').scrollIntoView();
+        document.getElementById('bottom').scrollIntoView({ behavior: 'smooth', block: 'end' });
+        // $([document.documentElement, document.body]).animate({
+        //     scrollTop: $("#bottom").offset().top
+        // }, 2000);
     }
     $scope.addMessage = function (message) {
         $scope.data = [message, ...$scope.data];
@@ -411,6 +485,9 @@ myChatApp.controller('chatUser', function ($scope, $q, chat) {
                     $scope.showLoadingMore = ($scope.page + 1 <= Math.ceil($scope.total / $scope.nbrPerPage));
                     console.log($scope.data);
                 });
+                if (newPage == 1) {
+                    $scope.viewConversation();
+                }
             }).catch(error => console.error(error))
             .finally(() => {
                 $scope.$apply(() => {
