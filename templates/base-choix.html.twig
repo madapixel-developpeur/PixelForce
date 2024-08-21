@@ -161,9 +161,13 @@
         {% endblock %}
 
         {% block chatScripts %}
+            <script src="https://cdn.jsdelivr.net/npm/moment@2.30.1/moment.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/moment-duration-format@2.3.2/lib/moment-duration-format.min.js"></script>
             <script type="text/javascript">
-                document.baseUrlChat = '{{base_url_chat}}';
-                document.jwtToken = '{{configSecteurService.getUserJwtToken(app.user)}}';
+                window.momentDurationFormatSetup(moment);
+                window.baseUrlChat = '{{base_url_chat}}';
+                window.jwtToken = '{{configSecteurService.getUserJwtToken(app.user)}}';
+                window.userId = '{{app.user.id}}';
             </script>
             <script src="{{ asset('app-assets/js/chat/chat.js') }}"></script>
         {% endblock %}

@@ -9,6 +9,70 @@
     </div>
   </div>
   <div class="chat-user-list-main">
+    <div style="height:100%;" ng-if="isLoading">
+      <div class="d-flex align-items-center justify-content-center" style="height: 100%;">
+        <i class="ti ti-loader fs-2 my-loader"></i>
+      </div>
+    </div>
+    <div style="height:100%;" ng-if="!isLoading">
+      <div style="height:100%;" ng-if="total == 0">
+        <div class="d-flex align-items-center justify-content-center" style="height: 100%;">
+          <span>Aucune conversation</span>
+        </div>
+      </div>
+
+
+      <div ng-repeat="conversation in data"
+        class="d-flex p-3 chat-one-user {{ "{{isNewMessage(conversation) ? 'new' : ''}}" }} {{ "{{conversation.id == conversationId ? 'selected' : ''}}" }}"
+        ng-click="conversationSelected(conversation.id)">
+        <div class="d-flex align-items-center justify-content-center flex-column" style="width: 80px;">
+          <img src="{{ asset('assets/img/avatar.webp') }}" class="chat-user-avatar" />
+          <span class="fs-6 profile-name"
+            ng-if="isConversationCreator(conversation)">{{ "{{conversation.inviteeUser.data.roleLabel | truncate: 15}}" }}</span>
+          <span class="fs-6 profile-name"
+            ng-if="!isConversationCreator(conversation)">{{ "{{conversation.createdByUser.data.roleLabel | truncate: 15}}" }}</span>
+        </div>
+
+        <div class="flex-grow-1 d-flex flex-column justify-content-between ms-2">
+          <div>
+            <div class="d-flex justify-content-between">
+              <span><b>{{ "{{ isConversationCreator(conversation) ? conversation.inviteeUser.firstname + ' ' +
+                  conversation.inviteeUser.lastname : conversation.createdByUser.firstname + ' ' +
+                  conversation.createdByUser.lastname }}" }}</b></span>
+              <span class="badge rounded-pill bg-light-danger" ng-if="isNewMessage(conversation)">
+                1
+              </span>
+            </div>
+            <div class="d-flex justify-content-between" ng-if="isConversationCreator(conversation)">
+              <span style="font-size: 0.65rem;">{{ "{{conversation.inviteeUser.email | truncate: 30}}" }}</span>
+
+            </div>
+            <div class="d-flex justify-content-between" ng-if="!isConversationCreator(conversation)">
+              <span style="font-size: 0.65rem;">{{ "{{conversation.createdByUser.email | truncate: 30}}" }}</span>
+
+            </div>
+          </div>
+          <div class="d-flex justify-content-between">
+            <span class="fs-6 message-text">{{ "{{(conversation.lastMessage ? conversation.lastMessage.content : 'Démarrer la conversation
+              maintenant') | truncate: 30}}" }}</span>
+            <span class="fs-6">{{ "{{conversation.lastMessage ? (conversation.lastMessage.createdAt | myTimeAgo) :
+              ''}}" }}</span>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="d-flex p-3 align-items-center justify-content-center mb-2">
+        <div class="d-flex flex-column align-items-center font-weight-bold" style="cursor: pointer;"
+          ng-if="showLoadingMore && !isLoadingMore" ng-click="loadMore()">
+          <i class="ti ti-chevron-down fs-2 " style="cursor: pointer;"></i>
+          <span class="fs-6">Voir plus</span>
+
+        </div>
+
+        <i class="ti ti-loader fs-2 my-loader" ng-if="isLoadingMore"></i>
+      </div>
+    </div>
   </div>
   <button class="add-conversation-button" ng-click="addConversation()">
     <span>+</span>
