@@ -14,7 +14,8 @@ parameters:
     pbb_ws_url: '%env(PBB_WS_URL)%'
     secteur_digital_id: '%env(SECTEUR_DIGITAL_ID)%'
     base_url_chat: '%env(BASE_URL_CHAT)%'
-
+    socket_url_chat: '%env(SOCKET_URL_CHAT)%'
+    
 services:
     # default configuration for services in *this* file
     _defaults:

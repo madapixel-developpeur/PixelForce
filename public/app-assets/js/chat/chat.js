@@ -1,9 +1,25 @@
-var myChatApp = angular.module("myChatApp", []);
+var myChatApp = angular.module("myChatApp", ['btford.socket-io']);
 const applicationName = "pixelforce";
 const baseHeadersChatApi = {
     'authorization': 'Bearer ' + window.jwtToken,
     'x-application': applicationName
 };
+
+myChatApp.factory('socket', function (socketFactory) {
+    // Custom configuration with extra headers and query parameters
+    var myIoSocket = io.connect(window.socketUrlChat, {
+        query: {
+            token: window.jwtToken,
+        },
+        extraHeaders: {
+            'x-application': applicationName
+        }
+    });
+
+    return socketFactory({
+        ioSocket: myIoSocket
+    });
+});
 
 myChatApp.service('chat', function ($http) {
     this.searchUsersChat = async function (search = '', page = 1, nbrPerPage = 10) {
@@ -149,7 +165,7 @@ myChatApp.filter('myTimeAgo', function () {
     };
 });
 
-myChatApp.controller('chatWidget', function ($scope) {
+myChatApp.controller('chatWidget', function ($scope, socket) {
     $scope.visible = false;
     $scope.currentView = null; // in [LIST, USER, SEARCH]
     $scope.conversationId = null;
@@ -175,6 +191,18 @@ myChatApp.controller('chatWidget', function ($scope) {
         $scope.currentView = newView;
         $scope.$broadcast('changeView', { currentView: $scope.currentView });
     }
+
+    socket.on('connect', function () {
+        console.log('Connected to server');
+    });
+
+    socket.on('disconnect', function () {
+        console.log('Disconnected from server');
+    });
+
+    socket.on('reconnect', function () {
+        console.log('Reconnected to server');
+    });
 
 })
 
