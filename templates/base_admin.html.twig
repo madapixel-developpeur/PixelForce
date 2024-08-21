@@ -16,6 +16,11 @@
         <link rel="stylesheet"  href="{{ asset('assets/vuexy/vendors/css/charts/apexcharts.css') }}">
         <link rel="stylesheet"  href="{{ asset('assets/vuexy/vendors/css/extensions/toastr.min.css') }}">
         <link rel="stylesheet" type="text/css" href="{{ asset('assets/vuexy/vendors/css/pickers/flatpickr/flatpickr.min.css') }}">
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/1.35.0/iconfont/tabler-icons.min.css" integrity="sha512-tpsEzNMLQS7w9imFSjbEOHdZav3/aObSESAL1y5jyJDoICFF2YwEdAHOPdOr1t+h8hTzar0flphxR76pd0V1zQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel="stylesheet" href="{{ asset('app-assets/css/chat/chat.css')}}">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.8.3/angular.min.js" integrity="sha512-KZmyTq3PLx9EZl0RHShHQuXtrvdJ+m35tuOiwlcZfs/rE7NZv29ygNA8SFCkMXTnYZQK2OX0Gm2qKGfvWEtRXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
         <!-- Calendly link widget begin -->
 		<link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
 		<script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript" async></script>
@@ -75,6 +80,10 @@
         {# {% include 'live/video/liveVideoRapide.html.twig' %} #}
         {# {% include 'live/chat/mini_menu_chat.html.twig'  %} #}
 
+        {% block chat %}
+        {% include '/partials/chat/chat-widget.html.twig' %}
+        {% endblock %}
+
         {% block javascripts %}
             <script type="application/json" id="live-call-topic">{{ mercure(constant('App\\Services\\LiveVideo::CALL_TOPIC')~(app.user.id|base64_encode))|json_encode(constant('JSON_UNESCAPED_SLASHES') b-or constant('JSON_HEX_TAG'))|raw }}</script>
             <script type="application/json" id="live-refus-topic">{{ mercure(constant('App\\Services\\LiveVideo::REFUS_CALL_TOPIC')~(app.user.id|base64_encode))|json_encode(constant('JSON_UNESCAPED_SLASHES') b-or constant('JSON_HEX_TAG'))|raw }}</script>
@@ -125,6 +134,24 @@
 
 
 
+        {% endblock %}
+
+        {% block chatScripts %}
+            <script src="https://cdn.jsdelivr.net/npm/moment@2.30.1/moment.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/moment-duration-format@2.3.2/lib/moment-duration-format.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.5/socket.io.js" integrity="sha512-luMnTJZ7oEchNDZAtQhgjomP1eZefnl82ruTH/3Oj/Yu5qYtwL7+dVRccACS/Snp1lFXq188XFipHKYE75IaQQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-socket-io/0.7.0/socket.min.js" integrity="sha512-RB0FN8aKxL1P9La/rZN27Jk6istGcQxfgipQGx1D+abcsdwpBnMeZnw8O3DfQvwerZ8VLie+UUdUgiYz0sgwvA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/locale/fr.min.js" integrity="sha512-RAt2+PIRwJiyjWpzvvhKAG2LEdPpQhTgWfbEkFDCo8wC4rFYh5GQzJBVIFDswwaEDEYX16GEE/4fpeDNr7OIZw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-i18n/1.8.3/angular-locale_fr-fr.min.js" integrity="sha512-MCAYlKrKtIZuB2/OgBy7GcuYJsqzD+SL3BtLi3S9Gqah2QRDz242o2T4nbmVu5TptihL3spl98VVMT2hAYODcg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            <script type="text/javascript">
+                moment.locale('fr');
+                window.momentDurationFormatSetup(moment);
+                window.baseUrlChat = '{{base_url_chat}}';
+                window.socketUrlChat = '{{socket_url_chat}}';
+                window.jwtToken = '{{configSecteurService.getUserJwtToken(app.user)}}';
+                window.userId = '{{app.user.id}}';
+            </script>
+            <script src="{{ asset('app-assets/js/chat/chat.js') }}"></script>
         {% endblock %}
     </body>
 </html>
