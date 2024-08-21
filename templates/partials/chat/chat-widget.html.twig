@@ -1,5 +1,5 @@
 <div ng-app="myChatApp" class="custom-chat wrapper d-none" ng-controller="chatWidget">
-  <div class="chat-box" ng-if="visible">
+  <div class="chat-box" ng-show="visible">
         <div ng-show="currentView == 'LIST'" style="height: 100%;">
             {% include '/partials/chat/chat-user-list.html.twig' %}
         </div>
