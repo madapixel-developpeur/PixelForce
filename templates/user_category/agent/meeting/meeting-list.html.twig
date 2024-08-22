@@ -1,301 +1,382 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-    Rendez-vous
+	Rendez-vous
 {% endblock %}
 
 {% block stylesheets %}
-    {{ parent() }}
-    <link rel="stylesheet" type="text/css" href="{{ asset('assets/templates/meeting/meeting.style.css') }}">
+	{{ parent() }}
+	<link rel="stylesheet" type="text/css" href="{{ asset('assets/templates/meeting/meeting.style.css') }}">
 {% endblock %}
 
 {% block body %}
- 
-    <div class="row mb-3">
+
+	<div class="row mb-3">
 		<div class="col-12  mt-2 mt-md-3">
-			<h4 class="my-auto general-primary-text">{% if contact is defined and contact is not null %}<span class="h5 block__title">Liste de rendez-vous </span ><span class="h5">({{ contact.information.fullName }}): </span >{% else %}<span class="h5 block__title"> Liste de rendez-vous :</span > {% endif %}</h4>
+			<h4 class="my-auto general-primary-text">
+				{% if contact is defined and contact is not null %}
+					<span class="h5 block__title">Liste de rendez-vous
+					</span>
+					<span class="h5">({{ contact.information.fullName }}):
+					</span>
+				{% else %}
+					<span class="h5 block__title">
+						Liste de rendez-vous :</span>
+				{% endif %}
+			</h4>
 		</div>
 	</div>
 	<div class="card card-company-table p-5 rounded-3" style="">
-				<div class="card-body p-0">
-					<div class="card-head mb-3">
-						<div class="row">
-							<div class="col-0 col-md-6">
-                        
-							</div>
-							<div class="col-12 col-md-6 d-flex justify-content-center">
-								<form action="{{path('agent_contact_meeting_list')}}" class="input-group rounded-3 m-2 w-75">
-                                    <button class="input-group-text border-0" id="search-addon" type="submit">
-										<i class="fas fa-search"></i>
-									</button>
-                                    <input type="search"name="search" class="form-control  input-group-text border-0" placeholder="Chercher" aria-label="Search" aria-describedby="search-addon" />
-                                </form>
-								<div class="col-6 col-md-4">
-                                    <div class="input-group rounded-3 m-2">
-                                        <button class="input-group-text border-0 w-100" type="button" data-toggle="collapse" data-target="#filters" aria-expanded="false" aria-controls="filters">
-                                            <span class="input-group-text border-0 w-25 rounded-4 me-4" id="filter-toggle">
-                                                <i class="fa-solid fa-bars-staggered"></i>
-                                            </span>
-                                            Filtres
-                                        </button>
-                                    </div>
-                                </div>
+		<div class="card-body p-0">
+			<div class="card-head mb-3">
+				<div class="row">
+					<div class="col-0 col-md-6"></div>
+					<div class="col-12 col-md-6 d-flex justify-content-center">
+						<form action="{{path('agent_contact_meeting_list')}}" class="input-group rounded-3 m-2 w-75">
+							<button class="input-group-text border-0" id="search-addon" type="submit">
+								<i class="fas fa-search"></i>
+							</button>
+							<input type="search" name="search" class="form-control  input-group-text border-0" placeholder="Chercher" aria-label="Search" aria-describedby="search-addon"/>
+						</form>
+						<div class="col-6 col-md-4">
+							<div class="input-group rounded-3 m-2">
+								<button class="input-group-text border-0 w-100" type="button" data-toggle="collapse" data-target="#filters" aria-expanded="false" aria-controls="filters">
+									<span class="input-group-text border-0 w-25 rounded-4 me-4" id="filter-toggle">
+										<i class="fa-solid fa-bars-staggered"></i>
+									</span>
+									Filtres
+								</button>
 							</div>
 						</div>
-                    </div>
-                    <div class="collapse" id="filters">
-                        <div class="block block--bordered block--rounded">
-                             <h1 class="block__text block__text--center mt-2" >Options de filtre :</h1>
-                             <div class="filter-wrap">
-                                    <!-- Formulaire de recherche -->
-                                    <div class="search-form">
-                                        {{form_start(searchForm)}}
-                                        <div class="row text-center">
-                                            <div class="col-12 col-sm-6 col-md-6">
-                                                {{form_row(searchForm.title)}}
-                                            </div>
-                                            <div class="col-12 col-sm-6 col-md-6">
-                                                {{form_row(searchForm.status)}}
-                                            </div>
-                                            <div class="col-6">
-                                                <label for="dateInscriptionMin" class="form-label">Date debut</label>
-                                                {{form_widget(searchForm.startDate)}}
-                                            </div>
-                                            <div class="col-6">
-                                                <label for="dateInscriptionMax" class="form-label">Date fin</label>
-                                                {{form_widget(searchForm.endDate)}}
-                                            </div>
-                                            <div class="col-12 col-sm-12 col-md-12 mt-3">
-                                                <button class="btn btn-primary "><i class="fa-solid fa-magnifying-glass"></i> Rechercher</button>
-                                            </div>
-                                        </div>
-                                        {{form_end(searchForm)}}
-                                    </div>
-                             </div>
-                        </div>
-                    </div>
-                    
-                    {% if meetings|length ==0 %}
-                        <div class="alert alert-primary p-3 text-center" role="alert">
-                            <div class="alert-body">
-                                Aucun rendez-vous.
-                            </div>
-                        </div>
-                    {% endif %}
-                    {% if meetings|length !=0 %}
-					<div class="table-responsive">
-						<table class="table text-center">
-							<tbody class="align-items-center">
-								<tr>
-                                    <th>Id</th>
-                                    <th>Date de début</th>
-                                    <th>Date de fin</th>
-                                    <th>Libellé</th>
-                                    <th>Invité</th>
-                                    <th>Téléphone</th>
-                                    <th>Email</th>
-                                    <th>Référence</th>
-                                    <th>AUDIT</th>
-                                    <th>Statut</th>
-                                    <th class="table-th-notSortable"></th>
-                                </tr>
-
-								{% for meeting in meetings %}
-                                <tr>
-                                    <td>{{meeting.id}}</td>
-                                    <td>{{meeting.start | date("d/m/Y H:i")}}</td>
-                                    <td>{{meeting.end | date("d/m/Y H:i")}}</td>
-                                    <td><b>{{meeting.title}}</b></td>
-                                    <td> <a href="{{ path('agent_contact_view', { id: meeting.userToMeet.information.contact.id }) }}">{{ meeting.userToMeet.information.lastname }} {{ meeting.userToMeet.information.firstname }}</a> </td>
-                                    <td> <a href="tel:{{meeting.userToMeet.information.phone}}">{{ meeting.userToMeet.information.phone|default('-') }}</a> </td>
-                                    <td> <a href="mailto:{{meeting.userToMeet.information.email}}">{{ meeting.userToMeet.information.email|default('-') }}</a> </td>
-                                    <td> 
-                                        <div class="d-flex justify-content-start">
-                                            <a class="btn btn-outline-primary w-50" href="{{ path('agent_order_list_digital',{'referenceVente' : generateReference(meeting.userToMeet.agent.id,app.user.id,meeting.userToMeet.id,meeting.user.id)  }) }}"> {{ generateReference(meeting.userToMeet.agent.id,app.user.id,meeting.userToMeet.id,meeting.user.id) }} </a>
-                                            <a class="p-2" href="#" onclick="copyLink('{{ configSecteurService.getRefUrl(generateReference(meeting.userToMeet.agent.id,app.user.id,meeting.userToMeet.id,meeting.user.id)) }}','Liens de la référence {{  generateReference(meeting.userToMeet.agent.id,app.user.id,meeting.userToMeet.id,meeting.user.id) }} copié avec succès') "><i class="fa-solid fa-copy"></i></a> 
-                                        </div>
-                                    </td>
-                                    <td> 
-                                        {% if meeting.audit != null  %}
-                                            <a class="btn btn-outline-primary p-2" {% if meeting.audit != null  %}href="{{ path('meeting_audit_view', { 'id': meeting.getId() }) }}"{% endif %}>Détail</a>
-                                        {% else %}
-                                            <a class="btn btn-outline-success p-2" href="{{ path('meeting_audit_add', { id: meeting.getId() }) }}">Ajouter</a>
-                                        {% endif %}
-                                    </td>
-                                    
-                                    <td>
-                                        {% if meeting.meetingState.name == 'Annulé' %}
-                                            <span class="text-danger">{{meeting.meetingState.name}}</span>
-                                        {% else %}
-                                            {{meeting.meetingState.name}}
-                                        {% endif %}
-                                    </td>
-                                    <td class="col-action p-2">
-                                        <a href="{{path('agent_contact_meeting_fiche', {'id': meeting.id})}}" >
-                                            <i data-feather="eye"></i>
-                                        </a>
-                                    </td>
-
-                                
-                                </tr>
-                                {% endfor %}
-
-							</tbody>
-						</table>
 					</div>
-					<div class="pagination d-flex justify-content-center">
-						{{ knp_pagination_render(meetings)}}
-					</div>
-                     {% endif %}
 				</div>
+			</div>
+			<div class="collapse" id="filters">
+				<div class="block block--bordered block--rounded">
+					<h1 class="block__text block__text--center mt-2">Options de filtre :</h1>
+					<div
+						class="filter-wrap">
+						<!-- Formulaire de recherche -->
+						<div class="search-form">
+							{{form_start(searchForm)}}
+							<div class="row text-center">
+								<div class="col-12 col-sm-6 col-md-6">
+									{{form_row(searchForm.title)}}
+								</div>
+								<div class="col-12 col-sm-6 col-md-6">
+									{{form_row(searchForm.status)}}
+								</div>
+								<div class="col-6">
+									<label for="dateInscriptionMin" class="form-label">Date debut</label>
+									{{form_widget(searchForm.startDate)}}
+								</div>
+								<div class="col-6">
+									<label for="dateInscriptionMax" class="form-label">Date fin</label>
+									{{form_widget(searchForm.endDate)}}
+								</div>
+								<div class="col-12 col-sm-12 col-md-12 mt-3">
+									<button class="btn btn-primary ">
+										<i class="fa-solid fa-magnifying-glass"></i>
+										Rechercher</button>
+								</div>
+							</div>
+							{{form_end(searchForm)}}
+						</div>
+					</div>
+				</div>
+			</div>
+
+			{% if meetings|length ==0 %}
+				<div class="alert alert-primary p-3 text-center" role="alert">
+					<div class="alert-body">
+						Aucun rendez-vous.
+					</div>
+				</div>
+			{% endif %}
+			{% if meetings|length !=0 %}
+				<div class="table-responsive">
+					<table class="table text-center">
+						<tbody class="align-items-center">
+							<tr>
+								<th>Id</th>
+								<th>Date de début</th>
+								<th>Date de fin</th>
+								<th>Libellé</th>
+								<th>Invité</th>
+								<th>Téléphone</th>
+								<th>Email</th>
+								<th>Référence</th>
+								<th>AUDIT</th>
+								<th>Statut</th>
+								<th class="table-th-notSortable"></th>
+							</tr>
+
+							{% for meeting in meetings %}
+								<tr>
+									<td>{{meeting.id}}</td>
+									<td>{{meeting.start | date("d/m/Y H:i")}}</td>
+									<td>{{meeting.end | date("d/m/Y H:i")}}</td>
+									<td>
+										<b>{{meeting.title}}</b>
+									</td>
+									<td>
+										<a href="{{ path('agent_contact_view', { id: meeting.userToMeet.information.contact.id }) }}">{{ meeting.userToMeet.information.lastname }}
+											{{ meeting.userToMeet.information.firstname }}</a>
+									</td>
+									<td>
+										<a href="tel:{{meeting.userToMeet.information.phone}}">{{ meeting.userToMeet.information.phone|default('-') }}</a>
+									</td>
+									<td>
+										<a href="mailto:{{meeting.userToMeet.information.email}}">{{ meeting.userToMeet.information.email|default('-') }}</a>
+									</td>
+									<td>
+										<div class="d-flex justify-content-start">
+											<a class="btn btn-outline-primary w-50" href="{{ path('agent_order_list_digital',{'referenceVente' : generateReference(meeting.userToMeet.agent.id,app.user.id,meeting.userToMeet.id,meeting.user.id) }) }}">
+												{{ generateReference(meeting.userToMeet.agent.id,app.user.id,meeting.userToMeet.id,meeting.user.id) }}
+											</a>
+											<a class="p-2" href="#" onclick="copyLink('{{ configSecteurService.getRefUrl(generateReference(meeting.userToMeet.agent.id,app.user.id,meeting.userToMeet.id,meeting.user.id)) }}','Liens de la référence {{  generateReference(meeting.userToMeet.agent.id,app.user.id,meeting.userToMeet.id,meeting.user.id) }} copié avec succès') ">
+												<i class="fa-solid fa-copy"></i>
+											</a>
+										</div>
+									</td>
+									<td>
+										{% if meeting.audit != null  %}
+											<a class="btn btn-outline-primary p-2" {% if meeting.audit != null %} href="{{ path('meeting_audit_view', { 'id': meeting.getId() }) }}" {% endif %}>Détail</a>
+										{% else %}
+											<a class="btn btn-outline-success p-2" href="{{ path('meeting_audit_add', { id: meeting.getId() }) }}">Ajouter</a>
+										{% endif %}
+									</td>
+
+									<td>
+										{% if meeting.meetingState.name == 'Annulé' %}
+											<span class="text-danger">{{meeting.meetingState.name}}</span>
+										{% else %}
+											{{meeting.meetingState.name}}
+										{% endif %}
+									</td>
+									<td class="col-action p-2">
+										<a href="{{path('agent_contact_meeting_fiche', {'id': meeting.id})}}">
+											<i data-feather="eye"></i>
+										</a>
+									</td>
+
+
+								</tr>
+							{% endfor %}
+
+						</tbody>
+					</table>
+				</div>
+				<div class="pagination d-flex justify-content-center">
+					{{ knp_pagination_render(meetings)}}
+				</div>
+			{% endif %}
+		</div>
 	</div>
-     <div class="row match-height">
-        <div class="col-lg-8 col-12">
-            <h4 class=" mt-2 mb-3 choix-secteur-primary">Formation(s)</h4>
-            <div class="card ">
-                <div class="card-body p-0">
-                    {% if firstFormation == null %}    
-                        <div class="alert alert-primary text-center m-5">
-                            Aucune formation disponible
-                        </div>
-                    {% else %}
-                        {# {% if firstFormation.categorieFormation.ordreCatFormation == constant('App\\Entity\\CategorieFormation::ORDRE_LISTE_DE_CONTACT') and nbrAllMyContacts < constant('App\\Entity\\CategorieFormation::CONDITION_LISTE_DE_CONTACT') %}
-                            <h3 class="fw-bolder text-center mt-2">{{ firstFormation.titre}} </h3>    
-                            <div class="alert alert-warning m-5 text-center h2">
-                                Pour débloquer cette formation, assurez-vous d’avoir enregistré plus de 100 contacts dans votre liste de prospection.
-                            </div>
-                        {% else %} #}
-                            {% set isQuiz = firstFormation.type == constant('App\\Entity\\Formation::TYPE_QUIZ') %}
-                            
-                            {% if isQuiz %}
-                            {% set formationAgentRelation = repoFormationAgent.findOneBy({agent:app.user.id, formation:firstFormation}) %}
-                            {% set statut = formationAgentRelation ? formationAgentRelation.statut : constant('App\\Entity\\Formation::STATUT_DISPONIBLE') %}
-                            <h3 class="fw-bolder text-center mt-2">QUIZ: {{ firstFormation.titre}} </h3>
-                            <div class="border bg-white px-3 py-3" style="min-height: 150px;">
-                                {% if firstFormation.description %}
-                                <p class="text-center">{{ firstFormation.description }}</p>
-                                {% endif %}
-                                
-                                {% if formationAgentRelation %}
-                                <div class="d-flex align-items-center justify-content-around mb-2">
-                                <p><b>Dernièr résultat:</b> {{formationAgentRelation.lastResultScore | number_format(2, ',', ' ')}} %</p>
-                                <p><b>Résultat maximum:</b> {{formationAgentRelation.maxResultScore | number_format(2, ',', ' ')}} %</p>
-                                    
-                                    <p><b>Statut:</b>&nbsp;
-                                    {% if formationAgentRelation.statut == constant('App\\Entity\\Formation::STATUT_TERMINER') %}
-                                    <b class="text-success">RÉUSSI</b>
-                                    {% else %}
-                                    <b class="text-danger">ÉCHOUÉ</b>
-                                    {% endif %}
-                                    </p>
-                                </div>                                  
-                                {% endif %}
-                                <div class="text-center"><i class="fa fa-question-circle fa-3x"></i></div>
-                            </div>
-                            
-                            <div class="text-center m-2 p-2">
-                                <div class="row">
-                                        {% if statut == constant('App\\Entity\\Formation::STATUT_DISPONIBLE')%}
-                                    <div class="col">
-                                        <a href="{{ path('agent_quiz_begin', {id:firstFormation.id}) }}" class="btn btn-primary fw-bolder mt-4">Commencer</a>
-                                    </div>
-                                    <div class="col">
-                                        
-                                    </div>
-                                    {% elseif statut == constant('App\\Entity\\Formation::STATUT_IN_PROGRESS') or statut == constant('App\\Entity\\Formation::STATUT_TERMINER') %}
-                                    <div class="col">
-                                        <a href="{{ path('agent_quiz_begin', {id:firstFormation.id}) }}" class="btn btn-primary fw-bolder mt-4"><i class="fa fa-repeat"></i> Réessayer</a>
-                                    </div>
-                                    <div class="col">
-                                        <a href="{{ path('agent_quiz_result', {id:formationAgentRelation.id}) }}" class="btn btn-success fw-bolder mt-4"><i class="fa fa-chevron-right"></i> Voir le dérnier résultat</a>
-                                    </div>
-                                    {% endif %}
-                                    <div class="col">
-                                        <a href="{{ path('agent_formation_list') }}" class="btn btn-secondary fw-bolder mt-4"><i class="fa-solid fa-list me-2"></i> Liste des formations</a>
-                                    </div>
-                                </div>
-                            </div>
-                            {% else %}
-                            <div class="row">
+	<div class="row match-height">
+		<div class="col-lg-8 col-12">
+			<h4 class=" mt-2 mb-3 choix-secteur-primary">Formation(s)</h4>
+			<div class="card ">
+				<div class="card-body p-0">
+					{% if firstFormation == null %}
+						<div class="alert alert-primary text-center m-5">
+							Aucune formation disponible
+						</div>
+					{% else %}
+						{# {% if firstFormation.categorieFormation.ordreCatFormation == constant('App\\Entity\\CategorieFormation::ORDRE_LISTE_DE_CONTACT') and nbrAllMyContacts < constant('App\\Entity\\CategorieFormation::CONDITION_LISTE_DE_CONTACT') %}
+												                            <h3 class="fw-bolder text-center mt-2">{{ firstFormation.titre}} </h3>    
+												                            <div class="alert alert-warning m-5 text-center h2">
+												                                Pour débloquer cette formation, assurez-vous d’avoir enregistré plus de 100 contacts dans votre liste de prospection.
+												                            </div>
+												                        {% else %} #}
+						{% set isQuiz = firstFormation.type == constant('App\\Entity\\Formation::TYPE_QUIZ') %}
 
-                                <div class="col-12 pb-3">
-                                    <div class="border ratio ratio-16x9 rounded-3">
-                                        <iframe id="formationVideo" src="https://player.vimeo.com/video/{{ firstFormation.videoId }}?loop=0&byline=0&portrait=0&title=0&muted=1" width="700" height="400" class="m-auto" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen allow="autoplay; encrypted-media"></iframe>
-                                    </div>  
-                                    <h5 class=" text-center m-2 general-primary-text fs-5">{{ firstFormation.titre}} </h5>
-                                    <div class="text-center">
-                                        <div class="row">
-                                            <div class="col-md-2">
-                                                {% if previousFormation is not null %}
-                                                        <a href="{{ path('agent_contact_meeting_list',{'formationId' : previousFormation.id }) }}" class="btn btn-primary mt-2 rounded-3"> <i class="fa fa-angle-double-left"></i> Précédente </a>
-                                                {% endif %}
-                                            </div>
-                                            
-                                            <div class="col-md-8">
-                                                <a href="{{ path('agent_formation_fiche', {id:firstFormation.id}) }}" class="regular-button w-50 mt-2 rounded-3"><i class="fa-solid fa-file me-2"></i> Fiche formation</a>
-                                            </div>
-                                            <div class="col-md-2">
-                                                {% if nextFormation is not null %}
-                                                    <a href="{{ path('agent_contact_meeting_list',{'formationId' :  nextFormation.id }) }}" class="btn btn-primary  mt-2 rounded-3">Suivante <i class="fa fa-angle-double-right"></i></a>
-                                                {% endif %}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            {% endif %}
-                            <form method="get" action="{{ path('agent_formation_terminer', {id:firstFormation.id}) }}" id="formFinishFormation">
-                                <input type="hidden" name="path" value="fromDashboard">
-                            </form>
+						{% if isQuiz %}
+							{% set formationAgentRelation = repoFormationAgent.findOneBy({agent:app.user.id, formation:firstFormation}) %}
+							{% set statut = formationAgentRelation ? formationAgentRelation.statut : constant('App\\Entity\\Formation::STATUT_DISPONIBLE') %}
+							<h3 class="fw-bolder text-center mt-2">QUIZ:
+								{{ firstFormation.titre}}
+							</h3>
+							<div class="border bg-white px-3 py-3" style="min-height: 150px;">
+								{% if firstFormation.description %}
+									<p class="text-center">{{ firstFormation.description }}</p>
+								{% endif %}
+
+								{% if formationAgentRelation %}
+									<div class="d-flex align-items-center justify-content-around mb-2">
+										<p>
+											<b>Dernièr résultat:</b>
+											{{formationAgentRelation.lastResultScore | number_format(2, ',', ' ')}}
+											%</p>
+										<p>
+											<b>Résultat maximum:</b>
+											{{formationAgentRelation.maxResultScore | number_format(2, ',', ' ')}}
+											%</p>
+
+										<p>
+											<b>Statut:</b>&nbsp;
+											{% if formationAgentRelation.statut == constant('App\\Entity\\Formation::STATUT_TERMINER') %}
+												<b class="text-success">RÉUSSI</b>
+											{% else %}
+												<b class="text-danger">ÉCHOUÉ</b>
+											{% endif %}
+										</p>
+									</div>
+								{% endif %}
+								<div class="text-center">
+									<i class="fa fa-question-circle fa-3x"></i>
+								</div>
+							</div>
+
+							<div class="text-center m-2 p-2">
+								<div class="row">
+									{% if statut == constant('App\\Entity\\Formation::STATUT_DISPONIBLE')%}
+										<div class="col">
+											<a href="{{ path('agent_quiz_begin', {id:firstFormation.id}) }}" class="btn btn-primary fw-bolder mt-4">Commencer</a>
+										</div>
+										<div class="col"></div>
+									{% elseif statut == constant('App\\Entity\\Formation::STATUT_IN_PROGRESS') or statut == constant('App\\Entity\\Formation::STATUT_TERMINER') %}
+										<div class="col">
+											<a href="{{ path('agent_quiz_begin', {id:firstFormation.id}) }}" class="btn btn-primary fw-bolder mt-4">
+												<i class="fa fa-repeat"></i>
+												Réessayer</a>
+										</div>
+										<div class="col">
+											<a href="{{ path('agent_quiz_result', {id:formationAgentRelation.id}) }}" class="btn btn-success fw-bolder mt-4">
+												<i class="fa fa-chevron-right"></i>
+												Voir le dérnier résultat</a>
+										</div>
+									{% endif %}
+									<div class="col">
+										<a href="{{ path('agent_formation_list') }}" class="btn btn-secondary fw-bolder mt-4">
+											<i class="fa-solid fa-list me-2"></i>
+											Liste des formations</a>
+									</div>
+								</div>
+							</div>
+						{% else %}
+							<div class="row">
+
+								<div class="col-12 pb-3">
+									<div class="border ratio ratio-16x9 rounded-3">
+										<iframe id="formationVideo" src="https://player.vimeo.com/video/{{ firstFormation.videoId }}?loop=0&byline=0&portrait=0&title=0&muted=1" width="700" height="400" class="m-auto" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen allow="autoplay; encrypted-media"></iframe>
+									</div>
+									<h5 class=" text-center m-2 general-primary-text fs-5">{{ firstFormation.titre}}
+									</h5>
+									<div class="text-center">
+										<div class="row">
+											<div class="col-md-2">
+												{% if previousFormation is not null %}
+													<a href="{{ path('agent_contact_meeting_list',{'formationId' : previousFormation.id }) }}" class="btn btn-primary mt-2 rounded-3">
+														<i class="fa fa-angle-double-left"></i>
+														Précédente
+													</a>
+												{% endif %}
+											</div>
+
+											<div class="col-md-8">
+												<a href="{{ path('agent_formation_fiche', {id:firstFormation.id}) }}" class="regular-button w-50 mt-2 rounded-3">
+													<i class="fa-solid fa-file me-2"></i>
+													Fiche formation</a>
+											</div>
+											<div class="col-md-2">
+												{% if nextFormation is not null %}
+													<a href="{{ path('agent_contact_meeting_list',{'formationId' : nextFormation.id }) }}" class="btn btn-primary  mt-2 rounded-3">Suivante
+														<i class="fa fa-angle-double-right"></i>
+													</a>
+												{% endif %}
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						{% endif %}
+						<form method="get" action="{{ path('agent_formation_terminer', {id:firstFormation.id}) }}" id="formFinishFormation">
+							<input type="hidden" name="path" value="fromDashboard">
+						</form>
+
+						{# {% endif %} #}
+					{% endif %}
+
+				</div>
+			</div>
+
+		</div>
+
+		<div class="col-lg-4 col-md-6 col-12">
+			{% if expert is defined and expert is not null %}
+
+				<h4 class=" mt-2 mb-3 choix-secteur-primary">Rendez-vous avec un expert</h4>
+				<div class="card mb-3" style="max-height:310px;">
+					<div class="card-body text-center">
+						<div class="text-center">
+							<img src="{{ path('user_avatar', { id:expert.id}) }}" width="100" height="100" class="rounded-circle object-fit-cover">
+						</div>
+
+						<div
+							class=" mt-3">
+							{# <span>
+														                                {% for categorie in pro.categorieService %}   
+														                        {{ categorie.nom ~ ","}}
+														                                {% endfor %}
+														                            </span> #}
+
+							<div class="px-4 mt-1">
+								<p>
+									<span class="fw-bolder me-25">Nom:</span>
+									{{ expert.fullName}}</p>
+								<p>
+									<span class="fw-bolder me-25">Contact:</span>
+									{{ expert.telephone}}</p>
+								<p>
+									<span class="fw-bolder me-25">Email:</span>
+									{{ expert.email}}</p>
+
+							</div>
+
+
+							<div class="buttons">
+								<a href="{{ expert.lienCalendly}}" target="_blank" class="btn btn-primary w-100" href>Prendre rendez-vous</a>
+							</div>
+
+
+						</div>
+					</div>
+				</div>
+			{% endif %}
+                <div class="card mb-3" style="max-height:220px;">
+                    <div class="card-body text-center d-flex flex-column">
+                        <div class="flex-fill custom-truncate-text">
                             
-                        {# {% endif %} #}
-                    {% endif %}
-                    
+							<p><span class="fw-bolder me-25">Script d'appel:</span></p>
+            				{% if callScript %}
+                                <p>{{ callScript.content |nl2br}}</p>
+							{% else %}
+								<div class="alert alert-primary text-center m-5">
+									Vide
+								</div>	
+            				{% endif %}
+                        </div>
+                        <div class="buttons mt-auto d-flex justify-content-center">
+							{% if callScript %}
+								<a href="{{ path('agent_call_script_list')}}"  class="btn btn-primary" >
+											Voir plus
+								</a>
+							{% else %}
+							 <a class="btn btn-primary" href="{{ path('agent_call_script_add') }}"><i class="fa fa-plus"></i>
+								Ajouter un script
+								</a>
+							{% endif %}
+                        </div>
+                    </div>
                 </div>
-            </div>
             
-        </div>
+		</div>
+	</div>
 
-        <div class="col-lg-4 col-md-6 col-12">
-        {% if expert is defined and expert is not null %}
-        
-            <h4 class=" mt-2 mb-3 choix-secteur-primary">Rendez-vous avec un expert</h4>
-            <div class="card mb-3" style="max-height:310px;">
-                <div class="card-body text-center">
-                        <div class="text-center">
-                            <img src="{{ path('user_avatar', { id:expert.id}) }}" width="100" height="100" class="rounded-circle object-fit-cover">
-                        </div>
-                        
-                        <div class=" mt-3" >
-                            {# <span>
-                                {% for categorie in pro.categorieService %}   
-                        {{ categorie.nom ~ ","}}
-                                {% endfor %}
-                            </span> #}
-                            
-                            <div class="px-4 mt-1">
-                                <p><span class="fw-bolder me-25">Nom:</span>{{ expert.fullName}}</p>
-                                <p>   <span class="fw-bolder me-25">Contact:</span>{{ expert.telephone}}</p>
-                                <p>   <span class="fw-bolder me-25">Email:</span>{{ expert.email}}</p>
-                            
-                            </div>
-                            
-                        
-                            <div class="buttons">
-                            <a href="{{ expert.lienCalendly}}" target="_blank" class="btn btn-primary w-100" href>Prendre rendez-vous</a>
-                            </div>
-                            
-                            
-                        </div> 
-                </div>
-            </div>
-        {% endif %}
-        </div>
-    </div>
-  
 {% endblock %}
 
 {% block javascripts %}
-    {{ parent() }}
-    <script src="{{ asset('assets/templates/meeting/meeting.js') }}"></script>
+	{{ parent() }}
+	<script src="{{ asset('assets/templates/meeting/meeting.js') }}"></script>
 {% endblock %}

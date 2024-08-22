@@ -1,0 +1,86 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/templates/meeting/meeting.style.css') }}">
+{% endblock %}
+{% block title %}
+    Script d'appel
+{% endblock %}
+{% block body %}
+    <div class="block block--bordered block--rounded mt-5">
+       <div class="block__header mb-3 d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Liste des scripts</h5>
+             {% if  is_granted('ROLE_COACH') %}
+                <a class="btn btn-primary" href="{{ path('coach_call_script_add') }}"><i class="fa fa-plus"></i>Ajouter script</a>
+            {% else %}
+                <a class="btn btn-primary" href="{{ path('agent_call_script_add') }}"><i class="fa fa-plus"></i>Ajouter script</a>
+            {% endif %}
+        </div>
+
+        {% if scripts|length ==0 %}
+                <div class="alert alert-primary p-3 text-center" role="alert">
+                    <div class="alert-body">
+                        Aucun script trouvé.
+                    </div>
+                </div>
+        {% endif %}
+        {% if scripts|length !=0 %}
+        <div class="table-responsive mb-1">
+            <table class="table table-bordered table-hover sortable-sortDefault-Desc">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Intitulé</th>
+                        <th class="text-center">Aperçu</th>
+                        <th class="table-th-notSortable"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for script in scripts %}
+                    <tr style="height:60px">
+                        <td>{{ script.id}}</td>
+                        <td>{{ script.name }}</td>
+                        <td class="text-center"> {{ (script.content |slice(0, 100) ~ '...')|nl2br}}</td>
+                        <td class="col-action ">
+                            {% if  is_granted('ROLE_COACH') %}
+                                <a href="{{path('coach_call_script_view', {'id': script.id})}}">
+                                    <i data-feather="eye"></i>
+                                </a>
+                                {% if script.author.id == app.user.id %}
+                                    <a href="{{path('coach_call_script_edit', {'id': script.id})}}">
+                                        <i data-feather="edit"></i>
+                                    </a>
+                                {% endif %}
+                                
+                            {% else %}
+                                 <a href="{{path('agent_call_script_view', {'id': script.id})}}">
+                                    <i data-feather="eye"></i>
+                                </a>
+                                {% if script.author.id == app.user.id %}
+                                    <a href="{{path('agent_call_script_edit', {'id': script.id})}}">
+                                        <i data-feather="edit"></i>
+                                    </a>
+                                {% endif %}
+
+                            {% endif %}
+                        </td>
+
+                       
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="d-flex justify-content-center scale-up-center">
+            {{ knp_pagination_render(scripts) }}
+        <div>
+        {% endif %}
+    </div>
+{% endblock %}
+
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('assets/templates/meeting/meeting.js') }}"></script>
+{% endblock %}

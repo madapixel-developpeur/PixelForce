@@ -3,6 +3,7 @@
 
 namespace App\Controller;
 
+use App\Entity\CallScript;
 use Exception;
 use DateInterval;
 use App\Entity\User;
@@ -24,6 +25,7 @@ use App\Repository\MeetingRepository;
 use App\Repository\SecteurRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\SearchEntity\MeetingSearch;
+use App\Form\CallScriptFormType;
 use App\Repository\AgentSecteurRepository;
 use App\Repository\CoachSecteurRepository;
 use App\Repository\MeetingStateRepository;
@@ -31,6 +33,7 @@ use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\CalendarEventLabelRepository;
+use App\Repository\CallScriptRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -207,4 +210,83 @@ class CoachContactMeetingController extends AbstractController
             'button' => 'Modifier le rendez-vous'
         ]);
     }
+
+    #[Route('/coach/rendez-vous/scripts-d-appel', name : 'coach_call_script_list')]
+    public function listCallScript(Request $request ,PaginatorInterface $paginator,CallScriptRepository $callScriptRepository,CoachSecteurRepository $coachSecteurRepository){
+        $user = $this->getUser();
+        $CoachSecteur = $coachSecteurRepository->findOneBy(['coach' => $user->getId()]);
+        $secteur = $CoachSecteur->getSecteur();
+
+
+        $scripts = $paginator->paginate(
+            $callScriptRepository->findAllScript($user,$secteur),
+            $request->query->getInt('page', 1),
+            20
+        );
+        return $this->render('user_category/coach/meeting/script/script_list.html.twig', [
+            'scripts' => $scripts,
+        ]);
+    }
+
+    #[Route('/coach/rendez-vous/scripts-d-appel/nouveau', name : 'coach_call_script_add')]
+    public function addScript(Request $request,CoachSecteurRepository $coachSecteurRepository){
+        $user = $this->getUser();
+        $script = new CallScript();
+        $form = $this->createForm(CallScriptFormType::class, $script);
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid()) {
+            try {
+                $CoachSecteur = $coachSecteurRepository->findOneBy(['coach' => $user->getId()]);
+                $secteur = $CoachSecteur->getSecteur();
+                $script->setAuthor($user);
+                $script->setSecteur($secteur);
+
+
+                $this->entityManager->persist($script);
+                $this->entityManager->flush();
+                $this->addFlash('success', 'Script ajouté avec succès');
+                return $this->redirectToRoute('coach_call_script_list');
+            } catch (\Throwable $th) {
+                $this->addFlash('danger', $_ENV['CUSTOM_ERROR_MESSAGE']);
+            }
+        }
+        return $this->render('user_category/coach/meeting/script/script_add.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
+    #[Route('/coach/rendez-vous/scripts-d-appel/modifier/{id}', name : 'coach_call_script_edit')]
+    public function editScript(CallScript $script,Request $request,CoachSecteurRepository $coachSecteurRepository){
+        $user = $this->getUser();
+        $form = $this->createForm(CallScriptFormType::class, $script);
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid()) {
+            try {
+                $CoachSecteur = $coachSecteurRepository->findOneBy(['coach' => $user->getId()]);
+                $secteur = $CoachSecteur->getSecteur();
+                $script->setAuthor($user);
+                $script->setSecteur($secteur);
+
+
+                $this->entityManager->persist($script);
+                $this->entityManager->flush();
+                $this->addFlash('success', 'Script modifié avec succès');
+                return $this->redirectToRoute('coach_call_script_list');
+            } catch (\Throwable $th) {
+                $this->addFlash('danger', $_ENV['CUSTOM_ERROR_MESSAGE']);
+            }
+        }
+        return $this->render('user_category/coach/meeting/script/script_add.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
+    #[Route('/coach/rendez-vous/scripts-d-appel/detail/{id}', name : 'coach_call_script_view')]
+    public function viewCallScript(CallScript $callScript,Request $request){
+
+        return $this->render('user_category/coach/meeting/script/script_view.html.twig', [
+            'script' => $callScript,
+        ]);
+    }
+
 }

@@ -639,3 +639,10 @@ body{
 		display: none;
 	}
 }
+
+.custom-truncate-text {
+	max-height: 202px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;  
+}

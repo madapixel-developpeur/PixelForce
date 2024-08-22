@@ -10,7 +10,14 @@
 {% endblock %}
 
 {% block body %}
-<div class="block block--bordered block--rounded">
+   <div class="row mt-4 mb-3">
+        <div class="col-12 col-md-6">
+        </div>
+        <div class="col-12 col-md-6 d-flex align-items-center justify-content-end">
+            <a href="{{ path('coach_call_script_list')}}" class="btn bg-primary text-white ms-2"><i class="fa fa-phone"></i>  Script d'appel</a>
+        </div>
+    </div>
+    <div class="block block--bordered block--rounded">
         <h1 class="block__text block__text--center mt-2" >Options de filtre :</h1>
         <div class="filter-wrap">
             <!-- Formulaire de recherche -->
@@ -41,8 +48,7 @@
     </div>
      <div class="block block--bordered block--rounded">
         <div class="block__header mb-1" >
-           <p> {% if contact is defined and contact is not null %}<span class="h5 block__title">Liste des rendez-vous </span ><span class="h5">({{ contact.information.fullName }}): </span >{% else %}<span class="h5 block__title"> Liste de mes rendez-vous :</span > {% endif %}</p>
-            
+            <h5> {% if contact is defined and contact is not null %}<span class=" block__title">Liste des rendez-vous </span >({{ contact.information.fullName }}):{% else %}<span class="block__title"> Liste de mes rendez-vous :</span > {% endif %}</h5>
         </div>
         {% if meetings|length ==0 %}
                 <div class="alert alert-primary p-3 text-center" role="alert">

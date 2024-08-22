@@ -20,11 +20,13 @@ doctrine:
             string_functions:
                 group_concat: App\DoctrineExtensions\GroupConcat
                 sha1: App\DoctrineExtensions\Sha1
+                JSON_CONTAINS: DoctrineExtensions\Query\Mysql\JsonContains
             datetime_functions:
                 DAY: DoctrineExtensions\Query\Mysql\Day
                 MONTH: DoctrineExtensions\Query\Mysql\Month
                 YEAR: DoctrineExtensions\Query\Mysql\Year
                 DATE: DoctrineExtensions\Query\Mysql\Date
+                
 
 
 when@test:
