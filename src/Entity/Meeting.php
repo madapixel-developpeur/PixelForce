@@ -73,6 +73,13 @@ class Meeting implements JsonSerializable
     private $secteur;
 
 
+    
+    /**
+     * @ORM\OneToMany(targetEntity=MeetingFiles::class, mappedBy="meeting")
+     */
+    private $files;
+
+
     public function getId(): ?int
     {
         return $this->id;
@@ -216,6 +223,26 @@ class Meeting implements JsonSerializable
     public function setSecteur($secteur)
     {
         $this->secteur = $secteur;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of files
+     */ 
+    public function getFiles()
+    {
+        return $this->files;
+    }
+
+    /**
+     * Set the value of files
+     *
+     * @return  self
+     */ 
+    public function setFiles($files)
+    {
+        $this->files = $files;
 
         return $this;
     }

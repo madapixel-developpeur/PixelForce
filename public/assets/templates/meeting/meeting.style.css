@@ -37,3 +37,30 @@
     gap : 10px;
     flex-wrap: nowrap;
 }
+
+
+.file-items-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    /* Reduce the gap between items */
+    margin-top: 10px;
+    /* Add space at the bottom end */
+}
+
+.file-item {
+    background-color: #f0f0f0;
+    padding: 5px 10px;
+    border-radius: 5px;
+    white-space: nowrap;
+    /* Prevent wrapping */
+    display: inline-block;
+}
+
+.file-name {
+    margin-right: 5px;
+}
+
+.file-download {
+    color: #4A148C;
+}

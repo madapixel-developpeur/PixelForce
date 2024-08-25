@@ -102,11 +102,37 @@
                 <td><a class="btn btn-outline-success m-2" href="{{ path('meeting_audit_add', { id: meeting.getId() }) }}">Ajouter un audit</a></td>
             </tr>
             {% endif %}
+            <tr>
+                <th>Fichier</th>
+               <td>
+                    <div class="row">
+                        <div class="col-md-12 d-flex justify-content-end">
+                            <a class="btn btn-primary m-2" href="#" data-bs-toggle="modal" data-bs-target="#fileUploadModal"><i class="fa fa-plus"></i></a>
+                        </div>
+                        <div class="col-md-12">
+                            {% if meeting.files|length == 0 %}
+                                <div class="alert alert-primary text-center">
+                                        Vide
+                                </div>
+                            {% endif %}
+                            <div class="mt-2 file-items-container mb-2">
+                                {% for item in meeting.files %}
+                                <div class="file-item">
+                                    <span class="file-name">{{ item.fileName }}</span>
+                                    <a href="{{ path('download_meeting_file',{'id' : item.id })}}" class="file-download"><i class="fas fa-download"></i></a>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            
+                            
+                        </div>
+                    </div>  
+                </td>
+            </tr>
             <tr class="note-row">
                 <th>Note</th>
                 <td>{{meeting.note|raw}}</td>
-            <tr>
-            
+            </tr>
             
         </table>
         <div class="meeting-fiche-controls">
@@ -120,6 +146,29 @@
                 <a class="btn btn-outline-warning" href="{{meeting.audit.secteur.googleForms}}" target="_blank" >Accéder aux formulaires </a>
                 {% endif %}
             {% endif %}
+        </div>
+    </div>
+    <div class="modal fade" id="fileUploadModal" tabindex="-1" aria-labelledby="fileUploadModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form action="{{ path('agent_add_meeting_document')}}" method="POST" enctype="multipart/form-data">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="fileUploadModalLabel">Fichier</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                            <input type="hidden" name="meeting_id" value="{{ meeting.id }}">
+                            <div class="mb-3">
+                                <label for="formFileMultiple" class="form-label">Élément du rendez-vous</label>
+                                <input class="form-control" type="file" id="files" name="files[]" multiple>
+                            </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                        <button type="submit" class="btn btn-primary">Ajouter</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
     {% endif %}

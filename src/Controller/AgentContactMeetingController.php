@@ -9,19 +9,19 @@ use App\Entity\Contact;
 use App\Entity\Meeting;
 use App\Form\MeetingType;
 use App\Entity\CallScript;
+use App\Entity\MeetingFiles;
+use App\Services\FileHandler;
 use App\Form\MeetingFilterType;
 use App\Form\MeetingSearchType;
+
+
+
 use App\Form\CallScriptFormType;
 use App\Services\MeetingService;
-
-
-
 use App\Entity\ContactInformation;
-
-
 use App\Repository\UserRepository;
-use App\Services\FormationService;
 
+use App\Services\FormationService;
 use App\Repository\ContactRepository;
 use App\Repository\MeetingRepository;
 use App\Repository\SecteurRepository;
@@ -57,7 +57,8 @@ class AgentContactMeetingController extends AbstractController
     public function __construct(EntityManagerInterface $entityManager, MeetingRepository $meetingRepository, MeetingStateRepository $meetingStateRepository, CalendarEventLabelRepository $calendarEventLabelRepository, ContactRepository $contactRepository, CoachSecteurRepository $coachSecteurRepository, SecteurRepository $secteurRepository, SessionInterface $session, MeetingService $meetingService,
         private  UserRepository $repoUser,
         private FormationRepository $formationRepository,
-        private CallScriptRepository $callScriptRepository
+        private CallScriptRepository $callScriptRepository,
+        private FileHandler $fileHandler, 
     )
     {
         $this->entityManager = $entityManager;
@@ -410,5 +411,44 @@ class AgentContactMeetingController extends AbstractController
         return $this->render('user_category/coach/meeting/script/script_view.html.twig', [
             'script' => $callScript,
         ]);
+    }
+
+
+    #[Route('/agent/rendez-vous/ajouter/document', name: 'agent_add_meeting_document' ,  methods: ['POST'])]
+    public function addDocument(Request $request)
+    {
+        $files = $request->files->get('files');
+        $meetingId = $request->get('meeting_id');
+        try {
+            $this->entityManager->beginTransaction();
+
+            $meeting = $this->meetingRepository->findOneBy(['id'=> $meetingId ]);
+            if ($files) {
+                foreach ($files as $file) {
+                    $document = new MeetingFiles();
+                    $filePath = $this->fileHandler->upload($file, "meeting/document/".$meeting->getId());
+                    $document->setFilePath($filePath);
+                    $document->setFileName($file->getClientOriginalName());
+                    $document->setMeeting($meeting);
+                    $document->setAuthor($this->getUser());
+                    $this->entityManager->persist($document);
+                    $this->entityManager->flush();
+                }
+                $this->entityManager->flush();
+                $this->entityManager->commit();
+                $this->entityManager->clear();
+                $this->addFlash('success',"Fichier(s) ajouté(s) avec succès.");
+            }
+            else{
+                $this->addFlash('danger',"Veuillez choisir un fichier, s'il vous plaît.");
+            }
+        } catch(\Exception $ex){
+            $error = $ex->getMessage();
+            if($this->entityManager->getConnection()->isTransactionActive()) {
+                $this->entityManager->rollback();
+            }
+            $this->addFlash('danger',$_ENV['CUSTOM_ERROR_MESSAGE']);
+        }
+        return $this->redirectToRoute('agent_contact_meeting_fiche',['id' => $meetingId ]);
     }
 }
