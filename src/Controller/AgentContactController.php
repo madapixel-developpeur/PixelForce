@@ -82,7 +82,7 @@ class AgentContactController extends AbstractController
         $searchForm->handleRequest($request);
 
         $contacts = $paginator->paginate(
-            $this->repoContact->findContactBySecteur($search, $agent, $secteurId, $request->get('search')),
+            $this->repoContact->findContactBySecteur($search, $agent, null, $request->get('search')),
             $request->query->getInt('page', 1),
             20
         );
@@ -140,9 +140,18 @@ class AgentContactController extends AbstractController
 
         $headers = ["NOM ET PRÉNOMS", "EMAIL", "TÉLÉPHONE", "ADRESSE", "TYPE DU LOGEMENT", "RUE", "NUMÉRO", "CODE POSTAL", "VILLE", "COMPOSITION DU FOYER", "NOMBRE DE PERSONNE", "COMMENTAIRE"];
         $fields = [
-            "information.lastname", "information.email", "information.phone", "information.address",
-            "information.typeLogement.nom", "information.rue", "information.numero", "information.codePostal",
-            "information.ville", "information.compositionFoyer", "information.nbrPersonne", "information.commentaire"
+            "information.lastname",
+            "information.email",
+            "information.phone",
+            "information.address",
+            "information.typeLogement.nom",
+            "information.rue",
+            "information.numero",
+            "information.codePostal",
+            "information.ville",
+            "information.compositionFoyer",
+            "information.nbrPersonne",
+            "information.commentaire"
         ];
         $file = $excelService->export($contacts, $fields, $headers);
 
@@ -195,9 +204,17 @@ class AgentContactController extends AbstractController
         }
 
         $fields = [
-            "information.lastname", "information.email", "information.phone", "information.address",
-            "information.typeLogement.nom", "information.rue", "information.numero", "information.codePostal",
-            "information.ville", "information.compositionFoyer", "information.nbrPersonne"
+            "information.lastname",
+            "information.email",
+            "information.phone",
+            "information.address",
+            "information.typeLogement.nom",
+            "information.rue",
+            "information.numero",
+            "information.codePostal",
+            "information.ville",
+            "information.compositionFoyer",
+            "information.nbrPersonne"
         ];
 
         $rows = $excelService->getrowsInTable($contacts, $fields);
@@ -241,9 +258,17 @@ class AgentContactController extends AbstractController
         }
 
         $fields = [
-            "information.lastname", "information.email", "information.phone", "information.address",
-            "information.typeLogement.nom", "information.rue", "information.numero", "information.codePostal",
-            "information.ville", "information.compositionFoyer", "information.nbrPersonne"
+            "information.lastname",
+            "information.email",
+            "information.phone",
+            "information.address",
+            "information.typeLogement.nom",
+            "information.rue",
+            "information.numero",
+            "information.codePostal",
+            "information.ville",
+            "information.compositionFoyer",
+            "information.nbrPersonne"
         ];
 
         $rows = $excelService->getrowsInTable($contacts, $fields);
@@ -274,7 +299,7 @@ class AgentContactController extends AbstractController
     public function agent_contact_mobile_import(ContactManager $contactManager): Response
     {
         /** @var User $agent */
-        $agent =  $this->getUser();
+        $agent = $this->getUser();
         $secteurId = $this->session->get('secteurId');
         $contacts = $_POST['contacts'];
 
@@ -327,7 +352,7 @@ class AgentContactController extends AbstractController
         return $this->render('user_category/agent/contact/add_contact.html.twig', [
             'formContact' => $formContact->createView(),
             'button' => 'Enregistrer',
-            'btn_class' =>  'success',
+            'btn_class' => 'success',
             'tags' => $tags,
             'tags_selectionner' => []
         ]);
@@ -365,7 +390,7 @@ class AgentContactController extends AbstractController
         return $this->render('user_category/agent/contact/add_contact.html.twig', [
             'formContact' => $formContact->createView(),
             'button' => 'Modifier',
-            'btn_class' =>  'success',
+            'btn_class' => 'success',
             'label' => 'Modification',
             'tags' => $tags,
             'tags_selectionner' => $tags_selectionner,

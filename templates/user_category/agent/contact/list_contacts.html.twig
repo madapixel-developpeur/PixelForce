@@ -35,10 +35,10 @@
                     <div class="card-body p-0">
                         <div class="card-head mb-3">
                             <div class="row">
-                                <div class="col-0 col-md-6">
+                                <div class="col-0 col-md-4">
                                 </div>
-                                <div class="col-12 col-md-6 row">
-                                    <div class="col-6 col-md-8">
+                                <div class="col-12 col-md-8 row align-items-center">
+                                    <div class="col-4 col-md-6">
                                         <form action="{{ path('agent_contact_list') }}" class="input-group rounded-3 m-2 w-100 w-sm-75">
                                             <button class="input-group-text border-0" id="search-addon" type="submit">
                                                 <i class="fas fa-search"></i>
@@ -46,8 +46,11 @@
                                             <input type="search" name="search" class="form-control input-group-text border-0" placeholder="Chercher" aria-label="Search" aria-describedby="search-addon" />
                                         </form>
                                     </div>
-                                    <div class="col-6 col-md-4">
-                                        <div class="input-group rounded-3 m-2">
+                                    <div class="col-4 col-md-3">
+                                    <a href="{{path('agent_contact_info_add')}}" class="btn btn-success btn mx-2 rounded-3" style="width: 100%;"><i class="fa fa-file-text"></i> <span class="ms-1">Ajout</span></a>
+                                    </div>
+                                    <div class="col-4 col-md-3">
+                                        <div class="input-group rounded-3">
                                             <button class="input-group-text border-0 w-100" type="button" data-toggle="collapse" data-target="#filters" aria-expanded="false" aria-controls="filters">
                                                 <span class="input-group-text border-0 w-25 rounded-4 me-4" id="filter-toggle">
                                                     <i class="fa-solid fa-bars-staggered"></i>
@@ -108,7 +111,7 @@
                                                 <div class="row">
                                                     <div class="col-12 col-md-8 mt-3 row">
                                                             <div class="col-12 col-md-5 d-flex align-items-center justify-content-center">
-                                                                <a href="{{path('agent_contact_info_add')}}" class=" mt-2 btn btn-success btn-sm mx-2 rounded-3"><i class="fa fa-file-text"></i> <span class="ms-1">Ajout</span></a>
+                                                                
                                                                 <a href="{{path('agent_contact_export_excel')}}" class=" mt-2 btn btn-success btn-sm mx-2 rounded-3"><i class="fa fa-print"></i> <span class="ms-1">Exporter excel</span></a>
                                                             </div>
                                                             <div class="col-12 col-md-7 d-flex align-items-center justify-content-center">
@@ -131,7 +134,7 @@
                         {% if contacts|length ==0 %}
                             <div class="alert alert-primary p-3 text-center" role="alert">
                                 <div class="alert-body">
-                                    Aucun rendez-vous.
+                                    Aucun contact.
                                 </div>
                             </div>
                         {% endif %}

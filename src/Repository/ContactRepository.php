@@ -113,9 +113,11 @@ class ContactRepository extends ServiceEntityRepository
             ->andwhere('c.agent = :agent')
             ->setParameter('agent', $agent)
             ->join('c.secteur', 'cs')
-            ->andwhere('cs.id = :secteurId')
-            ->setParameter('secteurId', $secteurId)
             ->join('c.information', 'ci');
+        if ($secteurId) {
+            $query->andwhere('cs.id = :secteurId')
+                ->setParameter('secteurId', $secteurId);
+        }
 
         if ($search->getPrenom()) {
             $query = $query
