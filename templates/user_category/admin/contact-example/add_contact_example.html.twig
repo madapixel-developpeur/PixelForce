@@ -1,0 +1,70 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title %} {{isEdit ? 'Modifier' : 'Ajouter'}} un exemple de contact {% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+	<div class="my-5">
+		<div class="content-body-form">
+			<a href="{{ path('admin_contact_example_list') }}" class="btn btn-secondary"> <i class="fa-solid fa-circle-arrow-left"></i> Retour </a>
+			<h1 class="text-center fw-bold">Information personnelle</h1>
+				<div class="form-add-contact">
+					{{ form_start(formContact) }}
+						<div class="row">
+							<div class="col-md-6">{{ form_row(formContact.lastname) }}</div>
+							<div class="col-md-6">{{ form_row(formContact.firstname) }}</div>
+						</div>
+						{{ form_row(formContact.email) }}
+						{{ form_row(formContact.phone) }}
+						{{ form_row(formContact.address) }}
+						{{ form_row(formContact.rue) }}
+						{{ form_row(formContact.numero) }}
+						{{ form_row(formContact.codePostal) }}
+						{{ form_row(formContact.ville) }}
+						{{ form_row(formContact.typeLogement) }}
+						{{ form_row(formContact.compositionFoyer) }}
+						{{ form_row(formContact.nbrPersonne) }}
+						{{ form_row(formContact.type) }}
+						{{ form_row(formContact.note) }}
+						<div>
+							<div class="form-label mb-2">Choisir le ou les tags</div>
+							<div class="row">
+								{% for tag in tags %}
+									<div class="col-3 mb-2">
+										<div class="border p-3">
+											<div class="row">
+												<div class="col-10"></div>
+												<div class="col-2"></div>
+											</div>
+											<div class="row">
+												<div class="col-10">
+													<h4>{{ tag.libelle|capitalize }}</h4>
+												</div>
+												<div class="col-2">
+													<div class="caret rounded-circle bg-{{ tag.couleur }}"></div>
+												</div>
+											</div>
+											<hr>
+											<p>{{ tag.description }}</p>
+											<input type="checkbox" {{ tag.id in tags_selectionner ? 'checked' : '' }} name="tags[]" value="{{ tag.id }}" />
+										</div>
+									</div>
+
+								{% else %}
+									<p class="text-center">Pas de tags diponibles</p>
+								{% endfor %}
+							</div>
+						</div>
+					
+						<div class="row">
+							<div class="col-md-12 text-end"><button type="submit" class="btn btn-success" style="margin-bottom: 81px;">Enregistrer</button></div>
+						</div>
+
+					{{ form_end(formContact) }}
+				</div>
+		</div>
+	</div>
+{% endblock %}

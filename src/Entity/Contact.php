@@ -31,7 +31,7 @@ class Contact
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="contact")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $agent;
 
@@ -75,12 +75,29 @@ class Contact
      */
     private $meetings;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $isExample;
+
     public function __construct()
     {
         $this->client = new ArrayCollection();
         $this->created_at = new \DateTime();
         $this->tags = new ArrayCollection();
         $this->meetings = new ArrayCollection();
+    }
+
+    public function getIsExample(): ?bool
+    {
+        return $this->isExample;
+    }
+
+    public function setIsExample(?bool $isExample): self
+    {
+        $this->isExample = $isExample;
+
+        return $this;
     }
 
     public function getId(): ?int
@@ -201,7 +218,7 @@ class Contact
     public function getTagIds(): array
     {
         $ids = [];
-        foreach($this->tags->toArray() as $tag) {
+        foreach ($this->tags->toArray() as $tag) {
             array_push($ids, $tag->getId());
         }
         return $ids;
@@ -209,7 +226,7 @@ class Contact
 
     public function clearTags()
     {
-        foreach($this->tags->toArray() as $tag) {
+        foreach ($this->tags->toArray() as $tag) {
             $this->removeTag($tag);
         }
         return $this;

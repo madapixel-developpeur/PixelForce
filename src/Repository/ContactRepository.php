@@ -110,9 +110,9 @@ class ContactRepository extends ServiceEntityRepository
     {
         $query = $this->createQueryBuilder('c');
         $query = $query
-            ->andwhere('c.agent = :agent')
+            ->andwhere('c.agent = :agent or c.agent is NULL')
             ->setParameter('agent', $agent)
-            ->join('c.secteur', 'cs')
+            ->leftJoin('c.secteur', 'cs')
             ->join('c.information', 'ci');
         if ($secteurId) {
             $query->andwhere('cs.id = :secteurId')

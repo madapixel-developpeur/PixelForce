@@ -143,6 +143,7 @@
                             <table class="table text-center">
                                 <tbody class="align-items-center">
                                     <tr>
+                                        
                                         <th>Id</th>
                                         <th>nom</th>
                                         <th>Email</th>
@@ -152,11 +153,13 @@
                                         <th>Type</th>
                                         <th>Référence</th>
                                         <th class="table-th-notSortable"></th>
+                                        <th></th>
                                     </tr>
 
                                     {% for contact in contacts %}            
                                         {% set information = contact.information %}
                                     <tr>
+                                        
                                         <td>{{ information.id }}</td>
                                         <td>{{ information.firstname }} {{ information.lastname }}</td>
                                         <td>{{ information.email }}</td>
@@ -171,22 +174,26 @@
                                         </td>
                                         <td>{{ information.stringType }}</td>
                                         <td>
-                                        <a href="{{ path('agent_order_list_digital',{'referenceVente' : generateReference(contact.agent.id,app.user.id,contact.id)  }) }}"> {{ generateReference(contact.agent.id,app.user.id,contact.id) }} </a>
-                                        <a class="p-2" href="#" onclick="copyLink('{{configSecteurService.getRefUrl(generateReference(contact.agent.id,app.user.id,contact.id))}}','Liens de la référence {{  generateReference(contact.agent.id,app.user.id,contact.id) }} copié avec succès') "><i class="fa-solid fa-copy"></i></a> 
+                                        <a href="{{ path('agent_order_list_digital',{'referenceVente' : generateReference(contact.agent ? contact.agent.id : 'AGENT_ID',app.user.id,contact.id)  }) }}"> {{ generateReference(contact.agent ? contact.agent.id : 'AGENT_ID',app.user.id,contact.id) }} </a>
+                                        <a class="p-2" href="#" onclick="copyLink('{{configSecteurService.getRefUrl(generateReference(contact.agent ? contact.agent.id : 'AGENT_ID',app.user.id,contact.id))}}','Liens de la référence {{  generateReference(contact.agent ? contact.agent.id : 'AGENT_ID',app.user.id,contact.id) }} copié avec succès') "><i class="fa-solid fa-copy"></i></a> 
                                         </td>
                                         <td class="d-flex justify-content-center">
                                             <a href="{{ path('agent_contact_view', {'id': contact.id}) }}" class="btn btn-secondary">
                                                 <i class="fa-solid fa-eye"></i>
                                             </a>
+                                            {% if not contact.isExample %}
                                             <a href="{{ path('agent_contact_info_edit', {'id': information.id}) }}" class="btn btn-success ms-1">
                                                 <i class="fas fa-edit"></i>
                                             </a>
+                                            
                                             <form method="post" action="{{path('agent_contact_info_delete', {id: contact.id})}}" class="ms-1" style="display: inline-block;" onsubmit="return confirm('Êtes vous vraiment sûr de supprimer ce contact ?')">
                                                 <input type="hidden" name="_method" value="DELETE">
                                                 <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ contact.id) }}">
                                                 <button class="btn btn-danger"><i class="fas fa-trash-alt"></i></button>
                                             </form>  
+                                            {% endif %}
                                         </td>
+                                        <td>{{ contact.isExample ? 'Exemple de contact' : 'Vrai contact' }}</td>
                                     </tr>
                                     {% endfor %}
 
