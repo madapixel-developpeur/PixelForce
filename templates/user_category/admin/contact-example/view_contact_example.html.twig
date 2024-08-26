@@ -37,6 +37,10 @@
 							</div>
 							<div class="contact-card__infos-container">
 								<div class="contact-card__info-item">
+									<strong>Type du contact: </strong>
+									<span> {{ contact.information.typeContactLabel }}</span>
+								</div>
+								<div class="contact-card__info-item">
 									<i class="fa-solid fa-phone"></i>
 									<span> {{ 'Contact ' ~ contact.information.stringType }}</span>
 								</div>
@@ -65,18 +69,39 @@
 									</ul>
 								</div>
 							
+								{% if contact.information.typeContact == constant('App\\Entity\\ContactInformation::TYPE_CONTACT_PARTICULIER') %}
 								<div class="contact-card__info-item">
 									<i class="fa-solid fa-house-chimney"></i>
-									<span> {{ contact.information.typeLogement.nom|default('(Type logement)') }}</span>
+									<span> <strong>Type du logement:</strong> {{ contact.information.typeLogement.nom|default('--') }}</span>
 									<ul>
-										{% if contact.information.compositionFoyer %}
+										{# {% if contact.information.compositionFoyer %}
 											<li><span class="fw-bolder">Composition foyer :</span> {{ contact.information.compositionFoyer }}</li>
-										{% endif %}
+										{% endif %} #}
 										{% if contact.information.nbrPersonne %}
 											<li><span class="fw-bolder">Nombre personnes :</span> {{ contact.information.nbrPersonne }}</li>
 										{% endif %}
+										{% if contact.information.anneeConstructionMaison %}
+											<li><span class="fw-bolder">Année de construction de la maison :</span> {{ contact.information.anneeConstructionMaison }}</li>
+										{% endif %}
 									</ul>
 								</div>
+								{% elseif contact.information.typeContact == constant('App\\Entity\\ContactInformation::TYPE_CONTACT_ENTREPRISE')  %}
+								<div class="contact-card__info-item">
+									<i class="fa-solid fa-house-chimney"></i>
+									<span> <strong>Information sur l'entreprise:</strong></span>
+									<ul>
+										{% if contact.information.nomEntreprise %}
+											<li><span class="fw-bolder">Nom de l'entreprise :</span> {{ contact.information.nomEntreprise }}</li>
+										{% endif %}
+										{% if contact.information.siretEntreprise %}
+											<li><span class="fw-bolder">Siret :</span> {{ contact.information.siretEntreprise }}</li>
+										{% endif %}
+										{% if contact.information.adresseEntreprise %}
+											<li><span class="fw-bolder">Adresse postale :</span> {{ contact.information.adresseEntreprise }}</li>
+										{% endif %}
+									</ul>
+								</div>
+								{% endif %}
 
 								<div class="contact-card__info-item row">
 								

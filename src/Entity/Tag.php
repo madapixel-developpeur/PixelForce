@@ -40,6 +40,11 @@ class Tag
      */
     private $contacts;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $sort;
+
     public function __construct()
     {
         $this->contacts = new ArrayCollection();
@@ -48,6 +53,18 @@ class Tag
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getSort(): ?int
+    {
+        return $this->sort;
+    }
+
+    public function setSort(?int $sort): self
+    {
+        $this->sort = $sort;
+
+        return $this;
     }
 
     public function getLibelle(): ?string

@@ -4,16 +4,23 @@
 
 {% block stylesheets %}
     {{ parent() }}
+	<style>
+		.choices-radio{
+			gap: 20px;
+		}
+	</style>
 {% endblock %}
 
 {% block body %}
 	<div class="my-5">
 		<div class="content-body-form">
 			<a href="{{ path('agent_contact_list') }}" class="btn btn-secondary"> <i class="fa-solid fa-circle-arrow-left"></i> Retour </a>
-			<h1 class="text-center fw-bold">Information personnelle</h1>
+			<h1 class="text-center fw-bold">Information sur le contact</h1>
 			{% if app.session.get('secteurId') %}
 				<div class="form-add-contact">
 					{{ form_start(formContact) }}
+						{{ form_row(formContact.typeContact) }}
+						<h2 class="type_entreprise d-none">Information sur le gérant</h2>
 						<div class="row">
 							<div class="col-md-6">{{ form_row(formContact.lastname) }}</div>
 							<div class="col-md-6">{{ form_row(formContact.firstname) }}</div>
@@ -25,10 +32,19 @@
 						{{ form_row(formContact.numero) }}
 						{{ form_row(formContact.codePostal) }}
 						{{ form_row(formContact.ville) }}
-						{{ form_row(formContact.typeLogement) }}
-						{{ form_row(formContact.compositionFoyer) }}
-						{{ form_row(formContact.nbrPersonne) }}
 						{{ form_row(formContact.type) }}
+						<div class="type_particulier">
+						{{ form_row(formContact.typeLogement) }}
+						{{ form_row(formContact.nbrPersonne) }}
+						{{ form_row(formContact.anneeConstructionMaison) }}
+						</div>
+						<div class="type_entreprise  d-none">
+						<h2 class="type_entreprise d-none">Information sur l'entreprise</h2>
+						{{ form_row(formContact.nomEntreprise) }}
+						{{ form_row(formContact.siretEntreprise) }}
+						{{ form_row(formContact.adresseEntreprise) }}
+						</div>
+						
 						{{ form_row(formContact.note) }}
 						<div>
 							<div class="form-label mb-2">Choisir le ou les tags</div>
@@ -74,4 +90,31 @@
 			{% endif %}
 		</div>
 	</div>
+{% endblock %}
+
+{% block javascripts %}
+	{{parent()}}
+	<script>
+		$(document).ready(function() {
+			function detectTypeChange(selectedValue){
+				
+				if(selectedValue == "{{constant('App\\Entity\\ContactInformation::TYPE_CONTACT_ENTREPRISE')}}") {
+					$('.type_particulier').addClass('d-none');
+					$('.type_entreprise').removeClass('d-none');
+				} else {
+					$('.type_entreprise').addClass('d-none');
+					$('.type_particulier').removeClass('d-none');
+				}	
+			}
+			$('input[name="contact_information[typeContact]"]').change(function() {
+				// Get the value of the selected radio button
+				const selectedValue = $('input[name="contact_information[typeContact]"]:checked').val();
+				detectTypeChange(selectedValue);
+			});
+
+			detectTypeChange("{{constant('App\\Entity\\ContactInformation::TYPE_CONTACT_PARTICULIER')}}")
+		});
+
+
+	</script>
 {% endblock %}

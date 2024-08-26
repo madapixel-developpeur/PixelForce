@@ -10,15 +10,23 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class ContactInformation
 {
-    
+
     const TYPE_DEFAULT = 1;
     const TYPE_AUDIT = 2;
     const TYPE_CLIENT = 3;
 
     const TYPE_ARRAY_FORM = [
-        self::TYPE_DEFAULT => 'Normal', 
-        self::TYPE_AUDIT => 'Audit', 
-        self::TYPE_CLIENT => 'Client', 
+        self::TYPE_DEFAULT => 'Normal',
+        self::TYPE_AUDIT => 'Audit',
+        self::TYPE_CLIENT => 'Client',
+    ];
+
+    const TYPE_CONTACT_PARTICULIER = 'particulier';
+    const TYPE_CONTACT_ENTREPRISE = 'entreprise';
+
+    const TYPE_CONTACT_LABELS = [
+        'Particulier' => self::TYPE_CONTACT_PARTICULIER,
+        'Entreprise' => self::TYPE_CONTACT_ENTREPRISE,
     ];
 
     /**
@@ -93,12 +101,37 @@ class ContactInformation
      */
     private $typeLogement;
 
-      /**
+    /**
      * @ORM\Column(type="integer",options={"default" : 1})
      */
     private $type = self::TYPE_DEFAULT;
 
-    
+
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $typeContact;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $anneeConstructionMaison;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $nomEntreprise;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $siretEntreprise;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $adresseEntreprise;
 
     public function getId(): ?int
     {
@@ -113,6 +146,55 @@ class ContactInformation
     public function setFirstname(string $firstname): self
     {
         $this->firstname = $firstname;
+
+        return $this;
+    }
+
+    public function getTypeContact(): ?string
+    {
+        return $this->typeContact;
+    }
+
+    public function setTypeContact(string $typeContact): self
+    {
+        $this->typeContact = $typeContact;
+
+        return $this;
+    }
+
+    public function getNomEntreprise(): ?string
+    {
+        return $this->nomEntreprise;
+    }
+
+    public function setNomEntreprise(string $nomEntreprise): self
+    {
+        $this->nomEntreprise = $nomEntreprise;
+
+        return $this;
+    }
+
+    public function getSiretEntreprise(): ?string
+    {
+        return $this->siretEntreprise;
+    }
+
+    public function setSiretEntreprise(string $siretEntreprise): self
+    {
+        $this->siretEntreprise = $siretEntreprise;
+
+        return $this;
+    }
+
+
+    public function getAdresseEntreprise(): ?string
+    {
+        return $this->adresseEntreprise;
+    }
+
+    public function setAdresseEntreprise(string $adresseEntreprise): self
+    {
+        $this->adresseEntreprise = $adresseEntreprise;
 
         return $this;
     }
@@ -259,6 +341,18 @@ class ContactInformation
         return $this;
     }
 
+    public function getAnneeConstructionMaison(): ?int
+    {
+        return $this->anneeConstructionMaison;
+    }
+
+    public function setAnneeConstructionMaison(?int $anneeConstructionMaison): self
+    {
+        $this->anneeConstructionMaison = $anneeConstructionMaison;
+
+        return $this;
+    }
+
     public function getTypeLogement(): ?TypeLogement
     {
         return $this->typeLogement;
@@ -273,13 +367,13 @@ class ContactInformation
 
     public function fullName()
     {
-        return $this->firstname .' '. $this->lastname;
+        return $this->firstname . ' ' . $this->lastname;
     }
 
 
     /**
      * Get the value of type
-     */ 
+     */
     public function getType()
     {
         return $this->type;
@@ -289,7 +383,7 @@ class ContactInformation
      * Set the value of type
      *
      * @return  self
-     */ 
+     */
     public function setType($type)
     {
         $this->type = $type;
@@ -298,8 +392,18 @@ class ContactInformation
     }
 
 
-    public function getStringType(){
+    public function getStringType()
+    {
         return self::TYPE_ARRAY_FORM[$this->getType()];
     }
 
+    public function getTypeContactLabel()
+    {
+        switch ($this->getTypeContact()) {
+            case self::TYPE_CONTACT_ENTREPRISE:
+                return "Entreprise";
+            default:
+                return "Particulier";
+        }
+    }
 }

@@ -348,7 +348,7 @@ class AgentContactController extends AbstractController
             return $this->redirectToRoute('agent_contact_view', ['id' => $contact->getId()]);
         }
 
-        $tags = $this->tagRepository->findAll();
+        $tags = $this->tagRepository->findOrderBySort();
         return $this->render('user_category/agent/contact/add_contact.html.twig', [
             'formContact' => $formContact->createView(),
             'button' => 'Enregistrer',
@@ -384,7 +384,7 @@ class AgentContactController extends AbstractController
             return $this->redirectToRoute('agent_contact_view', ['id' => $contact->getId()]);
         }
 
-        $tags = $this->tagRepository->findAll();
+        $tags = $this->tagRepository->findOrderBySort();
         $tags_selectionner = $contact->getTagIds();
 
         return $this->render('user_category/agent/contact/add_contact.html.twig', [

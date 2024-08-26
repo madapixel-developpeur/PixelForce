@@ -56,10 +56,12 @@
                                 <tbody class="align-items-center">
                                     <tr>
                                         <th>Id</th>
+                                        <th>Type du contact</th>
                                         <th>nom</th>
                                         <th>Email</th>
                                         <th>Téléphone</th>
                                         <th>Adresse</th>
+                                        <th>Nom de l'entreprise</th>
                                         <th>Statut</th>
                                         <th>Type</th>
                                         <th>Référence</th>
@@ -70,10 +72,12 @@
                                         {% set information = contact.information %}
                                     <tr>
                                         <td>{{ information.id }}</td>
+                                        <td>{{ information.typeContactLabel }}</td>
                                         <td>{{ information.firstname }} {{ information.lastname }}</td>
                                         <td>{{ information.email }}</td>
                                         <td>{{ information.phone }}</td>
                                         <td>{{ information.address }}</td>
+                                        <td>{{ information.nomEntreprise ?? '--' }}</td>
                                         <td>
                                             {% set tags = information.contact.tags.toArray %}
                                             {% for tag in tags %}

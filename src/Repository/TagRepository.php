@@ -39,7 +39,20 @@ class TagRepository extends ServiceEntityRepository
         }
     }
 
-//    /**
+    /**
+     * @return Tag[] Returns an array of Tag objects
+     */
+    public function findOrderBySort(): array
+    {
+        return $this->createQueryBuilder('t')
+            ->addOrderBy('t.sort', 'ASC')
+            ->addOrderBy('t.id', 'ASC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    //    /**
 //     * @return Tag[] Returns an array of Tag objects
 //     */
 //    public function findByExampleField($value): array
@@ -54,7 +67,7 @@ class TagRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?Tag
+    //    public function findOneBySomeField($value): ?Tag
 //    {
 //        return $this->createQueryBuilder('t')
 //            ->andWhere('t.exampleField = :val')

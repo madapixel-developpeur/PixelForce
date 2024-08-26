@@ -112,7 +112,7 @@ class AdminContactExampleController extends AbstractController
             return $this->redirectToRoute('admin_contact_example_view', ['id' => $contact->getId()]);
         }
 
-        $tags = $this->tagRepository->findAll();
+        $tags = $this->tagRepository->findOrderBySort();
         return $this->render('user_category/admin/contact-example/add_contact_example.html.twig', [
             'formContact' => $formContact->createView(),
             'isEdit' => false,
@@ -148,7 +148,7 @@ class AdminContactExampleController extends AbstractController
             return $this->redirectToRoute('admin_contact_example_view', ['id' => $contact->getId()]);
         }
 
-        $tags = $this->tagRepository->findAll();
+        $tags = $this->tagRepository->findOrderBySort();
         $tags_selectionner = $contact->getTagIds();
 
         return $this->render('user_category/admin/contact-example/add_contact_example.html.twig', [

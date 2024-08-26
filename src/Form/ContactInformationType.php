@@ -19,7 +19,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 class ContactInformationType extends AbstractType
 {
     private $typeLogementRepository;
-    public function __construct(TypeLogementRepository $typeLogementRepository){
+    public function __construct(TypeLogementRepository $typeLogementRepository)
+    {
         $this->typeLogementRepository = $typeLogementRepository;
     }
 
@@ -32,31 +33,31 @@ class ContactInformationType extends AbstractType
             ->add('firstname', TextType::class, [
                 'label' => 'Prénom',
                 'attr' => [
-                    'placeholder' => 'Entrer le prénom du client'
+                    'placeholder' => 'Entrer le prénom'
                 ]
             ])
             ->add('lastname', TextType::class, [
                 'label' => 'Nom',
                 'attr' => [
-                    'placeholder' => 'Entrer le nom du client'
+                    'placeholder' => 'Entrer le nom'
                 ]
             ])
             ->add('email', TextType::class, [
                 'label' => 'E-mail',
                 'attr' => [
-                    'placeholder' => 'Entrer l\'adresse mail du client'
+                    'placeholder' => 'Entrer l\'adresse mail'
                 ]
             ])
             ->add('phone', TextType::class, [
                 'label' => 'Téléphone',
                 'attr' => [
-                    'placeholder' => 'Entrer le numéro téléphone du client'
+                    'placeholder' => 'Entrer le numéro téléphone'
                 ]
             ])
             ->add('address', TextType::class, [
                 'label' => 'Adresse',
                 'attr' => [
-                    'placeholder' => 'Entrer l\'adresse du client'
+                    'placeholder' => 'Entrer l\'adresse'
                 ]
             ])
             ->add('rue', TextType::class, [
@@ -81,23 +82,21 @@ class ContactInformationType extends AbstractType
             ])
             ->add('typeLogement', EntityType::class, [
                 "label" => "Type du Logement",
-                'class'=> TypeLogement::class,
+                'class' => TypeLogement::class,
                 'choices' => $typeLogementList,
-                'choice_label' => function(?TypeLogement $typeLogement) {
+                'choice_label' => function (?TypeLogement $typeLogement) {
                     return $typeLogement ? $typeLogement->getNom() : '';
                 },
                 'multiple' => false,
                 'expanded' => true,
                 "required" => false,
-                'placeholder' => false
-            ])
-            ->add('compositionFoyer', TextType::class, [
-                'label' => 'Composition du foyer',
-                'trim' => true,
-                'required' => false
+                'placeholder' => false,
+                'attr' => [
+                    'class' => 'd-flex align-items-center choices-radio',
+                ],
             ])
             ->add('nbrPersonne', IntegerType::class, [
-                'label' => 'Nombre de personne',
+                'label' => 'Nombre de personnes du foyer',
                 'required' => false
             ])
             ->add('note', CKEditorType::class, [
@@ -117,6 +116,36 @@ class ContactInformationType extends AbstractType
                     'class' => "form-control"
                 ]
             ])
+            ->add('typeContact', ChoiceType::class, [
+                "label" => "Type",
+                'choices' => ContactInformation::TYPE_CONTACT_LABELS,
+                'expanded' => true,
+                'multiple' => false,
+                'required' => true,
+                'data' => $contact?->getInformation()?->getTypeContact() ?? ContactInformation::TYPE_CONTACT_PARTICULIER,
+                'attr' => [
+                    'class' => 'd-flex align-items-center choices-radio',
+                ],
+            ])
+            ->add('anneeConstructionMaison', IntegerType::class, [
+                'label' => ' Année de construction de la maison',
+                'required' => false
+            ])
+            ->add('nomEntreprise', TextType::class, [
+                'label' => 'Nom de l\'entreprise',
+                'trim' => true,
+                'required' => false
+            ])
+            ->add('siretEntreprise', TextType::class, [
+                'label' => 'Siret',
+                'trim' => true,
+                'required' => false
+            ])
+            ->add('adresseEntreprise', TextType::class, [
+                'label' => 'Adresse postale (rue, ville, code postal, pays)',
+                'trim' => true,
+                'required' => false
+            ]);
         ;
     }
 
