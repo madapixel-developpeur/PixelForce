@@ -44,7 +44,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
         self::ROLE_AMBASSADEUR => self::ROLE_AMBASSADEUR,
     ];
 
-    const INACTIVE_STATE = -1 ;
+    const INACTIVE_STATE = -1;
     const HAVENT_SEEN_SECTOR_VIDEO = 0;
     const HAVE_SEEN_SECTOR_VIDEO = 1;
 
@@ -360,14 +360,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
      */
     private $position;
 
-     /**
+    /**
      * @ORM\Column(type="integer", nullable=true ,options={"default"=0})
      */
     private $haveSeenSectorVideo = self::HAVENT_SEEN_SECTOR_VIDEO;
 
 
-    
-     /**
+
+    /**
      * @ORM\Column(type="integer", nullable=true ,options={"default"=0})
      */
     private $finishedOneVideoFormation = true;
@@ -404,18 +404,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
 
     public function getAccessibleFonctionnalites($secteurId): ?array
     {
-        $key = ''. $secteurId;
+        $key = '' . $secteurId;
         return isset($this->accessibleFonctionnalites[$key]) && $this->accessibleFonctionnalites[$key] ? $this->accessibleFonctionnalites[$key] : null;
     }
 
     public function setAccessibleFonctionnalites($secteurId, array $accessibleFonctionnalitesSecteur): self
     {
-        $key = ''. $secteurId;
+        $key = '' . $secteurId;
         $this->accessibleFonctionnalites[$key] = $accessibleFonctionnalitesSecteur;
 
         return $this;
     }
-    
+
     public function getPosition(): ?int
     {
         return $this->position;
@@ -672,7 +672,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
 
     public function validateForgottenPassToken($forgotten_pass)
     {
-        if ($this->forgottenPassToken ===  $forgotten_pass) {
+        if ($this->forgottenPassToken === $forgotten_pass) {
             return true;
         }
         return false;
@@ -1097,7 +1097,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
     // }
     public function getFormationStatut(Formation $formation)
     {
-        $formationAgents =  $formation->getFormationAgents();
+        $formationAgents = $formation->getFormationAgents();
         foreach ($formationAgents->toArray() as $formationAgent) {
             if ($formationAgent->getAgent()->getId() === $this->getId()) {
                 return $formationAgent->getStatut();
@@ -1721,8 +1721,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
         return $this;
     }
 
-    public function canAccessFonct(string $fonct, $secteurId): bool{
-        return in_array($fonct, $this->getAccessibleFonctionnalites($secteurId) ?? [] );
+    public function canAccessFonct(string $fonct, $secteurId): bool
+    {
+        return in_array($fonct, $this->getAccessibleFonctionnalites($secteurId) ?? []);
     }
 
 
@@ -1740,7 +1741,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
 
     /**
      * Get the value of haveSeenSectorVideo
-     */ 
+     */
     public function getHaveSeenSectorVideo()
     {
         return $this->haveSeenSectorVideo;
@@ -1750,7 +1751,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
      * Set the value of haveSeenSectorVideo
      *
      * @return  self
-     */ 
+     */
     public function setHaveSeenSectorVideo($haveSeenSectorVideo)
     {
         $this->haveSeenSectorVideo = $haveSeenSectorVideo;
@@ -1760,7 +1761,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
 
     /**
      * Get the value of finishedOneVideoFormation
-     */ 
+     */
     public function getFinishedOneVideoFormation()
     {
         return $this->finishedOneVideoFormation;
@@ -1770,7 +1771,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
      * Set the value of finishedOneVideoFormation
      *
      * @return  self
-     */ 
+     */
     public function setFinishedOneVideoFormation($finishedOneVideoFormation)
     {
         $this->finishedOneVideoFormation = $finishedOneVideoFormation;
@@ -1778,23 +1779,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
         return $this;
     }
 
-    public function getRoleLabel() {
+    public function getRoleLabel()
+    {
 
-        if(in_array(self::ROLE_AGENT, $this->getRoles())){
-             return 'Agent';
-        } else if(in_array(self::ROLE_COACH, $this->getRoles())){
+        if (in_array(self::ROLE_AGENT, $this->getRoles())) {
+            return 'Agent';
+        } else if (in_array(self::ROLE_COACH, $this->getRoles())) {
             return 'Coach';
-        } else if(in_array(self::ROLE_ADMINISTRATEUR, $this->getRoles())){
+        } else if (in_array(self::ROLE_ADMINISTRATEUR, $this->getRoles())) {
             return 'Administrateur';
-        } else if(in_array(self::ROLE_CLIENT, $this->getRoles())){
+        } else if (in_array(self::ROLE_CLIENT, $this->getRoles())) {
             return 'Client';
-        } else if(in_array(self::ROLE_DOCUMENT_OWNER, $this->getRoles())){
+        } else if (in_array(self::ROLE_DOCUMENT_OWNER, $this->getRoles())) {
             return 'Propriétaire de document';
-        } else if(in_array(self::ROLE_AMBASSADEUR, $this->getRoles())){
+        } else if (in_array(self::ROLE_AMBASSADEUR, $this->getRoles())) {
             return 'Ambassadeur';
-        } else if(in_array(self::ROLE_MADA, $this->getRoles())){
+        } else if (in_array(self::ROLE_MADA, $this->getRoles())) {
             return 'Mada';
-        } 
+        }
         return '';
     }
 }
