@@ -29,6 +29,27 @@ class ContactInformation
         'Entreprise' => self::TYPE_CONTACT_ENTREPRISE,
     ];
 
+    const FIELDS = [
+        ['field' => 'typeContact'],
+        ['field' => 'lastname', 'trim' => true],
+        ['field' => 'firstname', 'trim' => true],
+        ['field' => 'email', 'trim' => true],
+        ['field' => 'phone', 'trim' => true],
+        ['field' => 'address', 'trim' => true],
+        ['field' => 'rue', 'trim' => true],
+        ['field' => 'numero', 'trim' => true],
+        ['field' => 'codePostal', 'trim' => true],
+        ['field' => 'ville', 'trim' => true],
+        ['field' => 'type'],
+        ['field' => 'typeLogement', 'typeContact' => self::TYPE_CONTACT_PARTICULIER],
+        ['field' => 'nbrPersonne', 'typeContact' => self::TYPE_CONTACT_PARTICULIER],
+        ['field' => 'anneeConstructionMaison', 'typeContact' => self::TYPE_CONTACT_PARTICULIER],
+        ['field' => 'nomEntreprise', 'typeContact' => self::TYPE_CONTACT_ENTREPRISE, 'trim' => true],
+        ['field' => 'siretEntreprise', 'typeContact' => self::TYPE_CONTACT_ENTREPRISE, 'trim' => true],
+        ['field' => 'adresseEntreprise', 'typeContact' => self::TYPE_CONTACT_ENTREPRISE, 'trim' => true],
+
+    ];
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -404,6 +425,40 @@ class ContactInformation
                 return "Entreprise";
             default:
                 return "Particulier";
+        }
+    }
+
+    public function getNote()
+    {
+        $total = 0;
+        $completed = 0;
+        foreach (self::FIELDS as $field) {
+            if (!isset($field['typeContact']) || (isset($field['typeContact']) && $field['typeContact'] == $this->getTypeContact())) {
+                $total++;
+                $value = $this->getPropertyByFieldName($field['field']);
+                if (isset($field['trim']) && $field['trim'] && $value) {
+                    $value = trim($value);
+                }
+                if ($value)
+                    $completed++;
+            }
+        }
+        if ($total == 0)
+            return 10;
+        return round($completed * 1000 / $total) / 100;
+    }
+
+    public function getPropertyByFieldName($fieldName)
+    {
+        // Convert the field name to the corresponding getter method
+        $methodName = 'get' . ucfirst($fieldName);
+
+        // Check if the method exists in the object
+        if (method_exists($this, $methodName)) {
+            // Call the getter method and return the result
+            return call_user_func([$this, $methodName]);
+        } else {
+            throw new \Exception("Getter method '$methodName' not found in class " . get_class($this));
         }
     }
 }

@@ -68,10 +68,12 @@
 			<table class="table table-striped table-hover text-center">
 				<thead>
 					<tr>
+                        <th scope="col">Type du contact</th>
 						<th scope="col">Prénoms</th>
 						<th scope="col">Email</th>
 						<th scope="col">Téléphone</th>
 						<th scope="col">Adresse</th>
+                        <th scope="col">Nom de l'entreprise</th>
 						<th scope="col">ACTION</th>
 					</tr>
 				</thead>
@@ -79,10 +81,12 @@
 					{% for contact in contacts %}            
                         {% set information = contact.information %}
                         <tr>
+                            <td>{{ information.typeContactLabel }}</td>
                             <td>{{ information.lastname }}</td>
                             <td>{{ information.email }}</td>
                             <td>{{ information.phone }}</td>
                             <td>{{ information.address }}</td>
+                            <td>{{ information.nomEntreprise ?? '--' }}</td>
                             <td >
                                 <a href="{{ path('coach_agent_contact_view', {'id': contact.id}) }}" class="btn btn-secondary">
                                     <i class="fa-solid fa-eye"></i>

@@ -93,7 +93,7 @@
 								{% elseif contact.information.typeContact == constant('App\\Entity\\ContactInformation::TYPE_CONTACT_ENTREPRISE')  %}
 								<div class="contact-card__info-item">
 									<i class="fa-solid fa-house-chimney"></i>
-									<span> <strong>Information sur l'entreprise:</strong></span>
+									<span> Information sur l'entreprise:</span>
 									<ul>
 										{% if contact.information.nomEntreprise %}
 											<li><span class="fw-bolder">Nom de l'entreprise :</span> {{ contact.information.nomEntreprise }}</li>
@@ -122,6 +122,11 @@
 									{% endif %}
 								</div>
 							
+								<div class="contact-card__info-item">
+									<i class="fa-solid fa-spinner"></i>
+									<span> <strong>Note:</strong> {{contact.information.note | number_format(2, ',', ' ')}}/10</span>
+									
+								</div>
 							</div>
 						</div>
 

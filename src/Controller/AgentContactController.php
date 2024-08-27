@@ -82,7 +82,7 @@ class AgentContactController extends AbstractController
         $searchForm->handleRequest($request);
 
         $contacts = $paginator->paginate(
-            $this->repoContact->findContactBySecteur($search, $agent, null, $request->get('search')),
+            $this->repoContact->findContactBySecteur($search, $agent, null, $request->get('search'), true),
             $request->query->getInt('page', 1),
             20
         );

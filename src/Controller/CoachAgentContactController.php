@@ -68,7 +68,7 @@ class CoachAgentContactController extends AbstractController
         $searchForm->handleRequest($request);
 
         $contacts = $paginator->paginate(
-            $this->repoContact->findContactBySecteur($search, $agent, $coachSecteur->getSecteur()->getId()),
+            $this->repoContact->findContactBySecteur($search, $agent, null),
             $request->query->getInt('page', 1),
             20
         );
@@ -98,7 +98,7 @@ class CoachAgentContactController extends AbstractController
         ;
 
         $formNote->handleRequest($request);
-        if($formNote->isSubmitted() && $formNote->isValid()) {
+        if ($formNote->isSubmitted() && $formNote->isValid()) {
             $note = $request->request->get('form')['note'];
             $contact->setNote($note);
             $this->entityManager->save($contact);
@@ -117,7 +117,7 @@ class CoachAgentContactController extends AbstractController
     }
 
 
-    
+
     /**
      * @Route("/coach/agent/{agent}/contact/exportExcel", name="coach_agent_contact_export_excel")
      */
@@ -129,9 +129,20 @@ class CoachAgentContactController extends AbstractController
         $contacts = $this->repoContact->findBy(['agent' => $agent, 'secteur' => $secteur]);
 
         $headers = ["NOM ET PRÉNOMS", "EMAIL", "TÉLÉPHONE", "ADRESSE", "TYPE DU LOGEMENT", "RUE", "NUMÉRO", "CODE POSTAL", "VILLE", "COMPOSITION DU FOYER", "NOMBRE DE PERSONNE", "COMMENTAIRE"];
-        $fields = ["information.lastname", "information.email", "information.phone", "information.address", 
-            "information.typeLogement.nom", "information.rue", "information.numero", "information.codePostal", 
-            "information.ville", "information.compositionFoyer", "information.nbrPersonne", "information.commentaire"];
+        $fields = [
+            "information.lastname",
+            "information.email",
+            "information.phone",
+            "information.address",
+            "information.typeLogement.nom",
+            "information.rue",
+            "information.numero",
+            "information.codePostal",
+            "information.ville",
+            "information.compositionFoyer",
+            "information.nbrPersonne",
+            "information.commentaire"
+        ];
         $file = $excelService->export($contacts, $fields, $headers);
         $date = (new \DateTime())->format('Y-m-d');
         return $this->file($file, "contact-$date.csv");

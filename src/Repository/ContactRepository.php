@@ -106,11 +106,15 @@ class ContactRepository extends ServiceEntityRepository
      * @param string $role
      * @return Query
      */
-    public function findContactBySecteur(UserSearch $search, $agent, $secteurId, $search_gal = null)
+    public function findContactBySecteur(UserSearch $search, $agent, $secteurId, $search_gal = null, $withExample = false)
     {
+        $whereAgent = 'c.agent = :agent ';
+        if ($withExample) {
+            $whereAgent .= 'or c.agent is NULL';
+        }
         $query = $this->createQueryBuilder('c');
         $query = $query
-            ->andwhere('c.agent = :agent or c.agent is NULL')
+            ->andwhere($whereAgent)
             ->setParameter('agent', $agent)
             ->leftJoin('c.secteur', 'cs')
             ->join('c.information', 'ci');
