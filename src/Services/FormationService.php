@@ -89,6 +89,13 @@ class FormationService
 
     public function getRendezVousFormation(Secteur $secteur, int $formationId = null,CategorieFormation $categorie = null){
         $formation = null;
+        if(is_null($categorie)){
+            return [
+                'formation' => null,
+                'previous' => null,
+                'next' => null,
+            ];
+        }
         if($formationId){
             $formation = $this->repoFormation->findOneBy(['id' => $formationId]);
         }

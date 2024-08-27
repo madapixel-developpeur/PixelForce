@@ -377,7 +377,7 @@ class FormationRepository extends ServiceEntityRepository
         return $queryBuilder->getQuery()->getResult();
     }
 
-    public function getSingleFormationByCategorie(Secteur $secteur,CategorieFormation $categorie,$options = []){
+    public function getSingleFormationByCategorie(Secteur $secteur,?CategorieFormation $categorie,$options = []){
         $queryBuilder = $this->createQueryBuilder('f');
         
         $queryBuilder
