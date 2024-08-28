@@ -346,11 +346,13 @@
 			{% endif %}
                 <div class="card mb-3" style="max-height:220px;">
                     <div class="card-body text-center d-flex flex-column">
-                        <div class="flex-fill custom-truncate-text">
+                        <div class="">
                             
 							<p><span class="fw-bolder me-25">Script d'appel:</span></p>
             				{% if callScript %}
-                                <p>{{ callScript.content |nl2br}}</p>
+							 <p><div class="script-content-wrapper">
+                                {{ callScript.content |raw}}
+							</div></p>
 							{% else %}
 								<div class="alert alert-primary text-center m-5">
 									Vide

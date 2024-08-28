@@ -12,7 +12,7 @@
         <h4 class="mb-3">Détail</h4>
         <p>  <span class="fw-bolder me-25">Intitulé: </span>{{ script.name}}</p>
         <p>
-            {{ script.content|nl2br }}
+            {{ script.content|raw }}
         </p>
     </div>
 {% endblock %}

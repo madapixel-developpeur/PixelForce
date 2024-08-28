@@ -64,3 +64,12 @@
 .file-download {
     color: #4A148C;
 }
+
+.script-content-wrapper {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -webkit-line-clamp: 5; /* Number of lines to display */
+    height: auto; /* Ensure it fits within the max-height */
+}

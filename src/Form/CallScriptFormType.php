@@ -6,6 +6,7 @@ use App\Entity\CallScript;
 use Symfony\Component\Form\AbstractType;
 use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
@@ -16,15 +17,18 @@ class CallScriptFormType extends AbstractType
         $builder
             ->add('name', TextType::class, [
                 'label' => 'Intitulé',
-                'trim' => true,
-                'required' => false
+                'required' => true,
+                'trim' =>true,
+                "constraints" => [
+                    new NotBlank(["message" => "Intitulé obligatoire"])
+                ]
             ])
             ->add('content', CKEditorType::class,  array(
-            'required' => true,
-            'config' => array(
-                    'uiColor' => '#ffffff',
-                )
-            ))
+                'required' => true,
+                'config' => array(
+                        'uiColor' => '#ffffff',
+                    )
+                ))
         ;
     }
 

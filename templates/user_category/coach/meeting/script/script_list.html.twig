@@ -41,7 +41,11 @@
                     <tr style="height:60px">
                         <td>{{ script.id}}</td>
                         <td>{{ script.name }}</td>
-                        <td class="text-center"> {{ (script.content |slice(0, 100) ~ '...')|nl2br}}</td>
+                        <td class="text-center"> 
+                            <div class="script-content-wrapper">
+                                {{ script.content |raw}}
+                            </div>
+                        </td>
                         <td class="col-action ">
                             {% if  is_granted('ROLE_COACH') %}
                                 <a href="{{path('coach_call_script_view', {'id': script.id})}}">
