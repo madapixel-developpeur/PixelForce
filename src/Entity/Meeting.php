@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\MeetingRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use JsonSerializable;
@@ -78,6 +80,11 @@ class Meeting implements JsonSerializable
      * @ORM\OneToMany(targetEntity=MeetingFiles::class, mappedBy="meeting")
      */
     private $files;
+
+    public function __construct()
+    {
+        $this->files = new ArrayCollection();
+    }
 
 
     public function getId(): ?int
@@ -243,6 +250,28 @@ class Meeting implements JsonSerializable
     public function setFiles($files)
     {
         $this->files = $files;
+
+        return $this;
+    }
+
+    public function addFile(MeetingFiles $file): static
+    {
+        if (!$this->files->contains($file)) {
+            $this->files->add($file);
+            $file->setMeeting($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFile(MeetingFiles $file): static
+    {
+        if ($this->files->removeElement($file)) {
+            // set the owning side to null (unless already changed)
+            if ($file->getMeeting() === $this) {
+                $file->setMeeting(null);
+            }
+        }
 
         return $this;
     }

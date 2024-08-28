@@ -285,4 +285,9 @@ class Contact
     {
         return $this->status;
     }
+
+    public function isIsExample(): ?bool
+    {
+        return $this->isExample;
+    }
 }

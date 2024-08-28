@@ -272,4 +272,9 @@ class CategorieFormation
         }
         return "Non prise en compte";
     }
+
+    public function isIsInProgression(): ?bool
+    {
+        return $this->isInProgression;
+    }
 }
