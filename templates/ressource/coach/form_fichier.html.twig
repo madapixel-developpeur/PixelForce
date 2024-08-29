@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    Ajout Fichier
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .form-add-fichier {
+            padding: 0 10px;
+        }
+
+        @media (min-width: 700px) {
+            .form-add-fichier {
+                padding: 0 100px;
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="block block--bordered block--rounded">
+        <h1 class="block__text block__text--center mt-2">Formulaire de Fichier :</h1>
+        
+        {{ form_start(form, {'attr': {'class': 'my-form', 'id': 'fichier-form'}}) }}
+            <div class="my-form-widget">
+                {{ form_label(form.nom) }}
+                {{ form_widget(form.nom) }}
+                {{ form_errors(form.nom) }}
+            </div>
+            <div class="my-form-widget">
+                {{ form_label(form.file) }}
+                {{ form_widget(form.file) }}
+                {{ form_errors(form.file) }}
+            </div>
+            <div class="btn-wrap">
+                <button class="btn btn-primary" type="submit">
+                    <i data-feather="save"></i> {{ isEdit ? 'Enregistrer les modifications' : 'Créer' }}
+                </button>
+            </div>
+        {{ form_end(form) }}
+    </div>
+{% endblock %}

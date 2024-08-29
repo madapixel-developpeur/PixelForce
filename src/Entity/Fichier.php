@@ -1,13 +1,14 @@
 <?php
+
 namespace App\Entity;
 
-use App\Repository\RessourceRepository;
+use App\Repository\FichierRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=RessourceRepository::class)
+ * @ORM\Entity(repositoryClass=FichierRepository::class)
  */
-class Ressource
+class Fichier
 {
     /**
      * @ORM\Id
@@ -17,41 +18,30 @@ class Ressource
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=self::class)
-     * @ORM\JoinColumn(name="id_parent", referencedColumnName="id", nullable=true, onDelete="CASCADE")
-     */
-    private $idParent;
-
-    /**
      * @ORM\Column(type="string", length=255)
      */
     private $nom;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="string", length=255)
      */
-    private $item = 0;
+    private $file;
 
     /**
      * @ORM\ManyToOne(targetEntity=Secteur::class)
+     * @ORM\JoinColumn(nullable=false)
      */
     private $secteur;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Ressource::class)
+     * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
+     */
+    private $id_parent;
 
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getIdParent(): ?self
-    {
-        return $this->idParent;
-    }
-
-    public function setIdParent(?self $idParent): self
-    {
-        $this->idParent = $idParent;
-
-        return $this;
     }
 
     public function getNom(): ?string
@@ -66,14 +56,14 @@ class Ressource
         return $this;
     }
 
-    public function getItem(): ?int
+    public function getFile(): ?string
     {
-        return $this->item;
+        return $this->file;
     }
 
-    public function setItem(?int $item): self
+    public function setFile(string $file): self
     {
-        $this->item = $item;
+        $this->file = $file;
 
         return $this;
     }
@@ -86,6 +76,18 @@ class Ressource
     public function setSecteur(?Secteur $secteur): self
     {
         $this->secteur = $secteur;
+
+        return $this;
+    }
+
+    public function getIdParent(): ?Ressource
+    {
+        return $this->id_parent;
+    }
+
+    public function setIdParent(?Ressource $id_parent): self
+    {
+        $this->id_parent = $id_parent;
 
         return $this;
     }

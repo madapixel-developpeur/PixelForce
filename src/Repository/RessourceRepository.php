@@ -40,21 +40,20 @@ class RessourceRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param User $agent
+     * @param Secteur $secteur
      * @param int|null $idParent
      * @return Ressource[]
      */
-    public function findByAgentAndParent($agent, ?int $idParent = null): array
+    public function findBySecteurAndParent($secteur, ?int $idParent = null): array
     {
         $qb = $this->createQueryBuilder('r')
-            ->where('r.agent = :agent')
-            ->setParameter('agent', $agent);
+            ->where('r.secteur = :secteur')
+            ->setParameter('secteur', $secteur);
 
         if ($idParent !== null) {
             $qb->andWhere('r.idParent = :idParent')
                ->setParameter('idParent', $idParent);
-        }
-        else {
+        } else {
             $qb->andWhere('r.idParent IS NULL');
         }
 
