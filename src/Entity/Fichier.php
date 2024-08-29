@@ -35,7 +35,7 @@ class Fichier
 
     /**
      * @ORM\ManyToOne(targetEntity=Ressource::class)
-     * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
+     * @ORM\JoinColumn(nullable=true, onDelete="CASCADE")
      */
     private $id_parent;
 
