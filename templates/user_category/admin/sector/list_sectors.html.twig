@@ -57,7 +57,7 @@
 						<th scope="col" class="text-center">Type</th>
 						<th scope="col" class="text-center">Google Form</th>
                         <th scope="col" class="text-center">état secteur</th>
-						<th scope="col" class="text-center table-th-notSortable">ACTION</th>
+						<th scope="col" class="text-center table-th-notSortable">ACTIONS</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -93,6 +93,9 @@
                                         <i class="fa-solid fa-sync"></i>
                                     </a>
                                 {% endif %}
+                                <a href="{{ path('admin_sector_add', {'duplicateId': sector.id}) }}" class="btn btn-warning">
+                                    <i class="fas fa-copy"></i>
+                                </a>
                             </td>
                         </tr>
 						

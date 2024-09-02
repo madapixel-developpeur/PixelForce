@@ -138,6 +138,22 @@ class Secteur implements JsonSerializable
         $this->fonctionnalites = [];
     }
 
+    public function duplicate(){
+        $result = new self();
+        $result->setNom($this->getNom());
+        $result->setTitle($this->getTitle());
+        $result->setDescription($this->getDescription());
+        $result->setLongDescription($this->getLongDescription());
+        $result->setLiens($this->getLiens());
+        $result->setGoogleForms($this->getGoogleForms());
+        $result->setGoogleFormsResponse($this->getGoogleFormsResponse());
+        $result->setType($this->getType());
+        $result->setCouverture($this->getCouverture());
+        $result->setAffiche($this->getAffiche());
+        $result->setFonctionnalites($this->getFonctionnalites());
+        return $result;
+    }
+
     public function getId(): ?int
     {
         return $this->id;

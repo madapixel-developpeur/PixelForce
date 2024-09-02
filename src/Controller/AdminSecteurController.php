@@ -77,7 +77,13 @@ class AdminSecteurController extends AbstractController
     public function admin_sector_add(Request $request)
     {
         $sector = new Secteur();
-        $coachSecteur = new CoachSecteur();
+        $duplicateId = $request->get('duplicateId', null);
+        if($duplicateId){
+            $duplicateSecteur = $this->repoSecteur->find($duplicateId);
+            $sector = $duplicateSecteur->duplicate();
+        }
+        
+        // $coachSecteur = new CoachSecteur();
         $formSecteur = $this->createForm(SecteurType::class, $sector)
             // ->add('coach', EntityType::class, [
             //     'mapped' => false,
@@ -110,8 +116,8 @@ class AdminSecteurController extends AbstractController
             // $coachId = $request->request->get('secteur')['coach'];
             // $coach = $this->repoUser->find($coachId);
             // $coachSecteur->setCoach($coach);
-            $coachSecteur->setSecteur($sector);
-            $this->entityManager->save($coachSecteur);
+            // $coachSecteur->setSecteur($sector);
+            // $this->entityManager->save($coachSecteur);
 
             $this->addFlash('success', "Ajout d'un secteur avec succès");
             return $this->redirectToRoute('admin_sector_list');    
