@@ -25,29 +25,7 @@ class TypeSecteur implements JsonSerializable
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $nom;
-
-    /**
-     * @ORM\Column(type="json", nullable=true)
-     */
-    private $fonctionnalites = [];
-
-    public function __construct(){
-        $this->fonctionnalites = [];
-    }
-
-    public function getFonctionnalites(): array
-    {
-        $fonctionnalites = $this->fonctionnalites;
-        return array_unique($fonctionnalites);
-    }
-
-    public function setFonctionnalites(array $fonctionnalites): self
-    {
-        $this->fonctionnalites = $fonctionnalites;
-
-        return $this;
-    }
+    private $nom;    
 
     public function getId(): ?int
     {
