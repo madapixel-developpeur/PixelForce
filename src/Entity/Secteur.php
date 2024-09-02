@@ -120,20 +120,9 @@ class Secteur implements JsonSerializable
     /**
      * @ORM\Column(type="json", nullable=true)
      */
-    private $fonctionnalites = [];
+    private $fonctionnalites;
 
-    public function getFonctionnalites(): array
-    {
-        $fonctionnalites = $this->fonctionnalites;
-        return array_unique($fonctionnalites);
-    }
-
-    public function setFonctionnalites(array $fonctionnalites): self
-    {
-        $this->fonctionnalites = $fonctionnalites;
-
-        return $this;
-    }
+    
 
 
 
@@ -152,6 +141,19 @@ class Secteur implements JsonSerializable
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getFonctionnalites(): array
+    {
+        $fonctionnalites = $this->fonctionnalites ?? [];
+        return array_unique($fonctionnalites);
+    }
+
+    public function setFonctionnalites(array $fonctionnalites): self
+    {
+        $this->fonctionnalites = $fonctionnalites;
+
+        return $this;
     }
 
     public function getNom(): ?string

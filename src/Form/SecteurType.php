@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\Secteur;
 use App\Entity\TypeSecteur;
 use App\Repository\TypeSecteurRepository;
+use App\Util\FonctionnalitesTypeSecteur;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -13,6 +14,7 @@ use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Validator\Constraints\File;
 use FOS\CKEditorBundle\Form\Type\CKEditorType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class SecteurType extends AbstractType
 {
@@ -22,6 +24,7 @@ class SecteurType extends AbstractType
     }
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $secteur = $builder->getData();
         $types = $this->typeSecteurRepository->findAll();
         $builder
             ->add('nom', null, ['attr' => ['placeholder' => 'Nom du secteur']])
@@ -99,6 +102,13 @@ class SecteurType extends AbstractType
                         'mimeTypesMessage' => 'Image invalide. Le format doit être: .jpeg ou .png',
                     ])
                 ]
+            ])
+            ->add('fonctionnalites', ChoiceType::class, [
+                "label" => "Fonctionnalités activées",
+                'multiple' => true,
+                'expanded' => true,
+                'choices' => FonctionnalitesTypeSecteur::getFonctionnaliteLabels($secteur?->getType()?->getId()??FonctionnalitesTypeSecteur::TYPE_STANDARD),
+                "required" => false,
             ])
         ;
     }

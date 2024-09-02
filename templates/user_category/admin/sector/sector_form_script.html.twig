@@ -1,0 +1,25 @@
+<script>
+    $(document).ready(function (){
+        const currentTypeValue = {{ formSecteur.type.vars.value | json_encode | raw }}
+        const currentFonctionnalitesValue = {{ formSecteur.fonctionnalites.vars.value | json_encode | raw }}
+        const fonctionnalitesType =  {{constant('App\\Util\\FonctionnalitesTypeSecteur::TYPE_FONCTIONNALITES') | json_encode | raw}}
+        const fonctionnalitesLabel = {{constant('App\\Util\\FonctionnalitesTypeSecteur::FONCTIONNALITE_LABELS') | json_encode | raw}} 
+        $('#secteur_type').change(function () {
+            const type = $(this).val();
+            const data = [];
+            const typeKey = "type_"+(type??'');
+            if(type && fonctionnalitesType[typeKey]) {
+                fonctionnalitesType[typeKey].forEach((f) => {
+                    data[fonctionnalitesLabel[f]] = f;
+                })
+            }
+            const parent = $('#secteur_fonctionnalites');
+            parent.empty();
+            Object.keys(data).forEach((key, index) => {
+                parent.append($(`<div class="form-check"><input type="checkbox" id="secteur_fonctionnalites_${index}" name="secteur[fonctionnalites][]" class="form-check-input" value="${data[key]}" ${currentTypeValue == type && currentFonctionnalitesValue.includes(data[key]) ? 'checked':''}>
+        <label class="form-check-label" for="secteur_fonctionnalites_${index}">${key}</label></div>`))
+            })
+            
+        })
+    })
+</script>

@@ -19,4 +19,18 @@ class FonctionnalitesTypeSecteur
         self::FONCTIONNALITE_STANDARD_CONTACT => "Contact",
         self::FONCTIONNALITE_STANDARD_FORMATION => "Formation"
     ];
+
+    public static function getFonctionnalites($typeId){
+        if(!isset(self::TYPE_FONCTIONNALITES["type_".$typeId])) return [];
+        return self::TYPE_FONCTIONNALITES["type_".$typeId];
+    }
+
+    public static function getFonctionnaliteLabels($typeId){
+        $fonct = self::getFonctionnalites($typeId);
+        $result = [];
+        foreach($fonct as $f){
+            $result[self::FONCTIONNALITE_LABELS[$f]] = $f;
+        }
+        return $result;
+    }
 }
