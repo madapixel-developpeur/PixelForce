@@ -117,6 +117,24 @@ class Secteur implements JsonSerializable
      */
     private $contratSecu;
 
+    /**
+     * @ORM\Column(type="json", nullable=true)
+     */
+    private $fonctionnalites = [];
+
+    public function getFonctionnalites(): array
+    {
+        $fonctionnalites = $this->fonctionnalites;
+        return array_unique($fonctionnalites);
+    }
+
+    public function setFonctionnalites(array $fonctionnalites): self
+    {
+        $this->fonctionnalites = $fonctionnalites;
+
+        return $this;
+    }
+
 
 
     public function __construct()
@@ -128,6 +146,7 @@ class Secteur implements JsonSerializable
         $this->liveChatVideos = new ArrayCollection();
         $this->produits = new ArrayCollection();
         $this->active = 1;
+        $this->fonctionnalites = [];
     }
 
     public function getId(): ?int
