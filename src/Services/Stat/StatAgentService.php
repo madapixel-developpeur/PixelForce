@@ -49,13 +49,22 @@ class StatAgentService
     }
     public function getPbbSummary($pbb_id)
     {
-        $pbb_ws_url = $this->parameterBag->get('pbb_ws_url');
-        $response = $this->client->request(
-            'GET',
-            $pbb_ws_url . '/api/pbb_summary?pbb_id=' . $pbb_id
-        );
-        $content = json_decode($response->getContent(), true);
-        return $content;
+        try {
+
+            $pbb_ws_url = $this->parameterBag->get('pbb_ws_url');
+            if(!trim($pbb_ws_url)) throw new \Exception('API unavailable');
+            $response = $this->client->request(
+                'GET',
+                $pbb_ws_url . '/api/pbb_summary?pbb_id=' . $pbb_id
+            );
+            $content = json_decode($response->getContent(), true);
+            return $content;
+        } catch(\Exception $exception) {
+            return [
+                "chiffreAffaire" => 0,
+                "orders" => []
+            ];
+        }
     }
     public function getRevenuAnnee($annee, $secteurId = -1, $agentId = -1)
     {
@@ -158,13 +167,21 @@ class StatAgentService
 
     public function getPbbStat($pbb_id)
     {
+        try {
         $pbb_ws_url = $this->parameterBag->get('pbb_ws_url');
+        if(!trim($pbb_ws_url)) throw new \Exception('API unavailable');
         $response = $this->client->request(
             'GET',
             $pbb_ws_url . '/api/pbb_stat/' . $pbb_id
         );
         $content = json_decode($response->getContent(), true);
         return $content;
+        } catch(\Exception $exception){
+            return [
+                "totalAmount" => 0,
+                "orderCount" => 0
+            ];
+        }
     }
 
     public function getAgentStat(User $agent, Secteur $secteur)
