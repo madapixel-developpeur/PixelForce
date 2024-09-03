@@ -72,6 +72,7 @@
 					<p class="card-text">Pour inviter d'autres personnes à se joindre à vous, veuillez cliquer ici.</p>
 					<a class="btn btn-primary w-100 font-weight-bold" href="#" onclick="copyLink('{{ url('agent_inscription', {'ambassador_username':  app.user.username != "" ?  app.user.username : ' '}) }}') " >Copier</a>
 				</div>
+                {% if app.user.uniqueCoachSecteur.isFonctionnaliteActive(constant('App\\Util\\FonctionnalitesTypeSecteur::FONCTIONNALITE_COMMON_AGENDA')) %}
                 <div class="card card-developer-meetup position-relative">
                     <div class="position-absolute right-0 top-0 m-3">
                         <a href="{{ path('calendar_index') }}" class="btn btn-primary d-flex justify-content-center align-items-center">Mon Agenda <i data-feather="calendar" class="ms-3"></i></a>
@@ -120,6 +121,7 @@
                         {% endif %}
                     </div>
                 </div>
+                {% endif %}
             </div>
             <!--/ Developer Meetup Card -->
              {#

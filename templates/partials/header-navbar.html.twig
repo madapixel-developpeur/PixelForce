@@ -41,6 +41,7 @@
        
         <ul class="d-none d-xl-block">
              <div class="d-flex align-items-center">
+                {% if secteurAgent.isFonctionnaliteActive(constant('App\\Util\\FonctionnalitesTypeSecteur::FONCTIONNALITE_STANDARD_VENTE')) %}
                 <div class="col-auto">
                     <div class="d-flex flex-row align-items-center mx-2 ">
                         <div class="">
@@ -59,6 +60,8 @@
                         </div>
                     </div>
                 </div>
+                {% endif %}
+                {% if secteurAgent.isFonctionnaliteActive(constant('App\\Util\\FonctionnalitesTypeSecteur::FONCTIONNALITE_COMMON_RDV')) %}
                 <div class="col-auto">
                     <div class="d-flex flex-row align-items-center mx-2">
                         <div class="">
@@ -74,6 +77,7 @@
                         </div>
                     </div>
                 </div>
+                {% endif %}
                 <div class="col-auto">
                     <div class="d-flex flex-row align-items-center mx-2">
                         <div class="">

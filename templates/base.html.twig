@@ -1,5 +1,6 @@
 {% if  is_granted('ROLE_AGENT') and app.session.get('secteurId') %}
 {% set fonctionnalites = authService.getAccessibleFonctionnalites(app.user, app.session.get('secteurId')) %}
+{% set secteurAgent = secteurRepository.find(app.session.get('secteurId')) %}
 {% endif %}
 <!DOCTYPE html>
 <html >

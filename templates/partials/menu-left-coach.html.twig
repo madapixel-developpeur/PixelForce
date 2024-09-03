@@ -2,12 +2,13 @@
 </li>
 
 <li class=" nav-item"><a class="d-flex align-items-center" href="{{ path('coach_dashboard_index') }}"><i data-feather="eye"></i><span class="menu-title text-truncate" data-i18n="Feather">Tableau de bord</span></a></li>
-<li class=" nav-item"><a class="d-flex align-items-center" href="{{ path('coach_formation_list') }}"><i data-feather="eye"></i><span class="menu-title text-truncate" data-i18n="Feather">Formations</span></a></li>
+{% if app.user.uniqueCoachSecteur.isFonctionnaliteActive(constant('App\\Util\\FonctionnalitesTypeSecteur::FONCTIONNALITE_COMMON_FORMATION')) %} <li class=" nav-item"><a class="d-flex align-items-center" href="{{ path('coach_formation_list') }}"><i data-feather="eye"></i><span class="menu-title text-truncate" data-i18n="Feather">Formations</span></a></li>{% endif %}
 <li class=" nav-item"><a class="d-flex align-items-center" href="{{ path('coach_agent_list') }}"><i data-feather="user"></i><span class="menu-title text-truncate" data-i18n="User">Mes Agents</span></a>
 <li class=" nav-item"><a class="d-flex align-items-center" href="{{ path('coach_view') }}"><i class="fa-solid fa-child"></i><span class="menu-title text-truncate" data-i18n="User">Filleul</span></a>
-<li class=" nav-item"><a class="d-flex align-items-center" href="{{ path('audit_list') }}"><i class="fa-solid fa-magnifying-glass"></i><span class="menu-title text-truncate" data-i18n="User">Audit</span></a>
+{% if app.user.uniqueCoachSecteur.isFonctionnaliteActive(constant('App\\Util\\FonctionnalitesTypeSecteur::FONCTIONNALITE_COMMON_AUDIT')) %} <li class=" nav-item"><a class="d-flex align-items-center" href="{{ path('audit_list') }}"><i class="fa-solid fa-magnifying-glass"></i><span class="menu-title text-truncate" data-i18n="User">Audit</span></a> {% endif %}
 {# <li class=" nav-item"><a class="d-flex align-items-center" href="{{ path('coach_zoom_list') }}"><i data-feather="video"></i><span class="menu-title text-truncate" data-i18n="User">Réunions</span></a> #}
 {% if app.user.uniqueCoachSecteur.type.id == 1 %}
+{% if app.user.uniqueCoachSecteur.isFonctionnaliteActive(constant('App\\Util\\FonctionnalitesTypeSecteur::FONCTIONNALITE_STANDARD_VENTE')) %}
 <li class=" nav-item"><a class="d-flex align-items-center" href="#"><i data-feather="briefcase"></i><span class="menu-title text-truncate" data-i18n="Components">Catalogue</span></a>
 <ul class="menu-content">
     <li><a class="d-flex align-items-center" href="{{path('admin_category_list')}}"><i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="Alerts">Catégories</span></a>
@@ -20,6 +21,7 @@
     </li>
 </ul>
 </li>
+{% endif %}
 {% elseif app.user.uniqueCoachSecteur.type.id == 2 %}
 <li class=" nav-item"><a class="d-flex align-items-center" href="#"><i data-feather="briefcase"></i><span class="menu-title text-truncate" data-i18n="Components">Catalogue</span></a>
 <ul class="menu-content">
@@ -49,6 +51,6 @@
 </ul>
 </li>
 {% endif %}
-<li class=" nav-item"><a class="d-flex align-items-center" href="{{path('calendar_index')}}"><i data-feather="calendar"></i><span class="menu-title text-truncate" data-i18n="Calendar">Mon Agenda</span></a></li>
-<li class=" nav-item"><a class="d-flex align-items-center" href="{{path('coach_contact_meeting_list')}}"><i data-feather="coffee"></i><span class="menu-title text-truncate" data-i18n="Meetings">Rendez-vous</span></a></li>
-<li class=" nav-item"><a class="d-flex align-items-center" href="{{ path('coach_transaction_retrait') }}"><i data-feather="dollar-sign"></i><span class="menu-title text-truncate" data-i18n="Email">Retrait</span></a></li>
+{% if app.user.uniqueCoachSecteur.isFonctionnaliteActive(constant('App\\Util\\FonctionnalitesTypeSecteur::FONCTIONNALITE_COMMON_AGENDA')) %}<li class=" nav-item"><a class="d-flex align-items-center" href="{{path('calendar_index')}}"><i data-feather="calendar"></i><span class="menu-title text-truncate" data-i18n="Calendar">Mon Agenda</span></a></li>{% endif %}
+{% if app.user.uniqueCoachSecteur.isFonctionnaliteActive(constant('App\\Util\\FonctionnalitesTypeSecteur::FONCTIONNALITE_COMMON_RDV')) %}<li class=" nav-item"><a class="d-flex align-items-center" href="{{path('coach_contact_meeting_list')}}"><i data-feather="coffee"></i><span class="menu-title text-truncate" data-i18n="Meetings">Rendez-vous</span></a></li>{% endif %}
+{% if app.user.uniqueCoachSecteur.isFonctionnaliteActive(constant('App\\Util\\FonctionnalitesTypeSecteur::FONCTIONNALITE_COMMON_TRANSACTION')) %}<li class=" nav-item"><a class="d-flex align-items-center" href="{{ path('coach_transaction_retrait') }}"><i data-feather="dollar-sign"></i><span class="menu-title text-truncate" data-i18n="Email">Retrait</span></a></li>{% endif %}

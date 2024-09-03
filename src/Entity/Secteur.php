@@ -29,18 +29,18 @@ class Secteur implements JsonSerializable
     /**
      * @ORM\Column(type="text", nullable=true)
      */
-    
+
     private $description;
 
     /**
      * @ORM\Column(type="text", nullable=true)
      */
-    
+
     private $title;
     /**
      * @ORM\Column(type="text", nullable=true)
      */
-    
+
     private $longDescription;
 
     /**
@@ -48,7 +48,7 @@ class Secteur implements JsonSerializable
      */
     private $couverture;
 
-     /**
+    /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $affiche;
@@ -122,7 +122,7 @@ class Secteur implements JsonSerializable
      */
     private $fonctionnalites;
 
-    
+
 
 
 
@@ -138,7 +138,8 @@ class Secteur implements JsonSerializable
         $this->fonctionnalites = [];
     }
 
-    public function duplicate(){
+    public function duplicate()
+    {
         $result = new self();
         $result->setNom($this->getNom());
         $result->setTitle($this->getTitle());
@@ -284,12 +285,12 @@ class Secteur implements JsonSerializable
     public function getAgents()
     {
         /** @var  $agentSecteur AgentSecteur */
-       $agentSecteurs = $this->agentSecteurs->toArray();
-       foreach($agentSecteurs as $agentSecteur) {
-           $this->agents[] = $agentSecteur->getAgent();
-       }
+        $agentSecteurs = $this->agentSecteurs->toArray();
+        foreach ($agentSecteurs as $agentSecteur) {
+            $this->agents[] = $agentSecteur->getAgent();
+        }
 
-       return $this->agents;
+        return $this->agents;
     }
 
     /**
@@ -384,12 +385,12 @@ class Secteur implements JsonSerializable
 
     public function getCoachs()
     {
-       $coachs = [];
-       $coachSecteurs = $this->coachSecteurs->toArray();
+        $coachs = [];
+        $coachSecteurs = $this->coachSecteurs->toArray();
         /** @var CoachSecteur $coachSecteur */
-        foreach($coachSecteurs as $coachSecteur) {
-           $coachs[] = $coachSecteur->getCoach();
-       }
+        foreach ($coachSecteurs as $coachSecteur) {
+            $coachs[] = $coachSecteur->getCoach();
+        }
 
         return $coachs;
     }
@@ -549,5 +550,8 @@ class Secteur implements JsonSerializable
         return $this;
     }
 
-    
+    public function isFonctionnaliteActive($fonct): bool
+    {
+        return in_array($fonct, $this->getFonctionnalites());
+    }
 }
