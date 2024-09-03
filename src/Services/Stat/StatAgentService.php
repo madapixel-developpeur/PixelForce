@@ -52,14 +52,27 @@ class StatAgentService
         try {
 
             $pbb_ws_url = $this->parameterBag->get('pbb_ws_url');
-            if(!trim($pbb_ws_url)) throw new \Exception('API unavailable');
+            if (!trim($pbb_ws_url))
+                throw new \Exception('API unavailable');
             $response = $this->client->request(
                 'GET',
                 $pbb_ws_url . '/api/pbb_summary?pbb_id=' . $pbb_id
             );
             $content = json_decode($response->getContent(), true);
             return $content;
-        } catch(\Exception $exception) {
+        } catch (\Exception $exception) {
+            return [
+                "chiffreAffaire" => 0,
+                "orders" => []
+            ];
+        }
+    }
+
+    public function getSummary($agentId, $secteurId)
+    {
+        if ($secteurId == $this->parameterBag->get('secteur_digital_id')) {
+            return $this->getPbbSummary($agentId);
+        } else {
             return [
                 "chiffreAffaire" => 0,
                 "orders" => []
@@ -168,15 +181,28 @@ class StatAgentService
     public function getPbbStat($pbb_id)
     {
         try {
-        $pbb_ws_url = $this->parameterBag->get('pbb_ws_url');
-        if(!trim($pbb_ws_url)) throw new \Exception('API unavailable');
-        $response = $this->client->request(
-            'GET',
-            $pbb_ws_url . '/api/pbb_stat/' . $pbb_id
-        );
-        $content = json_decode($response->getContent(), true);
-        return $content;
-        } catch(\Exception $exception){
+            $pbb_ws_url = $this->parameterBag->get('pbb_ws_url');
+            if (!trim($pbb_ws_url))
+                throw new \Exception('API unavailable');
+            $response = $this->client->request(
+                'GET',
+                $pbb_ws_url . '/api/pbb_stat/' . $pbb_id
+            );
+            $content = json_decode($response->getContent(), true);
+            return $content;
+        } catch (\Exception $exception) {
+            return [
+                "totalAmount" => 0,
+                "orderCount" => 0
+            ];
+        }
+    }
+
+    public function getStat($agentId, $secteurId)
+    {
+        if ($secteurId == $this->parameterBag->get('secteur_digital_id')) {
+            return $this->getPbbStat($agentId);
+        } else {
             return [
                 "totalAmount" => 0,
                 "orderCount" => 0
@@ -186,11 +212,11 @@ class StatAgentService
 
     public function getAgentStat(User $agent, Secteur $secteur)
     {
-        $statDigital = null;
-        if ($secteur->getId() == $_ENV['SECTEUR_DIGITAL_ID']) {
-            $statDigital = $this->getPbbStat($agent->getId());
-        }
-        $pbb_summary = $this->getPbbSummary($agent->getId(), $agent->getNom());
+        // $statDigital = null;
+        // if ($secteur->getId() == $_ENV['SECTEUR_DIGITAL_ID']) {
+        $statDigital = $this->getStat($agent->getId(), $secteur->getId());
+        // }
+        $pbb_summary = $this->getSummary($agent->getId(), $secteur->getId());
         $statVente = $this->getStatVente($agent->getId(), $secteur->getId(), $secteur->getType()->getId());
         $chiffreAffaireTotal = $pbb_summary['chiffreAffaire'] + ($statVente != null ? $statVente['ca'] : 0);
         $nbVentesTotal = count($pbb_summary['orders']) + ($statVente != null ? $statVente['nbr_ventes'] : 0);

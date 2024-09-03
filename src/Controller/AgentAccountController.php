@@ -114,7 +114,7 @@ class AgentAccountController extends AbstractController
         if ($this->agentService->isActivableContent($agent)) {
             $stripe_publishable_key = '';
             $stripeIntentSecret = '';
-            $planPrice  = 0.0;
+            $planPrice = 0.0;
         } else {
             $agentSecteurs = $this->repoAgentSecteur->findBy(['agent' => $agent]);
             $planAgentAccountType = $agent->typePlanAccountBySecteurChoice($agentSecteurs);
@@ -167,7 +167,7 @@ class AgentAccountController extends AbstractController
     public function agentAddSector(Secteur $secteur)
     {
         $user = $this->getUser();
-        $agentSecteur  = new AgentSecteur();
+        $agentSecteur = new AgentSecteur();
         $agentSecteur->setAgent($user);
         $agentSecteur->setSecteur($secteur);
         $agentSecteur->setStatut(1);
@@ -189,17 +189,16 @@ class AgentAccountController extends AbstractController
         $firstFormation = $this->repoFormation->findOrderedNonFinishedFormations($secteur, $agent);
 
         // On vérifie d'abord si la session avec la clé 'secteurId' est générée ou les contenus sont activés
-        $sessionSecteurId =  $this->session->get('secteurId');
-        $sessionAccountStatus =  $this->agentService->isActivableContent($agent);
+        $sessionSecteurId = $this->session->get('secteurId');
+        $sessionAccountStatus = $this->agentService->isActivableContent($agent);
         if (!$sessionSecteurId || !$sessionAccountStatus) {
             return $this->redirectToRoute('agent_home');
         }
 
-        $statDigital = null;
-        if ($sessionSecteurId == $this->getParameter('secteur_digital_id')) {
-            $statDigital = $statAgentService->getPbbStat($agent->getId());
-            // $statDigital = $statAgentService->getPbbStat(1);
-        }
+        // $statDigital = null;
+        // if ($sessionSecteurId == $this->getParameter('secteur_digital_id')) {
+        $statDigital = $statAgentService->getStat($agent->getId(), $sessionSecteurId);
+        // }
 
         $contacts = $this->repoContact->findBy(['secteur' => $secteur, 'agent' => $agent]);
         $contacts = $paginator->paginate(
@@ -228,7 +227,7 @@ class AgentAccountController extends AbstractController
         $topClients = $statAgentService->getTopClients($agent->getId(), $secteur->getId(), 5);
         $revenuAnnee = $statAgentService->getRevenuAnnee($annee, $secteur->getId(), $agent->getId());
         $nbrRdv = $statAgentService->getNbrRdv($agent->getId());
-        $pbb_summary = $statAgentService->getPbbSummary($agent->getId(), $agent->getNom());
+        $pbb_summary = $statAgentService->getSummary($agent->getId(), $sessionSecteurId);
         $soldeRemuneration = $userTransactionRepository->getSolde($agent, [$secteur->getId()]);
         // dd($pbb_summary);
         $chiffreAffaireTotal = $pbb_summary['chiffreAffaire'] + ($statVente != null ? $statVente['ca'] : 0);
@@ -240,7 +239,7 @@ class AgentAccountController extends AbstractController
         $expert = $this->repoUser->getFirstCoachBySecteur($secteur);
 
 
-        $videoFinFormation = $this->secteurVideoFormationRepository->findOneBy(['secteur'=> $sessionSecteurId ]);
+        $videoFinFormation = $this->secteurVideoFormationRepository->findOneBy(['secteur' => $sessionSecteurId]);
 
         return $this->render('user_category/agent/dashboard_secteur.html.twig', [
             'secteur' => $secteur,

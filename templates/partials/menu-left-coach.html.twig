@@ -8,7 +8,7 @@
 {% if app.user.uniqueCoachSecteur.isFonctionnaliteActive(constant('App\\Util\\FonctionnalitesTypeSecteur::FONCTIONNALITE_COMMON_AUDIT')) %} <li class=" nav-item"><a class="d-flex align-items-center" href="{{ path('audit_list') }}"><i class="fa-solid fa-magnifying-glass"></i><span class="menu-title text-truncate" data-i18n="User">Audit</span></a> {% endif %}
 {# <li class=" nav-item"><a class="d-flex align-items-center" href="{{ path('coach_zoom_list') }}"><i data-feather="video"></i><span class="menu-title text-truncate" data-i18n="User">Réunions</span></a> #}
 {% if app.user.uniqueCoachSecteur.type.id == 1 %}
-{% if app.user.uniqueCoachSecteur.isFonctionnaliteActive(constant('App\\Util\\FonctionnalitesTypeSecteur::FONCTIONNALITE_STANDARD_VENTE')) %}
+{% if app.user.uniqueCoachSecteur.isFonctionnaliteActive(constant('App\\Util\\FonctionnalitesTypeSecteur::FONCTIONNALITE_STANDARD_PRODUIT')) %}
 <li class=" nav-item"><a class="d-flex align-items-center" href="#"><i data-feather="briefcase"></i><span class="menu-title text-truncate" data-i18n="Components">Catalogue</span></a>
 <ul class="menu-content">
     <li><a class="d-flex align-items-center" href="{{path('admin_category_list')}}"><i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="Alerts">Catégories</span></a>

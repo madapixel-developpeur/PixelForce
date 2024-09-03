@@ -45,15 +45,16 @@ class CoachAgentController extends AbstractController
      */
     private $formationService;
 
-    public function __construct(FormationService $formationService,
-                                CoachAgentRepository $coachAgentRepository,
-                                UserRepository $repoUser,
-                                UserManager $userManager,
-                                EntityManager $entityManager,
-                                CoachSecteurRepository $repoCoachSecteur,
-                                AgentSecteurRepository $repoAgentSecteur,
-                                private FormationRepository $repoFormation)
-    {
+    public function __construct(
+        FormationService $formationService,
+        CoachAgentRepository $coachAgentRepository,
+        UserRepository $repoUser,
+        UserManager $userManager,
+        EntityManager $entityManager,
+        CoachSecteurRepository $repoCoachSecteur,
+        AgentSecteurRepository $repoAgentSecteur,
+        private FormationRepository $repoFormation
+    ) {
         $this->coachAgentRepository = $coachAgentRepository;
         $this->repoUser = $repoUser;
         $this->userManager = $userManager;
@@ -68,7 +69,7 @@ class CoachAgentController extends AbstractController
      */
     public function coach_agent_list(Request $request, PaginatorInterface $paginator)
     {
-        
+
         /** @var User $coach */
         $coach = $this->getUser();
         $mySector = $this->repoCoachSecteur->findOneBy(['coach' => $this->getUser()])->getSecteur();
@@ -93,7 +94,7 @@ class CoachAgentController extends AbstractController
         ]);
     }
 
-    
+
     /**
      * @Route("/coach/agent/add", name="coach_agent_add")
      */
@@ -113,12 +114,12 @@ class CoachAgentController extends AbstractController
         ;
         $formUser->handleRequest($request);
 
-        if($formUser->isSubmitted() && $formUser->isValid()) {
+        if ($formUser->isSubmitted() && $formUser->isValid()) {
             $agentSecteur->setAgent($agent);
             $agentSecteur->setStatut(1);
             $secteur = $this->repoCoachSecteur->findBy(['coach' => $coach])[0]->getSecteur();
             $agentSecteur->setSecteur($secteur);
-            $agent->setRoles([ User::ROLE_AGENT ]);
+            $agent->setRoles([User::ROLE_AGENT]);
             $agent->setPassword(base64_encode('_dfdkf12132_1321df'));
 
             $coachAgent->setCoach($this->getUser());
@@ -151,7 +152,7 @@ class CoachAgentController extends AbstractController
             $agent->setUsername($request->request->get('user_login')['username']);
             $this->userManager->setUserPasword($agent, $request->request->get('user_login')['password']['first'], '', false);
             $this->addFlash('success', 'Ajout de l\'utilisateur Agent efféctué avec succès');
-            return $this->redirectToRoute('coach_agent_list');    
+            return $this->redirectToRoute('coach_agent_list');
         }
 
         return $this->render('user_category/coach/agent/generate_password_agent.html.twig', [
@@ -168,13 +169,13 @@ class CoachAgentController extends AbstractController
     /**
      * @Route("/coach/agent/{id}/secteur/view", name="coach_agent_view")
      */
-    public function coach_agent_view(User $agent,  AgentSecteurService $agentSecteurService, CategorieFormationRepository $categorieFormationRepository,StatAgentService $statAgentService)
+    public function coach_agent_view(User $agent, AgentSecteurService $agentSecteurService, CategorieFormationRepository $categorieFormationRepository, StatAgentService $statAgentService)
     {
         $mySector = $this->repoCoachSecteur->findOneBy(['coach' => $this->getUser()])->getSecteur();
         $agentSecteur = $this->repoAgentSecteur->findOneBy(['secteur' => $mySector, 'agent' => $agent]);
         $agentSecteurs = $this->repoAgentSecteur->findBy(['agent' => $agent]);
         $secteurs = $agentSecteurService->getSecteurs($agentSecteurs);
-      
+
         $positionSteps = [
             ['position' => 1, 'label' => 'Avoir au moins 5 filleuls directs et au moins 1000 € de CA'],
             ['position' => 2, 'label' => 'Avoir au moins 25 membres dans son équipe'],
@@ -182,24 +183,25 @@ class CoachAgentController extends AbstractController
         ];
 
         $formationCategoriesOrdered = $categorieFormationRepository->getValidCategoriesOrdered();
-        
+
         $firstFormation = $this->repoFormation->findOrderedNonFinishedFormations($mySector, $agent);
 
         $chiffreAffaireTotal = 0;
-        if($mySector->getId() == $this->getParameter('secteur_digital_id')){
-            $chiffreAffaireTotal = $statAgentService->getPbbStat($agent->getId())['totalAmount'];
-        }
-        else{
+        // if($mySector->getId() == $this->getParameter('secteur_digital_id')){
+        $chiffreAffaireTotal = $statAgentService->getStat($agent->getId(), $mySector->getId())['totalAmount'];
+        // }
+        if ($mySector->getId() != $this->getParameter('secteur_digital_id')) {
             $statVente = $statAgentService->getStatVente($agent->getId(), $mySector->getId(), $mySector->getType()->getId());
-            $pbb_summary = $statAgentService->getPbbSummary($agent->getId(), $agent->getNom());
+            $pbb_summary = $statAgentService->getSummary($agent->getId(), $mySector->getId());
             $chiffreAffaireTotal = $pbb_summary['chiffreAffaire'] + ($statVente != null ? $statVente['ca'] : 0);
         }
+        // }
 
         return $this->render('user_category/coach/agent/view_agent.html.twig', [
             'agent' => $agent,
             'agentSecteur' => $agentSecteur,
             'secteurs' => $secteurs,
-            'repoCoachSecteur' =>  $this->repoCoachSecteur,
+            'repoCoachSecteur' => $this->repoCoachSecteur,
             'positionSteps' => $positionSteps,
             'formationCategoriesOrdered' => $formationCategoriesOrdered,
             'firstFormation' => $firstFormation,
@@ -208,7 +210,7 @@ class CoachAgentController extends AbstractController
     }
 
 
-    
+
     /**
      * Permet de valider le secteur en attente de l'agent
      * 
@@ -227,7 +229,7 @@ class CoachAgentController extends AbstractController
 
         return $this->json([
             'validation' => 'successfully'
-        ], 200); 
+        ], 200);
     }
 
     /**
@@ -248,7 +250,7 @@ class CoachAgentController extends AbstractController
 
         return $this->json([
             'invalidation' => 'successfully'
-        ], 200); 
-        
+        ], 200);
+
     }
 }
