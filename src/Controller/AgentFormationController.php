@@ -56,7 +56,7 @@ class AgentFormationController extends AbstractController
 
     /** @var RFormationCategorieRepository $repoRelationFormationCategorie */
     protected $repoRelationFormationCategorie;
-    
+
     /** @var CategorieFormationAgentService $categorieFormationAgentService */
     protected $categorieFormationAgentService;
 
@@ -72,10 +72,22 @@ class AgentFormationController extends AbstractController
     /** @var CategorieFormationAgentRepository $repoCategorieAgent */
     protected $repoCategorieAgent;
 
-    public function __construct(EntityManager $entityManager, SecteurRepository $secteurRepository, PaginatorInterface $paginator, FormationRepository $formationRepository, FormationAgentRepository $formationAgentRepository, MailerService $mailerService, RFormationCategorieRepository $repoRelationFormationCategorie, CategorieFormationAgentService $categorieFormationAgentService, SessionInterface $sessionInterface, CategorieFormationRepository $repoCatFormation, ContactRepository $repoContact, CategorieFormationAgentRepository $repoCategorieAgent, private AgentSecteurRepository $agentSecteurRepository,
+    public function __construct(
+        EntityManager $entityManager,
+        SecteurRepository $secteurRepository,
+        PaginatorInterface $paginator,
+        FormationRepository $formationRepository,
+        FormationAgentRepository $formationAgentRepository,
+        MailerService $mailerService,
+        RFormationCategorieRepository $repoRelationFormationCategorie,
+        CategorieFormationAgentService $categorieFormationAgentService,
+        SessionInterface $sessionInterface,
+        CategorieFormationRepository $repoCatFormation,
+        ContactRepository $repoContact,
+        CategorieFormationAgentRepository $repoCategorieAgent,
+        private AgentSecteurRepository $agentSecteurRepository,
         private FormationPageConfigurationRepository $formationPageConfigurationRepository,
-    )
-    {
+    ) {
         $this->paginator = $paginator;
         $this->formationRepository = $formationRepository;
         $this->formationAgentRepository = $formationAgentRepository;
@@ -100,10 +112,10 @@ class AgentFormationController extends AbstractController
         $agent = $this->getUser();
         $secteur_id = $session->get('secteurId');
         $secteur = $this->secteurRepository->findOneBy(['id' => $secteur_id]);
-        
 
-        if($secteur) {
-                        // dd($request->query->get('q'));
+
+        if ($secteur) {
+            // dd($request->query->get('q'));
             $criteres = $request->query->get('q');
             $criteres = $criteres ? $criteres : [];
             $formations = $this->formationRepository->searchForAgent($criteres, $secteur);
@@ -121,12 +133,12 @@ class AgentFormationController extends AbstractController
             //     'nbrAllMyContacts' => count($this->repoContact->findAll()),
             //     'agentSecteur' => $agentSecteur
             // ]);
-            $configuration = $this->formationPageConfigurationRepository->findOneBy(['secteur'=> $secteur ]);
+            $configuration = $this->formationPageConfigurationRepository->findOneBy(['secteur' => $secteur]);
             return $this->render('formation/video/agent_detail_categorie_formation.html.twig', [
                 'formations' => $formations,
                 'criteres' => $criteres,
                 'formationAgentRepository' => $this->formationAgentRepository,
-                'categories' => $this->repoCatFormation->findBy(['statut' => 1]),
+                'categories' => $this->repoCatFormation->findBy(['statut' => 1], ['ordreCatFormation' => 'ASC']),
                 'nbrAllMyContacts' => count($this->repoContact->findAll()),
                 'agentSecteur' => $agentSecteur,
                 'filesDirectory' => $this->getParameter('files_directory_relative'),
@@ -145,7 +157,7 @@ class AgentFormationController extends AbstractController
     //     $secteur_id = $session->get('secteurId');
     //     $secteur = $this->secteurRepository->findOneBy(['id' => $secteur_id]);
     //     $categorie = $this->categorieFormationAgentService->getCurrentAgentCategorie($agent, $secteur);
-        
+
 
     //     if($secteur) {
     //                     // dd($request->query->get('q'));
@@ -193,10 +205,10 @@ class AgentFormationController extends AbstractController
      */
     public function coach_formation_fiche(Formation $formation, Request $request)
     {
-       return $this->render('formation/video/agent_formation_fiche.html.twig', [
-           'formation' => $formation,
-           'formationAgentRepository' => $this->formationAgentRepository
-       ]);
+        return $this->render('formation/video/agent_formation_fiche.html.twig', [
+            'formation' => $formation,
+            'formationAgentRepository' => $this->formationAgentRepository
+        ]);
     }
     // public function coach_formation_fiche(Formation $formation, Request $request)
     // {
@@ -206,47 +218,48 @@ class AgentFormationController extends AbstractController
     //    ]);
     // }
 
-    private function terminer_formation(Formation $formation, $quizData=[]){
+    private function terminer_formation(Formation $formation, $quizData = [])
+    {
         $agent = $this->getUser();
         $coach = $formation->getCoach();
         $agentSecteur = $this->agentSecteurRepository->findOneBy(["agent" => $agent, "secteur" => $formation->getSecteur()]);
         $result = $this->formationAgentRepository->findBy(['agent' => $agent, 'formation' => $formation]);
         $formationAgent = null;
-        if(count($result) > 0){
+        if (count($result) > 0) {
             $formationAgent = $result[0];
-        } else{
+        } else {
             $formationAgent = new FormationAgent();
             $formationAgent->setAgent($agent);
             $formationAgent->setFormation($formation);
         }
         $formationAgent->setStatut(Formation::STATUT_TERMINER);
-        if($formation->getType() == Formation::TYPE_QUIZ){
+        if ($formation->getType() == Formation::TYPE_QUIZ) {
             $score = isset($quizData['score']) ? $quizData['score'] : 0;
             $snapshot = isset($quizData['snapshot']) ? $quizData['snapshot'] : 0;
             $formationAgent->setLastResultScore($score);
             $formationAgent->setLastResultSnapshot($snapshot);
-            if($formationAgent->getMaxResultScore() === null || $score >= $formationAgent->getMaxResultScore()){
+            if ($formationAgent->getMaxResultScore() === null || $score >= $formationAgent->getMaxResultScore()) {
                 $formationAgent->setMaxResultScore($score);
                 $formationAgent->setMaxResultSnapshot($snapshot);
-            } 
-            if($formationAgent->getMaxResultScore() < 50){
+            }
+            if ($formationAgent->getMaxResultScore() < 50) {
                 $formationAgent->setStatut(Formation::STATUT_IN_PROGRESS);
             }
         }
-        
+
         $this->entityManager->persist($formationAgent);
-        if($formationAgent->getStatut() === Formation::STATUT_TERMINER){
+        if ($formationAgent->getStatut() === Formation::STATUT_TERMINER) {
             $formationRank = $formation->getCategorieFormation()->getOrdreCatFormation();
-            if(count($this->formationRepository->getNextFormationsByCategorieAndSecteur($formation->getSecteur(), $formation->getCategorieFormation(), $formation->getId(), $formation->getType())) == 0){
-                $formationRank ++;
+            if (count($this->formationRepository->getNextFormationsByCategorieAndSecteur($formation->getSecteur(), $formation->getCategorieFormation(), $formation->getId(), $formation->getType())) == 0) {
+                $formationRank++;
             }
 
-            if($agentSecteur->getCurrentFormationRank() < $formationRank){
+            if ($agentSecteur->getCurrentFormationRank() < $formationRank) {
                 $agentSecteur->setCurrentFormationRank($formationRank);
                 $this->entityManager->persist($agentSecteur);
             }
         }
-        
+
         $this->entityManager->flush();
         return $formationAgent;
     }
@@ -256,28 +269,28 @@ class AgentFormationController extends AbstractController
      */
     public function coach_formation_terminer(Formation $formation, Request $request)
     {
-        try{
+        try {
             $user = $this->getUser();
             $this->terminer_formation($formation);
             // $this->mailerService->sendMailAfterDoneFormation($agent, $coach, $formation);
-            if(!$user->getFinishedOneVideoFormation()){
+            if (!$user->getFinishedOneVideoFormation()) {
                 $user->setFinishedOneVideoFormation(true);
                 $this->entityManager->persist($user);
                 $this->entityManager->flush();
             }
-            $this->addFlash('congratulation_message', 'Vous venez de terminer la formation : '.$formation->getTitre());
-        } catch(Exception $ex){
+            $this->addFlash('congratulation_message', 'Vous venez de terminer la formation : ' . $formation->getTitre());
+        } catch (Exception $ex) {
             $this->addFlash('danger', $ex->getMessage());
         }
-        
-        if (isset($_GET['path'] ) and $_GET['path'] === 'fromDashboard') {
+
+        if (isset($_GET['path']) and $_GET['path'] === 'fromDashboard') {
             // On redirige l'utilisateur vers le dashbord lorsqu'il a cliquer le bouton 'J'ai terminé la formation' depuis le dashboard
             $secteur_id = $this->sessionInterface->get('secteurId');
             return $this->redirectToRoute('agent_dashboard_secteur', ['id' => $secteur_id]);
         } else {
             return $this->redirectToRoute('agent_formation_list');
         }
-        
+
     }
     // public function coach_formation_terminer(Formation $formation, Request $request)
     // {
@@ -302,7 +315,7 @@ class AgentFormationController extends AbstractController
 
     //     $this->mailerService->sendMailAfterDoneFormation($agent, $coach, $formation);
     //     $this->addFlash('success', '<h2 class="text-secondary text-center"> 🎉 Félicitations! Vous venez de terminer la formation : '.$formation->getTitre().' 🎉</h2>');
-        
+
     //     if (isset($_GET['path'] ) and $_GET['path'] === 'fromDashboard') {
     //         // On redirige l'utilisateur vers le dashbord lorsqu'il a cliquer le bouton 'J'ai terminé la formation' depuis le dashboard
     //         $secteur_id = $this->sessionInterface->get('secteurId');
@@ -310,7 +323,7 @@ class AgentFormationController extends AbstractController
     //     } else {
     //         return $this->redirectToRoute('agent_formation_list');
     //     }
-        
+
     // }
 
     /**
@@ -320,9 +333,9 @@ class AgentFormationController extends AbstractController
     public function quiz_begin(Formation $quiz, Request $request)
     {
         if ($request->isMethod('POST')) {
-            try{
+            try {
 
-            
+
                 // Handle the POST request
                 $result = $request->get('quizResult');
                 $result = $result ? json_decode($result, true) : [];
@@ -331,7 +344,7 @@ class AgentFormationController extends AbstractController
                 $snapshot = [
                     'titre' => $quiz->getTitre(),
                     'description' => $quiz->getDescription(),
-                    'categorie' => $quiz->getCategorieFormation()?->getNom()??'',
+                    'categorie' => $quiz->getCategorieFormation()?->getNom() ?? '',
                     'items' => []
                 ];
                 foreach ($quiz->getValidFormationQuizItems() as $item) {
@@ -347,7 +360,8 @@ class AgentFormationController extends AbstractController
                     ];
                     foreach ($choices as $choice) {
                         $checked = in_array($choice->getId(), $itemResult);
-                        if($checked !== ($choice->isVrai()??false)) $wrongCount++;
+                        if ($checked !== ($choice->isVrai() ?? false))
+                            $wrongCount++;
                         $itemSnapshot['choices'][] = [
                             'choix' => $choice->getChoix(),
                             'vrai' => $choice->isVrai(),
@@ -355,27 +369,27 @@ class AgentFormationController extends AbstractController
                         ];
                     }
                     $countItem++;
-                    if($wrongCount > 0){
+                    if ($wrongCount > 0) {
                         $itemSnapshot['result'] = false;
                         $itemSnapshot['wrongCount'] = $wrongCount;
                     } else {
                         $countItemTrue++;
                     }
                     $snapshot['items'][] = $itemSnapshot;
-                    
+
                 }
-                $score = $countItemTrue * 100./$countItem;
+                $score = $countItemTrue * 100. / $countItem;
 
                 $formationAgent = $this->terminer_formation($quiz, ['score' => $score, 'snapshot' => $snapshot]);
-                $this->addFlash('success', '<h2 class="text-secondary text-center"> 🎉 Félicitations! Vous venez de terminer le quiz : '.$quiz->getTitre().' 🎉</h2>');
+                $this->addFlash('success', '<h2 class="text-secondary text-center"> 🎉 Félicitations! Vous venez de terminer le quiz : ' . $quiz->getTitre() . ' 🎉</h2>');
                 return $this->redirectToRoute('agent_quiz_result', ['id' => $formationAgent->getId()]);
-            } catch(Exception $ex){
+            } catch (Exception $ex) {
                 $this->addFlash('danger', $ex->getMessage());
             }
         }
-       return $this->render('formation/quiz/agent_quiz_begin.html.twig', [
-           'quiz' => $quiz,
-       ]);
+        return $this->render('formation/quiz/agent_quiz_begin.html.twig', [
+            'quiz' => $quiz,
+        ]);
     }
 
     /**
@@ -384,39 +398,39 @@ class AgentFormationController extends AbstractController
      */
     public function quiz_result(FormationAgent $result, Request $request)
     {
-        
-       return $this->render('formation/quiz/agent_quiz_result.html.twig', [
-           'result' => $result,
-       ]);
+
+        return $this->render('formation/quiz/agent_quiz_result.html.twig', [
+            'result' => $result,
+        ]);
     }
 
-       /**
+    /**
      * @Route("/agent/video-secteur/terminer", name="agent_video_secteur_terminer", options={"expose"=true})
      * @IsGranted("ROLE_AGENT")
      */
     public function video_secteur_terminer(Request $request)
     {
-        try{
-           $agent  = $this->getUser();
-           $agent->setHaveSeenSectorVideo(User::HAVE_SEEN_SECTOR_VIDEO);
-           $this->entityManager->persist($agent);
-           $this->entityManager->flush();
+        try {
+            $agent = $this->getUser();
+            $agent->setHaveSeenSectorVideo(User::HAVE_SEEN_SECTOR_VIDEO);
+            $this->entityManager->persist($agent);
+            $this->entityManager->flush();
             $this->addFlash('congratulation_message', "Félicitations ! Vous venez de terminer la première vidéo de présentation de Pixelforce. Vous pouvez maintenant choisir le secteur qui vous convient.");
-        } catch(Exception $ex){
+        } catch (Exception $ex) {
             $this->addFlash('danger', $ex->getMessage());
         }
         return $this->redirectToRoute('agent_home');
-        
+
     }
 
-     /**
+    /**
      * @Route("/agent/formation/detail/categorie-formation", name="agent_formation_categorie_detail", options={"expose"=true})
      * @IsGranted("ROLE_AGENT")
      */
     public function categorie_formation_fiche(Request $request)
     {
-       return $this->render('formation/video/agent_detail_categorie_formation.html.twig', [
-          
-       ]);
+        return $this->render('formation/video/agent_detail_categorie_formation.html.twig', [
+
+        ]);
     }
 }
