@@ -62,5 +62,8 @@
 
 {% block javascripts %}
 	{{parent()}}
+	<script type="text/javascript">
+		console.log('hello from here 2');
+	</script>
 	{% include 'user_category/admin/sector/sector_form_script.html.twig' %}
 {% endblock %}
