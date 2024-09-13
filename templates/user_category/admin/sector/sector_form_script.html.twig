@@ -8,11 +8,14 @@
             const type = $(this).val();
             const data = [];
             const typeKey = "type_"+(type??'');
-            if(type && fonctionnalitesType[typeKey]) {
-                fonctionnalitesType[typeKey].forEach((f) => {
-                    data[fonctionnalitesLabel[f]] = f;
-                })
+            let fonctKeys = fonctionnalitesType['common'];
+            if(type && fonctionnalitesType[typeKey]){
+                fonctKeys = [...fonctKeys, ...fonctionnalitesType[typeKey]];
             }
+            fonctKeys.forEach((f) => {
+                data[fonctionnalitesLabel[f]] = f;
+            })
+            
             const parent = $('#secteur_fonctionnalites');
             parent.empty();
             Object.keys(data).forEach((key, index) => {
