@@ -5,11 +5,11 @@ import axios from 'axios';
 require('jquery-validation')
 
 function parseVimeoVideoId(url){
-    const regex = /vimeo\.com\/video\/(\d+)/;
+    const regex = /vimeo\.com\/video\/(\d+)(\?.*)?/;
     const match = url.match(regex);
 
     if (match) {
-        const videoId = match[1];
+        const videoId = match[1] + (match[2] || "");
         return videoId;
     }
     return null;
