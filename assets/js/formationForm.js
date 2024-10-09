@@ -4,7 +4,16 @@ import circleImage3 from '../images/3-Leg-Preloader.svg'
 import axios from 'axios';
 require('jquery-validation')
 $(document).ready(function () {
+    function parseVimeoVideoId(url){
+        const regex = /vimeo\.com\/video\/(\d+)/;
+        const match = url.match(regex);
 
+        if (match) {
+            const videoId = match[1];
+            return videoId;
+        }
+        return null;
+    }
     // enregistrement des données du formulaire
     // etape 1 : upload video vers serveur vimeo
     // etap 2 : submit formulaire (symfony : upload + flush Data)
@@ -12,7 +21,7 @@ $(document).ready(function () {
         e.preventDefault();
         validationFormulaire(async function() {
             progressionBar(0);
-            if(!$('#check_url')[0].checked) {
+            /*if(!$('#check_url')[0].checked) {
                 sendVideoToVimeo({
                     selector:$('#inputVideo'),
                     titre:$('#video-upload-name').text(),
@@ -27,10 +36,10 @@ $(document).ready(function () {
                         await save(videoId)
                     }
                 })
-            } else {
-                const videoId = extractIdFromSrcValues($('#input-url-video').val())
+            } else {*/
+                const videoId = parseVimeoVideoId($('#input-url-video').val())
                 await save(videoId)
-            }
+            //}
 
         });
     });
@@ -157,7 +166,7 @@ $(document).ready(function () {
                 fileDeleted.append('deleted_media[]', $(this).val())
             });
             (await axios.post(Routing.generate('coach_formation_delete_media'),fileDeleted))
-             if(addVideo && !$('#check_url')[0].checked) {
+            /* if(addVideo && !$('#check_url')[0].checked) {
                  $('.hiddenVideoData').remove();
                  sendVideoToVimeo({
                      selector:$('#inputVideo'),
@@ -185,8 +194,8 @@ $(document).ready(function () {
                          },1000)
                      }
                  })
-             } else {
-                 const videoId = extractIdFromSrcValues($('#input-url-video').val())
+             } else {*/
+                 const videoId = parseVimeoVideoId($('#input-url-video').val())
                  await saveData(videoId);
                  progressionContainer.remove()
                  progressionLabel.html(
@@ -200,7 +209,7 @@ $(document).ready(function () {
                         location.reload();
                      },1000)
                  },1000)
-             }
+             //}
 
 
         })
@@ -297,7 +306,7 @@ async function saveData(videoId = '')
     const mediasData = documentsData.concat(audiosData);
     // console.log(mediasData);
     formData.append('mediasData', JSON.stringify(mediasData));
-    formData.append('video_id', videoId);
+    if(videoId) formData.append('video_id', videoId);
     (await axios.post($('#formation, #formation-fiche').attr('action'),formData)).data;
 }
 

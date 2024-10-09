@@ -222,7 +222,8 @@ class CoachFormationController extends AbstractController
             $formation->setSecteur($this->getUser()->getSecteurByCoach());
             $formation->setCoach($this->getUser());
 
-            $formation->setVideoId($request->request->get('video_id'));
+            $video_id = $request->request->get('video_id');
+            if($video_id) $formation->setVideoId($video_id);
             $this->entityManager->save($formation);
 
             $relationFormationCategorie->setFormation($formation);
