@@ -391,10 +391,10 @@ function validationFormulaire(callback, edit=false)
                 if(!urlVideo && edit) {
                     callback();
                 } else {
-                    if(!urlVideo) $('#formation').prepend(alertEmpty);
+                    if(!urlVideo) $('form[name="formation"]').prepend(alertEmpty);
                     else {
                         const videoId = parseVimeoVideoId(urlVideo);
-                        if(!videoId) $('#formation').prepend(alertInvalid);
+                        if(!videoId) $('form[name="formation"]').prepend(alertInvalid);
                         else {
                             callback();
                         }
