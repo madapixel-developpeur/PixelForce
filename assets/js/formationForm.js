@@ -212,7 +212,7 @@ $(document).ready(function () {
              //}
 
 
-        })
+        }, true)
     })
 
 
@@ -352,7 +352,7 @@ function progressionBar(pourcentage)
 }
 
 
-function validationFormulaire(callback)
+function validationFormulaire(callback, edit=false)
 {
     $('#formation, #formation-fiche').validate({
         // in 'rules' user have to specify all the constraints for respective fields
@@ -370,23 +370,36 @@ function validationFormulaire(callback)
             'formation[contenu]' : '<i class=\'fa fa-warning\'></i> Veuillez entrer le contenu de la formation'
         },
         submitHandler: function() {
-            const alert = '<div class="alert alert-danger my-2" role="alert">\n' +
+            const alertEmpty = '<div class="alert alert-danger my-2" role="alert">\n' +
                 '  La vidéo est obligatoire\n' +
                 '</div>';
-            let btnAddVideo = $('#btn-add-video')[0];
+            const alertInvalid = '<div class="alert alert-danger my-2" role="alert">\n' +
+                '  Le lien de la vidéo est invalide\n' +
+                '</div>';
+            /*let btnAddVideo = $('#btn-add-video')[0];
             if(btnAddVideo && !btnAddVideo.disabled) {
                 if($('#inputVideo').length === 0) {
                     $('#formation').prepend(alert);
                 } else {
                     callback();
                 }
-            } else if (!$('#input-url-video')[0].disabled) {
-                if($('#input-url-video').val() === '') {
-                    $('#formation').prepend(alert);
-                } else {
+            } else if (!$('#input-url-video')[0].disabled) {*/
+                $urlVideo = trim($('#input-url-video').val());
+                if(!$urlVideo && edit) {
                     callback();
+                } else {
+                    if(!$urlVideo) $('#formation').prepend(alertEmpty);
+                    else {
+                        $videoId = parseVimeoVideoId($urlVideo);
+                        if(!$videoId) $('#formation').prepend(alertInvalid);
+                        else {
+                            callback();
+                        }
+                    }
                 }
-            }
+                    
+                
+            //}
 
         }
     });
