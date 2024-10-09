@@ -3,17 +3,20 @@ import {sendVideoToVimeo} from './ImportVideoVimeo'
 import circleImage3 from '../images/3-Leg-Preloader.svg'
 import axios from 'axios';
 require('jquery-validation')
-$(document).ready(function () {
-    function parseVimeoVideoId(url){
-        const regex = /vimeo\.com\/video\/(\d+)/;
-        const match = url.match(regex);
 
-        if (match) {
-            const videoId = match[1];
-            return videoId;
-        }
-        return null;
+function parseVimeoVideoId(url){
+    const regex = /vimeo\.com\/video\/(\d+)/;
+    const match = url.match(regex);
+
+    if (match) {
+        const videoId = match[1];
+        return videoId;
     }
+    return null;
+}
+
+$(document).ready(function () {
+    
     // enregistrement des données du formulaire
     // etape 1 : upload video vers serveur vimeo
     // etap 2 : submit formulaire (symfony : upload + flush Data)
