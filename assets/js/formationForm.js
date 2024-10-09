@@ -384,14 +384,14 @@ function validationFormulaire(callback, edit=false)
                     callback();
                 }
             } else if (!$('#input-url-video')[0].disabled) {*/
-                $urlVideo = trim($('#input-url-video').val());
-                if(!$urlVideo && edit) {
+                const urlVideo = ($('#input-url-video').val()??'').trim();
+                if(!urlVideo && edit) {
                     callback();
                 } else {
-                    if(!$urlVideo) $('#formation').prepend(alertEmpty);
+                    if(!urlVideo) $('#formation').prepend(alertEmpty);
                     else {
-                        $videoId = parseVimeoVideoId($urlVideo);
-                        if(!$videoId) $('#formation').prepend(alertInvalid);
+                        const videoId = parseVimeoVideoId(urlVideo);
+                        if(!videoId) $('#formation').prepend(alertInvalid);
                         else {
                             callback();
                         }
