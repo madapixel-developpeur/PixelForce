@@ -15,6 +15,8 @@ parameters:
     secteur_digital_id: '%env(SECTEUR_DIGITAL_ID)%'
     base_url_chat: '%env(BASE_URL_CHAT)%'
     socket_url_chat: '%env(SOCKET_URL_CHAT)%'
+    finance_stat_url: '%env(FINANCE_STAT_URL)%'
+    secteur_finance_id: '%env(SECTEUR_FINANCE_ID)%'
     
 services:
     # default configuration for services in *this* file

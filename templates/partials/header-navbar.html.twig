@@ -41,6 +41,7 @@
        
         <ul class="d-none d-xl-block">
              <div class="d-flex align-items-center">
+             {% if app.session.get('secteurId') != secteur_finance_id %}
                 {% if secteurAgent.isFonctionnaliteActive(constant('App\\Util\\FonctionnalitesTypeSecteur::FONCTIONNALITE_STANDARD_VENTE')) %}
                 <div class="col-auto">
                     <div class="d-flex flex-row align-items-center mx-2 ">
@@ -111,6 +112,81 @@
                         </div>
                     </div>
                 </div>
+                {% else %}
+                {% set statFinance = data.statFinance %}
+                {% if statFinance.total_invested_number is defined %}
+                <div class="col-auto">
+                    <div class="d-flex flex-row  align-items-center mx-2">
+                        <div class=" ">
+                            <div class="text-center avatar-statistique-nav-bar rounded-circle bg-light-success me-2">
+                                <a href="#"><i class="fa-solid fa-dollar-sign fs-4 mt-2 text-success"></i></a>
+                            </div>
+                        </div>
+                        <div class="my-auto">
+                            <h4 class="card-text font-small-1 mb-0 text-dark-template d-none d-xl-block">Total investi</h4>
+                            <h6 class="fw-bolder mb-0 ">
+                                {{ statFinance.total_invested_number | number_format(2, ',', ' ')}} $  
+                            </h6>
+                            
+                        </div>
+                    </div>
+                </div>
+                {% endif  %}
+                {% if statFinance.total_returns_number is defined %}
+                <div class="col-auto">
+                    <div class="d-flex flex-row  align-items-center mx-2">
+                        <div class=" ">
+                            <div class="text-center avatar-statistique-nav-bar rounded-circle bg-light-danger me-2">
+                                <a href="#"><i class="fa-solid fa-dollar-sign fs-4 mt-2 text-danger"></i></a>
+                            </div>
+                        </div>
+                        <div class="my-auto">
+                            <h4 class="card-text font-small-1 mb-0 text-dark-template d-none d-xl-block">Rendement total</h4>
+                            <h6 class="fw-bolder mb-0 ">
+                                {{ statFinance.total_returns_number | number_format(2, ',', ' ')}} $  
+                            </h6>
+                            
+                        </div>
+                    </div>
+                </div>
+                {% endif  %}
+                {% if statFinance.total_returns_percent_number is defined %}
+                <div class="col-auto">
+                    <div class="d-flex flex-row  align-items-center mx-2">
+                        <div class=" ">
+                            <div class="text-center avatar-statistique-nav-bar rounded-circle bg-light-success me-2">
+                                <a href="#"><i class="fa-solid fa-percent fs-4 mt-2 text-success"></i></a>
+                            </div>
+                        </div>
+                        <div class="my-auto">
+                            <h4 class="card-text font-small-1 mb-0 text-dark-template d-none d-xl-block">Pourcentage de rendement total</h4>
+                            <h6 class="fw-bolder mb-0 ">
+                                {{ statFinance.total_returns_percent_number | number_format(2, ',', ' ')}} %  
+                            </h6>
+                            
+                        </div>
+                    </div>
+                </div>
+                {% endif  %}
+                {% if statFinance.wallet_balance_number is defined %}
+                <div class="col-auto">
+                    <div class="d-flex flex-row  align-items-center mx-2">
+                        <div class=" ">
+                            <div class="text-center avatar-statistique-nav-bar rounded-circle bg-light-danger me-2">
+                                <a href="#"><i class="fa-solid fa-dollar-sign fs-4 mt-2 text-danger"></i></a>
+                            </div>
+                        </div>
+                        <div class="my-auto">
+                            <h4 class="card-text font-small-1 mb-0 text-dark-template d-none d-xl-block">Solde</h4>
+                            <h6 class="fw-bolder mb-0 ">
+                                {{ statFinance.wallet_balance_number | number_format(2, ',', ' ')}} $  
+                            </h6>
+                            
+                        </div>
+                    </div>
+                </div>
+                {% endif  %}
+                {% endif %}
                
             </div>
         </ul>
