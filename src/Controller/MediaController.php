@@ -47,7 +47,7 @@ class MediaController extends AbstractController
         $secteur = $this->secteurRepository->findOneBy(['id' => $secteur_id]);
         // Changement de la condition de téléchargement dû au fichier CoachFormationController->coach_formation_add() ligne 221
 //        if($formation->getFormationAgents()->contains($formationAgentRelation)) {
-        if(($secteur && $formation->getSecteur()->getNom() === $secteur->getNom()) || in_array(User::ROLE_ADMINISTRATEUR,$this->getUser()->getRoles())){
+        //if(($secteur && $formation->getSecteur()->getNom() === $secteur->getNom()) || in_array(User::ROLE_ADMINISTRATEUR,$this->getUser()->getRoles())){
             $filePath = $media->getType() === 'document' ?
                 $this->directoryManagement->getMediaFolder_formation_document() :
                 $this->directoryManagement->getMediaFolder_formation_audio();
@@ -58,13 +58,13 @@ class MediaController extends AbstractController
                 'Content-Length' => filesize($filePath),
                 'Content-Disposition' => 'attachment; filename=' . $media->getTitre(),
             ));
-        }
+        //}
 
-        $this->addFlash('danger', 'Vous n\'avez pas le droit pour télécharger le fichier');
+        // $this->addFlash('danger', 'Vous n\'avez pas le droit pour télécharger le fichier');
 
-        $referer = $request->headers->get('referer');
+        // $referer = $request->headers->get('referer');
 
-        return new RedirectResponse($referer);
+        // return new RedirectResponse($referer);
 
     }
 

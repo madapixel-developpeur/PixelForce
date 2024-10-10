@@ -27,7 +27,14 @@
                 <ul>
                     {% for media in formation.medias.toArray %}
                         {% if media.type == 'audio' %}
-                            <li><a href="{{ path('media_download', {id:media.id}) }}" class="text-dark cursor-pointer">{{ media.titre }}</a></li>
+                            <li>
+                            <a href="{{ path('media_download', {id:media.id}) }}" class="text-dark cursor-pointer">{{ media.titre }}</a>
+                            <br />
+                            <br />
+                            <audio controls style="width: 250px; height: 30px;">
+                                <source src="{{ path('media_download', {id:media.id}) }}" />
+                            </audio>
+                            </li>
                         {% endif %}
                     {% endfor %}
                 </ul>

@@ -119,9 +119,14 @@
                                         <div class="row media">
                                             <div class="col-12 col-md-9 mt-4 font-small-2 ">
                                                 <span><i class="fa-solid {{ media.type == 'document' ? 'fa-book' : 'fa-music' }} me-2"></i> {{ media.titre}}</span>
+                                                <br />
+                                                <audio controls style="width: 200px; height: 30px;">
+                                                    <source src="{{ path('media_download', {id:media.id}) }}" />
+                                                </audio>
                                             </div>
                                             <div class="col-12 col-md-3 mt-4 font-small-1">
                                                 <a href="#" class="btn btn-outline-danger btn-sm btn-media-delete" data-media-id="{{ media.id }}"><i class="fa fa-trash"></i></a>
+                                                
                                             </div>
                                         </div>
                                     {% endif %}
