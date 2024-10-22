@@ -85,28 +85,28 @@ class FormationRepository extends ServiceEntityRepository
 
     public function findBySecteur(Secteur $secteur)
     {
-            return $this->createQueryBuilder('f')
-                ->where('f.secteur=:secteur')
-                ->setParameter('secteur',$secteur->getId())
-                ->getQuery();
+        return $this->createQueryBuilder('f')
+            ->where('f.secteur=:secteur')
+            ->setParameter('secteur', $secteur->getId())
+            ->getQuery();
     }
 
     public function findFormationsCoach(?array $criteres, Secteur $secteur)
     {
 
         $queryBuilder = ($this->createQueryBuilder('f'))->where('f.secteur=:secteur')
-        ->setParameter('secteur',$secteur->getId());
-        if(isset($criteres['titre']) && !empty($criteres['titre'])) {
+            ->setParameter('secteur', $secteur->getId());
+        if (isset($criteres['titre']) && !empty($criteres['titre'])) {
             $queryBuilder->andWhere('f.titre LIKE :titre')
-                ->setParameter('titre', '%'.$criteres['titre'].'%');
+                ->setParameter('titre', '%' . $criteres['titre'] . '%');
         }
-        if(isset($criteres['description']) && !empty($criteres['description'])) {
+        if (isset($criteres['description']) && !empty($criteres['description'])) {
             $queryBuilder->andWhere('f.description LIKE :description')
-                ->setParameter('description', '%'.$criteres['description'].'%');
+                ->setParameter('description', '%' . $criteres['description'] . '%');
         }
-        if(isset($criteres['etat'])) {
+        if (isset($criteres['etat'])) {
             $etat = trim($criteres['etat']);
-            if($etat != ""){
+            if ($etat != "") {
                 $etat = $criteres['etat'];
                 $queryBuilder->andWhere('f.statut = :etat')
                     ->setParameter('etat', $etat);
@@ -115,14 +115,14 @@ class FormationRepository extends ServiceEntityRepository
         $queryBuilder->andWhere('f.statut != :statusDeleted')
             ->setParameter('statusDeleted', Formation::STATUS_DELETED);
 
-        if(isset($criteres['auteur']) && !empty($criteres['auteur'])) {
+        if (isset($criteres['auteur']) && !empty($criteres['auteur'])) {
             $queryBuilder->innerJoin('App\Entity\User', 'u', 'ON')
                 ->andWhere('u.nom LIKE :nom')
-                ->setParameter('nom', '%'.$criteres['auteur'].'%');
+                ->setParameter('nom', '%' . $criteres['auteur'] . '%');
         }
         $queryBuilder->addOrderBy('f.type', 'ASC');
-        if(isset($criteres['trie']) && !empty($criteres['trie'])) {
-            $queryBuilder->addOrderBy('f.'.$criteres['trie'], $criteres['ordre']);
+        if (isset($criteres['trie']) && !empty($criteres['trie'])) {
+            $queryBuilder->addOrderBy('f.' . $criteres['trie'], $criteres['ordre']);
         }
 
 
@@ -130,11 +130,11 @@ class FormationRepository extends ServiceEntityRepository
             $queryBuilder
                 ->join('f.CategorieFormation', 'cf')
                 ->andwhere('cf.nom LIKE :nomCategorie')
-                ->setParameter('nomCategorie', '%'.$criteres['categorie'].'%')
-            ;           
+                ->setParameter('nomCategorie', '%' . $criteres['categorie'] . '%')
+            ;
         }
 
-      return $queryBuilder->getQuery();
+        return $queryBuilder->getQuery();
 
     }
 
@@ -142,34 +142,36 @@ class FormationRepository extends ServiceEntityRepository
     {
 
         $queryBuilder = ($this->createQueryBuilder('f'))->where('f.secteur=:secteur')
-        ->setParameter('secteur',$secteur->getId());
-        if(!empty($criteres['titre'])) {
+            ->setParameter('secteur', $secteur->getId());
+        if (!empty($criteres['titre'])) {
             $queryBuilder->andWhere('f.titre LIKE :titre')
-                ->setParameter('titre', '%'.$criteres['titre'].'%');
+                ->setParameter('titre', '%' . $criteres['titre'] . '%');
         }
-        if(!empty($criteres['description'])) {
+        if (!empty($criteres['description'])) {
             $queryBuilder->andWhere('f.description LIKE :description')
-                ->setParameter('description', '%'.$criteres['description'].'%');
+                ->setParameter('description', '%' . $criteres['description'] . '%');
         }
-        if(!empty($criteres['etat'])) {
+        if (!empty($criteres['etat'])) {
             switch ($criteres['etat']) {
-                case 'disponible' :   $queryBuilder->andWhere('f.debloqueAgent = :etat')
-                    ->setParameter('etat', true );
+                case 'disponible':
+                    $queryBuilder->andWhere('f.debloqueAgent = :etat')
+                        ->setParameter('etat', true);
                     break;
-                case 'brouillon' : $queryBuilder->andWhere('f.brouillon = :etat')
-                    ->setParameter('etat', true );
-                break;
+                case 'brouillon':
+                    $queryBuilder->andWhere('f.brouillon = :etat')
+                        ->setParameter('etat', true);
+                    break;
             }
 
         }
-        if(!empty($criteres['auteur'])) {
+        if (!empty($criteres['auteur'])) {
             $queryBuilder->innerJoin('App\Entity\User', 'u', 'ON')
                 ->andWhere('u.nom LIKE :nom')
-                ->setParameter('nom', '%'.$criteres['auteur'].'%');
+                ->setParameter('nom', '%' . $criteres['auteur'] . '%');
         }
         $queryBuilder->addOrderBy('f.type', 'ASC');
-        if(!empty($criteres['trie'])) {
-            $queryBuilder->orderBy('f.'.$criteres['trie'], $criteres['ordre']);
+        if (!empty($criteres['trie'])) {
+            $queryBuilder->orderBy('f.' . $criteres['trie'], $criteres['ordre']);
         }
 
 
@@ -177,78 +179,78 @@ class FormationRepository extends ServiceEntityRepository
             $queryBuilder
                 ->join('f.CategorieFormation', 'cf')
                 ->andwhere('cf.nom LIKE :nomCategorie')
-                ->setParameter('nomCategorie', '%'.$criteres['categorie'].'%')
-            ;           
+                ->setParameter('nomCategorie', '%' . $criteres['categorie'] . '%')
+            ;
         }
 
-      return $queryBuilder->getQuery();
+        return $queryBuilder->getQuery();
 
     }
 
     public function searchForAgent(?array $criteres, $secteur)
     {
         $queryBuilder = ($this->createQueryBuilder('f'))->where('f.secteur=:secteur')
-            ->setParameter('secteur',$secteur->getId());
+            ->setParameter('secteur', $secteur->getId());
         $queryBuilder->andWhere($queryBuilder->expr()->orX(
-                $queryBuilder->expr()->isNull('f.brouillon'),
-                $queryBuilder->expr()->eq('f.brouillon', ':brouillon')
-            ))->setParameter('brouillon', 0)
+            $queryBuilder->expr()->isNull('f.brouillon'),
+            $queryBuilder->expr()->eq('f.brouillon', ':brouillon')
+        ))->setParameter('brouillon', 0)
         ;
-        if(!empty($criteres['titre'])) {
+        if (!empty($criteres['titre'])) {
             $queryBuilder->andWhere('f.titre LIKE :titre')
-                ->setParameter('titre', '%'.$criteres['titre'].'%');
+                ->setParameter('titre', '%' . $criteres['titre'] . '%');
         }
-        if(!empty($criteres['description'])) {
+        if (!empty($criteres['description'])) {
             $queryBuilder->andWhere('f.description LIKE :description')
-                ->setParameter('description', '%'.$criteres['description'].'%');
+                ->setParameter('description', '%' . $criteres['description'] . '%');
         }
         $queryBuilder->andWhere('f.statut = :statusCreated')
             ->setParameter('statusCreated', Formation::STATUS_CREATED);
 
-        if(!empty($criteres['auteur'])) {
+        if (!empty($criteres['auteur'])) {
             $queryBuilder->innerJoin('App\Entity\User', 'u', 'ON')
                 ->andWhere('u.nom LIKE :nom')
-                ->setParameter('nom', '%'.$criteres['auteur'].'%');
+                ->setParameter('nom', '%' . $criteres['auteur'] . '%');
         }
         $queryBuilder->addOrderBy('f.type', 'ASC');
-        if(!empty($criteres['trie'])) {
-            $queryBuilder->orderBy('f.'.$criteres['trie'], $criteres['ordre']);
+        if (!empty($criteres['trie'])) {
+            $queryBuilder->orderBy('f.' . $criteres['trie'], $criteres['ordre']);
         }
 
         if (isset($criteres['categorie'])) {
             $queryBuilder
                 ->join('f.CategorieFormation', 'cf')
                 ->andwhere('cf.nom LIKE :nomCategorie')
-                ->setParameter('nomCategorie', '%'.$criteres['categorie'].'%')
-            ;           
+                ->setParameter('nomCategorie', '%' . $criteres['categorie'] . '%')
+            ;
         }
-        
-//        dd((string) $queryBuilder);
+
+        //        dd((string) $queryBuilder);
 
         return $queryBuilder->getQuery();
     }
 
     public function getNextFormationsByCategorieAndSecteur($secteur, $categorie, $formationId, $formationType)
     {
-       $qb = $this->createQueryBuilder('f');
+        $qb = $this->createQueryBuilder('f');
 
         return $qb->andWhere('f.CategorieFormation = :categorie')
-        ->andWhere('f.secteur = :secteur')
-        ->andWhere('f.id > :formationId or coalesce(f.type, 1) > :formationType')
-        ->andWhere($qb->expr()->orX(
-            $qb->expr()->isNull('f.brouillon'),
-            $qb->expr()->eq('f.brouillon', ':brouillon')
-        ))->setParameter('brouillon', 0)
-        ->andWhere('f.statut = :statusCreated')
+            ->andWhere('f.secteur = :secteur')
+            ->andWhere('f.id > :formationId or coalesce(f.type, 1) > :formationType')
+            ->andWhere($qb->expr()->orX(
+                $qb->expr()->isNull('f.brouillon'),
+                $qb->expr()->eq('f.brouillon', ':brouillon')
+            ))->setParameter('brouillon', 0)
+            ->andWhere('f.statut = :statusCreated')
             ->setParameter('statusCreated', Formation::STATUS_CREATED)
-        ->setParameter('categorie', $categorie)
-        ->setParameter('secteur', $secteur)
-        ->setParameter('formationId', $formationId)
-        ->setParameter('formationType', $formationType??1)
-        ->addOrderBy('f.type', 'ASC')
-        ->addOrderBy('f.id', 'ASC')
-        ->getQuery()
-        ->getResult();
+            ->setParameter('categorie', $categorie)
+            ->setParameter('secteur', $secteur)
+            ->setParameter('formationId', $formationId)
+            ->setParameter('formationType', $formationType ?? 1)
+            ->addOrderBy('f.type', 'ASC')
+            ->addOrderBy('f.id', 'ASC')
+            ->getQuery()
+            ->getResult();
     }
 
 
@@ -256,46 +258,48 @@ class FormationRepository extends ServiceEntityRepository
     {
         $queryBuilder = ($this->createQueryBuilder('f'))
             ->where('f.secteur=:secteur')
-            ->setParameter('secteur',$secteur->getId())
+            ->setParameter('secteur', $secteur->getId())
             ->andWhere('f.brouillon=:brouillon')
             ->setParameter('brouillon', false);
-        if(isset($criteres['titre']) && !empty($criteres['titre'])) {
+        if (isset($criteres['titre']) && !empty($criteres['titre'])) {
             $queryBuilder->andWhere('f.titre LIKE :titre')
-                ->setParameter('titre', '%'.$criteres['titre'].'%');
+                ->setParameter('titre', '%' . $criteres['titre'] . '%');
         }
-        if(isset($criteres['description']) && !empty($criteres['description'])) {
+        if (isset($criteres['description']) && !empty($criteres['description'])) {
             $queryBuilder->andWhere('f.description LIKE :description')
-                ->setParameter('description', '%'.$criteres['description'].'%');
+                ->setParameter('description', '%' . $criteres['description'] . '%');
         }
-        if(isset($criteres['etat']) && !empty($criteres['etat'])) {
+        if (isset($criteres['etat']) && !empty($criteres['etat'])) {
             switch ($criteres['etat']) {
-                case 'bloquee' :
+                case 'bloquee':
                     $queryBuilder->andWhere('f.debloqueAgent = :etat')
-                        ->setParameter('etat', false ); break;
-                case 'disponible' :   $queryBuilder->andWhere('f.debloqueAgent = :etat')
-                    ->setParameter('etat', true );
+                        ->setParameter('etat', false);
+                    break;
+                case 'disponible':
+                    $queryBuilder->andWhere('f.debloqueAgent = :etat')
+                        ->setParameter('etat', true);
                     break;
             }
 
         }
-        if(isset($criteres['auteur']) && !empty($criteres['auteur'])) {
+        if (isset($criteres['auteur']) && !empty($criteres['auteur'])) {
             $queryBuilder->innerJoin('App\Entity\User', 'u', 'ON')
                 ->andWhere('u.nom LIKE :nom')
-                ->setParameter('nom', '%'.$criteres['auteur'].'%');
+                ->setParameter('nom', '%' . $criteres['auteur'] . '%');
         }
-        if(isset($criteres['trie']) && !empty($criteres['trie'])) {
-            $queryBuilder->orderBy('f.'.$criteres['trie'], $criteres['ordre']);
+        if (isset($criteres['trie']) && !empty($criteres['trie'])) {
+            $queryBuilder->orderBy('f.' . $criteres['trie'], $criteres['ordre']);
         }
 
         if (isset($criteres['categorie'])) {
             $queryBuilder
                 ->join('f.CategorieFormation', 'cf')
                 ->andwhere('cf.nom LIKE :nomCategorie')
-                ->setParameter('nomCategorie', '%'.$criteres['categorie'].'%')
-            ;           
+                ->setParameter('nomCategorie', '%' . $criteres['categorie'] . '%')
+            ;
         }
-        
-//        dd((string) $queryBuilder);
+
+        //        dd((string) $queryBuilder);
 
         return $queryBuilder->getQuery();
     }
@@ -305,11 +309,12 @@ class FormationRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('f')
             ->where('f.secteur=:secteur')
             ->andWhere('f.brouillon=false')
-            ->setParameter('secteur',$secteur->getId())
+            ->setParameter('secteur', $secteur->getId())
             ->getQuery();
     }
 
-    public function findOrderedNonFinishedFormations(Secteur $secteur, User $agent){
+    public function findOrderedNonFinishedFormations(Secteur $secteur, User $agent)
+    {
         $agentSecteur = $this->agentSecteurRepository->findOneBy(["agent" => $agent, "secteur" => $secteur]);
         $sql = '
             SELECT f.id as formationId FROM formation f join categorie_formation cf on f.categorie_formation_id = cf.id
@@ -317,23 +322,23 @@ class FormationRepository extends ServiceEntityRepository
             WHERE cf.statut = :statutValid AND f.secteur_id = :secteur AND f.statut = :statusCreated AND (f.brouillon IS NULL OR f.brouillon =0)
             AND cf.ordre_cat_formation >= :formationRank
             AND (fa.statut != :finishedStatus OR fa.agent_id IS NULL) ORDER BY cf.ordre_cat_formation, f.type, f.id LIMIT 1
-        ';   
+        ';
         $stmt = $this->getEntityManager()->getConnection()->prepare($sql);
         $resultSet = $stmt->executeQuery([
-            'agent' => $agent->getId(), 
-            'secteur' => $secteur->getId(), 
-            'statusCreated' => Formation::STATUS_CREATED, 
+            'agent' => $agent->getId(),
+            'secteur' => $secteur->getId(),
+            'statusCreated' => Formation::STATUS_CREATED,
             'finishedStatus' => Formation::STATUT_TERMINER,
-            'formationRank' => $agentSecteur?->getCurrentFormationRank()??0,
-            'statutValid' => Status::Valid
+            'formationRank' => $agentSecteur?->getCurrentFormationRank() ?? 0,
+            'statutValid' => Status::VALID
         ]);
         $result = $resultSet->fetchAllAssociative();
-        if(count($result) > 0) {
+        if (count($result) > 0) {
             return $this->find($result[0]['formationId']);
         }
-        return null;        
+        return null;
     }
-    
+
 
     /**
      * Permet de recupérer les formations de l'agent en fonction du secteur et de la catégorie
@@ -345,17 +350,17 @@ class FormationRepository extends ServiceEntityRepository
     public function findFormationsAgentBySecteurAndCategorie(Secteur $secteur, User $agent, CategorieFormation $categorie = null, $excludeFormationDone = false)
     {
         $queryBuilder = $this->createQueryBuilder('f');
-        
+
         $queryBuilder
             ->where('f.secteur=:secteur')
             ->andWhere('f.brouillon=false')
-            ->setParameter('secteur',$secteur->getId())
+            ->setParameter('secteur', $secteur->getId())
             ->join('f.CategorieFormation', 'cf')
             ->join('f.formationAgents', 'fa')
             ->andWhere('fa.agent = :agent')
             ->setParameter('agent', $agent->getId())
         ;
-            
+
         if ($categorie) {
             $queryBuilder
                 ->andWhere('cf.nom = :category')
@@ -363,7 +368,7 @@ class FormationRepository extends ServiceEntityRepository
             ;
         }
 
-        
+
         // // Lorsqu'on met $excludeFormationDone à true, on exclut les formations terminées
         if ($excludeFormationDone === true) {
             $statutBloquee = Formation::STATUT_BLOQUEE;
@@ -371,24 +376,25 @@ class FormationRepository extends ServiceEntityRepository
             $queryBuilder
                 ->andWhere('fa.statut NOT LIKE :statutBloquee')
                 ->andWhere('fa.statut NOT LIKE :statutTerminee')
-                ->setParameter('statutBloquee', '%'.$statutBloquee.'%' )
-                ->setParameter('statutTerminee', '%'.$statutTerminee.'%' );
+                ->setParameter('statutBloquee', '%' . $statutBloquee . '%')
+                ->setParameter('statutTerminee', '%' . $statutTerminee . '%');
         }
 
 
         return $queryBuilder->getQuery()->getResult();
     }
 
-    public function getSingleFormationByCategorie(Secteur $secteur,?CategorieFormation $categorie,$options = []){
+    public function getSingleFormationByCategorie(Secteur $secteur, ?CategorieFormation $categorie, $options = [])
+    {
         $queryBuilder = $this->createQueryBuilder('f');
-        
+
         $queryBuilder
             ->where('f.secteur=:secteur')
             ->andWhere('f.brouillon IS NULL OR f.brouillon =0')
-            ->setParameter('secteur',$secteur->getId())
+            ->setParameter('secteur', $secteur->getId())
             ->leftJoin('f.CategorieFormation', 'cf')
-        ;  
-        
+        ;
+
         if ($categorie) {
             $queryBuilder
                 ->andWhere('cf.nom = :category')
@@ -396,23 +402,22 @@ class FormationRepository extends ServiceEntityRepository
             ;
         }
 
-        if(isset($options['previous']) && isset($options['current'])){
+        if (isset($options['previous']) && isset($options['current'])) {
             $queryBuilder
-            ->andWhere('f.id < :formationId')
-            ->setParameter('formationId', $options['current']->getId())
-            ->orderBy('f.id','DESC'); 
-        }else if(isset($options['next']) && isset($options['current'])){
+                ->andWhere('f.id < :formationId')
+                ->setParameter('formationId', $options['current']->getId())
+                ->orderBy('f.id', 'DESC');
+        } else if (isset($options['next']) && isset($options['current'])) {
             $queryBuilder
-            ->andWhere('f.id > :formationId')
-            ->setParameter('formationId', $options['current']->getId())
-            ->orderBy('f.id','ASC'); 
-        }
-        else{
+                ->andWhere('f.id > :formationId')
+                ->setParameter('formationId', $options['current']->getId())
+                ->orderBy('f.id', 'ASC');
+        } else {
             $queryBuilder
-            ->orderBy('f.id','ASC');
+                ->orderBy('f.id', 'ASC');
         }
 
-        return  $queryBuilder
+        return $queryBuilder
             ->setMaxResults(1)
             ->getQuery()
             ->getOneOrNullResult();
@@ -420,44 +425,46 @@ class FormationRepository extends ServiceEntityRepository
 
 
 
-    public function findNextFormationRank(Secteur $secteur, int $currentRank){
+    public function findNextFormationRank(Secteur $secteur, int $currentRank)
+    {
         $sql = '
             select min(cf.id) as nextRank
             from categorie_formation cf join formation f on cf.id = f.categorie_formation_id 
             where cf.statut = :statutValid and f.secteur_id = :secteur AND f.statut = :statusCreated AND (f.brouillon IS NULL OR f.brouillon =0)
             and cf.ordre_cat_formation > :currentRank
-        ';   
+        ';
         $stmt = $this->getEntityManager()->getConnection()->prepare($sql);
         $resultSet = $stmt->executeQuery([
-            'secteur' => $secteur->getId(), 
-            'statusCreated' => Formation::STATUS_CREATED, 
+            'secteur' => $secteur->getId(),
+            'statusCreated' => Formation::STATUS_CREATED,
             'currentRank' => $currentRank,
-            'statutValid' => Status::Valid
+            'statutValid' => Status::VALID
         ]);
         $result = $resultSet->fetchAllAssociative();
         $nextRank = null;
-        if(count($result) > 0) {
-            $nextRank = $this->find($result[0]['nextRank']);
+        if (count($result) > 0) {
+            $nextRank = $result[0]['nextRank'];
         }
-        if($nextRank === null){
+        if ($nextRank === null) {
             $sql = '
                 select max(cf.id) as nextRank
                 from categorie_formation cf 
                 where cf.statut = :statutValid and 
                 cf.ordre_cat_formation >= :currentRank
-            ';   
+            ';
             $stmt = $this->getEntityManager()->getConnection()->prepare($sql);
-            $resultSet = $stmt->executeQuery([ 
+            $resultSet = $stmt->executeQuery([
                 'currentRank' => $currentRank,
-                'statutValid' => Status::Valid
+                'statutValid' => Status::VALID
             ]);
             $result = $resultSet->fetchAllAssociative();
-            if(count($result) > 0) {
-                $nextRank = $this->find($result[0]['nextRank']);
+            if (count($result) > 0) {
+                $nextRank = $result[0]['nextRank'];
             }
-            if($nextRank === null) $nextRank = $currentRank;
+            if ($nextRank === null)
+                $nextRank = $currentRank;
             $nextRank++;
         }
-        return $nextRank;       
+        return $nextRank;
     }
 }

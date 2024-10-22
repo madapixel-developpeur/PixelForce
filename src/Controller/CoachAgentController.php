@@ -182,7 +182,7 @@ class CoachAgentController extends AbstractController
             ['position' => 3, 'label' => 'Avoir au moins 100 membres dans son équipe'],
         ];
 
-        $formationCategoriesOrdered = $categorieFormationRepository->getValidCategoriesOrdered();
+        $formationCategoriesOrdered = $categorieFormationRepository->getValidCategoriesOrderedSecteur($mySector->getId());
 
         $firstFormation = $this->repoFormation->findOrderedNonFinishedFormations($mySector, $agent);
 

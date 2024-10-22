@@ -253,7 +253,7 @@ class AgentFormationController extends AbstractController
             $formationRank = $formation->getCategorieFormation()->getOrdreCatFormation();
             if (count($this->formationRepository->getNextFormationsByCategorieAndSecteur($formation->getSecteur(), $formation->getCategorieFormation(), $formation->getId(), $formation->getType())) == 0) {
                 // $formationRank++;
-                $formationRank = $formationRepository->findNextFormationRank($secteur, $formationRank);
+                $formationRank = $this->formationRepository->findNextFormationRank($formation->getSecteur(), $formationRank);
             }
 
             if ($agentSecteur->getCurrentFormationRank() < $formationRank) {

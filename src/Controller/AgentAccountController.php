@@ -233,7 +233,7 @@ class AgentAccountController extends AbstractController
         $chiffreAffaireTotal = $pbb_summary['chiffreAffaire'] + ($statVente != null ? $statVente['ca'] : 0);
         $nbVentesTotal = count($pbb_summary['orders']) + ($statVente != null ? $statVente['nbr_ventes'] : 0);
 
-        $formationCategoriesOrdered = $categorieFormationRepository->getValidCategoriesOrdered();
+        $formationCategoriesOrdered = $categorieFormationRepository->getValidCategoriesOrderedSecteur($sessionSecteurId);
         //progression
         $visible = $request->query->get('visible', 1);
         $expert = $this->repoUser->getFirstCoachBySecteur($secteur);
