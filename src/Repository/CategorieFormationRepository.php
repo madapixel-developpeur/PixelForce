@@ -155,4 +155,18 @@ class CategorieFormationRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+
+    public function getNotEmptyCategoriesBySecteur($secteurId)
+    {
+        return $this->createQueryBuilder('cf')
+            ->select('cf')
+            ->join('cf.formations', 'f', 'WITH', 'f.secteur = :secteurId')
+            ->andwhere('cf.statut = :statut')
+            ->setParameter('statut', Status::VALID)
+            ->setParameter('secteurId', $secteurId)
+            ->addOrderBy('cf.ordreCatFormation','ASC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 }
