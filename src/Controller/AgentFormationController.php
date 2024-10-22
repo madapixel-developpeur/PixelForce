@@ -115,7 +115,8 @@ class AgentFormationController extends AbstractController
                 'formations' => $formations,
                 'criteres' => $criteres,
                 'formationAgentRepository' => $this->formationAgentRepository,
-                'categories' => $this->repoCatFormation->findBy(['statut' => 1]),
+                // 'categories' => $this->repoCatFormation->findBy(['statut' => 1]),
+                'categories' => $this->repoCatFormation->getNotEmptyCategoriesBySecteur($secteur->getId()),
                 'nbrAllMyContacts' => count($this->repoContact->findAll()),
                 'agentSecteur' => $agentSecteur
             ]);
@@ -225,7 +226,7 @@ class AgentFormationController extends AbstractController
         if($formationAgent->getStatut() === Formation::STATUT_TERMINER){
             $formationRank = $formation->getCategorieFormation()->getOrdreCatFormation();
             if(count($this->formationRepository->getNextFormationsByCategorieAndSecteur($formation->getSecteur(), $formation->getCategorieFormation(), $formation->getId(), $formation->getType())) == 0){
-                $formationRank ++;
+                $formationRank = $formationRepository->findNextFormationRank($secteur, $formationRank);
             }
 
             if($agentSecteur->getCurrentFormationRank() < $formationRank){

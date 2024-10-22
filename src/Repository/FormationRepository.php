@@ -13,6 +13,8 @@ use Doctrine\ORM\ORMException;
 use Doctrine\ORM\Query\Expr;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
+use App\Util\Status;
+
 /**
  * @method Formation|null find($id, $lockMode = null, $lockVersion = null)
  * @method Formation|null findOneBy(array $criteria, array $orderBy = null)
@@ -313,7 +315,7 @@ class FormationRepository extends ServiceEntityRepository
         $sql = '
             SELECT f.id as formationId FROM formation f join categorie_formation cf on f.categorie_formation_id = cf.id
             left join formation_agent fa ON f.id = fa.formation_id AND fa.agent_id = :agent 
-            WHERE f.secteur_id = :secteur AND f.statut = :statusCreated AND (f.brouillon IS NULL OR f.brouillon =0)
+            WHERE cf.statut = :statutValid AND f.secteur_id = :secteur AND f.statut = :statusCreated AND (f.brouillon IS NULL OR f.brouillon =0)
             AND cf.ordre_cat_formation >= :formationRank
             AND (fa.statut != :finishedStatus OR fa.agent_id IS NULL) ORDER BY cf.ordre_cat_formation, f.type, f.id LIMIT 1
         ';   
@@ -324,6 +326,7 @@ class FormationRepository extends ServiceEntityRepository
             'statusCreated' => Formation::STATUS_CREATED, 
             'finishedStatus' => Formation::STATUT_TERMINER,
             'formationRank' => $agentSecteur?->getCurrentFormationRank()??0,
+            'statutValid' => Status::Valid
         ]);
         $result = $resultSet->fetchAllAssociative();
         if(count($result) > 0) {
@@ -375,5 +378,46 @@ class FormationRepository extends ServiceEntityRepository
 
 
         return $queryBuilder->getQuery()->getResult();
+    }
+
+    public function findNextFormationRank(Secteur $secteur, int $currentRank){
+        $sql = '
+            select min(cf.id) as nextRank
+            from categorie_formation cf join formation f on cf.id = f.categorie_formation_id 
+            where cf.statut = :statutValid and f.secteur_id = :secteur AND f.statut = :statusCreated AND (f.brouillon IS NULL OR f.brouillon =0)
+            and cf.ordre_cat_formation > :currentRank
+        ';   
+        $stmt = $this->getEntityManager()->getConnection()->prepare($sql);
+        $resultSet = $stmt->executeQuery([
+            'secteur' => $secteur->getId(), 
+            'statusCreated' => Formation::STATUS_CREATED, 
+            'currentRank' => $currentRank,
+            'statutValid' => Status::Valid
+        ]);
+        $result = $resultSet->fetchAllAssociative();
+        $nextRank = null;
+        if(count($result) > 0) {
+            $nextRank = $this->find($result[0]['nextRank']);
+        }
+        if($nextRank === null){
+            $sql = '
+                select max(cf.id) as nextRank
+                from categorie_formation cf 
+                where cf.statut = :statutValid and 
+                cf.ordre_cat_formation >= :currentRank
+            ';   
+            $stmt = $this->getEntityManager()->getConnection()->prepare($sql);
+            $resultSet = $stmt->executeQuery([ 
+                'currentRank' => $currentRank,
+                'statutValid' => Status::Valid
+            ]);
+            $result = $resultSet->fetchAllAssociative();
+            if(count($result) > 0) {
+                $nextRank = $this->find($result[0]['nextRank']);
+            }
+            if($nextRank === null) $nextRank = $currentRank;
+            $nextRank++;
+        }
+        return $nextRank;       
     }
 }
