@@ -134,8 +134,10 @@
                             <a class="regular-button w-100 text-center mb-3" href="{{ path('agent_formation_list') }}"  id="startFormation" >Demarrer le programme</a>  
                         {% endif %}
                         <a class="regular-button w-100 text-center mb-3 d-none" href="#" onclick='terminerFormation()' id="terminerFormationButton" >Terminer la formation</a>  
+                        {% if app.session.get('secteurId') == secteurDigitalId %}
                         <a class="regular-button w-100 text-center mb-3" href="{{ pbb_ws_url }}">Devenir client</a>  
                         <a class="regular-button w-100 text-center mb-3" href="{{ pbb_ws_url }}">⁠Recommander des clients</a>  
+                        {% endif %}
                         <a class="regular-button w-100 text-center mb-3" href="{{ path('agent_view') }}"  >⁠Recommander des personnes</a>  
                         
                     </div>
@@ -228,12 +230,13 @@
             {% endif %}
 
          
-
+            
             <div class="row match-height mt-4">
                 <div class="col-lg-8 col-12">
                     <h4 class=" mt-2 mb-3 choix-secteur-primary only-on-large-screens" style="visibility: hidden;">&nbsp;</h4>
                     {% if secteurAgent.isFonctionnaliteActive(constant('App\\Util\\FonctionnalitesTypeSecteur::FONCTIONNALITE_STANDARD_PRODUIT')) %}
                     {% if app.user.canAccessFonct('PRODUIT', app.session.get('secteurId')) %}
+                    {% if secteurAgent.id ==  secteurDigitalId %}
                     <div class="col-lg-12 col-md-12 mb-4">
                         <div class="vision-section rounded-3 pb-1" style="">
                             <div class=" p-0">
@@ -260,6 +263,7 @@
                             </div>
                         </div>
                     </div>
+                    {% endif %}
                     {% endif %}
                     {% endif %}
                 </div>
@@ -353,6 +357,7 @@
                             </div> #}
                         </div>
                     </div>
+                    {% if secteurAgent.id ==  secteurDigitalId %}
                     <div class="card" style="max-height:190px;">
                         <div class="card-body">
                          <div class="row">
@@ -369,6 +374,7 @@
                             <a target="_blank" class="regular-button w-100 text-center mt-3 rounded-3 p-3" href="{{pbbAccesClient }}">Accéder à la plateforme</a>    
                         </div>
                     </div>
+                    {% endif %}
                 </div>
                 <!--/ Developer Meetup Card -->
                 {% endif %}

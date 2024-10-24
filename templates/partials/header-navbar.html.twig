@@ -207,6 +207,7 @@
                                     <span class="user-status header-user">{{ app.user.prenom|default(' ') }}</span>
                                     <span class="user-name header-user" >{{ app.user.nom }}</span>
                                 </li>
+                                {% if app.session.get('secteurId') == secteurDigitalId %}
                                 <li class="d-flex p-0">
                                     <span class="">
                                         <a class="header-user text-primary" href="#"  onclick="copyLink('{{ url('agent_inscription', {'ambassador_username':  app.user.username != "" ?  app.user.username : ' '}) }}') " >
@@ -215,6 +216,7 @@
                                         </a>
                                     </span>
                                 </li>
+                                {% endif %}
                             </ul>
                         </div>
 
