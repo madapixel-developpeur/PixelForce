@@ -93,6 +93,7 @@
 					</div>
 					<!--/ User Sidebar -->
 				</div>
+				{% if app.user.uniqueCoachSecteur.id == secteurDigitalId %}
 				<div class="card">
 						<h4 class="card-header">Liste des utilisateurs par recommandation.</h4>
 						<div class="table-responsive">
@@ -126,6 +127,7 @@
 							{{ knp_pagination_render(filleul)}}
 						</div>
 				</div>
+				{% endif %}
 			</section>
 			
 		</div>
