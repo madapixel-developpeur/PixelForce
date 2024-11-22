@@ -236,7 +236,7 @@ class FormationRepository extends ServiceEntityRepository
 
         return $qb->andWhere('f.CategorieFormation = :categorie')
             ->andWhere('f.secteur = :secteur')
-            ->andWhere('f.id > :formationId or coalesce(f.type, 1) > :formationType')
+            ->andWhere('(coalesce(f.type, 1) = :formationType and f.id > :formationId) or coalesce(f.type, 1) > :formationType')
             ->andWhere($qb->expr()->orX(
                 $qb->expr()->isNull('f.brouillon'),
                 $qb->expr()->eq('f.brouillon', ':brouillon')
