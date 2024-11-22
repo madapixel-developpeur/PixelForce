@@ -27,13 +27,12 @@
                <h3 class="general-primary-text">Bonjour {{app.user.prenom|default(' ')}} !</h3>
             </li>
         </ul>
-        {% if app.session.get('secteurId') %}
-        {% set data = get_stat() %}
-        {% set statDigitalGlobalVariable = data.statDigital %}
-        {% set nbVentesTotalGlobalVariable = data.nbVentesTotal %}
-        {% set nbrRdvGlobalVariable = data.nbrRdv %}
-        {% set chiffreAffaireTotalGlobalVariable = data.chiffreAffaireTotal %}
-        {% set soldeRemunerationGlobalVariable = data.soldeRemuneration %}
+        {% if is_granted('ROLE_AGENT') and app.session.get('secteurId') %}
+        {% set statDigitalGlobalVariable = dataStat.statDigital %}
+        {% set nbVentesTotalGlobalVariable = dataStat.nbVentesTotal %}
+        {% set nbrRdvGlobalVariable = dataStat.nbrRdv %}
+        {% set chiffreAffaireTotalGlobalVariable = dataStat.chiffreAffaireTotal %}
+        {% set soldeRemunerationGlobalVariable = dataStat.soldeRemuneration %}
         {% set typeSecteurId = app.session.get('typeSecteurId') %}
         {% set isSecurite = typeSecteurId == constant('App\\Entity\\TypeSecteur::SECURITE') %}
         {% set isDemandeDevis = typeSecteurId == constant('App\\Entity\\TypeSecteur::DEMANDE_DEVIS') %}
@@ -113,7 +112,7 @@
                     </div>
                 </div>
                 {% else %}
-                {% set statFinance = data.statFinance %}
+                {% set statFinance = dataStat.statFinance %}
                 {% if statFinance.total_invested_number is defined %}
                 <div class="col-auto">
                     <div class="d-flex flex-row  align-items-center mx-2">

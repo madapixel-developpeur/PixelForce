@@ -218,10 +218,10 @@ class StatAgentService
             $statFinance = $this->getStatFinance($agent->getEmail());
         } else {
             // if ($secteur->getId() == $_ENV['SECTEUR_DIGITAL_ID']) {
-        $statDigital = $this->getStat($agent->getId(), $secteur->getId());
-        // }
+            $statDigital = $this->getStat($agent->getId(), $secteur->getId());
+            // }
         }
-        
+
         $pbb_summary = $this->getSummary($agent->getId(), $secteur->getId());
         $statVente = $this->getStatVente($agent->getId(), $secteur->getId(), $secteur->getType()->getId());
         $chiffreAffaireTotal = $pbb_summary['chiffreAffaire'] + ($statVente != null ? $statVente['ca'] : 0);
@@ -282,17 +282,18 @@ class StatAgentService
     {
         try {
             $url = $this->parameterBag->get('finance_stat_url');
+            // $email = 'elmannichi.m@gmail.com';
             if (!trim($url))
                 throw new \Exception('API unavailable');
             $response = $this->client->request(
                 'GET',
                 $url,
                 [
-                    'query' => ['constraints' => json_encode([["key" => "_all", "constraint_type" => "equals", "value" => strtolower(trim($email)) ]]) ]
+                    'query' => ['constraints' => json_encode([["key" => "_all", "constraint_type" => "equals", "value" => strtolower(trim($email))]])]
                 ]
             );
             $content = json_decode($response->getContent(), true);
-            return count($content['response']['results']) > 0 ? $content['response']['results'][0]:[
+            return count($content['response']['results']) > 0 ? $content['response']['results'][0] : [
                 "customColumn" => 0,
                 // "total_invested_number" => 120,
                 // "total_returns_number" => 120,
