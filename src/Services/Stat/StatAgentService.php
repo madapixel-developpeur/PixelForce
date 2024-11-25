@@ -306,4 +306,23 @@ class StatAgentService
             ];
         }
     }
+
+    public function getFinanceReferrals($referrer_code) {
+        try {
+            $url = $this->parameterBag->get('finance_stat_url');
+            if (!trim($url))
+                throw new \Exception('API unavailable');
+            $response = $this->client->request(
+                'GET',
+                $url,
+                [
+                    'query' => ['constraints' => json_encode([["key" => "referrer_code_text", "constraint_type" => "equals", "value" => $referrer_code]])]
+                ]
+            );
+            $content = json_decode($response->getContent(), true);
+            return $content['response']['results'];
+        } catch (\Exception $exception) {
+            return [];
+        }
+    }
 }
