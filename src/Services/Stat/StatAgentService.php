@@ -280,6 +280,7 @@ class StatAgentService
 
     public function getStatFinance($email)
     {
+        $result = ["customColumn" => 0, "referral_code_text" => null];
         try {
             $url = $this->parameterBag->get('finance_stat_url');
             // $email = 'elmannichi.m@gmail.com';
@@ -293,18 +294,13 @@ class StatAgentService
                 ]
             );
             $content = json_decode($response->getContent(), true);
-            return count($content['response']['results']) > 0 ? $content['response']['results'][0] : [
-                "customColumn" => 0,
-                // "total_invested_number" => 120,
-                // "total_returns_number" => 120,
-                // "total_returns_percent_number" => 12,
-                // "wallet_balance_number" => 120,
-            ];
+            if(count($content['response']['results']) > 0){
+                $result = array_merge($result, $content['response']['results'][0]);
+            }
         } catch (\Exception $exception) {
-            return [
-                "customColumn" => 0,
-            ];
+            
         }
+        return $result;
     }
 
     public function getFinanceReferrals($referrer_code) {

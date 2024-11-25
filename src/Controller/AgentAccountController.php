@@ -277,24 +277,41 @@ class AgentAccountController extends AbstractController
     /**
      * @Route("/agent/view", name="agent_view")
      */
-    public function admin_agent_view(Request $request, AgentSecteurService $agentSecteurService, UserRepository $repoUser, PaginatorInterface $paginator)
+    public function admin_agent_view(Request $request, AgentSecteurService $agentSecteurService, UserRepository $repoUser, PaginatorInterface $paginator, StatAgentService $statAgentService)
     {
+        $secteur_finance_id = $this->getParameter('secteur_finance_id');
+        $sessionSecteurId = $this->session->get('secteurId');
         $ambassadeur = $this->getUser();
-        $result = $this->repoUser->findBy(['parrain' => $ambassadeur->getId()]);
-        $filleul = $paginator->paginate(
-            $result,
-            $request->query->getInt('page', 1),
-            5
-        );
-
-        $countEquipe = $this->agentService->getNumberOfTeam($ambassadeur, 1);
-        $countDirect = count($result);
+        $type = ''; 
+        if(sessionSecteurId == $secteur_finance_id) {
+            $type = 'finance';
+            $userFinance = $statAgentService->getStatFinance($this->getUser()->getEmail());
+            if($userFinance && $userFinance['referral_code_text']){
+                $filleul = $statAgentService->getFinanceReferrals($userFinance['referral_code_text']);
+            } else {
+                $filleul = [];
+            }
+            $countEquipe = count($filleul);
+            $countDirect = count($filleul);
+        } else {
+            $result = $this->repoUser->findBy(['parrain' => $ambassadeur->getId()]);
+            $filleul = $paginator->paginate(
+                $result,
+                $request->query->getInt('page', 1),
+                5
+            );
+    
+            $countEquipe = $this->agentService->getNumberOfTeam($ambassadeur, 1);
+            $countDirect = count($result);
+        }
+        
 
         return $this->render('user_category/agent/view_agent.html.twig', [
             'ambassadeur' => $ambassadeur,
             'filleul' => $filleul,
             'countEquipe' => $countEquipe,
             'countDirect' => $countDirect,
+            'type' => $type
         ]);
     }
 
