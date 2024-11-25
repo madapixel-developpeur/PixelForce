@@ -99,7 +99,60 @@
 					</div>
 					<!--/ User Sidebar -->
 				</div>
-				{% if secteurAgent.id ==  secteurDigitalId %}
+				{% if secteurAgent.id ==  secteur_finance_id %}
+				<div class="col-lg-12 col-12">
+					<h2 class="general-primary-text">Liste des utilisateurs par recommandation.</h2>
+                    <div class="card card-company-table p-5" style="min-height: 300px;">
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-hover text-center">
+                                    <tbody class="align-items-center ">
+										<tr class="table-header-custom">
+											<th scope="col" class="text-center">Profil</th>
+											<th scope="col" class="text-center">Email</th>
+											<th scope="col" class="text-center">Nom et prénoms</th>
+										</tr>
+										{% for fils in filleul %}
+											<tr class="align-items-center">
+												<td >
+													{% if fils.photo_image is defined and fils.photo_image  %}
+													<div class="d-flex align-items-center justify-content-center ">
+														<div class="img">
+															<img src="{{fils.photo_image}}" class="w-25 rounded-3" alt="">
+														</div>
+													</div>
+													{% else %}
+													{% endif %}
+												</td>
+												<td class=" text-tableau">
+													{% if fils.authentication is defined and fils.authentication and fils.authentication.email is defined and fils.authentication.email and fils.authentication.email.email is defined and fils.authentication.email.email  %}
+													{{fils.authentication.email.email}}
+													{% else %}
+													--
+													{% endif %}
+												</td>
+												<td class=" text-tableau w-25">
+													{% if fils.fullname_text is defined and fils.fullname_text  %}
+													{{fils.fullname_text}}
+													{% else %}
+													--
+													{% endif %}
+												</td>
+											</tr>
+										{% else %}
+                                        <tr>
+                                            <td class="text-center" colspan="7">Aucun Filleul trouvé</td>
+                                        </tr>
+                                    	{% endfor %}
+
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+				{% else %}
 				<div class="col-lg-12 col-12">
 					<h2 class="general-primary-text">Liste des utilisateurs par recommandation.</h2>
                     <div class="card card-company-table p-5" style="min-height: 300px;">
