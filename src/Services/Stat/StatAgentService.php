@@ -13,7 +13,7 @@ use Doctrine\ORM\Query\ResultSetMapping;
 use App\Repository\UserTransactionRepository;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
-use App\Services\AgentService;
+use App\Services\User\AgentService;
 class StatAgentService
 {
     private $entityManager;
@@ -295,16 +295,17 @@ class StatAgentService
                 ]
             );
             $content = json_decode($response->getContent(), true);
-            if(count($content['response']['results']) > 0){
+            if (count($content['response']['results']) > 0) {
                 $result = array_merge($result, $content['response']['results'][0]);
             }
         } catch (\Exception $exception) {
-            
+
         }
         return $result;
     }
 
-    public function getFinanceReferrals($referrer_code) {
+    public function getFinanceReferrals($referrer_code)
+    {
         try {
             $url = $this->parameterBag->get('finance_stat_url');
             if (!trim($url))
@@ -323,19 +324,20 @@ class StatAgentService
         }
     }
 
-    public function getInovaUnilevelChildren(User $user,bool $currentLoggedUser = false){
+    public function getInovaUnilevelChildren(User $user, bool $currentLoggedUser = false)
+    {
         $data = [];
         $data['ID'] = $user->getId();
-        $data['name'] = $user->getNom().' ' .($user->getPrenom()??'');
+        $data['name'] = $user->getNom() . ' ' . ($user->getPrenom() ?? '');
         $data['imageUrl'] = $this->agentService->getPic($user);
         $data['area'] = $user->getEmail();
         $data['office'] = in_array("ROLE_ADMIN", $user->getRoles()) ? "Admin" : "User";
         $data['isLoggedUser'] = $currentLoggedUser;
         $data['positionName'] = $user->getUsername();
-        
+
         $userFinance = $this->getStatFinance($user->getEmail());
-        
-        if($userFinance && $userFinance['referral_code_text']){
+
+        if ($userFinance && $userFinance['referral_code_text']) {
             $children = $this->getFinanceReferrals($userFinance['referral_code_text']);
         } else {
             $children = [];
@@ -355,8 +357,8 @@ class StatAgentService
                 'positionName' => $email
             ];
             $i++;
-        }   
-         
+        }
+
         return $data;
     }
 }

@@ -156,6 +156,7 @@
 				method: 'GET',
 				data: { 
 					agentId: agentId, // Example parameter
+					secteurId: {{app.user.uniqueCoachSecteur.id}}
 				},
 				success: function(response) {
 					let data = response.equipe;

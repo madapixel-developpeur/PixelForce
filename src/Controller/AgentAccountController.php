@@ -283,11 +283,11 @@ class AgentAccountController extends AbstractController
         $secteur_finance_id = $this->getParameter('secteur_finance_id');
         $sessionSecteurId = $this->session->get('secteurId');
         $ambassadeur = $this->getUser();
-        $type = ''; 
-        if($sessionSecteurId == $secteur_finance_id) {
+        $type = '';
+        if ($sessionSecteurId == $secteur_finance_id) {
             $type = 'finance';
             $userFinance = $statAgentService->getStatFinance($this->getUser()->getEmail());
-            if($userFinance && $userFinance['referral_code_text']){
+            if ($userFinance && $userFinance['referral_code_text']) {
                 $filleul = $statAgentService->getFinanceReferrals($userFinance['referral_code_text']);
             } else {
                 $filleul = [];
@@ -301,11 +301,11 @@ class AgentAccountController extends AbstractController
                 $request->query->getInt('page', 1),
                 5
             );
-    
+
             $countEquipe = $this->agentService->getNumberOfTeam($ambassadeur, 1);
             $countDirect = count($result);
         }
-        
+
 
         return $this->render('user_category/agent/view_agent.html.twig', [
             'ambassadeur' => $ambassadeur,
@@ -321,8 +321,12 @@ class AgentAccountController extends AbstractController
      */
     public function getDataUnilevel(Request $request)
     {
+        $sessionSecteurId = $request->get('secteurId');
+        if (!$sessionSecteurId) {
+            $sessionSecteurId = $this->session->get('secteurId');
+        }
         $secteur_finance_id = $this->getParameter('secteur_finance_id');
-        $sessionSecteurId = $this->session->get('secteurId');
+
         $idAgent = $request->get('agentId');
         if ($idAgent) {
             $user = $this->repoUser->findOneBy(['id' => $idAgent]);
@@ -332,12 +336,12 @@ class AgentAccountController extends AbstractController
         if (in_array('ROLE_AGENT', $user->getRoles())) {
             $limit = ($user->getPosition() ?? 0) + 1;
         }
-        if($sessionSecteurId == $secteur_finance_id) {
+        if ($sessionSecteurId == $secteur_finance_id) {
             $unilevel = $this->statAgentService->getInovaUnilevelChildren($user, true);
         } else {
             $unilevel = $this->agentService->getUnilevelChildren($user, 1, true, $limit);
         }
-        
+
         $data = ['equipe' => $unilevel];
 
         return new JsonResponse($data);

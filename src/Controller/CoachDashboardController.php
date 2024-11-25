@@ -26,10 +26,13 @@ class CoachDashboardController extends AbstractController
     private $repoContact;
     private $calendarEventRepository;
 
-    public function __construct(EntityManagerInterface $entityManager, ContactRepository $repoContact, CalendarEventRepository $calendarEventRepository,
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        ContactRepository $repoContact,
+        CalendarEventRepository $calendarEventRepository,
         private AgentService $agentService,
         private SecteurVideoFormationRepository $secteurVideoFormationRepository
-    ){
+    ) {
         $this->entityManager = $entityManager;
         $this->repoContact = $repoContact;
         $this->calendarEventRepository = $calendarEventRepository;
@@ -40,9 +43,9 @@ class CoachDashboardController extends AbstractController
      */
     public function index(Request $request, PaginatorInterface $paginator, StatAgentService $statAgentService, StatCoachService $statCoachService, SecteurRepository $secteurRepository, UserTransactionRepository $userTransactionRepository)
     {
-        $user = (object)$this->getUser();
+        $user = (object) $this->getUser();
         $secteur = $user->getUniqueCoachSecteur();
-        
+
 
         $contacts = $this->repoContact->findBy(['secteur' => $secteur]);
         $contacts = $paginator->paginate(
@@ -65,14 +68,14 @@ class CoachDashboardController extends AbstractController
         $nbrRdv = $statAgentService->getNbrRdv($user->getId());
         $nbrAgents = $statCoachService->getNbrAgents($secteur->getId());
         $soldeRemuneration = $userTransactionRepository->getSolde($user, [$secteur->getId()]);
-        $videoFinFormation = $this->secteurVideoFormationRepository->findOneBy(['secteur'=> $secteur ]);
+        $videoFinFormation = $this->secteurVideoFormationRepository->findOneBy(['secteur' => $secteur]);
 
         return $this->render('user_category/coach/dashboard/dashboard_index.html.twig', [
             'secteur' => $secteur,
             'contacts' => $contacts,
             'nbrAllMyContacts' => count($contacts),
-            'upcomingEvents'=> $upcomingEvents,
-            'eventsOfTheDay'=> $eventsOfTheDay,
+            'upcomingEvents' => $upcomingEvents,
+            'eventsOfTheDay' => $eventsOfTheDay,
             'statVente' => $statVente,
             'nbrClients' => $nbrClients,
             'revenuAnnee' => $revenuAnnee,
@@ -81,30 +84,44 @@ class CoachDashboardController extends AbstractController
             'nbrRdv' => $nbrRdv,
             'nbrAgents' => $nbrAgents,
             'soldeRemuneration' => $soldeRemuneration,
-            'formations'=>null,
+            'formations' => null,
             'videoFinFormation' => $videoFinFormation
         ]);
     }
     /**
      * @Route("/view", name="coach_view")
      */
-    public function admin_agent_view(Request $request,UserRepository $repoUser, PaginatorInterface $paginator)
+    public function admin_agent_view(Request $request, UserRepository $repoUser, PaginatorInterface $paginator, StatAgentService $statAgentService)
     {
         $ambassadeur = $this->getUser();
-        $result=$repoUser->findBy(['parrain'=>$ambassadeur->getId()]);
-        $filleul = $paginator->paginate(
-            $result,
-            $request->query->getInt('page', 1),
-            5
-        );
+        $secteurId = $ambassadeur->getUniqueCoachSecteur()?->getId();
+        $secteur_finance_id = $this->getParameter('secteur_finance_id');
+        if ($secteurId == $secteur_finance_id) {
+            $userFinance = $statAgentService->getStatFinance($ambassadeur->getEmail());
+            if ($userFinance && $userFinance['referral_code_text']) {
+                $filleul = $statAgentService->getFinanceReferrals($userFinance['referral_code_text']);
+            } else {
+                $filleul = [];
+            }
+            $countEquipe = count($filleul);
+            $countDirect = count($filleul);
+        } else {
+            $result = $repoUser->findBy(['parrain' => $ambassadeur->getId()]);
+            $filleul = $paginator->paginate(
+                $result,
+                $request->query->getInt('page', 1),
+                5
+            );
+            $countEquipe = $this->agentService->getNumberOfTeam($ambassadeur, 1);
+            $countDirect = count($result);
+        }
 
-        $countEquipe = $this->agentService->getNumberOfTeam($ambassadeur,1);
-        $countDirect = count($result);
+
         return $this->render('user_category/coach/view_coach.html.twig', [
             'ambassadeur' => $ambassadeur,
-            'filleul'=>$filleul,
-            'countEquipe' =>$countEquipe,
-            'countDirect' =>$countDirect,
+            'filleul' => $filleul,
+            'countEquipe' => $countEquipe,
+            'countDirect' => $countDirect,
         ]);
     }
 
