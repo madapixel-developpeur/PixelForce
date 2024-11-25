@@ -71,7 +71,8 @@ class AgentAccountController extends AbstractController
         UserRepository $repoUser,
         private EntityManager $entityManager,
         CoachSecteurRepository $repoCoachSecteur,
-        private SecteurVideoFormationRepository $secteurVideoFormationRepository
+        private SecteurVideoFormationRepository $secteurVideoFormationRepository,
+        private StatAgentService $statAgentService
     ) {
         $this->repoSecteur = $repoSecteur;
         $this->repoAgentSecteur = $repoAgentSecteur;
@@ -283,7 +284,7 @@ class AgentAccountController extends AbstractController
         $sessionSecteurId = $this->session->get('secteurId');
         $ambassadeur = $this->getUser();
         $type = ''; 
-        if(sessionSecteurId == $secteur_finance_id) {
+        if($sessionSecteurId == $secteur_finance_id) {
             $type = 'finance';
             $userFinance = $statAgentService->getStatFinance($this->getUser()->getEmail());
             if($userFinance && $userFinance['referral_code_text']){
@@ -320,6 +321,8 @@ class AgentAccountController extends AbstractController
      */
     public function getDataUnilevel(Request $request)
     {
+        $secteur_finance_id = $this->getParameter('secteur_finance_id');
+        $sessionSecteurId = $this->session->get('secteurId');
         $idAgent = $request->get('agentId');
         if ($idAgent) {
             $user = $this->repoUser->findOneBy(['id' => $idAgent]);
@@ -329,7 +332,12 @@ class AgentAccountController extends AbstractController
         if (in_array('ROLE_AGENT', $user->getRoles())) {
             $limit = ($user->getPosition() ?? 0) + 1;
         }
-        $unilevel = $this->agentService->getUnilevelChildren($user, 1, true, $limit);
+        if($sessionSecteurId == $secteur_finance_id) {
+            $unilevel = $this->statAgentService->getInovaUnilevelChildren($user, true);
+        } else {
+            $unilevel = $this->agentService->getUnilevelChildren($user, 1, true, $limit);
+        }
+        
         $data = ['equipe' => $unilevel];
 
         return new JsonResponse($data);

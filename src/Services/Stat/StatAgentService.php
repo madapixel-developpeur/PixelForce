@@ -13,7 +13,7 @@ use Doctrine\ORM\Query\ResultSetMapping;
 use App\Repository\UserTransactionRepository;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
-
+use App\Services\AgentService;
 class StatAgentService
 {
     private $entityManager;
@@ -25,7 +25,8 @@ class StatAgentService
         private ParameterBagInterface $parameterBag,
         RemunerationService $remunerationService,
         private UserTransactionRepository $userTransactionRepository,
-        private ConfigSecteurService $configSecteurService
+        private ConfigSecteurService $configSecteurService,
+        private AgentService $agentService
     ) {
         $this->entityManager = $entityManager;
         $this->remunerationService = $remunerationService;
@@ -320,5 +321,42 @@ class StatAgentService
         } catch (\Exception $exception) {
             return [];
         }
+    }
+
+    public function getInovaUnilevelChildren(User $user,bool $currentLoggedUser = false){
+        $data = [];
+        $data['ID'] = $user->getId();
+        $data['name'] = $user->getNom().' ' .($user->getPrenom()??'');
+        $data['imageUrl'] = $this->agentService->getPic($user);
+        $data['area'] = $user->getEmail();
+        $data['office'] = in_array("ROLE_ADMIN", $user->getRoles()) ? "Admin" : "User";
+        $data['isLoggedUser'] = $currentLoggedUser;
+        $data['positionName'] = $user->getUsername();
+        
+        $userFinance = $this->getStatFinance($user->getEmail());
+        
+        if($userFinance && $userFinance['referral_code_text']){
+            $children = $this->getFinanceReferrals($userFinance['referral_code_text']);
+        } else {
+            $children = [];
+        }
+
+        $i = 1;
+        foreach ($children as $child) {
+            $data['countChildren'] = count($children);
+            $email = isset($child['authentication']) && $child['authentication'] && isset($child['authentication']['email']) && $child['authentication']['email'] && isset($child['authentication']['email']['email']) && $child['authentication']['email']['email'] ? $child['authentication']['email']['email'] : '';
+            $data['children'][] = [
+                'ID' => $i,
+                'name' => isset($child['fullname_text']) && $child['fullname_text'] ? $child['fullname_text'] : '--',
+                'imageUrl' => isset($child['photo_image']) && $child['photo_image'] ? $child['photo_image'] : null,
+                'area' => $email,
+                'office' => "User",
+                'isLoggedUser' => false,
+                'positionName' => $email
+            ];
+            $i++;
+        }   
+         
+        return $data;
     }
 }
