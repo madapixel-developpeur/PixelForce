@@ -1,82 +1,31 @@
-{% extends 'security/login.html.twig' %}
-
-{% block title %}Inscription agent{% endblock %}
-
-{% block form %}
-    <h3 class="general-primary-text text-center p-2">Inscription</h3>
-    <!-- Message alert -->
-        <div class="alert-message">
-            {% for label, messages in app.flashes %}
-                <div class="alert alert-{{label}} text-center">
-                    {% for message in messages %}
-                        {{message | raw}}
-                    {% endfor %}
-                </div>
-            {% endfor %}
-        </div>
-    {{ form_start(form) }}
-        <div class="row">
-            <div class="col-md-6 col-12">
-                {{ form_row(form.nom) }}
-            </div>
-            <div class="col-md-6 col-12">
-                {{ form_row(form.prenom) }}
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-6 col-12">
-                {{ form_row(form.email) }}
-            </div>
-            <div class="col-md-6 col-12">
-                {{ form_row(form.telephone) }}
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-6 col-12">
-                {{ form_row(form.adresse) }}
-            </div>
-            <div class="col-md-6 col-12">
-                {{ form_row(form.numero_rue) }}
-            </div>
-            <div class="col-md-6 col-12">
-                {{ form_row(form.codePostal) }}
-            </div>
-            <div class="col-md-6 col-12">
-                {{ form_row(form.ville) }}
-            </div>
-        </div>
-        {# <h5 class="mt-4">Choix du secteur</h5>
-        <div class="row my-3">
-            {% for secteurList in form.secteur.children.secteur.children %}
-                <div class="col-12 col-md-4">
-                    {{ form_row(secteurList) }}
-                </div>
-
-            {% endfor %}
-        </div> #}
-
-        <h5 class="general-primary-text text-center p-2">Information sur la connexion</h5>
-        {% if form.ambassador_username is defined %}
-            {{ form_row(form.ambassador_username) }}
+<!DOCTYPE html>
+<html>
+    <head>
+        {% if app.environment == 'prod' %}
+            <script async src="https://www.googletagmanager.com/gtag/js?id=G-8PBBKR57JN"></script>
+            <script type="text/javascript" src="{{ asset('assets/js/google_analytics.js') }}"></script>
         {% endif %}
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="google-site-verification" content="O5bvNXZxdhGiT5VN5hPxisFh_XZeZCQr4aN4yoy0Ilk" />
+        <title>{% block title %}Inscription agent{% endblock %}</title>
+        <link rel="stylesheet" href="/assets/fontawesome-free-6.0.0-web/css/all.css" />
+        <link rel="stylesheet" href="{{ asset('/assets/vuexy/css/pages/authentication.css') }}" />
+        <link rel="stylesheet" type="text/css" href="{{asset('assets/css/animations.css')}}">
+        <link rel="stylesheet" type="text/css" href="{{asset('assets/css/style.css')}}">
+        <link rel="stylesheet" type="text/css" href="{{asset('assets/css/login.css')}}">
+        {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
+        {% block stylesheets %}
+            {{ encore_entry_link_tags('vuexy_colors') }}
+            {{ encore_entry_link_tags('vuexy_components') }}
+            {{ encore_entry_link_tags('app') }}
+        {% endblock %}
 
-        {{ form_row(form.username) }}
-        {{ form_row(form.password) }}
-        <div class="w-100 text-center">
-        {#<button class="btn btn-primary" type="submit" id="btn-next">Procéder au paiement <i class="fa-solid fa-angles-right"></i></button>#}
-            <button class="btn btn-primary w-100" type="submit" id="btn-next">S’inscrire</button>
-        </div>
-        <div class=" text-center mt-3">
-            <a href="{{ path('app_forgetPassword') }}">Mot de passe oublié ?</a>
-        </div>         
-         <div class=" text-center mt-3">
-            Vous avez déjà un compte? <a href="{{ path('app_login') }}">Connexion</a>
-        </div>
-    {{ form_end(form) }}
-{% endblock %}
-
-{% block javascripts %}
-    <script>
+        <script src="{{ asset('assets/vuexy/vendors/js/vendors.min.js') }}" ></script>
+        {% block javascripts %}
+            {{ encore_entry_script_tags('vuexy_app') }}
+            {{ encore_entry_script_tags('app') }}
+            <script>
         // Fix required checkbox : Verifie qu'il y a au moins une secteur choisie par l'utilisateur
         // $(document).ready(function () {
         //     $('button#btn-next').click(function() {
@@ -90,4 +39,135 @@
         //     });
         // });
     </script>
+        {% endblock %}
+       
+    </head>
+
+    <body>
+{% block body %}
+<body class="horizontal-layout horizontal-menu blank-page navbar-floating footer-static  " data-open="hover" data-menu="horizontal-menu" data-col="blank-page">
+    <div class="app-content content ">
+        <div class="content-overlay"></div>
+        <div class="header-navbar-shadow"></div>
+        <div class="content-wrapper">
+            <div class="content-header row">
+            </div>
+            <div class="content-body">
+                <div class="auth-wrapper auth-cover">
+                    <div class="auth-inner row m-0">
+
+                        <!-- Left Text-->
+                        <div class="d-none d-lg-flex col-lg-7 align-items-center p-0 bg-image bg-image bg-inscription">
+                            {# <div class="w-100 d-lg-flex align-items-center justify-content-center ">
+                            <img class="img-fluid" src="{{asset('assets/vuexy/images/pages/Inscription-photo.png')}}" alt="Login V2" />
+                            </div> #}
+                        </div>
+                        <!-- /Left Text-->
+                        <!-- Login-->
+                        <div class="d-flex col-lg-5 align-items-center auth-bg px-2 ">
+                            <div class="col-12 col-sm-8 col-md-6 col-lg-12 px-xl-2 mx-auto">
+                                <h2 class="card-title fw-bold  text-center ">
+                                    <a href="{{ path('app_dashboard') }}" class="text-center text-muted text-decoration-none">
+                                        <img src="/assets/img/logo/mether/2x/Mether-Gold.png" class="img-fluid w-25" alt="logo-mether">
+                                    </a>
+                                </h2>
+
+                                {% block form %}
+                                <h3 class="general-primary-text text-center p-2">Inscription</h3>
+                                <!-- Message alert -->
+                                    <div class="alert-message">
+                                        {% for label, messages in app.flashes %}
+                                            <div class="alert alert-{{label}} text-center">
+                                                {% for message in messages %}
+                                                    {{message | raw}}
+                                                {% endfor %}
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                {{ form_start(form) }}
+                                    <div class="row">
+                                        <div class="col-md-6 col-12">
+                                            {{ form_row(form.nom) }}
+                                        </div>
+                                        <div class="col-md-6 col-12">
+                                            {{ form_row(form.prenom) }}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 col-12">
+                                            {{ form_row(form.email) }}
+                                        </div>
+                                        <div class="col-md-6 col-12">
+                                            {{ form_row(form.telephone) }}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 col-12">
+                                            {{ form_row(form.adresse) }}
+                                        </div>
+                                        <div class="col-md-6 col-12">
+                                            {{ form_row(form.numero_rue) }}
+                                        </div>
+                                        <div class="col-md-6 col-12">
+                                            {{ form_row(form.codePostal) }}
+                                        </div>
+                                        <div class="col-md-6 col-12">
+                                            {{ form_row(form.ville) }}
+                                        </div>
+                                    </div>
+                                    {# <h5 class="mt-4">Choix du secteur</h5>
+                                    <div class="row my-3">
+                                        {% for secteurList in form.secteur.children.secteur.children %}
+                                            <div class="col-12 col-md-4">
+                                                {{ form_row(secteurList) }}
+                                            </div>
+
+                                        {% endfor %}
+                                    </div> #}
+
+                                    <h5 class="general-primary-text text-center p-2">Information sur la connexion</h5>
+                                    {% if form.ambassador_username is defined %}
+                                        {{ form_row(form.ambassador_username) }}
+                                    {% endif %}
+
+                                    {{ form_row(form.username) }}
+                                    {{ form_row(form.password) }}
+                                    <div class="w-100 text-center">
+                                    {#<button class="btn btn-primary" type="submit" id="btn-next">Procéder au paiement <i class="fa-solid fa-angles-right"></i></button>#}
+                                        <button class="btn btn-primary w-100" type="submit" id="btn-next">S’inscrire</button>
+                                    </div>
+                                    <div class=" text-center mt-3">
+                                        <a href="{{ path('app_forgetPassword') }}">Mot de passe oublié ?</a>
+                                    </div>         
+                                    <div class=" text-center mt-3">
+                                        Vous avez déjà un compte? <a href="{{ path('app_login') }}">Connexion</a>
+                                    </div>
+                                {{ form_end(form) }}
+                            {% endblock %}
+
+
+
+
+                            </div>
+                        </div>
+                        <!-- /Login-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+     <script>
+        $(window).on('load', function() {
+            if (feather) {
+                feather.replace({
+                    width: 14,
+                    height: 14
+                });
+            }
+        })
+    </script>
+</body>
 {% endblock %}
+
+
+
