@@ -19,6 +19,7 @@ use App\Repository\SecteurRepository;
 use App\Repository\AgentSecteurRepository;
 use Symfony\Component\HttpFoundation\Request;
 use App\Repository\PlanAgentAccountRepository;
+use App\Services\CountryService;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -66,7 +67,7 @@ class AgentInscriptionController extends AbstractController
     /**
      * @Route("/inscription/agent/index/{ambassador_username?}", name="agent_inscription")
      */
-    public function inscriptionAgent(Request $request, SecteurRepository $secteurRepository, $ambassador_username = null)
+    public function inscriptionAgent(Request $request, SecteurRepository $secteurRepository, $ambassador_username = null, CountryService $countryService)
     {
         $user = new User();
         if($ambassador_username != null){
@@ -78,11 +79,13 @@ class AgentInscriptionController extends AbstractController
         try{   
            $parrain=$this->getParainByUsername($ambassador_username);
            if($form->isSubmitted() && $form->isValid()) {
-                $this->userManager->setUserPasword($user, $request->request->get('inscription_agent')['password']['first'], '', false);
+                $this->userManager->setUserPasword($user, $form->get('password')->getData(), '', false);
                 $user->setRoles([ User::ROLE_AGENT ]);
                 $user->setActive(1);
                 $user->setParrain($parrain);
-                $this->agentService->saveAgent($user,$request->request->get('inscription_agent')['password']['first']);
+                $countries = $countryService->readJson();
+                $user->setCountryName($countries[$user->getCountryCode()]);
+                $this->agentService->saveAgent($user,$form->get('password')->getData(), ['parrain' => $parrain]);
                 $this->addFlash(
                     'success',
                     'Votre inscription sur '.$_ENV['PLATFORME_NAME'].' a été effectuée avec succès'

@@ -5,8 +5,10 @@ namespace App\Form;
 
 
 use App\Form\FormEvents\SecteurChoiceListListener;
+use App\Services\CountryService;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
@@ -17,6 +19,7 @@ use Symfony\Component\Validator\Constraints\NotNull;
 
 class InscriptionAgentType2 extends AbstractType
 {
+    public function __construct(private CountryService $countryService){}
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $user = $options ["data"];
@@ -79,8 +82,27 @@ class InscriptionAgentType2 extends AbstractType
                     new NotNull([],'Champ obligatoire'),
                 ],
                 'mapped' => false
-            ])            
+            ])  
+            ->add('countryCode', ChoiceType::class, [
+                'choices' => $this->getCountryChoices(), // Custom method to define choices
+                'label' => false,
+                // 'placeholder' => 'Choose a country', // Optional: adds a default placeholder
+                'required' => true,                 // Optional: make the field required
+                'attr' => [
+                    'placeholder' => 'Pays' 
+                ],
+            ])          
         ;
         
+    }
+
+    private function getCountryChoices(): array
+    {
+        $data = $this->countryService->readJson();
+        $transformed = [];
+        foreach ($data as $code => $name) {
+            $transformed[$name] = $code;
+        }
+        return $transformed;
     }
 }

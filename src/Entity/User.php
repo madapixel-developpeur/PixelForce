@@ -363,6 +363,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
      */
     private $newsLettersState = 0;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $countryCode;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $countryName;
+
     public function __construct()
     {
         $this->coachAgents = new ArrayCollection();
@@ -386,6 +396,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
         $this->orderDigitals = new ArrayCollection();
         $this->devisCompanies = new ArrayCollection();
         $this->fils = new ArrayCollection();
+    }
+
+    public function getCountryCode(): ?string
+    {
+        return $this->countryCode;
+    }
+
+    public function setCountryCode(string $countryCode): self
+    {
+        $this->countryCode = $countryCode;
+
+        return $this;
+    }
+
+    public function setCountryName(string $countryName): self
+    {
+        $this->countryName = $countryName;
+
+        return $this;
+    }
+
+    public function getCountryName(): ?string
+    {
+        return $this->countryName;
     }
 
     public function getId(): ?int
