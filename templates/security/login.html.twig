@@ -14,6 +14,7 @@
         <link rel="stylesheet" type="text/css" href="{{asset('assets/css/animations.css')}}">
         <link rel="stylesheet" type="text/css" href="{{asset('assets/css/style.css')}}">
         <link rel="stylesheet" type="text/css" href="{{asset('assets/css/login.css')}}">
+        <link rel="shortcut icon" type="image/x-icon" href="{{ asset('assets/img/favicon.ico') }}">
         {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
         {% block stylesheets %}
             {{ encore_entry_link_tags('vuexy_colors') }}
@@ -42,14 +43,14 @@
                     <div class="auth-inner row m-0">
 
                         <!-- Left Text-->
-                        <div class="d-none d-lg-flex col-lg-8 align-items-center p-0 bg-image bg-image">
+                        <div class="d-none d-lg-flex col-lg-7 align-items-center p-0 bg-image bg-image">
                             {# <div class="w-100 d-lg-flex align-items-center justify-content-center ">
                             <img class="img-fluid" src="{{asset('assets/vuexy/images/pages/Inscription-photo.png')}}" alt="Login V2" />
                             </div> #}
                         </div>
                         <!-- /Left Text-->
                         <!-- Login-->
-                        <div class="d-flex col-lg-4 align-items-center auth-bg px-2 ">
+                        <div class="d-flex col-lg-5 align-items-center auth-bg px-2 ">
                             <div class="col-12 col-sm-8 col-md-6 col-lg-12 px-xl-2 mx-auto">
                                 <h2 class="card-title fw-bold  text-center ">
                                     <a href="{{ path('app_dashboard') }}" class="text-center text-muted text-decoration-none">

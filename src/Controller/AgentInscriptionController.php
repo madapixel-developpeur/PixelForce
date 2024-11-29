@@ -6,6 +6,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Entity\Secteur;
 use App\Entity\AgentSecteur;
+use App\Form\InscriptionAgentType2;
 use App\Manager\UserManager;
 use App\Manager\EntityManager;
 use App\Manager\StripeManager;
@@ -72,7 +73,7 @@ class AgentInscriptionController extends AbstractController
             $user->setAmbassadorUsername($ambassador_username);
         }
         $parrain=null;
-        $form = $this->createForm(InscriptionAgentType::class, $user);
+        $form = $this->createForm(InscriptionAgentType2::class, $user);
         $form->handleRequest($request);
         try{   
            $parrain=$this->getParainByUsername($ambassador_username);
