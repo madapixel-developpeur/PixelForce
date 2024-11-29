@@ -65,13 +65,15 @@ class AccountAgentType extends AbstractType
                 'label' => 'Pseudo',
                 'attr' => [
                     'placeholder' => 'Entrer votre pseudo',
+                    'disabled' => true
                 ]
             ])
 
             ->add('email', EmailType::class, [
                 'label' => 'Adresse Mail',
                 'attr' => [
-                    'placeholder' => 'Adresse mail'
+                    'placeholder' => 'Adresse mail',
+                    'disabled' => true
                 ],
                 'required' => false,
                 // 'disabled' => true
@@ -82,15 +84,15 @@ class AccountAgentType extends AbstractType
                 'disabled' => true,
                 'required' => false,
             ])
-            ->add('rib', TextType::class, [
-                'label' => 'RIB',
-                'attr' => [
-                    'placeholder' => 'Votre RIB'
-                ],
-                'constraints' => [
-                    new NotNull([],'champ obligatoire')
-                ]
-            ])
+            // ->add('rib', TextType::class, [
+            //     'label' => 'RIB',
+            //     'attr' => [
+            //         'placeholder' => 'Votre RIB'
+            //     ],
+            //     'constraints' => [
+            //         new NotNull([],'champ obligatoire')
+            //     ]
+            // ])
         ;
     }
 }
