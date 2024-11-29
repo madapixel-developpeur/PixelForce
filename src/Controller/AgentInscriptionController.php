@@ -280,7 +280,7 @@ class AgentInscriptionController extends AbstractController
         ]);
     }
 
-      /**
+    /**
      * @Route("/agent/inscription/back-office/{ambassador_username?}", name="agent_inscription_backoffice")
      */
     public function inscriptionAgentBackOffice(Request $request, SecteurRepository $secteurRepository, $ambassador_username = null)
