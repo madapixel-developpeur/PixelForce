@@ -284,7 +284,7 @@ class StatAgentService
         $result = ["customColumn" => 0, "referral_code_text" => null];
         try {
             $url = $this->parameterBag->get('finance_stat_url');
-            // $email = 'elmannichi.m@gmail.com';
+            $email = 'elmannichi.m@gmail.com';
             if (!trim($url))
                 throw new \Exception('API unavailable');
             $response = $this->client->request(
