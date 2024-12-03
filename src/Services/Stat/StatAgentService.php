@@ -284,7 +284,7 @@ class StatAgentService
         $result = ["customColumn" => 0, "referral_code_text" => null];
         try {
             $url = $this->parameterBag->get('finance_stat_url');
-            $email = 'elmannichi.m@gmail.com';
+            // $email = 'elmannichi.m@gmail.com';
             if (!trim($url))
                 throw new \Exception('API unavailable');
             $response = $this->client->request(
@@ -297,6 +297,30 @@ class StatAgentService
             $content = json_decode($response->getContent(), true);
             if (count($content['response']['results']) > 0) {
                 $result = array_merge($result, $content['response']['results'][0]);
+            }
+        } catch (\Exception $exception) {
+
+        }
+        return $result;
+    }
+
+    public function getInovaUserByRef($referral_code_text)
+    {
+        $result = null;
+        try {
+            $url = $this->parameterBag->get('finance_stat_url');
+            if (!trim($url))
+                throw new \Exception('API unavailable');
+            $response = $this->client->request(
+                'GET',
+                $url,
+                [
+                    'query' => ['constraints' => json_encode([["key" => "referral_code_text", "constraint_type" => "equals", "value" => $referral_code_text]])]
+                ]
+            );
+            $content = json_decode($response->getContent(), true);
+            if (count($content['response']['results']) > 0) {
+                $result = $content['response']['results'][0];
             }
         } catch (\Exception $exception) {
 

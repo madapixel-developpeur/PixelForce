@@ -457,6 +457,15 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->getResult();
     }
 
+    public function getUserByEmail($email)
+    {
+        return $this->createQueryBuilder('u')
+            ->andWhere('trim(lower(u.email)) = trim(lower(:email))')
+            ->setParameter('email', $email)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
     public function getFilsJusqueNiveau($agentId, $niveau = 3, $toId = false)
     {
         $result = [];
@@ -480,7 +489,8 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->getSingleScalarResult();
     }
 
-    public function getFirstCoachBySecteur(Secteur $secteur){
+    public function getFirstCoachBySecteur(Secteur $secteur)
+    {
 
         $query = $this->createQueryBuilder('a')
             ->where('a.roles LIKE :role')
@@ -488,28 +498,29 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->setParameter('role', '%' . User::ROLE_COACH . '%');
 
         $query = $query
-        ->join('a.coachSecteurs', 'aSec')
-        ->andwhere('aSec.secteur = :secteur')
-        ->setParameter('secteur', $secteur)
-        ->setMaxResults(1)
-        ->orderBy('a.id', 'DESC');
+            ->join('a.coachSecteurs', 'aSec')
+            ->andwhere('aSec.secteur = :secteur')
+            ->setParameter('secteur', $secteur)
+            ->setMaxResults(1)
+            ->orderBy('a.id', 'DESC');
 
         return $query->getQuery()
             ->getSingleResult();
-        }
+    }
 
-        public function searchChatUsersQueryBuilder($currentUser, $search = ''){
+    public function searchChatUsersQueryBuilder($currentUser, $search = '')
+    {
 
-            $query = $this->createQueryBuilder('u')
-                ->andWhere('u.id != :userId')
-                ->andWhere("lower(concat(concat(coalesce(u.prenom, ''), ' '), coalesce(u.nom, ''))) like :search ")
-                ->addOrderBy('u.prenom', 'ASC')
-                ->addOrderBy('u.nom', 'ASC')
-                ->addOrderBy('u.id', 'ASC')
-                ->setParameter('userId', $currentUser)
-                ->setParameter('search', '%' . strtolower($search) . '%');
+        $query = $this->createQueryBuilder('u')
+            ->andWhere('u.id != :userId')
+            ->andWhere("lower(concat(concat(coalesce(u.prenom, ''), ' '), coalesce(u.nom, ''))) like :search ")
+            ->addOrderBy('u.prenom', 'ASC')
+            ->addOrderBy('u.nom', 'ASC')
+            ->addOrderBy('u.id', 'ASC')
+            ->setParameter('userId', $currentUser)
+            ->setParameter('search', '%' . strtolower($search) . '%');
 
-    
-            return $query;
-        }
+
+        return $query;
+    }
 }
