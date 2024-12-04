@@ -32,7 +32,7 @@ class RessourceController
         }
         try{
             $filename = $this->fileHandler->upload($uploadedFile, "ressources");
-            return new JsonResponse(['message' => 'File uploaded successfully', 'file' => $filename]);
+            return new JsonResponse(['message' => 'File uploaded successfully', 'path' => $filename, 'name' => basename($filename)]);
         } catch(\Exception $ex){
             return new JsonResponse(['message' => $ex->getMessage()], 500);
         } 
@@ -65,30 +65,35 @@ class RessourceController
         $res = new Ressource();
         $form = $this->createForm(RessourceFormType::class, $doc);
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
+        $files = [];
+        if ($form->isSubmitted()){ 
+            $filesStr = trim($request->request->get('files', ''));
+            if($filesStr){
+                $files = json_decode($filesStr);
+            }
+            if($form->isValid()) {
+                try{
+                    
+                    $res->setFiles($files);
+                    $res->setStatut(Status::VALID);
+                    $this->entityManager->persist($res);
+                    $this->entityManager->flush();
 
-            try{
-                $filesStr = trim($request->request->get('files', ''));
-                $files = [];
-                if($filesStr){
-                    $files = json_decode($filesStr);
+                    return $this->redirectToRoute('app_ressource_details', [
+                        'id' => $res->getId()
+                    ]);
+                } catch(Exception $ex){
+                    $this->addFlash('danger', $ex->getMessage());
                 }
-                $res->setFiles($files);
-                $res->setStatut(Status::VALID);
-                $this->entityManager->persist($res);
-                $this->entityManager->flush();
-
-                return $this->redirectToRoute('app_ressource_details', [
-                    'id' => $res->getId()
-                ]);
-            } catch(Exception $ex){
-                $this->addFlash('danger', $ex->getMessage());
             }
         }
 
         return $this->render('user_category/common-admin/ressource/form.html.twig',[
             'form' => $form->createView(),
             'isEdit' => false,
+            'files' => array_map(function ($file) {
+                return ['path' => $file, 'name' => basename($file)];
+            }, $files)
         ]);
     }
 
@@ -99,31 +104,34 @@ class RessourceController
     {
         $form = $this->createForm(RessourceFormType::class, $doc);
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
+        $files = $res->getFiles();
+        if ($form->isSubmitted()){ 
+            $filesStr = trim($request->request->get('files', ''));
+            if($filesStr){
+                $files = json_decode($filesStr);
+            }
+            if($form->isValid()) {
+                try{
+                    $res->setFiles($files);
+                    $res->setStatut(Status::VALID);
+                    $this->entityManager->persist($res);
+                    $this->entityManager->flush();
 
-            try{
-                $filesStr = trim($request->request->get('files', ''));
-                $files = [];
-                if($filesStr){
-                    $files = json_decode($filesStr);
+                    return $this->redirectToRoute('app_ressource_details', [
+                        'id' => $res->getId()
+                    ]);
+                } catch(Exception $ex){
+                    $this->addFlash('danger', $ex->getMessage());
                 }
-                $res->setFiles($files);
-                $res->setStatut(Status::VALID);
-                $this->entityManager->persist($res);
-                $this->entityManager->flush();
-
-                return $this->redirectToRoute('app_ressource_details', [
-                    'id' => $res->getId()
-                ]);
-            } catch(Exception $ex){
-                $this->addFlash('danger', $ex->getMessage());
             }
         }
 
         return $this->render('user_category/common-admin/ressource/form.html.twig',[
             'form' => $form->createView(),
             'isEdit' => true,
-            'files' => $res->getFiles()
+            'files' => array_map(function ($file) {
+                return ['path' => $file, 'name' => basename($file)];
+            }, $files)
         ]);
     }
 

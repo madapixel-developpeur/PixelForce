@@ -1,0 +1,67 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title %}
+	Ressource
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+
+{% block body %}
+<section class="invoice-preview-wrapper">
+    <div class="row invoice-preview">
+        <!-- Invoice -->
+        <div class="col-12">
+            {% for label, messages in app.flashes() %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ label }}">
+                            <div class="alert-body">
+                            {{ message }}
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+            <div class="card invoice-preview-card">
+                <div class="card-body invoice-padding pb-0">
+                    <!-- Header starts -->
+                    <div class="d-flex flex-md-row flex-column invoice-spacing mt-0">
+                        <div>
+                            <div class="logo-wrapper">
+                                <h3 class="text-primary invoice-logo">{{res.name}}</h3>
+                            </div>
+                            <div>
+                                <i class="fa fa-file-pdf fa-4x"></i>
+                            </div>
+                            
+                            
+                        </div>
+
+                        <div class="pt-5 mx-2">
+                            
+                            <div class="invoice-date-wrapper">
+                                <p class="invoice-date-title">Contenu:</p>
+                                <p class="card-text">{{res.content | raw}}</p>
+                            </div>
+                            
+                        </div>
+
+                        
+                        
+                    </div>
+                    <!-- Header ends -->
+                        
+                </div>
+            </div>
+
+        </div>
+        
+    </div>
+</section>
+
+
+
+    
+{% endblock %}
+            

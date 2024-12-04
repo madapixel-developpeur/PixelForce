@@ -1,0 +1,118 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title %}
+	Ressource
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %} 
+    <div class="block block--bordered block--rounded">
+        <h1 class="block__text block__text--center mt-2" >{% if isEdit %}Modifier la ressource{% else %} Ajouter une ressource{% endif %} :</h1>
+            
+            {{ form_start(form, {'attr': {'class': 'my-form'}}) }}
+                {% for label, messages in app.flashes() %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ label }}">
+                            <div class="alert-body">
+                            {{ message }}
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+                
+                <div class="my-form-widget">
+                    {{form_label(form.name)}}
+                    {{form_widget(form.name)}}
+                    {{form_errors(form.name)}}
+                </div>
+                <div class="my-form-widget">
+                    {{form_label(form.content)}}
+                    {{form_widget(form.content)}}
+                    {{form_errors(form.content)}}
+                </div>
+                <div class="my-form-widget">
+                    <label>Fichiers</label>
+                    <div class="d-flex align-items-center justify-content-start" id="files-wrapper">
+                        {% for file in files %}
+                        <div class="file-block" data-path="{{file.path}}"><span>{{file.name}}</span></div>
+                        {% endfor %}
+                        <button type="button" id="btn-add-file">Ajouter</button>
+                    </div>
+                    <input type="file" class="d-none" id="file-input" >
+                    <input type="hidden" id="files" name="files" >
+                </div>
+                
+                <div class="btn-wrap">
+                    <button class="btn btn-primary" type="submit"><i data-feather="save"></i>Enregistrer</button>
+                </div>
+            {{ form_end(form) }}
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $(document).ready(function (){
+            
+            function addFile(data){
+                const downloadPath = "{{path('app_ressource_file_download', {'filename': 'custom-file-name'})}}";
+                downloadPath.replace('custom-file-name', data.path);
+                const fileBlock = $(``<div data-path="${data.path}"><span>${data.name}</span></div>``);
+
+                const removeFileBtn = $(`<span class="remove-file">X</span>`);
+                $(removeFileBtn).click(function () {
+                    $(fileBlock).remove();
+                })
+                $(fileBlock).append(removeFileBtn);
+                $(fileBlock).click(function (){
+                    window.location.href = downloadPath;
+                })
+
+                $('#files-wrapper').append(fileBlock);
+            }
+            $('#btn-add-file').click(function (){
+                $('#file-input').click();
+            });
+
+            $('#file-input').change(function () {
+                const file = this.files[0]; // Get only the first file
+                const formData = new FormData();
+                formData.append('file', file);
+                $.ajax({
+                    url: '{{path('app_ressource_file_upload')}}',
+                    type: 'POST',
+                    data: formData,
+                    processData: false, // Prevent jQuery from converting FormData to a string
+                    contentType: false, // Ensure correct content type is set
+                    success: function (response) {
+                       addFile(response);
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        const errorMessage = jqXHR.responseJSON?.message || jqXHR.responseText || 'An unknown error occurred';
+                        alert(errorMessage);
+                    },
+                });
+            })
+
+            const form = $('#{{form.vars.id}}');
+            $(form).submit(function (){
+                const filePaths = [];
+                $('#files-wrapper .file-block').each(function(index, element) {
+                    filePaths.push($(element).data('path'));
+                })
+                $('#files').val(JSON.stringify(filePaths));
+            })
+
+            const existingFiles = "{{files | json_encode() | raw}}";
+            existingFiles.forEach((file) => {
+                addFile(file);
+            })
+        }); 
+    </script>
+
+{% endblock %}
+
