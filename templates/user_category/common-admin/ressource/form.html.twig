@@ -12,7 +12,7 @@
     <div class="block block--bordered block--rounded">
         <h1 class="block__text block__text--center mt-2" >{% if isEdit %}Modifier la ressource{% else %} Ajouter une ressource{% endif %} :</h1>
             
-            {{ form_start(form, {'attr': {'class': 'my-form'}}) }}
+            {{ form_start(form, {'attr': {'class': 'my-form', 'id': form.vars.id}}) }}
                 {% for label, messages in app.flashes() %}
                     {% for message in messages %}
                         <div class="alert alert-{{ label }}">
@@ -35,11 +35,11 @@
                 </div>
                 <div class="my-form-widget">
                     <label>Fichiers</label>
-                    <div class="d-flex align-items-center justify-content-start" id="files-wrapper">
-                        {% for file in files %}
+                     <button class="btn btn-success btn-large" type="button" id="btn-add-file"><i class="fa fa-plus" aria-hidden="true"></i>&nbsp;Ajouter</button>
+                    <div class="d-flex align-items-center justify-content-start flex-wrap" id="files-wrapper">
+                        {# {% for file in files %}
                         <div class="file-block" data-path="{{file.path}}"><span>{{file.name}}</span></div>
-                        {% endfor %}
-                        <button type="button" id="btn-add-file">Ajouter</button>
+                        {% endfor %} #}
                     </div>
                     <input type="file" class="d-none" id="file-input" >
                     <input type="hidden" id="files" name="files" >
@@ -61,9 +61,12 @@
             function addFile(data){
                 const downloadPath = "{{path('app_ressource_file_download', {'filename': 'custom-file-name'})}}";
                 downloadPath.replace('custom-file-name', data.path);
-                const fileBlock = $(``<div data-path="${data.path}"><span>${data.name}</span></div>``);
+                
+                const fileBlock = $(`<div class="file-block m-2" data-path="${data.path}">
+                                                <span><i class="fa-regular fa-file fa-lg"></i></i>&nbsp;${data.name}</span>
+                                            </div>`);
 
-                const removeFileBtn = $(`<span class="remove-file">X</span>`);
+                const removeFileBtn = $(`<div class="file-close"><i class="fa-solid fa-xmark fa-lg"></i></div>`);
                 $(removeFileBtn).click(function () {
                     $(fileBlock).remove();
                 })
@@ -83,7 +86,7 @@
                 const formData = new FormData();
                 formData.append('file', file);
                 $.ajax({
-                    url: '{{path('app_ressource_file_upload')}}',
+                    url: "{{path('app_ressource_file_upload')}}",
                     type: 'POST',
                     data: formData,
                     processData: false, // Prevent jQuery from converting FormData to a string
@@ -98,16 +101,15 @@
                 });
             })
 
-            const form = $('#{{form.vars.id}}');
-            $(form).submit(function (){
+            document.getElementById('{{form.vars.id}}').addEventListener('submit', function (e){
                 const filePaths = [];
                 $('#files-wrapper .file-block').each(function(index, element) {
                     filePaths.push($(element).data('path'));
                 })
                 $('#files').val(JSON.stringify(filePaths));
-            })
+            });
 
-            const existingFiles = "{{files | json_encode() | raw}}";
+            const existingFiles = {{files | json_encode() | raw}};
             existingFiles.forEach((file) => {
                 addFile(file);
             })

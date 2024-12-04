@@ -76,14 +76,14 @@ class RessourceController extends AbstractController
                 try {
 
                     $res->setFiles($files);
-                    $res->setStatut(Status::VALID);
+                    $res->setStatus(Status::VALID);
                     $this->entityManager->persist($res);
                     $this->entityManager->flush();
 
                     return $this->redirectToRoute('app_ressource_details', [
                         'id' => $res->getId()
                     ]);
-                } catch (Exception $ex) {
+                } catch (\Exception $ex) {
                     $this->addFlash('danger', $ex->getMessage());
                 }
             }
@@ -113,14 +113,14 @@ class RessourceController extends AbstractController
             if ($form->isValid()) {
                 try {
                     $res->setFiles($files);
-                    $res->setStatut(Status::VALID);
+                    $res->setStatus(Status::VALID);
                     $this->entityManager->persist($res);
                     $this->entityManager->flush();
 
                     return $this->redirectToRoute('app_ressource_details', [
                         'id' => $res->getId()
                     ]);
-                } catch (Exception $ex) {
+                } catch (\Exception $ex) {
                     $this->addFlash('danger', $ex->getMessage());
                 }
             }
