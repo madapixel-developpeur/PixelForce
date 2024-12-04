@@ -8,13 +8,21 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use App\Services\FileHandler;
+use App\Util\Status;
+use App\Form\RessourceFormType;
+use App\Services\SearchService;
+use App\Util\Search\MyCriteriaParam;
+use Knp\Component\Pager\PaginatorInterface;
+use App\Form\RessourceFilterType;
 
 #[Route('/ressources')]
 class RessourceController
 {
 
-    public function __construct(private FileHandler $fileHandler){}
-    #[Route('/file/upload', name: 'app_ressource_file_upload', methods: ['POST'])]
+    public function __construct(private EntityManagerInterface $entityManager, private FileHandler $fileHandler){}
+    /**
+     * @Route("/file/upload", name="app_ressource_file_upload", methods=["POST"])
+     */
     public function uploadFile(
         Request $request
     ): JsonResponse {
@@ -30,7 +38,9 @@ class RessourceController
         } 
     }
 
-    #[Route('/file/download', name: 'app_ressource_file_download')]
+    /**
+     * @Route("/file/download", name="app_ressource_file_download")
+     */
     public function downloadFile(Request $request): Response
     {
         $filename = $request->get('filename');
@@ -45,5 +55,132 @@ class RessourceController
             basename($filename)
         );
         return $response;
+    }
+
+    /**
+     * @Route("/add", name="app_ressource_add")
+     */
+    public function add(Request $request): Response
+    {
+        $res = new Ressource();
+        $form = $this->createForm(RessourceFormType::class, $doc);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            try{
+                $filesStr = trim($request->request->get('files', ''));
+                $files = [];
+                if($filesStr){
+                    $files = json_decode($filesStr);
+                }
+                $res->setFiles($files);
+                $res->setStatut(Status::VALID);
+                $this->entityManager->persist($res);
+                $this->entityManager->flush();
+
+                return $this->redirectToRoute('app_ressource_details', [
+                    'id' => $res->getId()
+                ]);
+            } catch(Exception $ex){
+                $this->addFlash('danger', $ex->getMessage());
+            }
+        }
+
+        return $this->render('user_category/common-admin/ressource/form.html.twig',[
+            'form' => $form->createView(),
+            'isEdit' => false,
+        ]);
+    }
+
+    /**
+     * @Route("/{id}/edit", name="app_ressource_edit")
+     */
+    public function edit(Ressource $res, Request $request): Response
+    {
+        $form = $this->createForm(RessourceFormType::class, $doc);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            try{
+                $filesStr = trim($request->request->get('files', ''));
+                $files = [];
+                if($filesStr){
+                    $files = json_decode($filesStr);
+                }
+                $res->setFiles($files);
+                $res->setStatut(Status::VALID);
+                $this->entityManager->persist($res);
+                $this->entityManager->flush();
+
+                return $this->redirectToRoute('app_ressource_details', [
+                    'id' => $res->getId()
+                ]);
+            } catch(Exception $ex){
+                $this->addFlash('danger', $ex->getMessage());
+            }
+        }
+
+        return $this->render('user_category/common-admin/ressource/form.html.twig',[
+            'form' => $form->createView(),
+            'isEdit' => true,
+            'files' => $res->getFiles()
+        ]);
+    }
+
+    /**
+     * @Route("/{id}/details", name="app_ressource_details")
+     */
+    public function details(Ressource $res): Response
+    {
+        return $this->render('user_category/common-admin/ressource/details.html.twig',[
+            'res' => $res,
+        ]);
+    }
+
+
+    /**
+     * @Route("/", name="app_ressource_list")
+     */
+    public function index(Request $request, PaginatorInterface $paginator, SearchService $searchService): Response
+    {
+        $page = $request->query->get('page', 1);
+        $limit = 5;
+        $criteria = [
+            ['prop' => 'name', 'op' => 'LIKE']
+        ];
+
+        $filter = [];
+
+        $form = $this->createForm(RessourceFilterType::class, $filter, [
+            'method' => 'GET'
+        ]);
+
+        $form->handleRequest($request);
+        $filter = $form->getData();
+
+        $query = $this->entityManager
+            ->createQueryBuilder()
+            ->select('r')
+            ->from(Ressource::class, 'r')
+        ;  
+
+        $where =  $searchService->getWhere($filter, new MyCriteriaParam($criteria, 'r'));   
+        $query->where($where["where"]." and r.status = :statusValid ");
+        $where["params"]["statusValid"] = Status::VALID;
+        $searchService->setAllParameters($query, $where["params"]);
+        $searchService->addOrderBy($query, $filter, ['sort' => 'r.id', 'direction' => 'asc']);
+
+        $result = $paginator->paginate(
+            $query,
+            $page,
+            $limit
+        );
+
+        return $this->render('user_category/common-admin/ressource/list.html.twig', [
+            'result' => $result,
+            'form' => $form->createView(),
+            'page' => $page
+        ]);
+
     }
 }
