@@ -54,6 +54,7 @@ security:
     - { path: ^/dc, roles: IS_AUTHENTICATED_ANONYMOUSLY }
     - { path: ^/boutique, roles: IS_AUTHENTICATED_ANONYMOUSLY }
     - { path: ^/api, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+    - { path: ^/common-admin, roles: [ROLE_ADMINISTRATEUR, ROLE_COACH] }
     - { path: ^/*, roles: IS_AUTHENTICATED_REMEMBERED }
     # - { path: ^/profile, roles: ROLE_USER }
 
