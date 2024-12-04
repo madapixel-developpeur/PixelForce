@@ -16,9 +16,7 @@ class RessourceController
     public function __construct(private FileHandler $fileHandler){}
     #[Route('/file/upload', name: 'app_ressource_file_upload', methods: ['POST'])]
     public function uploadFile(
-        Request $request,
-        EntityManagerInterface $em,
-        SluggerInterface $slugger
+        Request $request
     ): JsonResponse {
         $uploadedFile = $request->files->get('file');
         if (!$uploadedFile) {
