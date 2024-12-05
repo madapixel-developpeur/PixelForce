@@ -1,6 +1,6 @@
 .bg-image {
     /* background-image: url("../vuexy/images/pages/Inscription-photo.png"); */
-    background-image: url("../vuexy/images/pages/column-inscription.webp");
+    background-image: url("../vuexy/images/pages/column-inscription.webp?v=2");
     background-size: cover;
     /* Ajuste l'image pour couvrir toute la div */
     background-position: center;
