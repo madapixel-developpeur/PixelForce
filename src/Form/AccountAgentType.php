@@ -89,18 +89,18 @@ class AccountAgentType extends AbstractType
                 // ]
             ])
 
-            ->add('email', EmailType::class, [
-                'label' => 'Adresse Mail',
-                'attr' => [
-                    'placeholder' => 'Adresse mail',
-                    'disabled' => true
-                ],
-                // 'required' => true,
-                // 'constraints' => [
-                //     new NotBlank([], 'Adresse email obligatoire')
-                // ]
-                // 'disabled' => true
-            ])
+            // ->add('email', EmailType::class, [
+            //     'label' => 'Adresse Mail',
+            //     'attr' => [
+            //         'placeholder' => 'Adresse mail',
+            //         // 'disabled' => true
+            //     ],
+            // 'required' => true,
+            // 'constraints' => [
+            //     new NotBlank([], 'Adresse email obligatoire')
+            // ]
+            // 'disabled' => true
+            // ])
             ->add('countryCode', ChoiceType::class, [
                 'choices' => $this->getCountryChoices(), // Custom method to define choices
                 'label' => 'Pays',

@@ -144,7 +144,8 @@ class UserController extends AbstractController
 
         return $this->render('users/account_setting.html.twig', [
             'form' => $form->createView(),
-            'user' => $user
+            'user' => $user,
+            'email' => $user->getEmail()
         ]);
     }
 
