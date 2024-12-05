@@ -1,0 +1,147 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	Ressource
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %} 
+    <div class="block block--bordered block--rounded">
+        <h1 class="block__text block__text--center mt-2" >Options de filtre :</h1>
+        <div class="filter-wrap">
+            
+            {{ form_start(form, {'attr': {'class': 'filter-form'}}) }}
+                
+                <div class="my-form-widget">
+                    {{form_label(form.name)}}
+                    {{form_widget(form.name)}}
+                    {{form_errors(form.name)}}
+                </div>
+                
+                
+                <div class="my-form-widget">
+                    {{form_label(form.sort)}}
+                    {{form_widget(form.sort)}}
+                    {{form_errors(form.sort)}}
+                </div>
+                <div class="my-form-widget">
+                    {{form_label(form.direction)}}
+                    {{form_widget(form.direction)}}
+                    {{form_errors(form.direction)}}
+                </div>
+                <div class="btn-wrap">
+                    <button class="btn btn-primary" type="submit"><i data-feather="filter"></i>Filtrer</button>
+                </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+    <div class="block block--bordered block--rounded">
+        {% for label, message in app.flashes %}
+            <div class="alert alert-{{label}} p-3 text-center" role="alert">
+                <div class="alert-body">
+                    {{message}}
+                </div>
+            </div>
+        {% endfor %}
+        <div class="block__header mb-1" >
+            <h1 class="block__title">Liste des ressources :</h1>
+            
+        </div>
+        {% if result|length ==0 %}
+                <div class="alert alert-primary p-3 text-center" role="alert">
+                    <div class="alert-body">
+                        Aucun résultat.
+                    </div>
+                </div>
+        {% endif %}
+        {% if result|length > 0 %}
+        <div class="card">
+        <div class="card-body">
+        <div id="ressourceAccordion">
+  {% for item in result %}
+  <div class="card">
+    <div style="cursor: pointer;" class="card-header collapsed" id="ressourceHeading{{item.id}}" data-toggle="collapse" data-target="#ressourceCollapse{{item.id}}" aria-expanded="false" aria-controls="ressourceCollapse{{item.id}}">
+      <h5 class="mb-0">
+          {{item.name}}
+      </h5>
+    </div>
+    <div id="ressourceCollapse{{item.id}}" class="collapse" aria-labelledby="ressourceHeading{{item.id}}" data-parent="#ressourceAccordion">
+      <div class="card-body">
+        <div class="row">
+                <div class="col-md-3 col-0"></div>
+                <div class="col-md-6 col-12 py-3">
+                    {# <h3 class="text-primary invoice-logo text-center">{{item.name}}</h3> #}
+                    {% if item.content %}<div class="mt-3">{{item.content | raw}}</div>{% endif %}
+                    {% if item.files|length > 0 %}
+                    <div class="mt-3">
+                        <div class="d-flex align-items-center" >
+                        <span><b>Fichiers :</b></span> 
+                        <div class="d-flex align-items-start flex-wrap ms-2" style="gap: 5px;">
+                            {% for file in item.filesParsed %}
+                            <div class="file-block" >
+                                <span><i class="fa-regular fa-file fa-lg"></i></i>&nbsp;{{file.customName}}</span>
+                                <div class="file-close download-file" style="cursor: pointer" data-path="{{file.path}}"><i class="fa-solid fa-download fa-lg"></i></div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        </div >
+                    </div>
+                    {% endif %}
+                    {% if item.links|length > 0 %}
+                    <div class="mt-3">
+                        <div class="d-flex align-items-center" >
+                        <div><b>Liens :</b></div> 
+                        <div class="d-flex align-items-start flex-wrap ms-2" style="gap: 5px;">
+                        {% for link in item.links %}
+                        <div >
+                        <a href="{{link.link}}">{{link.customName??link.link}}</a>
+                        {% if loop.index < (item.links|length) %},{% endif %}
+                        </div>
+                        {% endfor %}
+                        </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    
+                    
+                </div>
+                <div class="col-md-3 col-0"></div>
+                
+            </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+  
+</div>
+        
+        <div class="d-flex justify-content-center scale-up-center">
+            {{ knp_pagination_render(result) }}
+        <div>
+        </div>
+  </div>
+        {% endif %}
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $(document).ready(function (){
+            $('.download-file').click(function (){
+                let downloadPath = "{{path('app_agent_ressource_file_download', {'filename': 'custom-file-name'})}}";
+                downloadPath = downloadPath.replace('custom-file-name', $(this).data('path'));
+                window.location.href = downloadPath;
+            })
+        }); 
+    </script>
+
+{% endblock %}
+
+
+
