@@ -69,14 +69,20 @@ class RessourceController extends AbstractController
         $form = $this->createForm(RessourceFormType::class, $res);
         $form->handleRequest($request);
         $files = [];
+        $links = [];
         if ($form->isSubmitted()) {
             $filesStr = trim($request->request->get('files', ''));
             if ($filesStr) {
                 $files = json_decode($filesStr);
             }
+            $linksStr = trim($request->request->get('links', ''));
+            if ($linksStr) {
+                $links = json_decode($linksStr);
+            }
             if ($form->isValid()) {
                 try {
 
+                    $res->setLinks($links);
                     $res->setFiles($files);
                     $res->setStatus(Status::VALID);
                     $this->entityManager->persist($res);
@@ -96,7 +102,8 @@ class RessourceController extends AbstractController
             'isEdit' => false,
             'files' => array_map(function ($file) {
                 return ['path' => $file['path'], 'name' => basename($file['path']), 'customName' => $file['customName']];
-            }, $files)
+            }, $files),
+            'links' => $links
         ]);
     }
 
@@ -107,13 +114,19 @@ class RessourceController extends AbstractController
         $form = $this->createForm(RessourceFormType::class, $res);
         $form->handleRequest($request);
         $files = $res->getFiles();
+        $links = $res->getLinks();
         if ($form->isSubmitted()) {
             $filesStr = trim($request->request->get('files', ''));
             if ($filesStr) {
                 $files = json_decode($filesStr);
             }
+            $linksStr = trim($request->request->get('links', ''));
+            if ($linksStr) {
+                $links = json_decode($linksStr);
+            }
             if ($form->isValid()) {
                 try {
+                    $res->setLinks($links);
                     $res->setFiles($files);
                     $res->setStatus(Status::VALID);
                     $this->entityManager->persist($res);
@@ -133,7 +146,8 @@ class RessourceController extends AbstractController
             'isEdit' => true,
             'files' => array_map(function ($file) {
                 return ['path' => $file['path'], 'name' => basename($file['path']), 'customName' => $file['customName']];
-            }, $files)
+            }, $files),
+            'links' => $links
         ]);
     }
 

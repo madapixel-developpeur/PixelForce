@@ -43,8 +43,12 @@ class Ressource
      * @ORM\JoinColumn(nullable=true)
      */
     private $secteur;
+    /**
+     * @ORM\Column(type="json", nullable=true)
+     */
+    private $links;
 
-    
+
 
     public function getId(): ?int
     {
@@ -107,6 +111,18 @@ class Ressource
     public function setFiles(array $files): self
     {
         $this->files = $files;
+
+        return $this;
+    }
+
+    public function getLinks(): array
+    {
+        return $this->links ?? [];
+    }
+
+    public function setLinks(array $links): self
+    {
+        $this->links = $links;
 
         return $this;
     }

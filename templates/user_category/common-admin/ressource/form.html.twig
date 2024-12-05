@@ -67,6 +67,27 @@
                     <input type="file" class="d-none" id="file-input" >
                     <input type="hidden" id="files" name="files" >
                 </div>
+                <div class="my-form-widget">
+                    <div class="d-flex align-items-center justify-content-between " >
+                    <label>Liens</label>
+                     <button class="btn btn-success btn-large" type="button" id="btn-add-link"><i class="fa fa-plus" aria-hidden="true"></i>&nbsp;Ajouter</button>
+                    </div>
+                    
+                        <table class="table table-bordered mt-2 d-none" id="links-wrapper">
+                        <thead>
+                            <tr>
+                            <th scope="col">Nom</th>
+                            <th scope="col">Lien</th>
+                            <th scope="col"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            
+                            
+                        </tbody>
+                        </table>
+                    <input type="hidden" id="links" name="links" >
+                </div>
                 
                 <div class="btn-wrap">
                     <button class="btn btn-primary" type="submit"><i data-feather="save"></i>Enregistrer</button>
@@ -81,6 +102,36 @@
     <script>
         $(document).ready(function (){
             
+            function addLink(data){
+                
+                
+                const linkBlockWrapper = $(`<tr class="link-block-wrapper" >
+                            <td>
+                            <input type="text" name="customlinkname" class="form-control customlinkname" value="${data.customName??data.link}">
+                            </td>
+                            <td>
+                                <input type="text" name="link" class="form-control link" value="${data.link}">
+                            </td>
+                            <td >
+                            <button class="btn btn-danger btn-sm remove-link" type="button"><i class="fa fa-trash"></i></button>
+                            </td>
+                            </tr>`);
+
+                
+
+                $(linkBlockWrapper).find('.remove-link').click(function () {
+                    $(linkBlockWrapper).remove();
+                    if($('#links-wrapper tbody > *').length == 0 && !$('#links-wrapper').hasClass('d-none')){
+                        $('#links-wrapper').addClass('d-none')
+                    }
+                })
+
+                $('#links-wrapper tbody').append(linkBlockWrapper);
+                if($('#links-wrapper tbody > *').length > 0){
+                    $('#links-wrapper').removeClass('d-none');
+                }
+            }
+
             function addFile(data){
                 let downloadPath = "{{path('app_ressource_file_download', {'filename': 'custom-file-name'})}}";
                 downloadPath = downloadPath.replace('custom-file-name', data.path);
@@ -120,6 +171,10 @@
                 $('#file-input').click();
             });
 
+            $('#btn-add-link').click(function (){
+                addLink({link: '', customName: ''});
+            });
+
             $('#file-input').change(function () {
                 if(this.files.length > 0){
                     const file = this.files[0]; // Get only the first file
@@ -152,11 +207,32 @@
                     });
                 })
                 $('#files').val(JSON.stringify(filePaths));
+                const linksVal = [];
+                let error = false;
+                $('#links-wrapper .link-block-wrapper').each(function(index, element) {
+                    const val = {
+                        link: ($(element).find('.link').val()??'').trim(),
+                        customName: ($(element).find('.customlinkname').val()??'').trim()
+                    };
+                    if(val.link == ''){
+                        alert('Lien invalide: le lien ne peut pas être vide');
+                        e.preventDefault();
+                        error = true;
+                    }
+                    linksVal.push(val);
+                })
+                if(error) return;
+                $('#links').val(JSON.stringify(linksVal));
             });
 
             const existingFiles = {{files | json_encode() | raw}};
             existingFiles.forEach((file) => {
                 addFile(file);
+            })
+
+            const existingLinks = {{links | json_encode() | raw}};
+            existingLinks.forEach((link) => {
+                addLink(link);
             })
         }); 
     </script>
