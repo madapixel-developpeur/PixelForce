@@ -83,7 +83,7 @@
                     <!-- form -->
                     <div class="row mt-4">
                         <div class="col-md-6 col-12">
-                            {{ form_row(form.id, {attr: {readonly: true}}) }}
+                            {{ form_row(form.email) }}
                         </div>
                         <div class="col-md-6 col-12">
                             {{ form_row(form.username) }}
@@ -91,21 +91,31 @@
                     </div>
                     <div class="row">
                         <div class="col-md-6 col-12">
-                            {{ form_row(form.nom) }}
-                        </div>
-                        <div class="col-md-6 col-12">
                             {{ form_row(form.prenom) }}
                         </div>
+                        <div class="col-md-6 col-12">
+                            {{ form_row(form.nom) }}
+                        </div>
+                        
                     </div>
                     <div class="row">
                         <div class="col-md-6 col-12">
+                            {{ form_row(form.countryCode) }}
+                        </div>
+                        <div class="col-md-6 col-12">
                             {{ form_row(form.adresse) }}
+                        </div>
+                        
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 col-12">
+                            {{ form_row(form.codePostal) }}
                         </div>
                         <div class="col-md-6 col-12">
                             {{ form_row(form.telephone) }}
                         </div>
                     </div>
-                    {{ form_rest(form) }}
+                    {# {{ form_rest(form) }} #}
                     <div>
                         <button class="btn btn-primary" type="submit">Enregistrer</button>
                     </div>
