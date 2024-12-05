@@ -126,4 +126,19 @@ class Ressource
 
         return $this;
     }
+
+    public function getFilesParsed(): array
+    {
+        $files = $this->getFiles();
+        $filesParsed = [];
+        foreach ($files as $file) {
+            $name = basename($file['path']);
+            $filesParsed[] = [
+                'path' => $file['path'],
+                'name' => $name,
+                'customName' => $file['customName'] ?? $name,
+            ];
+        }
+        return $filesParsed;
+    }
 }

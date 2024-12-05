@@ -160,6 +160,21 @@ class RessourceController extends AbstractController
         ]);
     }
 
+    #[Route('/{id}/delete', name: 'app_ressource_delete', methods: ['POST'])]
+    public function delete(Ressource $res): Response
+    {
+        try {
+            $res->setStatus(Status::INVALID);
+            $this->entityManager->persist($res);
+            $this->entityManager->flush();
+            $this->addFlash('success', 'Ressource supprimée avec succès');
+        } catch (\Exception $ex) {
+            $this->addFlash('danger', $ex->getMessage());
+        }
+        return $this->redirectToRoute('app_ressource_list');
+
+    }
+
 
 
     #[Route('/', name: 'app_ressource_list')]
