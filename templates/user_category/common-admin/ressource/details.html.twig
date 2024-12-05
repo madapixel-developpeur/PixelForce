@@ -25,34 +25,17 @@
                 {% endfor %}
             <div class="card invoice-preview-card">
                 <div class="card-body invoice-padding pb-0">
-                    <!-- Header starts -->
-                    <div class="d-flex flex-md-row flex-column invoice-spacing mt-0">
-                        <div>
-                            <div class="logo-wrapper">
-                                <h3 class="text-primary invoice-logo">{{res.name}}</h3>
-                            </div>
-                            <div>
-                                <i class="fa fa-file-pdf fa-4x"></i>
-                            </div>
-                            
-                            
-                        </div>
-
-                        <div class="pt-5 mx-2">
-                            
-                            <div class="invoice-date-wrapper">
-                                <p class="invoice-date-title">Contenu:</p>
-                                <p class="card-text">{{res.content | raw}}</p>
-                            </div>
-                            
-                        </div>
-
-                        
-                        
+                <div class="row">
+                <div class="col-md-3 col-0"></div>
+                <div class="col-md-6 col-12">
+                    <h3 class="text-primary invoice-logo text-center">{{res.name}}</h3>
+                    <div class="mt-3 d-flex align-items-center" style="gap: 5px;">
+                        <div><b>Contenu:</b></div>
+                        <div>{{res.content ?? '--' | raw}}</div>
                     </div>
-                    <!-- Header ends -->
-                        
                 </div>
+                <div class="col-md-3 col-0"></div>
+                
             </div>
 
         </div>

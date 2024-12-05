@@ -5,9 +5,11 @@ namespace App\Controller;
 use App\Entity\Ressource;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use App\Services\FileHandler;
@@ -53,7 +55,7 @@ class RessourceController extends AbstractController
         // $mimeType = mime_content_type($filePath) ?: 'application/octet-stream';
         // $response->headers->set('Content-Type', 'appication/pdf');
         $response->setContentDisposition(
-            ResponseHeaderBag::DISPOSITION_INLINE,
+            ResponseHeaderBag::DISPOSITION_ATTACHMENT,
             basename($filename)
         );
         return $response;
@@ -93,7 +95,7 @@ class RessourceController extends AbstractController
             'form' => $form->createView(),
             'isEdit' => false,
             'files' => array_map(function ($file) {
-                return ['path' => $file, 'name' => basename($file)];
+                return ['path' => $file['path'], 'name' => basename($file['path']), 'customName' => $file['customName']];
             }, $files)
         ]);
     }
@@ -130,7 +132,7 @@ class RessourceController extends AbstractController
             'form' => $form->createView(),
             'isEdit' => true,
             'files' => array_map(function ($file) {
-                return ['path' => $file, 'name' => basename($file)];
+                return ['path' => $file['path'], 'name' => basename($file['path']), 'customName' => $file['customName']];
             }, $files)
         ]);
     }

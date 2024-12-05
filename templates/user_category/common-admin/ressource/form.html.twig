@@ -34,13 +34,36 @@
                     {{form_errors(form.content)}}
                 </div>
                 <div class="my-form-widget">
+                    <div class="d-flex align-items-center justify-content-between " >
                     <label>Fichiers</label>
                      <button class="btn btn-success btn-large" type="button" id="btn-add-file"><i class="fa fa-plus" aria-hidden="true"></i>&nbsp;Ajouter</button>
-                    <div class="d-flex align-items-center justify-content-start flex-wrap" id="files-wrapper">
-                        {# {% for file in files %}
-                        <div class="file-block" data-path="{{file.path}}"><span>{{file.name}}</span></div>
-                        {% endfor %} #}
                     </div>
+                    
+                        <table class="table table-bordered mt-2 d-none" id="files-wrapper">
+                        <thead>
+                            <tr>
+                            <th scope="col">Nom</th>
+                            <th scope="col">Fichier</th>
+                            <th scope="col"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {# <tr>
+                            <td>
+                            <input type="text" name="customfilename" class="form-control" value="${data.name}">
+                            </td>
+                            <td>
+                            <div class="file-block m-2" data-path="${data.path}">
+                                <span><i class="fa-regular fa-file fa-lg"></i></i>&nbsp;${data.name}</span>
+                            </div>
+                            </td>
+                            <td >
+                            <button class="btn btn-danger btn-sm" type="button"><i class="fa fa-trash"></i></button>
+                            </td>
+                            </tr> #}
+                            
+                        </tbody>
+                        </table>
                     <input type="file" class="d-none" id="file-input" >
                     <input type="hidden" id="files" name="files" >
                 </div>
@@ -59,52 +82,74 @@
         $(document).ready(function (){
             
             function addFile(data){
-                const downloadPath = "{{path('app_ressource_file_download', {'filename': 'custom-file-name'})}}";
-                downloadPath.replace('custom-file-name', data.path);
+                let downloadPath = "{{path('app_ressource_file_download', {'filename': 'custom-file-name'})}}";
+                downloadPath = downloadPath.replace('custom-file-name', data.path);
                 
-                const fileBlock = $(`<div class="file-block m-2" data-path="${data.path}">
-                                                <span><i class="fa-regular fa-file fa-lg"></i></i>&nbsp;${data.name}</span>
-                                            </div>`);
+                const fileBlockWrapper = $(`<tr class="file-block-wrapper" data-path="${data.path}">
+                            <td>
+                            <input type="text" name="customfilename" class="form-control customfilename" value="${data.customName??data.name}">
+                            </td>
+                            <td>
+                            <div class="file-block" >
+                                <span><i class="fa-regular fa-file fa-lg"></i></i>&nbsp;${data.name}</span>
+                                <div class="file-close download-file" style="cursor: pointer"><i class="fa-solid fa-download fa-lg"></i></div>
+                            </div>
+                            </td>
+                            <td >
+                            <button class="btn btn-danger btn-sm remove-file" type="button"><i class="fa fa-trash"></i></button>
+                            </td>
+                            </tr>`);
 
-                const removeFileBtn = $(`<div class="file-close"><i class="fa-solid fa-xmark fa-lg"></i></div>`);
-                $(removeFileBtn).click(function () {
-                    $(fileBlock).remove();
-                })
-                $(fileBlock).append(removeFileBtn);
-                $(fileBlock).click(function (){
+                $(fileBlockWrapper).find('.download-file').click(function () {
                     window.location.href = downloadPath;
                 })
 
-                $('#files-wrapper').append(fileBlock);
+                $(fileBlockWrapper).find('.remove-file').click(function () {
+                    $(fileBlockWrapper).remove();
+                    if($('#files-wrapper tbody > *').length == 0 && !$('#files-wrapper').hasClass('d-none')){
+                        $('#files-wrapper').addClass('d-none')
+                    }
+                })
+
+                $('#files-wrapper tbody').append(fileBlockWrapper);
+                if($('#files-wrapper tbody > *').length > 0){
+                    $('#files-wrapper').removeClass('d-none');
+                }
             }
             $('#btn-add-file').click(function (){
                 $('#file-input').click();
             });
 
             $('#file-input').change(function () {
-                const file = this.files[0]; // Get only the first file
-                const formData = new FormData();
-                formData.append('file', file);
-                $.ajax({
-                    url: "{{path('app_ressource_file_upload')}}",
-                    type: 'POST',
-                    data: formData,
-                    processData: false, // Prevent jQuery from converting FormData to a string
-                    contentType: false, // Ensure correct content type is set
-                    success: function (response) {
-                       addFile(response);
-                    },
-                    error: function (jqXHR, textStatus, errorThrown) {
-                        const errorMessage = jqXHR.responseJSON?.message || jqXHR.responseText || 'An unknown error occurred';
-                        alert(errorMessage);
-                    },
-                });
+                if(this.files.length > 0){
+                    const file = this.files[0]; // Get only the first file
+                    this.value = ''
+                    const formData = new FormData();
+                    formData.append('file', file);
+                    $.ajax({
+                        url: "{{path('app_ressource_file_upload')}}",
+                        type: 'POST',
+                        data: formData,
+                        processData: false, // Prevent jQuery from converting FormData to a string
+                        contentType: false, // Ensure correct content type is set
+                        success: function (response) {
+                        addFile(response);
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            const errorMessage = jqXHR.responseJSON?.message || jqXHR.responseText || 'An unknown error occurred';
+                            alert(errorMessage);
+                        },
+                    });
+                }
             })
 
             document.getElementById('{{form.vars.id}}').addEventListener('submit', function (e){
                 const filePaths = [];
-                $('#files-wrapper .file-block').each(function(index, element) {
-                    filePaths.push($(element).data('path'));
+                $('#files-wrapper .file-block-wrapper').each(function(index, element) {
+                    filePaths.push({
+                        path: $(element).data('path'),
+                        customName: ($(element).find('.customfilename').val()??'').trim()
+                    });
                 })
                 $('#files').val(JSON.stringify(filePaths));
             });
