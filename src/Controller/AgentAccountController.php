@@ -7,6 +7,7 @@ use App\Entity\User;
 use App\Entity\Secteur;
 use App\Entity\TypeSecteur;
 use App\Entity\AgentSecteur;
+use App\Form\ProbotFormType;
 use App\Manager\EntityManager;
 use App\Manager\StripeManager;
 use App\Services\StripeService;
@@ -54,10 +55,25 @@ class AgentAccountController extends AbstractController
     private $repoPlanAgentAccount;
     protected $repoUser;
 
-    public function __construct(SecteurRepository $repoSecteur, AgentSecteurRepository $repoAgentSecteur, FormationRepository $repoFormation,SessionInterface $session, ContactRepository $repoContact, FormationAgentRepository $repoFormationAgent, CategorieFormationRepository $repoCatFormation, RFormationCategorieRepository $repoRelationFormationCategorie, CategorieFormationAgentService $categorieFormationAgentService, CalendarEventRepository $calendarEventRepository, StripeService $stripeService, StripeManager $stripeManager, AgentService $agentService, PlanAgentAccountRepository $repoPlanAgentAccount, UserRepository $repoUser,
-    private EntityManager $entityManager,
-    private EvenementRepository $evenementRepository,)
-    {
+    public function __construct(
+        SecteurRepository $repoSecteur,
+        AgentSecteurRepository $repoAgentSecteur,
+        FormationRepository $repoFormation,
+        SessionInterface $session,
+        ContactRepository $repoContact,
+        FormationAgentRepository $repoFormationAgent,
+        CategorieFormationRepository $repoCatFormation,
+        RFormationCategorieRepository $repoRelationFormationCategorie,
+        CategorieFormationAgentService $categorieFormationAgentService,
+        CalendarEventRepository $calendarEventRepository,
+        StripeService $stripeService,
+        StripeManager $stripeManager,
+        AgentService $agentService,
+        PlanAgentAccountRepository $repoPlanAgentAccount,
+        UserRepository $repoUser,
+        private EntityManager $entityManager,
+        private EvenementRepository $evenementRepository,
+    ) {
         $this->repoSecteur = $repoSecteur;
         $this->repoAgentSecteur = $repoAgentSecteur;
         $this->repoFormation = $repoFormation;
@@ -84,7 +100,7 @@ class AgentAccountController extends AbstractController
     {
         /** @var User $agent */
         $agent = $this->getUser();
-        
+
         $this->session->remove('secteurId');
         $this->agentService->setSesssionEnabledContent($agent);
 
@@ -98,25 +114,25 @@ class AgentAccountController extends AbstractController
         if ($this->agentService->isActivableContent($agent)) {
             $stripe_publishable_key = '';
             $stripeIntentSecret = '';
-            $planPrice  = 0.0;
-        }else {
+            $planPrice = 0.0;
+        } else {
             $agentSecteurs = $this->repoAgentSecteur->findBy(['agent' => $agent]);
             $planAgentAccountType = $agent->typePlanAccountBySecteurChoice($agentSecteurs);
             /** @var PlanAgentAccount */
             $planAgentAccount = $this->repoPlanAgentAccount->findOneBy(['status' => 'active', 'stripePriceName' => $planAgentAccountType, 'statusChange' => StripeService::STATUS_CHANGE['ACTIVE']]);
-            
+
             // Gestion exeption
             if (is_null($planAgentAccount)) {
                 return throw new \Exception("Plan d'abonnement null, n'oublie pas de créer des plans d'abonnement pour les agents dans l'espace Admin", 1);
             }
-            
+
             $planPrice = $planAgentAccount->getAmount();
             $stripeIntentSecret = $this->stripeService->intentSecret($planPrice);
             $stripe_publishable_key = $_ENV['STRIPE_PUBLIC_KEY'];
         }
 
 
-        return $this->redirectToRoute('agent_generate_sessionSecteur_before_redirect_to_route_dahsboard',['id' => $_ENV['SECTEUR_METHER_ID']]);    
+        return $this->redirectToRoute('agent_generate_sessionSecteur_before_redirect_to_route_dahsboard', ['id' => $_ENV['SECTEUR_METHER_ID']]);
     }
 
 
@@ -139,7 +155,7 @@ class AgentAccountController extends AbstractController
     public function agentAddSector(Secteur $secteur)
     {
         $user = $this->getUser();
-        $agentSecteur  = new AgentSecteur();
+        $agentSecteur = new AgentSecteur();
         $agentSecteur->setAgent($user);
         $agentSecteur->setSecteur($secteur);
         $agentSecteur->setStatut(1);
@@ -151,23 +167,23 @@ class AgentAccountController extends AbstractController
     /**
      * @Route("/agent/dashboard/secteur/{id}", name="agent_dashboard_secteur")
      */
-    public function agent_dashboard_secteur( Request $request, PaginatorInterface $paginator, Secteur $secteur, StatAgentService $statAgentService,UserRepository $userRepository, UserTransactionRepository $userTransactionRepository, CategorieFormationRepository $categorieFormationRepository)
+    public function agent_dashboard_secteur(Request $request, PaginatorInterface $paginator, Secteur $secteur, StatAgentService $statAgentService, UserRepository $userRepository, UserTransactionRepository $userTransactionRepository, CategorieFormationRepository $categorieFormationRepository)
     {
-      
-        $agent = (object)$this->getUser();
+
+        $agent = (object) $this->getUser();
         $this->agentService->setStartDate($agent);
-      
+
         $firstFormation = $this->repoFormation->findOrderedNonFinishedFormations($secteur, $agent);
-        
+
         // On vérifie d'abord si la session avec la clé 'secteurId' est générée ou les contenus sont activés
-        $sessionSecteurId =  $this->session->get('secteurId');
-        $sessionAccountStatus =  $this->agentService->isActivableContent($agent);
+        $sessionSecteurId = $this->session->get('secteurId');
+        $sessionAccountStatus = $this->agentService->isActivableContent($agent);
         if (!$sessionSecteurId || !$sessionAccountStatus) {
             return $this->redirectToRoute('agent_home');
         }
 
         $statDigital = null;
-        if($sessionSecteurId == $this->getParameter('secteur_digital_id')){
+        if ($sessionSecteurId == $this->getParameter('secteur_digital_id')) {
             $statDigital = $statAgentService->getPbbStat($agent->getId());
             // $statDigital = $statAgentService->getPbbStat(1);
         }
@@ -186,7 +202,7 @@ class AgentAccountController extends AbstractController
         // Coach
         $userSearch = new UserSearch();
         $coachs = $paginator->paginate(
-            $userRepository->findCoachBySecteur(new UserSearch(),$secteur),
+            $userRepository->findCoachBySecteur(new UserSearch(), $secteur),
             $request->query->getInt('page', 1),
             20
         );
@@ -208,7 +224,7 @@ class AgentAccountController extends AbstractController
 
         $formationCategoriesOrdered = $categorieFormationRepository->getValidCategoriesOrdered();
 
-        $lastEvent= $this->evenementRepository->getLatestEvent();
+        $lastEvent = $this->evenementRepository->getLatestEvent();
 
 
         return $this->render('user_category/agent/dashboard_secteur.html.twig', [
@@ -218,8 +234,8 @@ class AgentAccountController extends AbstractController
             'CategorieFormation' => CategorieFormation::class,
             'nbrAllMyContacts' => count($this->repoContact->findAll()),
             'repoRelationFormationCategorie' => $this->repoRelationFormationCategorie,
-            'upcomingEvents'=> $upcomingEvents,
-            'eventsOfTheDay'=> $eventsOfTheDay,
+            'upcomingEvents' => $upcomingEvents,
+            'eventsOfTheDay' => $eventsOfTheDay,
             'statVente' => $statVente,
             'nbrClients' => $nbrClients,
             'topClients' => $topClients,
@@ -230,7 +246,7 @@ class AgentAccountController extends AbstractController
             'chiffreAffaireTotal' => $chiffreAffaireTotal,
             'nbVentesTotal' => $nbVentesTotal,
             "coachs" => $coachs,
-            "agent"=> $agent,
+            "agent" => $agent,
             'statDigital' => $statDigital,
             'soldeRemuneration' => $soldeRemuneration,
             'formationCategoriesOrdered' => $formationCategoriesOrdered,
@@ -241,62 +257,102 @@ class AgentAccountController extends AbstractController
     }
 
     /**
-     * @Route("/agent/view", name="agent_view")
+     * @Route("/agent/affiliation", name="agent_affiliation")
      */
-    public function admin_agent_view(Request $request, AgentSecteurService $agentSecteurService,UserRepository $repoUser, PaginatorInterface $paginator)
+    public function affiliation(Request $request, AgentSecteurService $agentSecteurService, UserRepository $repoUser, PaginatorInterface $paginator)
     {
         $ambassadeur = $this->getUser();
-        $result=$this->repoUser->findBy(['parrain'=>$ambassadeur->getId()]);
+        $formProbot = $this->createForm(ProbotFormType::class, ['probotXLink' => $ambassadeur->getProbotXLink()]);
+        $formProbot->handleRequest($request);
+        try {
+            if ($formProbot->isSubmitted() && $formProbot->isValid()) {
+                $probotXLink = $formProbot->getData()['probotXLink'];
+                $ambassadeur->setProbotXLink($probotXLink);
+                $this->entityManager->persist($ambassadeur);
+                $this->entityManager->flush();
+            }
+        } catch (\Exception $e) {
+            $this->addFlash(
+                'danger',
+                $e->getMessage()
+            );
+        }
+
+        $result = $this->repoUser->findBy(['parrain' => $ambassadeur->getId()]);
         $filleul = $paginator->paginate(
             $result,
             $request->query->getInt('page', 1),
             5
         );
 
-        $countEquipe = $this->agentService->getNumberOfTeam($ambassadeur,1);
+
+        $countEquipe = $this->agentService->getNumberOfTeam($ambassadeur, 1);
         $countDirect = count($result);
-        return $this->render('user_category/agent/view_agent.html.twig', [
+        return $this->render('user_category/agent/affiliation.html.twig', [
             'ambassadeur' => $ambassadeur,
-            'filleul'=>$filleul,
-            'countEquipe' =>$countEquipe,
-            'countDirect' =>$countDirect,
+            'filleul' => $filleul,
+            'countEquipe' => $countEquipe,
+            'countDirect' => $countDirect,
+            'formProbot' => $formProbot->createView()
         ]);
     }
 
-       /**
+    /**
+     * @Route("/agent/view", name="agent_view")
+     */
+    public function admin_agent_view(Request $request, AgentSecteurService $agentSecteurService, UserRepository $repoUser, PaginatorInterface $paginator)
+    {
+        $ambassadeur = $this->getUser();
+        $result = $this->repoUser->findBy(['parrain' => $ambassadeur->getId()]);
+        $filleul = $paginator->paginate(
+            $result,
+            $request->query->getInt('page', 1),
+            5
+        );
+
+        $countEquipe = $this->agentService->getNumberOfTeam($ambassadeur, 1);
+        $countDirect = count($result);
+        return $this->render('user_category/agent/view_agent.html.twig', [
+            'ambassadeur' => $ambassadeur,
+            'filleul' => $filleul,
+            'countEquipe' => $countEquipe,
+            'countDirect' => $countDirect,
+        ]);
+    }
+
+    /**
      * @Route("/agent/filleul-tree", name="app_agent_data_lineaire")
      */
     public function getDataUnilevel(Request $request)
     {
         $limit = 24;
         $idAgent = $request->get('agentId');
-        if($idAgent){
+        if ($idAgent) {
             $user = $this->repoUser->findOneBy(['id' => $idAgent]);
+        } else {
+            $user = (object) $this->getUser();
         }
-        else{
-            $user = (object)$this->getUser();
-        }
-        $unilevel = $this->agentService->getUnilevelChildren($user,1,true, $limit);
+        $unilevel = $this->agentService->getUnilevelChildren($user, 1, true, $limit);
         $data = ['equipe' => $unilevel];
         return new JsonResponse($data);
     }
 
     // public function agent_dashboard_secteur( Request $request, PaginatorInterface $paginator, Secteur $secteur, StatAgentService $statAgentService)
     // {
-      
+
     //     $agent = (object)$this->getUser();
     //     $this->agentService->setStartDate($agent);
 
     //     $categorie = $this->categorieFormationAgentService->getCurrentAgentCategorie($agent, $secteur);
-      
+
     //     $formations = $this->repoFormation->findFormationsAgentBySecteurAndCategorie($secteur, $agent, $categorie, true);
-       
+
     //     if (count($formations) > 0) {
     //         $firstFormation = $formations[0];
     //     }else{
     //         $firstFormation = null;
     //     }
-        
+
     //     // On vérifie d'abord si la session avec la clé 'secteurId' est générée ou les contenus sont activés
     //     $sessionSecteurId =  $this->session->get('secteurId');
     //     $sessionAccountStatus =  $this->agentService->isActivableContent($agent);
@@ -357,7 +413,7 @@ class AgentAccountController extends AbstractController
         }
 
         return $this->json(
-            ['stripe_checkout' => 'successfully'], 
+            ['stripe_checkout' => 'successfully'],
             200
         );
     }

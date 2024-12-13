@@ -44,11 +44,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
         self::ROLE_AMBASSADEUR => self::ROLE_AMBASSADEUR,
     ];
 
-    const INACTIVE_STATE = -1 ;
+    const INACTIVE_STATE = -1;
 
 
-    const NEWS_LETTERS_OK = 0 ;
-    const NEWS_LETTERS_NEED_TO_SEND = 1 ;
+    const NEWS_LETTERS_OK = 0;
+    const NEWS_LETTERS_NEED_TO_SEND = 1;
 
 
     /**
@@ -358,7 +358,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
      */
     private $position;
 
-      /**
+    /**
      * @ORM\Column(type="integer", nullable=true, options={"default": 0 })
      */
     private $newsLettersState = 0;
@@ -372,6 +372,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $countryName;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $probotXLink;
 
     public function __construct()
     {
@@ -396,6 +401,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
         $this->orderDigitals = new ArrayCollection();
         $this->devisCompanies = new ArrayCollection();
         $this->fils = new ArrayCollection();
+    }
+
+    public function getProbotXLink(): ?string
+    {
+        return $this->probotXLink;
+    }
+
+    public function setProbotXLink(string $probotXLink): self
+    {
+        $this->probotXLink = $probotXLink;
+
+        return $this;
     }
 
     public function getCountryCode(): ?string
@@ -429,18 +446,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
 
     public function getAccessibleFonctionnalites($secteurId): ?array
     {
-        $key = ''. $secteurId;
+        $key = '' . $secteurId;
         return isset($this->accessibleFonctionnalites[$key]) && $this->accessibleFonctionnalites[$key] ? $this->accessibleFonctionnalites[$key] : null;
     }
 
     public function setAccessibleFonctionnalites($secteurId, array $accessibleFonctionnalitesSecteur): self
     {
-        $key = ''. $secteurId;
+        $key = '' . $secteurId;
         $this->accessibleFonctionnalites[$key] = $accessibleFonctionnalitesSecteur;
 
         return $this;
     }
-    
+
     public function getPosition(): ?int
     {
         return $this->position;
@@ -697,7 +714,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
 
     public function validateForgottenPassToken($forgotten_pass)
     {
-        if ($this->forgottenPassToken ===  $forgotten_pass) {
+        if ($this->forgottenPassToken === $forgotten_pass) {
             return true;
         }
         return false;
@@ -1122,7 +1139,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
     // }
     public function getFormationStatut(Formation $formation)
     {
-        $formationAgents =  $formation->getFormationAgents();
+        $formationAgents = $formation->getFormationAgents();
         foreach ($formationAgents->toArray() as $formationAgent) {
             if ($formationAgent->getAgent()->getId() === $this->getId()) {
                 return $formationAgent->getStatut();
@@ -1746,13 +1763,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
         return $this;
     }
 
-    public function canAccessFonct(string $fonct, $secteurId): bool{
-        return in_array($fonct, $this->getAccessibleFonctionnalites($secteurId) ?? [] );
+    public function canAccessFonct(string $fonct, $secteurId): bool
+    {
+        return in_array($fonct, $this->getAccessibleFonctionnalites($secteurId) ?? []);
     }
 
     /**
      * Get the value of newsLettersState
-     */ 
+     */
     public function getNewsLettersState()
     {
         return $this->newsLettersState;
@@ -1762,7 +1780,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
      * Set the value of newsLettersState
      *
      * @return  self
-     */ 
+     */
     public function setNewsLettersState($newsLettersState)
     {
         $this->newsLettersState = $newsLettersState;

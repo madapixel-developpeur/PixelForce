@@ -19,19 +19,21 @@ use Symfony\Component\Validator\Constraints\NotNull;
 
 class InscriptionAgentType2 extends AbstractType
 {
-    public function __construct(private CountryService $countryService){}
+    public function __construct(private CountryService $countryService)
+    {
+    }
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $user = $options ["data"];
+        $user = $options["data"];
         $builder
-            
+
             ->add('prenom', TextType::class, [
                 'label' => false,
                 'attr' => [
                     'placeholder' => 'Prénom'
                 ],
                 'constraints' => [
-                    new NotNull([],'Champ obligatoire')
+                    new NotNull([], 'Champ obligatoire')
                 ]
             ])
 
@@ -41,7 +43,7 @@ class InscriptionAgentType2 extends AbstractType
                     'placeholder' => 'Adresse mail'
                 ],
                 'constraints' => [
-                    new NotNull([],'Champ obligatoire'),
+                    new NotNull([], 'Champ obligatoire'),
                 ]
             ])
             ->add('username', TextType::class, [
@@ -50,7 +52,7 @@ class InscriptionAgentType2 extends AbstractType
                     'placeholder' => 'Identifiant'
                 ],
                 'constraints' => [
-                    new NotNull([],'Champ obligatoire')
+                    new NotNull([], 'Champ obligatoire')
                 ]
             ])
 
@@ -66,7 +68,7 @@ class InscriptionAgentType2 extends AbstractType
                         ]
                 ],
                 'required' => true,
-                'first_options'  => [
+                'first_options' => [
                     'label' => false,
                     'attr' => [
                         'placeholder' => 'Mot de passe'
@@ -79,21 +81,26 @@ class InscriptionAgentType2 extends AbstractType
                     ]
                 ],
                 'constraints' => [
-                    new NotNull([],'Champ obligatoire'),
+                    new NotNull([], 'Champ obligatoire'),
                 ],
                 'mapped' => false
-            ])  
+            ])
             ->add('countryCode', ChoiceType::class, [
                 'choices' => $this->getCountryChoices(), // Custom method to define choices
                 'label' => false,
                 // 'placeholder' => 'Choose a country', // Optional: adds a default placeholder
                 'required' => true,                 // Optional: make the field required
                 'attr' => [
-                    'placeholder' => 'Pays' 
+                    'placeholder' => 'Pays'
                 ],
-            ])          
+            ])
+            ->add('ambassadorUsername', TextType::class, [
+                'label' => "Nom d'utilisateur du parrain",
+                'required' => true,
+                'disabled' => $user->getAmbassadorUsername() !== null
+            ]);
         ;
-        
+
     }
 
     private function getCountryChoices(): array

@@ -13,6 +13,9 @@ parameters:
     base_url: '%env(BASE_URL)%'
     pbb_ws_url: '%env(PBB_WS_URL)%'
     secteur_digital_id: '%env(SECTEUR_DIGITAL_ID)%'
+    lien_tunnel_1: '%env(LIEN_TUNNEL_1)%'
+    lien_tunnel_2: '%env(LIEN_TUNNEL_2)%'
+    lien_tunnel_3: '%env(LIEN_TUNNEL_3)%'
 
 services:
     # default configuration for services in *this* file

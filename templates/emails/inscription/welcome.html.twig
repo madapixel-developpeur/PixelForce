@@ -22,7 +22,7 @@
     <p>
         Username : {{user.username }}<br/>
         Mot de passe : {{ data.password}}<br/>
-        {% if data.parrain is defined and data.parrain %} Nom d’utilisateur de votre parrain : {{data.parrain }}{% endif %}
+        {% if data.parrain is defined and data.parrain %} Nom d’utilisateur de votre parrain : {{data.parrain.username }}{% endif %}
     <p>
         Cordialement,
     </p>

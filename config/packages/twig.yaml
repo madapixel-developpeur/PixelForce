@@ -15,6 +15,9 @@ twig:
         authService: '@util.auth'
         secteurDigitalId: '%env(SECTEUR_DIGITAL_ID)%'
         statisticState: '%env(STATISTIC_STATE)%'
+        lien_tunnel_1: '%env(LIEN_TUNNEL_1)%'
+        lien_tunnel_2: '%env(LIEN_TUNNEL_2)%'
+        lien_tunnel_3: '%env(LIEN_TUNNEL_3)%'
     paths:
         # pour spécifier le namespace des image. Exemple d'utilisation : email.image('@images/logo.png')
         '%kernel.project_dir%/assets/images': images

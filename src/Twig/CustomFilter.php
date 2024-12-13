@@ -18,6 +18,8 @@ class CustomFilter extends AbstractExtension
             new TwigFilter('base64_encode', [$this, 'base64_encode']),
             new TwigFilter('base64_decode', [$this, 'base64_decode']),
             new TwigFilter('cacheNumber', [$this, 'cacheNumber']),
+            new TwigFilter('truncate', [$this, 'truncate']),
+            new TwigFilter('replace_string', [$this, 'replaceString']),
         ];
     }
 
@@ -36,17 +38,27 @@ class CustomFilter extends AbstractExtension
         $cache = new FilesystemAdapter();
         $cacheNumber = $cache->get($date, function (ItemInterface $item) {
             // détruire après 24h
-            $item->expiresAfter(86400 );
+            $item->expiresAfter(86400);
 
             return 0;
         });
         /** @var CacheItem $cacheNumberItem */
         $cacheNumberItem = $cache->getItem($date);
 
-        $cacheNumberItem->set($cacheNumber+1);
+        $cacheNumberItem->set($cacheNumber + 1);
         $cache->save($cacheNumberItem);
 
-        return $date.'-'.$cacheNumberItem->get();
+        return $date . '-' . $cacheNumberItem->get();
 
+    }
+
+    public function truncate(string $text, int $limit): string
+    {
+        return mb_strlen($text) > $limit ? mb_substr($text, 0, $limit) . '...' : $text;
+    }
+
+    public function replaceString(string $text, string $search, string $replace): string
+    {
+        return str_replace($search, $replace, $text);
     }
 }
