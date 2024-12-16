@@ -1,0 +1,107 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title %}
+	Liens Calendly
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %} 
+    <div class="block block--bordered block--rounded">
+        <h1 class="block__text block__text--center mt-2" >Options de filtre :</h1>
+        <div class="filter-wrap">
+            
+            {{ form_start(form, {'attr': {'class': 'filter-form'}}) }}
+                
+                <div class="my-form-widget">
+                    {{form_label(form.description)}}
+                    {{form_widget(form.description)}}
+                    {{form_errors(form.description)}}
+                </div>
+                
+                
+                <div class="my-form-widget">
+                    {{form_label(form.sort)}}
+                    {{form_widget(form.sort)}}
+                    {{form_errors(form.sort)}}
+                </div>
+                <div class="my-form-widget">
+                    {{form_label(form.direction)}}
+                    {{form_widget(form.direction)}}
+                    {{form_errors(form.direction)}}
+                </div>
+                <div class="btn-wrap">
+                    <button class="btn btn-primary" type="submit"><i data-feather="filter"></i>Filtrer</button>
+                </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+    <div class="block block--bordered block--rounded">
+        {% for label, message in app.flashes %}
+            <div class="alert alert-{{label}} p-3 text-center" role="alert">
+                <div class="alert-body">
+                    {{message}}
+                </div>
+            </div>
+        {% endfor %}
+        <div class="block__header mb-1" >
+            <h1 class="block__title">Liste des ressources :</h1>
+            <div class="fab-btn-wrap">
+                <a  href="{{path('app_coach_calendly_link_add')}}" class="btn btn-primary btn--rounded fab-btn"><i data-feather="plus"></i>Ajouter</a>
+            </div>
+        </div>
+        {% if result|length ==0 %}
+                <div class="alert alert-primary p-3 text-center" role="alert">
+                    <div class="alert-body">
+                        Aucun résultat.
+                    </div>
+                </div>
+        {% endif %}
+        {% if result|length > 0 %}
+        <div class="table-responsive mb-1">
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Libellé</th>
+                        <th>Lien</th>
+                        <th>Image</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in result %}
+                    <tr>
+                        <td>{{item.id}}</td>
+                        <td>{{item.description}}</td>
+                        <td>{{item.link}}</td>
+                        <td>{% if item.image %}<img src="{{item.image}}" width="200" />{% endif %}</td>
+                        <td >
+                            
+                            <div class="d-flex align-items-center justify-content-center mt-3">
+                                <a role="button" class="btn btn-warning me-2" href="{{path('app_coach_calendly_link_edit', {'id': item.id})}}" ><i data-feather="edit"></i>&nbsp;Modifier</a>
+                                <form action="{{path('app_coach_calendly_link_delete', {'id': item.id})}}" method="post">
+                                <button type="submit" class="btn btn-danger" ><i data-feather="trash"></i>&nbsp;Supprimer</button>
+                                </for>
+                            </div>
+                        </td>
+                        
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            
+        </div>
+        <div class="d-flex justify-content-center scale-up-center">
+            {{ knp_pagination_render(result) }}
+        <div>
+        {% endif %}
+    </div>
+
+{% endblock %}
+
+
+

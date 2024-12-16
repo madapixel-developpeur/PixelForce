@@ -1,0 +1,59 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title %}
+	Lien Calendly
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %} 
+    <div class="block block--bordered block--rounded">
+        <h1 class="block__text block__text--center mt-2" >{% if isEdit %}Modifier le lien Calendly{% else %} Ajouter un lien Calendly{% endif %} :</h1>
+            
+            {{ form_start(form, {'attr': {'class': 'my-form', 'id': form.vars.id}}) }}
+                {% for label, messages in app.flashes() %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ label }}">
+                            <div class="alert-body">
+                            {{ message }}
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+                
+                <div class="my-form-widget">
+                    {{form_label(form.description)}}
+                    {{form_widget(form.description)}}
+                    {{form_errors(form.description)}}
+                </div>
+                <div class="my-form-widget">
+                    {{form_label(form.link)}}
+                    {{form_widget(form.link)}}
+                    {{form_errors(form.link)}}
+                </div>
+                <div class="my-form-widget">
+                    {{form_label(form.imageFile)}}
+                    {{form_widget(form.imageFile)}}
+                    {{form_errors(form.imageFile)}}
+                </div>
+                
+                <div class="btn-wrap">
+                    <button class="btn btn-primary" type="submit"><i data-feather="save"></i>Enregistrer</button>
+                </div>
+            {{ form_end(form) }}
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $(document).ready(function (){
+            
+        }); 
+    </script>
+
+{% endblock %}
+
