@@ -47,7 +47,7 @@
             </div>
         {% endfor %}
         <div class="block__header mb-1" >
-            <h1 class="block__title">Liste des ressources :</h1>
+            <h1 class="block__title">Liste des liens calendly :</h1>
             <div class="fab-btn-wrap">
                 <a  href="{{path('app_coach_calendly_link_add')}}" class="btn btn-primary btn--rounded fab-btn"><i data-feather="plus"></i>Ajouter</a>
             </div>
@@ -76,8 +76,8 @@
                     <tr>
                         <td>{{item.id}}</td>
                         <td>{{item.description}}</td>
-                        <td>{{item.link}}</td>
-                        <td>{% if item.image %}<img src="{{files_directory_relative ~ link.image }}" width="200" />{% endif %}</td>
+                        <td><a href="{{item.link}}">{{item.link}}</a></td>
+                        <td>{% if item.image %}<img src="{{asset(files_directory_relative ~ item.image) }}" width="200" />{% endif %}</td>
                         <td >
                             
                             <div class="d-flex align-items-center justify-content-center mt-3">

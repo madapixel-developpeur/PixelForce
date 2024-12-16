@@ -21,13 +21,28 @@ use Knp\Component\Pager\PaginatorInterface;
 use App\Form\CalendlyLinkFilterType;
 
 #[Route('/coach/calendly-links')]
-class CalendlyLinkController extends AbstractController
+class CoachCalendlyLinkController extends AbstractController
 {
 
     public function __construct(private EntityManagerInterface $entityManager, private FileHandler $fileHandler)
     {
     }
 
+    #[Route('/image/upload', name: 'app_coach_calendly_link_add_image', methods: ['POST'])]
+    public function uploadImage(
+        Request $request
+    ): JsonResponse {
+        $uploadedFile = $request->files->get('file');
+        if (!$uploadedFile) {
+            return new JsonResponse(['message' => 'No image provided'], 400);
+        }
+        try {
+            $filename = $this->fileHandler->upload($uploadedFile, "calendly-link-images");
+            return new JsonResponse(['message' => 'Image uploaded successfully', 'path' => $filename, 'name' => basename($filename)]);
+        } catch (\Exception $ex) {
+            return new JsonResponse(['message' => $ex->getMessage()], 500);
+        }
+    }
 
     #[Route('/add', name: 'app_coach_calendly_link_add')]
     public function add(Request $request): Response
@@ -36,13 +51,13 @@ class CalendlyLinkController extends AbstractController
         $form = $this->createForm(CalendlyLinkFormType::class, $cl);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            
+
             try {
-                $uploadedFile = $form->get('imageFile')->getData();
-                if($uploadedFile) {
-                    $filename = $this->fileHandler->upload($uploadedFile, "calendly-link-images");
-                    $cl->setImage($filename);
-                }
+                // $uploadedFile = $form->get('imageFile')->getData();
+                // if ($uploadedFile) {
+                //     $filename = $this->fileHandler->upload($uploadedFile, "calendly-link-images");
+                //     $cl->setImage($filename);
+                // }
                 $cl->setStatus(Status::VALID);
                 $this->entityManager->persist($cl);
                 $this->entityManager->flush();
@@ -55,12 +70,13 @@ class CalendlyLinkController extends AbstractController
             } catch (\Exception $ex) {
                 $this->addFlash('danger', $ex->getMessage());
             }
-            
+
         }
 
         return $this->render('user_category/coach/calendly-links/form.html.twig', [
             'form' => $form->createView(),
-            'isEdit' => false
+            'isEdit' => false,
+            'cl' => $cl
         ]);
     }
 
@@ -71,13 +87,13 @@ class CalendlyLinkController extends AbstractController
         $form = $this->createForm(CalendlyLinkFormType::class, $cl);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            
+
             try {
-                $uploadedFile = $form->get('imageFile')->getData();
-                if($uploadedFile) {
-                    $filename = $this->fileHandler->upload($uploadedFile, "calendly-link-images");
-                    $cl->setImage($filename);
-                }
+                // $uploadedFile = $form->get('imageFile')->getData();
+                // if ($uploadedFile) {
+                //     $filename = $this->fileHandler->upload($uploadedFile, "calendly-link-images");
+                //     $cl->setImage($filename);
+                // }
                 $cl->setStatus(Status::VALID);
                 $this->entityManager->persist($cl);
                 $this->entityManager->flush();
@@ -90,12 +106,13 @@ class CalendlyLinkController extends AbstractController
             } catch (\Exception $ex) {
                 $this->addFlash('danger', $ex->getMessage());
             }
-            
+
         }
 
         return $this->render('user_category/coach/calendly-links/form.html.twig', [
             'form' => $form->createView(),
-            'isEdit' => true
+            'isEdit' => true,
+            'cl' => $cl
         ]);
     }
 

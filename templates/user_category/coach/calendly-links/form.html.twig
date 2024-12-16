@@ -6,6 +6,48 @@
 
 {% block stylesheets %}
     {{ parent() }}
+    <style>
+    /* Container for the image block */
+    .image-block {
+      position: relative;
+      display: inline-block;
+      margin: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      overflow: hidden;
+      width: 200px;
+      height: 150px;
+    }
+
+    /* Image styling */
+    .image-block img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* Close icon */
+    .close-icon {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      width: 20px;
+      height: 20px;
+      background-color: rgba(0, 0, 0, 0.5);
+      color: white;
+      font-size: 16px;
+      text-align: center;
+      line-height: 20px;
+      border-radius: 50%;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    /* Hover effect for the close icon */
+    .close-icon:hover {
+      background-color: red;
+    }
+  </style>
 {% endblock %}
 
 {% block body %} 
@@ -33,10 +75,16 @@
                     {{form_widget(form.link)}}
                     {{form_errors(form.link)}}
                 </div>
+                
                 <div class="my-form-widget">
-                    {{form_label(form.imageFile)}}
-                    {{form_widget(form.imageFile)}}
-                    {{form_errors(form.imageFile)}}
+                    <label for="image-file" class="form-label">Image</label>
+                    <input type="file" id="image-file" name="image-file" class="form-control">
+                    {{form_errors(form.image)}}
+                    {{form_widget(form.image)}}
+                </div>
+                 <div class="image-block d-none" id="image-block">
+                    <span class="close-icon">×</span>
+                    <img src="https://via.placeholder.com/200x150" alt="Sample Image">
                 </div>
                 
                 <div class="btn-wrap">
@@ -51,7 +99,43 @@
     {{ parent() }}
     <script>
         $(document).ready(function (){
-            
+            $('#image-block .close-icon').click(function (){
+                if(!$('#image-block').hasClass('d-none')) $('#image-block').addClass('d-none')
+                $('#{{form.image.vars.id}}').val('');
+            })
+            function replaceImage(data){
+                let src = "{{asset(files_directory_relative ~ 'myfilepath')}}".replace('myfilepath', data.path);
+                $('#image-block img').attr('src', src);
+                $('#image-block').removeClass('d-none');
+                $('#{{form.image.vars.id}}').val(data.path);
+            }
+
+            $('#image-file').change(function (){
+                if(this.files.length > 0){
+                    const file = this.files[0]; // Get only the first file
+                    this.value = ''
+                    const formData = new FormData();
+                    formData.append('file', file);
+                    $.ajax({
+                        url: "{{path('app_coach_calendly_link_add_image')}}",
+                        type: 'POST',
+                        data: formData,
+                        processData: false, // Prevent jQuery from converting FormData to a string
+                        contentType: false, // Ensure correct content type is set
+                        success: function (response) {
+                            replaceImage(response);
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            const errorMessage = jqXHR.responseJSON?.message || jqXHR.responseText || 'An unknown error occurred';
+                            alert(errorMessage);
+                        },
+                    });
+                }
+            });
+
+            {% if cl.image and cl.image != '' %}
+            replaceImage({path: '{{cl.image}}'});
+            {% endif %}
         }); 
     </script>
 

@@ -15,31 +15,31 @@ use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 
 class CalendlyLinkFilterType extends AbstractType
 {
-    
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-        ->add('description', TextType::class, [
-            "label" => "Libellé",
-            "trim" => true,
-            "required" => false
-        ])
-        ->add('sort', ChoiceType::class, [
-            "label" => "Trier par",
-            'choices'  => [
-                'Identifiant' => "c.id",
-                'Nom' => "c.description",
-            ],
-            "required" => false
-        ])
-        ->add('direction', ChoiceType::class, [
-            "label" => "Ordre",
-            'choices'  => [
-                'Croissant' => "asc",
-                'Décroissant' => "desc"
-            ],
-            "required" => false
-        ])
+            ->add('description', TextType::class, [
+                "label" => "Libellé",
+                "trim" => true,
+                "required" => false
+            ])
+            ->add('sort', ChoiceType::class, [
+                "label" => "Trier par",
+                'choices' => [
+                    'Identifiant' => "c.id",
+                    'Libellé' => "c.description",
+                ],
+                "required" => false
+            ])
+            ->add('direction', ChoiceType::class, [
+                "label" => "Ordre",
+                'choices' => [
+                    'Croissant' => "asc",
+                    'Décroissant' => "desc"
+                ],
+                "required" => false
+            ])
         ;
     }
 

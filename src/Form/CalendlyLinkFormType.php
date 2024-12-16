@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\CalendlyLink;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -20,7 +21,7 @@ use Symfony\Component\Validator\Constraints\NotNull;
 
 class CalendlyLinkFormType extends AbstractType
 {
-    
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -32,29 +33,40 @@ class CalendlyLinkFormType extends AbstractType
                     new NotBlank(["message" => "Lien obligatoire"])
                 ]
             ])
-            ->add('description', TextType::class,  [
+            ->add('description', TextType::class, [
                 "label" => "Libellé",
                 "required" => true,
                 "constraints" => [
                     new NotBlank(["message" => "Libellé obligatoire"])
                 ]
-            ])  
-            ->add('imageFile', FileType::class, [
-                "label" => "Image",
-                'mapped' => false,
-                "required" => false,
-                'constraints' => [
-                    new File([
-                        // 'maxSize' => '1024k',
-                        'mimeTypes' => [
-                            'image/jpeg',
-                            'image/png',
-                        ],
-                        'mimeTypesMessage' => 'Image invalide. Le format doit être: .jpeg ou .png',
-                    ])
-                ]
             ])
-            
+            ->add('image', HiddenType::class, [
+                "label" => false,
+                "trim" => true,
+                "required" => false,
+            ])
+            // ->add('imageFile', FileType::class, [
+            //     "label" => "Image",
+            //     'mapped' => false,
+            //     "required" => false,
+            //     'constraints' => [
+            //         new File([
+            //             // 'maxSize' => '1024k',
+            //             'mimeTypes' => [
+            //                 'image/jpeg',
+            //                 'image/png',
+            //                 'image/gif',
+            //                 'image/bmp',
+            //                 'image/webp',
+            //                 'image/x-icon',
+            //                 'image/tiff',
+            //                 'image/svg+xml'
+            //             ],
+            //             'mimeTypesMessage' => 'Image invalide.',
+            //         ])
+            //     ]
+            // ])
+
         ;
     }
 

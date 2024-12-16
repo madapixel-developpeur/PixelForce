@@ -10,6 +10,7 @@ use App\Form\UserSearchType;
 use App\Repository\CoachSecteurRepository;
 use App\Repository\SecteurRepository;
 use App\Repository\UserRepository;
+use App\Util\Status;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -59,15 +60,15 @@ class AgentCoachController extends AbstractController
         $secteur = $this->secteurRepository->findOneBy(['id' => $this->session->get('secteurId')]);
         $search = new UserSearch();
         $searchForm = $this->createForm(UserSearchType::class, $search)->remove('secteur')
-                            ->remove('tag')
-                            ->remove('dateInscriptionMin')
-                            ->remove('active')
-                            ->remove('dateInscriptionMax');
+            ->remove('tag')
+            ->remove('dateInscriptionMin')
+            ->remove('active')
+            ->remove('dateInscriptionMax');
         $searchForm->handleRequest($request);
 
         $searckKeyWord = $request->get('search');
         $query = $this->userRepository->findCoachBySecteur($search, $secteur);
-        if(!is_null($searckKeyWord)){
+        if (!is_null($searckKeyWord)) {
             $query = $this->userRepository->findByKeyWordQuery($searckKeyWord);
         }
         $agents = $this->paginator->paginate(
