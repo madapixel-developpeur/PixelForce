@@ -106,6 +106,25 @@
             </div>
         </div>
     </div>
+
+    <div>
+        <h3>Liens Calendly</h3>
+        <div class="row">
+        {% for link in calendlyLinks %}
+            <div class="col-md-4 col-12">
+            <div class="card" >
+                {% if link.image %}
+                <img class="card-img-top" src="{{files_directory_relative ~ link.image }}" alt="Card image cap">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{link.description}}</h5>
+                    <a href="#" onclick="copyLink('{{ link.link }}')" class="btn btn-primary">Copier le lien</a>
+                </div>
+            </div>
+            </div>
+        {% endfor %}
+        </div>
+    </div>
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}

@@ -15,6 +15,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Repository\CalendlyLinkRepository;
 
 class AgentCoachController extends AbstractController
 {
@@ -52,7 +53,7 @@ class AgentCoachController extends AbstractController
     /**
      * @Route("/agent/coach/list", name="agent_coach_list")
      */
-    public function agent_coach_list(Request $request)
+    public function agent_coach_list(Request $request, CalendlyLinkRepository $calendlyLinkRepository)
     {
 
         $secteur = $this->secteurRepository->findOneBy(['id' => $this->session->get('secteurId')]);
@@ -75,12 +76,14 @@ class AgentCoachController extends AbstractController
             20
         );
 
+        $calendlyLinks = $calendlyLinkRepository->findBy(['status' => Status::VALID]);
 
         return $this->render('user_category/agent/coach/agent_coach_list.html.twig', [
             'coachs' => $agents,
             'searchForm' => $searchForm->createView(),
             'repoCoachSecteur' => $this->coachSecteurRepository,
-            'mySector' => $secteur
+            'mySector' => $secteur,
+            'calendlyLinks' => $calendlyLinks
         ]);
     }
 
