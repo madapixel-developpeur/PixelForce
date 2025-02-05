@@ -86,11 +86,12 @@ class AgentInscriptionController extends AbstractController
                 $parrain = $this->getParainByUsername($ambassador_username);
             }
             if ($form->isSubmitted() && $form->isValid()) {
-                $this->userManager->setUserPasword($user, $request->request->get('inscription_agent')['password']['first'], '', false);
                 $roles = $form->get('roles')->getData();
                 if(empty($roles)){
                     throw new \Exception('Vous devez sélectionner au moins un type de compte.');
                 } 
+                $this->userManager->setUserPasword($user, $request->request->get('inscription_agent')['password']['first'], '', false);
+                array_unshift($roles, User::ROLE_AGENT);
                 $user->setRoles($roles);
                 $user->setActive(1);
                 $user->setParrain($parrain);

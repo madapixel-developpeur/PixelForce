@@ -35,6 +35,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
     const ROLE_CLIENT = 'ROLE_CLIENT';
     const ROLE_DOCUMENT_OWNER = 'ROLE_DOCUMENT_OWNER';
     const ROLE_PROFESSIONNEL = 'ROLE_PROFESSIONNEL';
+    const ROLE_REVENDEUR = 'ROLE_REVENDEUR';
     const ROLES = [
         self::ROLE_AGENT => self::ROLE_AGENT,
         self::ROLE_MADA => self::ROLE_MADA,
@@ -51,9 +52,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
     const HAVE_SEEN_SECTOR_VIDEO = 1;
 
     const SIGNING_UP_ROLES = [
-        "Revendeur" => self::ROLE_AGENT,
+        "Revendeur" => self::ROLE_REVENDEUR,
         "Professionnel" => self::ROLE_PROFESSIONNEL,
     ];
+
+    const INFORMATION_VALIDATED = 2 ;
+    const INFORMATION_REJECTED = -1 ;
+    const INFORMATION_PENDING = 1 ;
+    const INFORMATION_EMPTY = 0;
 
     /**
      *  Clés disponibles :
@@ -378,6 +384,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
      * @ORM\Column(type="integer", nullable=true ,options={"default"=0})
      */
     private $finishedOneVideoFormation = true;
+
+    /**
+     * @var int|null
+     *
+     * @ORM\Column(name="profesionnal_information_state", type="integer", nullable=true,options={"default": self::INFORMATION_EMPTY })
+     */
+    private $profesionnalInformationState = self::INFORMATION_EMPTY;
 
     public function __construct()
     {
@@ -1806,5 +1819,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
             return 'Mada';
         }
         return '';
+    }
+
+    /**
+     * Get the value of profesionnalInformationState
+     */
+    public function getProfesionnalInformationState()
+    {
+        return $this->profesionnalInformationState;
+    }
+
+    /**
+     * Set the value of profesionnalInformationState
+     */
+    public function setProfesionnalInformationState($profesionnalInformationState): self
+    {
+        $this->profesionnalInformationState = $profesionnalInformationState;
+
+        return $this;
     }
 }

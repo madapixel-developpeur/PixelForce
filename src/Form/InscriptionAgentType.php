@@ -144,7 +144,7 @@ class InscriptionAgentType extends AbstractType
                 'expanded' => true,  
                 'multiple' => true,  
                 'required' => true,  
-                'data' => [ User::ROLE_AGENT], 
+                'data' => [ User::ROLE_REVENDEUR], 
             ])
             ->addEventSubscriber(new SecteurChoiceListListener())
         ;

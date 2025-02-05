@@ -9,47 +9,56 @@
     {% endif %}bra
 {% else %}
     {% if app.session.get('secteurId') and app.session.get('enabledContent') == true  %}
-        <li class=" navigation-header mt-3 text-white"><span data-i18n="User Interface">Espace revendeur</span><i data-feather="more-horizontal"></i></li>
-        <li class=" nav-item"><a class="d-flex align-items-center" href="{{ path('agent_dashboard_secteur', {id:app.session.get('secteurId')}) }}"><i class="fa fa-dashboard"></i><span class="menu-title text-truncate" data-i18n="Dashboards">Tableau de bord</span></a></li>
-        <li class=" nav-item"><a class="d-flex align-items-center" href="{{ path('agent_home') }}"><i data-feather="home"></i><span class="menu-title text-truncate" data-i18n="Dashboards">Choix secteur</span></a></li>
-        {% if secteurAgent.isFonctionnaliteActive(constant('App\\Util\\FonctionnalitesTypeSecteur::FONCTIONNALITE_COMMON_FORMATION')) %}<li class=" nav-item {% if not app.user.canAccessFonct('FORMATION', app.session.get('secteurId')) %}{% endif %}"><a class="d-flex align-items-center" href="{{ path('agent_formation_list') }}"><i data-feather="eye"></i><span class="menu-title text-truncate" data-i18n="Feather">Formation</span></a></li>{% endif %}
-        <li class=" nav-item "><a class="d-flex align-items-center" href="{{path('agent_view')}}"><i class="fa-solid fa-child"></i><span class="menu-title text-truncate" data-i18n="Calendar">Filleul</span></a></li>
-        {% if secteurAgent.isFonctionnaliteActive(constant('App\\Util\\FonctionnalitesTypeSecteur::FONCTIONNALITE_COMMON_AGENDA')) %}<li class=" nav-item {% if not app.user.canAccessFonct('AGENDA', app.session.get('secteurId')) %}disabled{% endif %}"><a class="d-flex align-items-center " href="{{path('calendar_index')}}"><i data-feather="calendar"></i><span class="menu-title text-truncate" data-i18n="Calendar">Mon Agenda</span></a></li>{% endif %}
-        {% if secteurAgent.isFonctionnaliteActive(constant('App\\Util\\FonctionnalitesTypeSecteur::FONCTIONNALITE_COMMON_TRANSACTION')) %}{% if secteurAgent.id ==  secteurDigitalId %}<li class=" nav-item "><a class="d-flex align-items-center" href="{{path('agent_transaction_retrait')}}"><i data-feather="dollar-sign"></i><span class="menu-title text-truncate" data-i18n="Calendar">Mes transactions</span></a></li>{% endif %}{% endif %}
-        <li class=" nav-item {% if not app.user.canAccessFonct('COACH', app.session.get('secteurId')) %}disabled{% endif %}"><a class="d-flex align-items-center" href="{{ path('agent_coach_list') }}"><i data-feather="users"></i><span class="menu-title text-truncate" data-i18n="User">Coach</span></a>
-        {% if secteurAgent.isFonctionnaliteActive(constant('App\\Util\\FonctionnalitesTypeSecteur::FONCTIONNALITE_COMMON_CONTACT')) %}<li class=" nav-item {% if not app.user.canAccessFonct('CONTACT', app.session.get('secteurId')) %}disabled{% endif %}"><a class="d-flex align-items-center" href="{{ path('agent_contact_list') }}"><i data-feather="user"></i><span class="menu-title text-truncate" data-i18n="User">Liste de contact</span></a></li>{% endif %}
-        {% if secteurAgent.isFonctionnaliteActive(constant('App\\Util\\FonctionnalitesTypeSecteur::FONCTIONNALITE_COMMON_RDV')) %}<li class=" nav-item {% if not app.user.canAccessFonct('RDV', app.session.get('secteurId')) %}disabled{% endif %}"><a class="d-flex align-items-center " href="{{path('agent_contact_meeting_list')}}"><i data-feather="coffee"></i><span class="menu-title text-truncate" data-i18n="Meetings">Rendez-vous</span></a></li>{% endif %}
-        {# <li class=" nav-item"><a class="d-flex align-items-center" href="{{ path('agent_contact_list') }}"><i data-feather="user"></i><span class="menu-title text-truncate" data-i18n="User">Contacts</span></a></li> #}
-        {# <li class=" nav-item"><a class="d-flex align-items-center" href="{{ path('agent_zoom_list') }}"><i data-feather="video"></i><span class="menu-title text-truncate" data-i18n="User">Réunions</span></a> #}
+        {% if  is_granted(constant('App\\Entity\\User::ROLE_REVENDEUR')) %}
+            <li class=" navigation-header mt-3 text-white"><span data-i18n="User Interface">Espace revendeur</span><i data-feather="more-horizontal"></i></li>
+            <li class=" nav-item"><a class="d-flex align-items-center" href="{{ path('agent_dashboard_secteur', {id:app.session.get('secteurId')}) }}"><i class="fa fa-dashboard"></i><span class="menu-title text-truncate" data-i18n="Dashboards">Tableau de bord</span></a></li>
+            <li class=" nav-item"><a class="d-flex align-items-center" href="{{ path('agent_home') }}"><i data-feather="home"></i><span class="menu-title text-truncate" data-i18n="Dashboards">Choix secteur</span></a></li>
+            {% if secteurAgent.isFonctionnaliteActive(constant('App\\Util\\FonctionnalitesTypeSecteur::FONCTIONNALITE_COMMON_FORMATION')) %}<li class=" nav-item {% if not app.user.canAccessFonct('FORMATION', app.session.get('secteurId')) %}{% endif %}"><a class="d-flex align-items-center" href="{{ path('agent_formation_list') }}"><i data-feather="eye"></i><span class="menu-title text-truncate" data-i18n="Feather">Formation</span></a></li>{% endif %}
+            <li class=" nav-item "><a class="d-flex align-items-center" href="{{path('agent_view')}}"><i class="fa-solid fa-child"></i><span class="menu-title text-truncate" data-i18n="Calendar">Filleul</span></a></li>
+            {% if secteurAgent.isFonctionnaliteActive(constant('App\\Util\\FonctionnalitesTypeSecteur::FONCTIONNALITE_COMMON_AGENDA')) %}<li class=" nav-item {% if not app.user.canAccessFonct('AGENDA', app.session.get('secteurId')) %}disabled{% endif %}"><a class="d-flex align-items-center " href="{{path('calendar_index')}}"><i data-feather="calendar"></i><span class="menu-title text-truncate" data-i18n="Calendar">Mon Agenda</span></a></li>{% endif %}
+            {% if secteurAgent.isFonctionnaliteActive(constant('App\\Util\\FonctionnalitesTypeSecteur::FONCTIONNALITE_COMMON_TRANSACTION')) %}{% if secteurAgent.id ==  secteurDigitalId %}<li class=" nav-item "><a class="d-flex align-items-center" href="{{path('agent_transaction_retrait')}}"><i data-feather="dollar-sign"></i><span class="menu-title text-truncate" data-i18n="Calendar">Mes transactions</span></a></li>{% endif %}{% endif %}
+            <li class=" nav-item {% if not app.user.canAccessFonct('COACH', app.session.get('secteurId')) %}disabled{% endif %}"><a class="d-flex align-items-center" href="{{ path('agent_coach_list') }}"><i data-feather="users"></i><span class="menu-title text-truncate" data-i18n="User">Coach</span></a>
+            {% if secteurAgent.isFonctionnaliteActive(constant('App\\Util\\FonctionnalitesTypeSecteur::FONCTIONNALITE_COMMON_CONTACT')) %}<li class=" nav-item {% if not app.user.canAccessFonct('CONTACT', app.session.get('secteurId')) %}disabled{% endif %}"><a class="d-flex align-items-center" href="{{ path('agent_contact_list') }}"><i data-feather="user"></i><span class="menu-title text-truncate" data-i18n="User">Liste de contact</span></a></li>{% endif %}
+            {% if secteurAgent.isFonctionnaliteActive(constant('App\\Util\\FonctionnalitesTypeSecteur::FONCTIONNALITE_COMMON_RDV')) %}<li class=" nav-item {% if not app.user.canAccessFonct('RDV', app.session.get('secteurId')) %}disabled{% endif %}"><a class="d-flex align-items-center " href="{{path('agent_contact_meeting_list')}}"><i data-feather="coffee"></i><span class="menu-title text-truncate" data-i18n="Meetings">Rendez-vous</span></a></li>{% endif %}
+            {# <li class=" nav-item"><a class="d-flex align-items-center" href="{{ path('agent_contact_list') }}"><i data-feather="user"></i><span class="menu-title text-truncate" data-i18n="User">Contacts</span></a></li> #}
+            {# <li class=" nav-item"><a class="d-flex align-items-center" href="{{ path('agent_zoom_list') }}"><i data-feather="video"></i><span class="menu-title text-truncate" data-i18n="User">Réunions</span></a> #}
 
-        {# <li class=" nav-item {% if not app.user.canAccessFonct('RDV', app.session.get('secteurId')) %}disabled{% endif %}"><a class="d-flex align-items-center" href="{{path('agent_contact_meeting_list')}}"><i data-feather="coffee"></i><span class="menu-title text-truncate" data-i18n="Meetings">Rendez-vous</span></a></li> #}
-        {% if app.session.get('typeSecteurId') == 1 %}
-            {% if secteurAgent.id ==  secteurDigitalId %}
-            {% if secteurAgent.isFonctionnaliteActive(constant('App\\Util\\FonctionnalitesTypeSecteur::FONCTIONNALITE_STANDARD_VENTE')) %} <li class=" nav-item {% if not app.user.canAccessFonct('VENTE', app.session.get('secteurId')) %}disabled{% endif %}"><a class="d-flex align-items-center" {% if app.session.get('secteurId') == secteurDigitalId  %}href="{{path('agent_order_list_digital')}}"{% else %}href="{{path('agent_order_list')}}"{% endif %}><i data-feather="eye"></i><span class="menu-title text-truncate" data-i18n="Calendar">Ventes</span></a></li>{% endif %}
-            {% endif %}
-        {% elseif app.session.get('typeSecteurId') == 2 %}
-            <li class=" nav-item {% if not app.user.canAccessFonct('VENTE', app.session.get('secteurId')) %}disabled{% endif %}"><a class="d-flex align-items-center" href="{{path('agent_demandedevis_list')}}"><i data-feather="eye"></i><span class="menu-title text-truncate" data-i18n="Calendar">Demandes de devis</span></a></li>
-            <li class=" nav-item {% if not app.user.canAccessFonct('VENTE', app.session.get('secteurId')) %}disabled{% endif %}"><a class="d-flex align-items-center" href="{{path('agent_company_devis_liste')}}"><i class="fa-regular fa-file"></i><span class="menu-title text-truncate" data-i18n="Calendar">Devis</span></a></li>
-            <li class=" nav-item {% if not app.user.canAccessFonct('VENTE', app.session.get('secteurId')) %}disabled{% endif %}"><a class="d-flex align-items-center" href="#"><i data-feather="settings"></i><span class="menu-title text-truncate" data-i18n="Components">Paramètre</span></a>
-                {% if app.user.canAccessFonct('VENTE', app.session.get('secteurId')) %}
-                <ul class="menu-content">
-                    <li class=" nav-item"><a class="d-flex align-items-center" href="#"><i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="Alerts">Référence</span></a>
-                        <ul class="menu-content">
-                            <li><a class="d-flex align-items-center" href="{{path('agent_refsociete_list')}}"><i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="Alerts">Société</span></a></li>
-                            <li><a class="d-flex align-items-center" href="{{path('agent_refclient_list')}}"><i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="Alerts">Client</span></a></li>
-                            <li><a class="d-flex align-items-center" href="{{path('agent_refservice_list')}}"><i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="Alerts">Service</span></a></li>
-                        </ul>
-                    </li>
-                    
-                </ul>
+            {# <li class=" nav-item {% if not app.user.canAccessFonct('RDV', app.session.get('secteurId')) %}disabled{% endif %}"><a class="d-flex align-items-center" href="{{path('agent_contact_meeting_list')}}"><i data-feather="coffee"></i><span class="menu-title text-truncate" data-i18n="Meetings">Rendez-vous</span></a></li> #}
+            {% if app.session.get('typeSecteurId') == 1 %}
+                {% if secteurAgent.id ==  secteurDigitalId %}
+                {% if secteurAgent.isFonctionnaliteActive(constant('App\\Util\\FonctionnalitesTypeSecteur::FONCTIONNALITE_STANDARD_VENTE')) %} <li class=" nav-item {% if not app.user.canAccessFonct('VENTE', app.session.get('secteurId')) %}disabled{% endif %}"><a class="d-flex align-items-center" {% if app.session.get('secteurId') == secteurDigitalId  %}href="{{path('agent_order_list_digital')}}"{% else %}href="{{path('agent_order_list')}}"{% endif %}><i data-feather="eye"></i><span class="menu-title text-truncate" data-i18n="Calendar">Ventes</span></a></li>{% endif %}
                 {% endif %}
-            </li>
-        {% elseif app.session.get('typeSecteurId') == 4 %}
-            <li class=" nav-item {% if not app.user.canAccessFonct('VENTE', app.session.get('secteurId')) %}disabled{% endif %}"><a class="d-flex align-items-center" href="{{path('admin_aroma_order_list')}}"><i data-feather="eye"></i><span class="menu-title text-truncate" data-i18n="Calendar">Commandes</span></a></li>    
-        {% elseif app.session.get('typeSecteurId') == 5 %}
-            {# coming soon #}
-        {% else %}
-            <li class=" nav-item {% if not app.user.canAccessFonct('VENTE', app.session.get('secteurId')) %}disabled{% endif %}"><a class="d-flex align-items-center" href="{{path('admin_ordersecu_list')}}"><i data-feather="eye"></i><span class="menu-title text-truncate" data-i18n="Calendar">Ventes</span></a></li>
+            {% elseif app.session.get('typeSecteurId') == 2 %}
+                <li class=" nav-item {% if not app.user.canAccessFonct('VENTE', app.session.get('secteurId')) %}disabled{% endif %}"><a class="d-flex align-items-center" href="{{path('agent_demandedevis_list')}}"><i data-feather="eye"></i><span class="menu-title text-truncate" data-i18n="Calendar">Demandes de devis</span></a></li>
+                <li class=" nav-item {% if not app.user.canAccessFonct('VENTE', app.session.get('secteurId')) %}disabled{% endif %}"><a class="d-flex align-items-center" href="{{path('agent_company_devis_liste')}}"><i class="fa-regular fa-file"></i><span class="menu-title text-truncate" data-i18n="Calendar">Devis</span></a></li>
+                <li class=" nav-item {% if not app.user.canAccessFonct('VENTE', app.session.get('secteurId')) %}disabled{% endif %}"><a class="d-flex align-items-center" href="#"><i data-feather="settings"></i><span class="menu-title text-truncate" data-i18n="Components">Paramètre</span></a>
+                    {% if app.user.canAccessFonct('VENTE', app.session.get('secteurId')) %}
+                    <ul class="menu-content">
+                        <li class=" nav-item"><a class="d-flex align-items-center" href="#"><i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="Alerts">Référence</span></a>
+                            <ul class="menu-content">
+                                <li><a class="d-flex align-items-center" href="{{path('agent_refsociete_list')}}"><i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="Alerts">Société</span></a></li>
+                                <li><a class="d-flex align-items-center" href="{{path('agent_refclient_list')}}"><i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="Alerts">Client</span></a></li>
+                                <li><a class="d-flex align-items-center" href="{{path('agent_refservice_list')}}"><i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="Alerts">Service</span></a></li>
+                            </ul>
+                        </li>
+                        
+                    </ul>
+                    {% endif %}
+                </li>
+            {% elseif app.session.get('typeSecteurId') == 4 %}
+                <li class=" nav-item {% if not app.user.canAccessFonct('VENTE', app.session.get('secteurId')) %}disabled{% endif %}"><a class="d-flex align-items-center" href="{{path('admin_aroma_order_list')}}"><i data-feather="eye"></i><span class="menu-title text-truncate" data-i18n="Calendar">Commandes</span></a></li>    
+            {% elseif app.session.get('typeSecteurId') == 5 %}
+                {# coming soon #}
+            {% else %}
+                <li class=" nav-item {% if not app.user.canAccessFonct('VENTE', app.session.get('secteurId')) %}disabled{% endif %}"><a class="d-flex align-items-center" href="{{path('admin_ordersecu_list')}}"><i data-feather="eye"></i><span class="menu-title text-truncate" data-i18n="Calendar">Ventes</span></a></li>
+            {% endif %}
+        {% endif %}
+        {% if  is_granted(constant('App\\Entity\\User::ROLE_PROFESSIONNEL')) %}
+            <li class=" navigation-header mt-3 text-white"><span data-i18n="User Interface">Espace professionnel</span><i data-feather="more-horizontal"></i></li>
+            {% if app.user.profesionnalInformationState ==  constant('App\\Entity\\User::INFORMATION_VALIDATED') %}
+            
+            {% endif %}
+            <li class=" nav-item"><a class="d-flex align-items-center" href=""><i data-feather="info"></i><span class="menu-title text-truncate" data-i18n="Information">Information</span></a></li>
         {% endif %}
         
         {# <li class=" nav-item"><a class="d-flex align-items-center" href="{{ path('live_video_list') }}"><i data-feather="calendar"></i><span class="menu-title text-truncate" data-i18n="Calendar">Réunions</span></a></li> #}
