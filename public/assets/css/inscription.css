@@ -23,8 +23,63 @@
 }
 .bg-image {
     background-image: url("../vuexy/images/pages/login-images.png");
-    background-size: cover; /* Ajuste l'image pour couvrir toute la div */
-    background-position: center; /* Centre l'image */
-    width: 100%; /* Assurez-vous que la div prend toute la largeur possible */
-    height: 100%; /* Ajustez selon la hauteur souhaitée */
+    background-size: cover;
+    background-repeat: no-repeat;  /* Prevents repeating if the image doesn’t fully cover */
+    background-position: center;  
+}
+
+.toggle-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.toggle-button {
+    position: relative;
+    display: inline-block;
+    padding: 6px 12px; /* Compact padding */
+    background-color: #e0e0e0; /* Default background color */
+    border: 2px solid #ccc; /* Default border color */
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+.toggle-button:hover {
+    background-color: #d0d0d0; /* Hover background color */
+}
+
+.toggle-input {
+    display: none; /* Hide the checkbox */
+}
+
+/* Change the entire button's background and border color when selected */
+.toggle-input:checked + .toggle-button {
+    background-color: #7d78e1; /* Selected background color */
+    border-color: #7d78e1; /* Selected border color */
+}
+
+.toggle-input:checked + .toggle-button .toggle-label {
+    color: #fff; /* Text color when selected */
+}
+
+.toggle-input:checked + .toggle-button .checkmark {
+    opacity: 1; /* Show checkmark when selected */
+}
+
+.toggle-label {
+    font-size: 14px; /* Smaller font size */
+    color: #333; /* Default text color */
+    padding-right: 20px; /* Space for the checkmark */
+    transition: color 0.3s;
+}
+
+.checkmark {
+    position: absolute;
+    top: 50%;
+    right: 8px; /* Position the checkmark */
+    transform: translateY(-50%);
+    font-size: 16px; /* Checkmark size */
+    color: #4CAF50; /* Green checkmark */
+    opacity: 0; /* Hidden by default */
+    transition: opacity 0.3s;
 }

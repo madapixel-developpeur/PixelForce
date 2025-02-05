@@ -4,16 +4,18 @@
 namespace App\Form;
 
 
-use App\Form\FormEvents\SecteurChoiceListListener;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\EmailType;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
-use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
+use Symfony\Component\Form\FormBuilderInterface;
+use App\Form\FormEvents\SecteurChoiceListListener;
+use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Component\Form\Extension\Core\Type\TelType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Validator\Constraints\NotNull;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 class InscriptionAgentType extends AbstractType
 {
@@ -136,6 +138,13 @@ class InscriptionAgentType extends AbstractType
                     'placeholder' => 'Pays'
                 ],
                 "required" => false
+            ])
+            ->add('roles', ChoiceType::class, [
+                'choices' => User::SIGNING_UP_ROLES,
+                'expanded' => true,  
+                'multiple' => true,  
+                'required' => true,  
+                'data' => [ User::ROLE_AGENT], 
             ])
             ->addEventSubscriber(new SecteurChoiceListListener())
         ;

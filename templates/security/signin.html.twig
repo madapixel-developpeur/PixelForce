@@ -14,7 +14,7 @@
         <link rel="stylesheet" href="{{ asset('/assets/vuexy/css/pages/authentication.css') }}" />
         <link rel="stylesheet" type="text/css" href="{{asset('assets/css/animations.css')}}">
         <link rel="stylesheet" type="text/css" href="{{asset('assets/css/style.css?date=202406271222')}}">
-        <link rel="stylesheet" type="text/css" href="{{asset('assets/css/inscription.css')}}">
+        <link rel="stylesheet" type="text/css" href="{{asset('assets/css/inscription.css?date=202502060000')}}">
         {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
         {% block stylesheets %}
             {{ encore_entry_link_tags('vuexy_colors') }}
@@ -124,10 +124,30 @@
 
                                             {{ form_row(form.username) }}
                                             {{ form_row(form.password) }}
+                                            <h5 class="mt-4 mb-3">Type de compte</h5>
+                                            <div class="toggle-buttons mb-3">
+                                                {{ form_errors(form.roles) }}
+                                                {% for choice in form.roles.vars.choices %}
+                                                    <input type="checkbox"
+                                                        id="{{ choice.value }}"
+                                                        name="{{ form.roles.vars.full_name }}[]"
+                                                        value="{{ choice.value }}"
+                                                        class="toggle-input"
+                                                        {% if choice.value in form.roles.vars.data %}checked{% endif %}
+                                                    >
+                                                    <label for="{{ choice.value }}" class="toggle-button">
+                                                        <span class="toggle-label">{{ choice.label }}</span>
+                                                        <span class="checkmark"><i class="fas fa-check"></i></span>
+                                                    </label>
+                                                {% endfor %}
+                                            </div>
+                                            {% do form.roles.setRendered %}
+
                                             <div class="w-100 text-center">
                                                 {#            <button class="btn btn-primary" type="submit" id="btn-next">Procéder au paiement <i class="fa-solid fa-angles-right"></i></button>#}
                                                     <button class="sign-in-button w-100 h-30 font-weight-bold rounded-3 p-2" type="submit" id="btn-next">S’inscrire</button>
                                              </div>
+
                                         {{ form_end(form) }}
                                         <div class="divider my-1">
                                             <hr/>

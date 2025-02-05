@@ -34,6 +34,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
     const ROLE_ADMINISTRATEUR = 'ROLE_ADMINISTRATEUR';
     const ROLE_CLIENT = 'ROLE_CLIENT';
     const ROLE_DOCUMENT_OWNER = 'ROLE_DOCUMENT_OWNER';
+    const ROLE_PROFESSIONNEL = 'ROLE_PROFESSIONNEL';
     const ROLES = [
         self::ROLE_AGENT => self::ROLE_AGENT,
         self::ROLE_MADA => self::ROLE_MADA,
@@ -42,11 +43,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
         self::ROLE_CLIENT => self::ROLE_CLIENT,
         self::ROLE_DOCUMENT_OWNER => self::ROLE_DOCUMENT_OWNER,
         self::ROLE_AMBASSADEUR => self::ROLE_AMBASSADEUR,
+        self::ROLE_PROFESSIONNEL => self::ROLE_PROFESSIONNEL,
     ];
 
     const INACTIVE_STATE = -1;
     const HAVENT_SEEN_SECTOR_VIDEO = 0;
     const HAVE_SEEN_SECTOR_VIDEO = 1;
+
+    const SIGNING_UP_ROLES = [
+        "Revendeur" => self::ROLE_AGENT,
+        "Professionnel" => self::ROLE_PROFESSIONNEL,
+    ];
 
     /**
      *  Clés disponibles :

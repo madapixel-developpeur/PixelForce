@@ -63,7 +63,7 @@ class AgentInscriptionController extends AbstractController
     /**
      * @Route("/inscription/agent/index/{ambassador_username?}", name="agent_inscription")
      */
-    public function inscriptionAgent(Request $request, SecteurRepository $secteurRepository, $ambassador_username = null, StatAgentService $statAgentService)
+    public function inscriptionAgent(Request $request, SecteurRepository $secteurRepository,StatAgentService $statAgentService, $ambassador_username = null )
     {
         $ref = $request->get('ref', null);
         if ($ref) {
@@ -87,7 +87,11 @@ class AgentInscriptionController extends AbstractController
             }
             if ($form->isSubmitted() && $form->isValid()) {
                 $this->userManager->setUserPasword($user, $request->request->get('inscription_agent')['password']['first'], '', false);
-                $user->setRoles([User::ROLE_AGENT]);
+                $roles = $form->get('roles')->getData();
+                if(empty($roles)){
+                    throw new \Exception('Vous devez sélectionner au moins un type de compte.');
+                } 
+                $user->setRoles($roles);
                 $user->setActive(1);
                 $user->setParrain($parrain);
                 // $user->setAccountStatus(User::ACCOUNT_STATUS['UNPAID']);
