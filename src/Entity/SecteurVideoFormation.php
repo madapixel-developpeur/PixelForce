@@ -28,6 +28,11 @@ class SecteurVideoFormation
      */
     private $secteur;
 
+      /**
+     * @ORM\Column(type="json")
+    */
+    private $roles = [];
+
     public function getId(): ?int
     {
         return $this->id;
@@ -62,6 +67,24 @@ class SecteurVideoFormation
     public function setUrlVideo($urlVideo)
     {
         $this->urlVideo = $urlVideo;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of roles
+     */
+    public function getRoles()
+    {
+        return $this->roles;
+    }
+
+    /**
+     * Set the value of roles
+     */
+    public function setRoles($roles): self
+    {
+        $this->roles = $roles;
 
         return $this;
     }

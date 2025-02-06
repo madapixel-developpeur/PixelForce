@@ -5,6 +5,7 @@ namespace App\Controller;
 
 
 use Exception;
+use App\Entity\User;
 use App\Entity\Media;
 use App\Entity\Formation;
 use App\Form\FormationType;
@@ -115,20 +116,21 @@ class CoachFormationController extends AbstractController
     }
 
     /**
-     * @Route("/coach/formation/list", name="coach_formation_list", options={"expose"=true})
+     * @Route("/coach/formation/list/{section}", name="coach_formation_list", options={"expose"=true})
      *
      * @Security("is_granted('ROLE_COACH') or is_granted('ROLE_ADMINISTRATEUR')")
      */
-    public function coach_formation_list(Request $request)
+    public function coach_formation_list(Request $request,$section = Formation::REVENDEUR_SECTION)
     {
         $coach = $this->getUser();
+        $role = $this->getRoleBySection($section);
 
         $secteur = $this->getUser()->getSecteurByCoach();
         if ($secteur_id = $request->query->get('secteur')) {
             $secteur = $this->secteurRepository->findOneBy(['id' => $secteur_id]);
         }
         $criteres = $request->query->get('q') ? $request->query->get('q') : [];
-        $formations = $this->formationRepository->findFormationsCoach($criteres, $secteur);
+        $formations = $this->formationRepository->findFormationsCoach($criteres, $secteur,$role);
 
         $formations = $this->paginator->paginate(
             $formations,
@@ -145,7 +147,13 @@ class CoachFormationController extends AbstractController
             //'agent' => $agent,
             'secteur' => $secteur,
             'categories' => $this->repoCatFormation->findBy(['statut' => 1], ['ordreCatFormation' => 'ASC']),
+            'section' => $section
         ]);
+    }
+
+    public function getRoleBySection(String $section){
+        $role = $section == 'revendeur' ? User::ROLE_REVENDEUR: User::ROLE_PROFESSIONNEL ;
+        return $role;
     }
     //    public function coach_formation_list(Request $request)
 //    {
@@ -209,15 +217,17 @@ class CoachFormationController extends AbstractController
     }
 
     /**
-     * @Route("/coach/formation/add", name="coach_formation_add", options={"expose"=true})
+     * @Route("/coach/formation/add/{section}", name="coach_formation_add", options={"expose"=true})
      */
-    public function coach_formation_add(Request $request)
+    public function coach_formation_add(Request $request, $section = Formation::REVENDEUR_SECTION)
     {
         $formation = new Formation();
+        $role = $this->getRoleBySection($section);
         $relationFormationCategorie = new RFormationCategorie();
         $form = $this->createForm(FormationType::class, $formation);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            $formation->setRoles([$role]);
             $formation->testStatut();
             $formation->setSecteur($this->getUser()->getSecteurByCoach());
             $formation->setCoach($this->getUser());
@@ -242,7 +252,8 @@ class CoachFormationController extends AbstractController
         }
 
         return $this->render('formation/video/coach_formation_add.html.twig', [
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'section' => $section
         ]);
     }
 
@@ -395,15 +406,17 @@ class CoachFormationController extends AbstractController
     }
 
     /**
-     * @Route("/coach/formation/fin/add", name="coach_video_formation_add", options={"expose"=true})
+     * @Route("/coach/formation/fin/add/{section}", name="coach_video_formation_add", options={"expose"=true})
      */
-    public function coach_vdeo_fin_formation(Request $request)
+    public function coach_vdeo_fin_formation(Request $request, $section = Formation::REVENDEUR_SECTION)
     {
         $secteur = $this->getUser()->getSecteurByCoach();
-        $video = $this->secteurVideoFormationRepository->findOneBy(['secteur' => $secteur]);
+        $roles = Formation::getRoleBasedOnSection($section);
+        $video = $this->secteurVideoFormationRepository->findBySectionAndSecteur( $secteur,$roles);
         if (is_null($video)) {
             $video = new SecteurVideoFormation();
             $video->setSecteur($secteur);
+            $video->setRoles($roles);
         }
         $form = $this->createForm(SecteurVideoFinFormationFormType::class, $video);
         $form->handleRequest($request);
@@ -427,7 +440,8 @@ class CoachFormationController extends AbstractController
 
         return $this->render('formation/video/fin_formation_add.html.twig', [
             'form' => $form->createView(),
-            'video' => $video
+            'video' => $video,
+            'section' => $section
         ]);
     }
 

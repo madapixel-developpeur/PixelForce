@@ -30,12 +30,13 @@ class CoachQuizController extends AbstractController
 
     }
     /**
-     * @Route("/add", name="coach_quiz_add")
+     * @Route("/add/{section}", name="coach_quiz_add")
      */
-   public function quiz_add(Request $request)
+   public function quiz_add(Request $request, $section = Formation::REVENDEUR_SECTION)
    {
         $quiz = new Formation();
-       return $this->quiz_save($quiz, $request);
+        $quiz->addRoleBasedOnSection($section);
+        return $this->quiz_save($quiz, $request);
    }
 
    /**

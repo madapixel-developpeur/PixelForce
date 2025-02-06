@@ -91,11 +91,14 @@ class FormationRepository extends ServiceEntityRepository
             ->getQuery();
     }
 
-    public function findFormationsCoach(?array $criteres, Secteur $secteur)
+    public function findFormationsCoach(?array $criteres, Secteur $secteur,$role)
     {
 
-        $queryBuilder = ($this->createQueryBuilder('f'))->where('f.secteur=:secteur')
-            ->setParameter('secteur', $secteur->getId());
+        $queryBuilder = ($this->createQueryBuilder('f'))
+            ->where('f.secteur=:secteur')
+            ->andWhere('JSON_CONTAINS(f.roles, :role) = 1')
+            ->setParameter('secteur', $secteur->getId())
+            ->setParameter('role', json_encode($role));
         if (isset($criteres['titre']) && !empty($criteres['titre'])) {
             $queryBuilder->andWhere('f.titre LIKE :titre')
                 ->setParameter('titre', '%' . $criteres['titre'] . '%');
@@ -133,6 +136,8 @@ class FormationRepository extends ServiceEntityRepository
                 ->setParameter('nomCategorie', '%' . $criteres['categorie'] . '%')
             ;
         }
+
+
 
         return $queryBuilder->getQuery();
 

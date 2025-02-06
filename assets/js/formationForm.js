@@ -224,6 +224,7 @@ $(document).ready(function () {
 async function save(videoId='')
 {
     await saveData(videoId);
+    let section = $("#section").length ? $("#section").val() : "revendeur";
     progressionContainer.remove()
     progressionLabel.html(
         '<div class="text-center">' +
@@ -233,7 +234,7 @@ async function save(videoId='')
     setTimeout(function() {
         progressionLabel.html('<strong>Rafraichissement de la page ...</strong>')
         setTimeout(function() {
-            location.href = Routing.generate('coach_formation_list')
+            location.href = Routing.generate('coach_formation_list',{ 'section' : section})
         },1000)
     },1000)
 }

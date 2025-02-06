@@ -3,7 +3,7 @@
 {% block body %}
 
     <div class="p-5 pb-5 mb-5 bg-white border position-relative" id="form-formation">
-        <h3 class="mb-3"><i class="fa fa-book-open"></i> Video fin de formation</h3>
+        <h3 class="mb-3"><i class="fa fa-book-open"></i> Video fin de formation ({{ section | title}})</h3>
         <input type="hidden" id="inputVideo" class="hiddenVideoData">
           {{ form_start(form) }}
             {{ form_row(form.urlVideo) }}

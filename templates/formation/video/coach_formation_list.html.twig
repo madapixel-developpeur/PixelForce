@@ -5,14 +5,42 @@
 {% block body %}
     <div>
         <div class="row mt-4">
+            {% if secteur is not null and secteur.id == secteurDigitalId %}
+                <div class="col-md-12">
+                    <ul class="nav nav-pills mb-4">
+                        <!-- account -->
+                        <li class="nav-item">
+                            <a class="nav-link  {% if section == 'revendeur' %} active bg-princ {% endif %}" href="{{ path('coach_formation_list') }}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shopping-cart font-medium-3 me-50">
+                                    <circle cx="9" cy="21" r="1"></circle>
+                                    <circle cx="20" cy="21" r="1"></circle>
+                                    <path d="M1 1h4l2 12h13l2-9H5"></path>
+                                </svg>
+                                <span class="fw-bold">Formation revendeur</span>
+                            </a>
+                        </li>
+                        <!-- security -->
+                        <li class="nav-item">
+                            <a class="nav-link {% if section == 'professionnel' %} active bg-princ {% endif %}" href="{{ path('coach_formation_list',{ 'section' : 'professionnel'}) }}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-briefcase font-medium-3 me-50">
+                                    <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                                    <path d="M16 7V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v3"></path>
+                                </svg>
+
+                                <span class="fw-bold">Formation professionnel</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            {% endif %}
             <div class="col-12 col-md-6">
                 <h3>Liste des formations</h3>
             </div>
             <div class="col-12 col-md-6 d-flex align-items-center justify-content-end">
                 {% if is_granted('ROLE_COACH') %}
-                <a href="{{ path('coach_video_formation_add')}}" class="btn bg-info text-white ms-2"><i class="fa fa-plus"></i> Video fin de formation</a>
-                <a href="{{ path('coach_formation_add') }}" class="btn bg-princ text-white ms-2"><i class="fa fa-plus"></i> Ajouter une formation</a>
-                <a href="{{ path('coach_quiz_add') }}" class="btn btn-warning text-white ms-2"><i class="fa fa-plus"></i> Ajouter un quiz</a>
+                <a href="{{ path('coach_video_formation_add',{ 'section' : section })}}" class="btn bg-info text-white ms-2"><i class="fa fa-plus"></i> Video fin de formation</a>
+                <a href="{{ path('coach_formation_add',{ 'section' : section }) }}" class="btn bg-princ text-white ms-2"><i class="fa fa-plus"></i> Ajouter une formation</a>
+                <a href="{{ path('coach_quiz_add',{ 'section' : section }) }}" class="btn btn-warning text-white ms-2"><i class="fa fa-plus"></i> Ajouter un quiz</a>
                 <a href="{{ path('coach_configure_formation_page')}}" class="btn bg-info text-white ms-2"><i class="fa fa-gear"></i> Configurer page de formation</a>
                 {% endif %}
             </div>

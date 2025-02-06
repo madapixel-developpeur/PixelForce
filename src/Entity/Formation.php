@@ -23,6 +23,9 @@ class Formation
     const STATUT_TERMINER = 'terminer';
     const STATUT_IN_PROGRESS = 'inprogress';
 
+    const REVENDEUR_SECTION = 'revendeur';
+    const PROFESSIONNEL_SECTION = 'professionnel';
+
     const TYPE_QUIZ = 2;
     /**
      * @ORM\Id
@@ -111,6 +114,11 @@ class Formation
      * @ORM\OneToMany(targetEntity=FormationQuizItem::class, mappedBy="formation")
      */
     private $formationQuizItems;
+
+    /**
+     * @ORM\Column(type="json")
+    */
+    private $roles = [];
 
     public function __construct()
     {
@@ -412,5 +420,47 @@ class Formation
             }
         }
         return $result;
+    }
+
+    /**
+     * Get the value of roles
+     */
+    public function getRoles()
+    {
+        return $this->roles;
+    }
+
+    /**
+     * Set the value of roles
+     */
+    public function setRoles($roles): self
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
+    public function addRoleBasedOnSection(String $section){
+        $roles = $this->getRoles();
+        if($section == self::REVENDEUR_SECTION){
+            $roles[] = User::ROLE_REVENDEUR;
+            $this->setRoles($roles);
+        }
+        elseif($section == self::PROFESSIONNEL_SECTION){
+            $roles[] = User::ROLE_PROFESSIONNEL;
+            $this->setRoles($roles);
+        }
+        return $this;
+    }
+
+    public static function getRoleBasedOnSection(String $section){
+        $roles = [];
+        if($section == self::REVENDEUR_SECTION){
+            $roles[] = User::ROLE_REVENDEUR;
+        }
+        elseif($section == self::PROFESSIONNEL_SECTION){
+            $roles[] = User::ROLE_PROFESSIONNEL;
+        }
+        return $roles;
     }
 }
