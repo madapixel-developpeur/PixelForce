@@ -44,6 +44,10 @@
                     <h4 class="card-title">Informations</h4>
                 </div>
                 <div class="card-body py-2 my-25">
+                    {% if user.profesionnalInformationState == constant('App\\Entity\\User::INFORMATION_VALIDATED') %}
+                        <button class="btn btn-success btn-sm">{{ user.profesionnalInformationStateString}}</button>
+                        {{ include ('global/card/_card_professionnel_information.html.twig', {user : user , userInformation : userInformation}) }}
+                    {% else %}     
                     <div class="status-container">
                         {% if user.profesionnalInformationState == constant('App\\Entity\\User::INFORMATION_REJECTED') %}
                             <i class="fas fa-ban rejected"></i>
@@ -54,6 +58,7 @@
                             <i class="fas fa-clock pending"></i>
                             <div class="status-text">{{ user.profesionnalInformationStateString}}</div>
                         {% endif %}
+                    {% endif %}
                     </div>
                 </div>
             </div>

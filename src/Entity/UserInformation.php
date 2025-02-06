@@ -2,8 +2,9 @@
 
 namespace App\Entity;
 
-use App\Repository\UserInformationRepository;
+use App\Util\Search\Constants;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\UserInformationRepository;
 
 /**
  * @ORM\Entity(repositoryClass=UserInformationRepository::class)
@@ -183,5 +184,9 @@ class UserInformation
         $this->validationDate = $validationDate;
 
         return $this;
+    }
+
+    public function getPortfolioFileName(){
+        return str_replace(Constants::PORTFOLIO_FOLDER.'/','',$this->getPortfolioFile());
     }
 }

@@ -9,4 +9,6 @@ class Constants {
 
     public const SEP_AND = "AND";
     public const SEP_OR = "OR";
+
+    public const PORTFOLIO_FOLDER = "professionnel/portfolio";
 }

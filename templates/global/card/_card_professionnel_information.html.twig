@@ -1,0 +1,45 @@
+    <div class="mb-3">
+        <label class="form-label">Nom & Prénom</label>
+        <input type="text" class="form-control" value="{{ user.fullName}}" disabled>
+    </div>
+
+
+    <div class="mb-3">
+        <label class="form-label">Date d'inscription</label>
+        <input type="date" class="form-control" value="{{ user.CreatedAt | date("Y-m-d") }}" disabled>
+    </div>
+
+    {% if userInformation.portfolioLink is not empty %}
+        <div class="mb-3">
+            <label class="form-label">Portfolio(lien)</label>
+            <input type="text" class="form-control" value="{{ userInformation.portfolioLink }}" disabled>
+        </div>
+    {% endif %}
+    {% if userInformation.portfolioFile %}
+         <!-- Fichier avec bouton de téléchargement -->
+        <div class="mb-3">
+            <label class="form-label">Portfolio(fichier)</label>
+            <div class="input-group">
+                <input type="text" class="form-control" value="{{ userInformation.getPortfolioFileName }}" disabled>
+                <a href="{{ path('download_portfolio', { id : userInformation.id })}}" class="btn btn-primary">Télécharger</a>
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="mb-3">
+        <label class="form-label">Compétence</label>
+        <textarea class="form-control" rows="2" disabled>{{ userInformation.competence }}</textarea>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Langues</label>
+        <textarea class="form-control" rows="2" disabled>{{ userInformation.langues }}</textarea>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Compétence technique</label>
+        <textarea class="form-control" rows="2" disabled>{{ userInformation.competenceTechnique }}</textarea>
+    </div>
+
+
+   

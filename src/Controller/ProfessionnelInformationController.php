@@ -8,6 +8,7 @@ use Exception;
 use App\Entity\User;
 use App\Form\UserSearchType;
 use App\Services\FileHandler;
+use App\Util\Search\Constants;
 use App\Entity\UserInformation;
 use App\Exception\CustomException;
 use App\Repository\UserRepository;
@@ -19,6 +20,7 @@ use App\Repository\CoachSecteurRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -64,7 +66,8 @@ class ProfessionnelInformationController extends AbstractController
             return $this->redirectToRoute('professionnel_add_info');     
         }
         return $this->render('user_category/professionnel/information/pro_information.html.twig', [
-            'user' => $user
+            'user' => $user,
+            'userInformation' => $user->getInformation(),
         ]);
     }
 
@@ -85,11 +88,13 @@ class ProfessionnelInformationController extends AbstractController
                     throw new CustomException('Veuillez fournir votre portfolio, sous forme de lien ou de fichier.');
                 }
                 if($file){
-                    $filename = $this->fileHandler->upload($file, "professionnel/portfolio");
+                    $filename = $this->fileHandler->upload($file, Constants::PORTFOLIO_FOLDER);
                     $userInformation->setPortfolioFile($filename);
                 }
+                $userInformation->setValidationDate(new \DateTime());
                 $user->setProfesionnalInformationState(User::INFORMATION_PENDING);
                 $user->setInformation($userInformation);
+                $user->set($userInformation);
                 $this->entityManager->flush();
                 $this->addFlash('success',"Information enregistrée avec succès.");
                 return $this->redirectToRoute('professionnel_info');    
@@ -119,5 +124,33 @@ class ProfessionnelInformationController extends AbstractController
         $this->entityManager->flush();
 
         return $this->redirectToRoute('professionnel_add_info');    
+    }
+
+    /**
+     * @Route("/download-portfolio/{id}", name="download_portfolio")
+    */
+    public function downloadPortfolio(UserInformation $userInformation)
+    {
+        // Path to your files directory
+        $fileDirectory = $this->getParameter('kernel.project_dir') . '/public/files/';
+
+        // Full path to the file
+        $filePath = $fileDirectory . $userInformation->getPortfolioFile();
+
+        // Check if the file exists
+        if (!file_exists($filePath)) {
+            throw $this->createNotFoundException('The file does not exist');
+        }
+
+        // Create a BinaryFileResponse
+        $response = new BinaryFileResponse($filePath);
+
+        // Optionally set a custom filename for the download
+        $response->setContentDisposition(
+            'attachment',
+            $userInformation->getPortfolioFileName()
+        );
+
+        return $response;
     }
 }

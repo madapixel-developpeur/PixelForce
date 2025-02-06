@@ -1,0 +1,96 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title %}
+	Professionnel - Validation d'information
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+    <div class="block block--bordered block--rounded">
+        <h1 class="block__text block__text--center mt-2" >Options de filtre :</h1>
+        <div class="filter-wrap">
+            
+            {{ form_start(form, {'attr': {'class': 'filter-form', 'id': 'product-filter-form'}}) }}
+                <div class="row">
+                    <div class="col-12 col-md-4">
+                        <div class="my-form-widget">
+                            {{form_label(form.dateMin)}}
+                            {{form_widget(form.dateMin)}}
+                            {{form_errors(form.dateMin)}}
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <div class="my-form-widget">
+                            {{form_label(form.dateMax)}}
+                            {{form_widget(form.dateMax)}}
+                            {{form_errors(form.dateMax)}}
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <div class="my-form-widget">
+                            {{form_label(form.userName)}}
+                            {{form_widget(form.userName)}}
+                            {{form_errors(form.userName)}}
+                        </div>
+                    </div>          
+                </div>
+                <div class="btn-wrap d-flex justify-content-start mt-3">
+                    <button class="btn btn-primary" type="submit"><i data-feather="filter"></i>Filtrer</button>
+                </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+    <div class="block block--bordered block--rounded mt-4">
+        <div class="block__header mb-1" >
+            <h1 class="block__title">Liste des professionnels en attente de validation :</h1>
+            
+        </div>
+        {% if data|length ==0 %}
+                <div class="alert alert-primary p-3 text-center" role="alert">
+                    <div class="alert-body">
+                        Aucune résultat.
+                    </div>
+                </div>
+        {% endif %}
+        {% if data|length !=0 %}
+        <div class="table-responsive mb-1">
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Utilisateur</th>
+                        <th>Nom et Prénom</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for element in data %}
+                    {% set item = element[0] %}
+                    <tr>
+                        <td>{{element.validationDate | date("d/m/Y H:i")}}</td>
+                        <td>{{item.username }}</td>
+                        <td>{{item.nom}} {{item.prenom}}</td>
+                        <td  style="white-space:nowrap" class="text-center">
+                            <a href="{{ path('admin_professionnel_information_view', { id : item.id })}}" class="btn btn-secondary d-inline ms-1">
+                                <i class="fa-solid fa-eye"></i>
+                            </a>
+                        </td>
+
+                       
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="d-flex justify-content-center scale-up-center">
+            {{ knp_pagination_render(data) }}
+        <div>
+        {% endif %}
+    </div>
+
+{% endblock %}
+
+

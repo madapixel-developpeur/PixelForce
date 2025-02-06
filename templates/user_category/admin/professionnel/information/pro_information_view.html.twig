@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    Professionnel - Information
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-12">
+            <!-- profile -->
+            <div class="card mt-2">
+                <div class="card-header border-bottom">
+                    <h4 class="card-title">Informations</h4>
+                </div>
+                <div class="card-body py-2 my-25">
+					{{ include ('global/card/_card_professionnel_information.html.twig', {user : user , userInformation : userInformation}) }}
+                    <div class="d-flex align-items-center justify-content-start ">
+                        <form action="{{ path('admin_professionnel_information_status', { id : user.id }) }}" method="post" id='validate_action_form' onclick="confirmationForm('validate_action_form','{{ path('admin_professionnel_information_status', { id : user.id }) }}','Êtes-vous sûr(e) de vouloir valider ces informations?')">
+                            <input type="hidden" name="status" value="{{ constant('App\\Entity\\User::INFORMATION_VALIDATED') }}" >
+                            <button class="btn  btn-success" type="submit">
+                                Valider
+                            </button>
+                        </form>
+                        <form action="{{ path('admin_professionnel_information_status', { id : user.id }) }}" method="post" id='reject_action_form' onclick="confirmationForm('reject_action_form','{{ path('admin_professionnel_information_status', { id : user.id }) }}','Êtes-vous sûr(e) de vouloir rejeter ces informations?')">
+                            <input type="hidden" name="status" value="{{ constant('App\\Entity\\User::INFORMATION_REJECTED') }}">
+                            <button class="btn btn-danger ms-2" type="submit">
+                                Refuser
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!--/ profile -->
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('vuexy_page_account_settings_account_js')}}
+{% endblock %}
+
