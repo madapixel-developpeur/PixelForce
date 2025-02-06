@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    Professionnel - Information
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-12">
+            <!-- profile -->
+            <div class="card mt-2">
+                <div class="card-header border-bottom">
+                    <h4 class="card-title">Informations</h4>
+                </div>
+                <div class="card-body py-2 my-25">
+                    {{ form_start(form, {attr:{
+                        enctype:"multipart/form-data"
+                    }}) }}
+                    {{ form_rest(form) }}
+                    <div>
+                        <button class="btn btn-primary" type="submit">Enregistrer</button>
+                    </div>
+                    {{ form_end(form) }}
+                    <!--/ form -->
+                </div>
+            </div>
+            <!--/ profile -->
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('vuexy_page_account_settings_account_js')}}
+{% endblock %}
+

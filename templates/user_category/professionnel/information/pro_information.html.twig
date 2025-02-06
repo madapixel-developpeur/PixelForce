@@ -1,0 +1,68 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    Professionnel - Information
+{% endblock %}
+{% block stylesheets %}
+   {{ parent() }}
+   <style>
+        .status-container {
+            text-align: center;
+            padding: 30px;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: white;
+        }
+        .status-container i {
+            font-size: 50px;
+            margin-bottom: 20px;
+        }
+        .pending {
+            color: #7d78e1; /* Theme color for Pending */
+        }
+        .rejected {
+            color: red;
+        }
+        .status-text {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+        .btn-resubmit:hover {
+            background-color: #6a67b8;
+        }
+   </style>
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-12 mt-4">
+            <!-- profile -->
+            <div class="card mt-2">
+                <div class="card-header border-bottom">
+                    <h4 class="card-title">Informations</h4>
+                </div>
+                <div class="card-body py-2 my-25">
+                    <div class="status-container">
+                        {% if user.profesionnalInformationState == constant('App\\Entity\\User::INFORMATION_REJECTED') %}
+                            <i class="fas fa-ban rejected"></i>
+                            <div class="status-text mb-2">{{ user.profesionnalInformationStateString}}</div>
+                            <a class="btn btn-primary" href="{{ path('professionnel_resend_info')}}">Soumettre à nouveau</a>
+                        
+                        {% elseif user.profesionnalInformationState == constant('App\\Entity\\User::INFORMATION_PENDING') %}
+                            <i class="fas fa-clock pending"></i>
+                            <div class="status-text">{{ user.profesionnalInformationStateString}}</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <!--/ profile -->
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('vuexy_page_account_settings_account_js')}}
+{% endblock %}
+

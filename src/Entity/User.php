@@ -392,6 +392,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
      */
     private $profesionnalInformationState = self::INFORMATION_EMPTY;
 
+    /**
+     * @ORM\OneToOne(targetEntity=UserInformation::class, inversedBy="user",cascade={"persist", "remove"})
+     * @ORM\JoinColumn(name="information_id", referencedColumnName="id", nullable=true)
+    */
+    private $information;
+
     public function __construct()
     {
         $this->coachAgents = new ArrayCollection();
@@ -1837,5 +1843,41 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
         $this->profesionnalInformationState = $profesionnalInformationState;
 
         return $this;
+    }
+
+    /**
+     * Get the value of information
+     */
+    public function getInformation()
+    {
+        return $this->information;
+    }
+
+    /**
+     * Set the value of information
+     */
+    public function setInformation($information): self
+    {
+        $this->information = $information;
+
+        return $this;
+    }
+
+    public function getProfesionnalInformationStateString()
+    {
+        switch ($this->getProfesionnalInformationState()) {
+            case self::INFORMATION_VALIDATED:
+                return 'Informations validées';
+                break;
+            case self::INFORMATION_REJECTED:
+                return 'Informations rejetées';
+                break;
+            case self::INFORMATION_PENDING:
+                return 'Informations en attente de validation';
+                break;
+           default:
+                return 'Informations non fournies';
+                break;
+        }
     }
 }

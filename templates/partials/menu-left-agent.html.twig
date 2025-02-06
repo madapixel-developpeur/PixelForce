@@ -58,7 +58,7 @@
             {% if app.user.profesionnalInformationState ==  constant('App\\Entity\\User::INFORMATION_VALIDATED') %}
             
             {% endif %}
-            <li class=" nav-item"><a class="d-flex align-items-center" href=""><i data-feather="info"></i><span class="menu-title text-truncate" data-i18n="Information">Information</span></a></li>
+            <li class=" nav-item"><a class="d-flex align-items-center" href="{{ path('professionnel_info') }}"><i data-feather="info"></i><span class="menu-title text-truncate" data-i18n="Information">Information</span></a></li>
         {% endif %}
         
         {# <li class=" nav-item"><a class="d-flex align-items-center" href="{{ path('live_video_list') }}"><i data-feather="calendar"></i><span class="menu-title text-truncate" data-i18n="Calendar">Réunions</span></a></li> #}
