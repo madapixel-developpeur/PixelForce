@@ -21,6 +21,18 @@ class FormationPageConfigurationRepository extends ServiceEntityRepository
         parent::__construct($registry, FormationPageConfiguration::class);
     }
 
+    public function findBySectionAndSecteur($secteur,$roles){
+        return $this->createQueryBuilder('s')
+           ->andWhere('s.secteur = :secteur')
+           ->andWhere('JSON_CONTAINS(s.roles, :role) = 1')
+           ->setParameter('role', json_encode($roles))
+           ->setParameter('secteur', $secteur)
+           ->orderBy('s.id', 'ASC')
+           ->setMaxResults(1)
+           ->getQuery()
+           ->getOneOrNullResult();
+    }
+
 //    /**
 //     * @return FormationPageConfiguration[] Returns an array of FormationPageConfiguration objects
 //     */

@@ -446,15 +446,17 @@ class CoachFormationController extends AbstractController
     }
 
     /**
-     * @Route("/coach/formation/configure-page", name="coach_configure_formation_page", options={"expose"=true})
+     * @Route("/coach/formation/configure-page/{section}", name="coach_configure_formation_page", options={"expose"=true})
      */
-    public function coach_formation_page_configuration(Request $request)
+    public function coach_formation_page_configuration(Request $request,$section = Formation::REVENDEUR_SECTION)
     {
         $secteur = $this->getUser()->getSecteurByCoach();
-        $configuration = $this->formationPageConfigurationRepository->findOneBy(['secteur' => $secteur]);
+        $roles = Formation::getRoleBasedOnSection($section);
+        $configuration = $this->formationPageConfigurationRepository->findBySectionAndSecteur($secteur,$roles);
         if (is_null($configuration)) {
             $configuration = new FormationPageConfiguration();
             $configuration->setSecteur($secteur);
+            $configuration->setRoles($roles);
         }
         $isCreation = true;
         $form = $this->createForm(FormationPageConfigurationFormType::class, $configuration, ['isCreation' => $isCreation]);
@@ -485,6 +487,7 @@ class CoachFormationController extends AbstractController
             'form' => $form->createView(),
             'configuration' => $configuration,
             'filesDirectory' => $this->getParameter('files_directory_relative'),
+            'section' => $section
         ]);
     }
 }

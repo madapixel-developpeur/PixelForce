@@ -42,6 +42,12 @@ class FormationPageConfiguration
      */
     private $secteur;
 
+    
+    /**
+     * @ORM\Column(type="json")
+    */
+    private $roles = [];
+
     public function getId(): ?int
     {
         return $this->id;
@@ -143,6 +149,24 @@ class FormationPageConfiguration
     public function setSecteur($secteur)
     {
         $this->secteur = $secteur;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of roles
+     */
+    public function getRoles()
+    {
+        return $this->roles;
+    }
+
+    /**
+     * Set the value of roles
+     */
+    public function setRoles($roles): self
+    {
+        $this->roles = $roles;
 
         return $this;
     }
