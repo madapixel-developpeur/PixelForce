@@ -103,14 +103,15 @@ class AgentFormationController extends AbstractController
     }
 
     /**
-     * @Route("/agent/formation/list", name="agent_formation_list", options={"expose"=true})
+     * @Route("/agent/formation/list/{section}", name="agent_formation_list", options={"expose"=true})
      * @IsGranted("ROLE_AGENT")
      */
-    public function agent_formation_list(Request $request, SessionInterface $session)
+    public function agent_formation_list(Request $request, SessionInterface $session, $section = Formation::REVENDEUR_SECTION)
     {
         // todo: miandry anle login agent izay ataon Tsiory mba haazaoana ilay session micontenir anle secteur
         $agent = $this->getUser();
         $secteur_id = $session->get('secteurId');
+        $roles = Formation::getRoleBasedOnSection($section);
         $secteur = $this->secteurRepository->findOneBy(['id' => $secteur_id]);
 
 
@@ -118,7 +119,7 @@ class AgentFormationController extends AbstractController
             // dd($request->query->get('q'));
             $criteres = $request->query->get('q');
             $criteres = $criteres ? $criteres : [];
-            $formations = $this->formationRepository->searchForAgent($criteres, $secteur);
+            $formations = $this->formationRepository->searchForAgent($criteres, $secteur,$roles);
             $agentSecteur = $this->agentSecteurRepository->findOneBy(["agent" => $agent, "secteur" => $secteur]);
             $formations = $this->paginator->paginate(
                 $formations,
@@ -133,7 +134,7 @@ class AgentFormationController extends AbstractController
             //     'nbrAllMyContacts' => count($this->repoContact->findAll()),
             //     'agentSecteur' => $agentSecteur
             // ]);
-            $configuration = $this->formationPageConfigurationRepository->findOneBy(['secteur' => $secteur]);
+            $configuration = $this->formationPageConfigurationRepository->findBySectionAndSecteur($secteur,$roles);
             return $this->render('formation/video/agent_detail_categorie_formation.html.twig', [
                 'formations' => $formations,
                 'criteres' => $criteres,
