@@ -94,7 +94,6 @@ class ProfessionnelInformationController extends AbstractController
                 $userInformation->setValidationDate(new \DateTime());
                 $user->setProfesionnalInformationState(User::INFORMATION_PENDING);
                 $user->setInformation($userInformation);
-                $user->set($userInformation);
                 $this->entityManager->flush();
                 $this->addFlash('success',"Information enregistrée avec succès.");
                 return $this->redirectToRoute('professionnel_info');    
