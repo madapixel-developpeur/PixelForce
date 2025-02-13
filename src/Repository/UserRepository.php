@@ -526,4 +526,17 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
         return $query;
     }
+
+    public function findUserByRoleAndSecteur($role,$secteurId){
+        $queryBuilder = $this->createQueryBuilder('u')
+            ->join('u.agentSecteurs', 'aSec')
+            ->where('u.active IS NULL or u.active != :inactiveState')
+            ->andWhere('u.roles LIKE :role')
+            ->andwhere('aSec.secteur = :secteur')
+            ->setParameter('inactiveState', User::INACTIVE_STATE)
+            ->setParameter('secteur', $secteurId)
+            ->setParameter('role', '%' . $role . '%');
+
+        return $queryBuilder->getQuery()->getResult();
+    }
 }

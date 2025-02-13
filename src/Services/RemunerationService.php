@@ -2,13 +2,15 @@
 
 namespace App\Services;
 
+use DateTime;
+use App\Entity\User;
 use App\Entity\UserTransaction;
-use App\Repository\SecteurRepository;
 use App\Repository\UserRepository;
-use App\Repository\UserTransactionRepository;
+use App\Repository\SecteurRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use App\Repository\UserTransactionRepository;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class RemunerationService
 {
@@ -201,5 +203,68 @@ class RemunerationService
     public static function getPositionSteps()
     {
         return self::POSTION_STEPS;
+    }
+
+    function saveProgress($filename,array $processedIds) {
+        file_put_contents($filename, json_encode($processedIds));
+        return $this->loadProgress($filename);
+    }
+    
+    function loadProgress($filename): array {
+        return file_exists($filename) ? json_decode(file_get_contents($filename), true) : [];
+    }
+
+    public function getRemunerationAndSaveData($data, DateTime $dateOfTheMonthToCheck){
+        $pbb_ws_url = $this->parameterBag->get('pbb_ws_url');
+        $response = $this->client->request(
+            'POST',
+            $pbb_ws_url . '/api/execute-remuneration-process',
+            [
+                'json' => array_merge( ['users_data' => $data], ['date' =>  $dateOfTheMonthToCheck->format('Y-m-d H:i:s')])
+            ]
+        );
+        $result = json_decode($response->getContent(), true);
+        $secteurDigital = $this->secteurRepository->find($_ENV['SECTEUR_DIGITAL_ID']);
+        foreach ($result as $userData) {
+            $user = $this->userRepository->find($userData['id']);
+            $remuneration = new UserTransaction();
+            $remuneration->setAmount($userData['amount']);
+            $remuneration->setUser($user);
+            $remuneration->setCreatedAt(new \DateTimeImmutable());
+            $remuneration->setStatus(UserTransaction::STATUS_VALID);
+            $remuneration->setSortie(false);
+            $remuneration->setType(UserTransaction::TYPE_REMUNERATION);
+            $remuneration->setSecteur($secteurDigital);
+            $this->entityManager->persist($remuneration);
+        }
+        return true;
+    }
+
+    public function checkUserRemuneration(DateTime $dateOfTheMonthToCheck){
+        $users = $this->userRepository->findUserByRoleAndSecteur(User::ROLE_REVENDEUR,$_ENV['SECTEUR_DIGITAL_ID']);
+        $arrayWithFilleulData = [];
+        $limitLevel = 3;
+        foreach ($users as $user) {
+            $arrayWithFilleulData[] = [
+                'id' => $user->getId(),
+                'filleul' => $this->userRepository->getFilsJusqueNiveau($user->getId(),$limitLevel,true)
+            ];
+        }
+        $chunks = array_chunk($arrayWithFilleulData, 100);
+        try {
+            $this->entityManager->beginTransaction();
+            foreach ($chunks as $chunk) {
+                $this->getRemunerationAndSaveData($chunk,$dateOfTheMonthToCheck);
+            }
+            $this->entityManager->flush();
+            $this->entityManager->commit();
+        } catch (\Exception $ex) {
+            if ($this->entityManager->getConnection()->isTransactionActive()) {
+                $this->entityManager->rollback();
+            }
+            throw $ex;
+        } finally {
+            $this->entityManager->clear();
+        }
     }
 }
