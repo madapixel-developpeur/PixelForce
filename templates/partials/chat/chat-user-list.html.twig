@@ -24,7 +24,7 @@
 
       <div ng-repeat="conversation in data"
         class="d-flex p-3 chat-one-user {{ "{{isNewMessage(conversation) ? 'new' : ''}}" }} {{ "{{conversation.id == conversationId ? 'selected' : ''}}" }}"
-        ng-click="conversationSelected(conversation.id)">
+        ng-click="conversationSelected(conversation.id)" ng-if="displayConversation(conversation)">
         <div class="d-flex align-items-center justify-content-center flex-column" style="width: 80px;">
           <img src="{{ asset('assets/img/avatar.webp') }}" class="chat-user-avatar" />
           <span class="fs-6 profile-name"

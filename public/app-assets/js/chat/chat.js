@@ -295,6 +295,20 @@ myChatApp.controller('chatUserList', function ($scope, chat) {
     $scope.isConversationCreator = function (conversation) {
         return conversation.createdByUser?.userIdApplication == window.userId;
     }
+    $scope.displayConversation = function (conversation) {
+        let me = conversation.createdByUser;
+        let other = conversation.inviteeUser;
+        if (!$scope.isConversationCreator(conversation)) {
+            me = conversation.inviteeUser;
+            other = conversation.createdByUser;
+        }
+        const myRoles = me.data?.roles ?? [];
+        const otherRoles = other.data?.roles ?? [];
+        if (!myRoles.includes("ROLE_ADMIN") && !myRoles.includes("ROLE_COACH")) {
+            if (!otherRoles.includes("ROLE_ADMIN") && !otherRoles.includes("ROLE_COACH")) return false;
+        }
+        return true;
+    }
     $scope.isNewMessage = function (conversation) {
         const lastUserView = $scope.isConversationCreator(conversation) ? conversation.lastUser1View : conversation.lastUser2View;
         if (!conversation.lastMessage) return false;
