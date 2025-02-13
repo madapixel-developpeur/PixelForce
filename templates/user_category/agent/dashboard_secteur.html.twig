@@ -131,12 +131,12 @@
                     <div class="col-lg-4 col-md-6 col-12">
                         <h4 class=" mt-2 mb-3 choix-secteur-primary only-on-large-screens" style="visibility: hidden;">&nbsp;</h4>
                         {% if firstFormation != null %}    
-                            <a class="regular-button w-100 text-center mb-3" href="{{ path('agent_formation_list') }}"  id="startFormation" >Demarrer le programme</a>  
+                            <a class="regular-button w-100 text-center mb-3" href="{{ path('agent_formation_list') }}"  id="startFormation" >Démarrer formation</a>  
                         {% endif %}
-                        <a class="regular-button w-100 text-center mb-3 d-none" href="#" onclick='terminerFormation()' id="terminerFormationButton" >Terminer la formation</a>  
+                        {# <a class="regular-button w-100 text-center mb-3 d-none" href="#" onclick='terminerFormation()' id="terminerFormationButton" >Terminer la formation</a>   #}
                         {% if app.session.get('secteurId') == secteurDigitalId %}
-                        <a class="regular-button w-100 text-center mb-3" href="{{ pbb_ws_url }}">Devenir client</a>  
-                        <a class="regular-button w-100 text-center mb-3" href="{{ pbb_ws_url }}">⁠Recommander des clients</a>  
+                        <a class="regular-button w-100 text-center mb-3" target="__blank" href="{{ pbb_ws_url }}/services?ref={{generateReference(app.user.id,app.user.id) }}">Devenir client</a>  
+                        <a class="regular-button w-100 text-center mb-3" href="#" onclick="copyLink('{{ pbb_ws_url }}/services?ref={{generateReference(app.user.id,app.user.id) }}','Lien de référence {{ pbb_ws_url }}/services?ref={{generateReference(app.user.id,app.user.id) }} copié avec succès') ">⁠Recommander des clients</a>  
                         {% endif %}
                         <a class="regular-button w-100 text-center mb-3" href="{{ path('agent_view') }}"  >⁠Recommander des personnes</a>  
                         
@@ -746,8 +746,8 @@
                 player.on('play', () => {
                     $form= $('#formFinishFormation');
                     if ($form.length){
-                        $('#terminerFormationButton').removeClass('d-none');
-                        $('#startFormation').addClass('d-none');
+                        //$('#terminerFormationButton').removeClass('d-none');
+                        //$('#startFormation').addClass('d-none');
                     }
                 });
                 player.on('ended', () => {
