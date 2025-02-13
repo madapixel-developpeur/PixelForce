@@ -20,6 +20,7 @@ twig:
         socket_url_chat: '%env(SOCKET_URL_CHAT)%'
         secteur_finance_id: '%env(SECTEUR_FINANCE_ID)%'
         inova_referral_link: '%env(INOVA_REFERRAL_LINK)%'
+        catalogues_base_url: '%env(CATALOGUES_BASE_URL)%'
         
     paths:
         # pour spécifier le namespace des image. Exemple d'utilisation : email.image('@images/logo.png')

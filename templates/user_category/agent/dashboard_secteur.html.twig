@@ -135,8 +135,8 @@
                         {% endif %}
                         {# <a class="regular-button w-100 text-center mb-3 d-none" href="#" onclick='terminerFormation()' id="terminerFormationButton" >Terminer la formation</a>   #}
                         {% if app.session.get('secteurId') == secteurDigitalId %}
-                        <a class="regular-button w-100 text-center mb-3" target="__blank" href="{{ pbb_ws_url }}/services?ref={{generateReference(app.user.id,app.user.id) }}">Devenir client</a>  
-                        <a class="regular-button w-100 text-center mb-3" href="#" onclick="copyLink('{{ pbb_ws_url }}/services?ref={{generateReference(app.user.id,app.user.id) }}','Lien de référence {{ pbb_ws_url }}/services?ref={{generateReference(app.user.id,app.user.id) }} copié avec succès') ">⁠Recommander des clients</a>  
+                        <a class="regular-button w-100 text-center mb-3" target="__blank" href="{{ catalogues_base_url }}?ref={{generateReference(app.user.id,app.user.id) }}">Devenir client</a>  
+                        <a class="regular-button w-100 text-center mb-3" href="#" onclick="copyLink('{{ catalogues_base_url }}?ref={{generateReference(app.user.id,app.user.id) }}','Lien de référence {{ catalogues_base_url }}?ref={{generateReference(app.user.id,app.user.id) }} copié avec succès') ">⁠Recommander des clients</a>  
                         {% endif %}
                         <a class="regular-button w-100 text-center mb-3" href="{{ path('agent_view') }}"  >⁠Recommander des personnes</a>  
                         

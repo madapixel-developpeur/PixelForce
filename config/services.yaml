@@ -18,6 +18,7 @@ parameters:
     finance_stat_url: '%env(FINANCE_STAT_URL)%'
     secteur_finance_id: '%env(SECTEUR_FINANCE_ID)%'
     inova_referral_link: '%env(INOVA_REFERRAL_LINK)%'
+    catalogues_base_url: '%env(CATALOGUES_BASE_URL)%'
     
 services:
     # default configuration for services in *this* file

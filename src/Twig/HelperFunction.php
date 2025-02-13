@@ -72,7 +72,7 @@ class HelperFunction extends AbstractExtension
             "service_dev_app_mobile" => "/developpement-application-mobile",
         ];
         if (isset($arrayLink[$name])) {
-            return $_ENV['PBB_WS_URL'] . "/services" . $arrayLink[$name] . ($ref ?? "");
+            return $_ENV['CATALOGUES_BASE_URL'] . $arrayLink[$name] . ($ref ?? "");
         }
         return "#";
     }
