@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bienvenue</title>
+    <style>
+
+    </style>
+</head>
+<body>
+    <div>
+        Bonjour {{user.prenom}} {{user.nom}},
+        <br />
+        <br />
+        Bienvenue dans la communauté Pixelforce ! Nous sommes ravis de vous compter parmi nous.
+        <br />
+        Pour commencer, voici votre lien de parrainage personnel :
+        <br />
+        👉 <a href="{{url('agent_inscription', {'ambassador_username':  user.username != "" ?  user.username : ' '})}}">{{url('agent_inscription', {'ambassador_username':  user.username != "" ?  user.username : ' '})}}</a>
+        <br />
+        <br />
+        N’hésitez pas à explorer notre site et à découvrir tout ce que nous avons à offrir :
+        <br />
+        🌐 <a href="{{ app.request.getSchemeAndHttpHost() }}">Accédez à notre site</a>
+        <br />
+        <br />
+        Si vous avez la moindre question, notre équipe est à votre disposition.
+        <br />
+        <br />
+        À très bientôt,
+        <br />
+        L’équipe Pixelforce
+    </div>
+    <div>
+        <img src="cid:logo" />
+    </div>
+
+</body>
+</html>

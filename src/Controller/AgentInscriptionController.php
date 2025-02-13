@@ -15,6 +15,7 @@ use App\Repository\AgentSecteurRepository;
 use App\Repository\PlanAgentAccountRepository;
 use App\Repository\SecteurRepository;
 use App\Repository\UserRepository;
+use App\Services\MailerService;
 use App\Services\Stat\StatAgentService;
 use App\Services\StripeService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -47,7 +48,7 @@ class AgentInscriptionController extends AbstractController
     /** @var PlanAgentAccountRepository $repoPlanAgentAccount */
     protected $repoPlanAgentAccount;
     private $secteurRepository;
-    public function __construct(EntityManager $entityManager, UserManager $userManager, StripeManager $stripeManager, SessionInterface $session, UserRepository $userRepository, AgentSecteurRepository $repoAgentSecteur, PlanAgentAccountRepository $repoPlanAgentAccount, SecteurRepository $secteurRepository)
+    public function __construct(EntityManager $entityManager, UserManager $userManager, StripeManager $stripeManager, SessionInterface $session, UserRepository $userRepository, AgentSecteurRepository $repoAgentSecteur, PlanAgentAccountRepository $repoPlanAgentAccount, SecteurRepository $secteurRepository, private MailerService $mailerService)
     {
         $this->entityManager = $entityManager;
         $this->userManager = $userManager;
@@ -63,7 +64,7 @@ class AgentInscriptionController extends AbstractController
     /**
      * @Route("/inscription/agent/index/{ambassador_username?}", name="agent_inscription")
      */
-    public function inscriptionAgent(Request $request, SecteurRepository $secteurRepository,StatAgentService $statAgentService, $ambassador_username = null )
+    public function inscriptionAgent(Request $request, SecteurRepository $secteurRepository, StatAgentService $statAgentService, $ambassador_username = null)
     {
         $ref = $request->get('ref', null);
         if ($ref) {
@@ -87,9 +88,9 @@ class AgentInscriptionController extends AbstractController
             }
             if ($form->isSubmitted() && $form->isValid()) {
                 $roles = $form->get('roles')->getData();
-                if(empty($roles)){
+                if (empty($roles)) {
                     throw new \Exception('Vous devez sélectionner au moins un type de compte.');
-                } 
+                }
                 $this->userManager->setUserPasword($user, $request->request->get('inscription_agent')['password']['first'], '', false);
                 array_unshift($roles, User::ROLE_AGENT);
                 $user->setRoles($roles);
@@ -98,6 +99,7 @@ class AgentInscriptionController extends AbstractController
                 // $user->setAccountStatus(User::ACCOUNT_STATUS['UNPAID']);
                 $user->setAccountStatus(User::ACCOUNT_STATUS['ACTIVE']); // On met temporairement le statut comme ACTIVE
                 $this->entityManager->save($user);
+                $this->mailerService->sendUserWelcome($user);
                 $this->session->set('agentId', $user->getId());
                 $this->addFlash(
                     'success',

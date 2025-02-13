@@ -37,7 +37,7 @@ class MailerService
     public function __construct(MailerInterface $mailer, ParameterBagInterface $parameterBag, Twig_Environment $twig, DompdfWrapperInterface $wrapper, FileHandler $fileHandler)
     {
         $this->mailer = $mailer;
-        $this->from =  $_ENV['MAILER_SEND_FROM'];
+        $this->from = $_ENV['MAILER_SEND_FROM'];
         $this->from_name = $_ENV['MAILER_SEND_FROM_NAME'];
         $this->parameterBag = $parameterBag;
         $this->twig = $twig;
@@ -102,20 +102,20 @@ class MailerService
                 'code' => $code,
                 'dateExpiration' => $dateExpiration
             ]
-        ]);       
+        ]);
     }
 
     public function SendDevisToCompany($recipient, $devisCompany, $pj_pathname)
     {
         $email = (new TemplatedEmail())
-        ->from(new Address($this->from, $this->from_name))
-        ->to($recipient)
-        ->subject('Devis')
-        ->htmlTemplate('emails/devis/devis_entreprise.html.twig')
-        ->context([
-            'devisCompany' => $devisCompany
-        ])
-        ->attachFromPath($this->parameterBag->get('kernel.project_dir')."/public/files/".$pj_pathname, null);
+            ->from(new Address($this->from, $this->from_name))
+            ->to($recipient)
+            ->subject('Devis')
+            ->htmlTemplate('emails/devis/devis_entreprise.html.twig')
+            ->context([
+                'devisCompany' => $devisCompany
+            ])
+            ->attachFromPath($this->parameterBag->get('kernel.project_dir') . "/public/files/" . $pj_pathname, null);
         $this->mailer->send($email);
     }
 
@@ -125,13 +125,13 @@ class MailerService
         $email = (new TemplatedEmail())
             ->from(new Address($this->from, $this->from_name))
             ->to($recipient->getEmail())
-            ->subject("Signature du document << ".$rec->getDocument()->getNom()." >>")
+            ->subject("Signature du document << " . $rec->getDocument()->getNom() . " >>")
             ->htmlTemplate('emails/document.html.twig')
             ->context([
                 'link' => $link,
                 'conseiller' => $rec->getConseiller()
             ])
-            ->embedFromPath($this->parameterBag->get('kernel.project_dir').'/public/assets/img/securitas.png', 'logoSecuritas', 'image/png');
+            ->embedFromPath($this->parameterBag->get('kernel.project_dir') . '/public/assets/img/securitas.png', 'logoSecuritas', 'image/png');
         $this->mailer->send($email);
     }
 
@@ -145,20 +145,20 @@ class MailerService
         ;
 
         // email des recepteurs
-        foreach($parameters['to'] as $to) {
-           $email = $email->addTo($to);
+        foreach ($parameters['to'] as $to) {
+            $email = $email->addTo($to);
         }
 
         // eamil en copie
-        if(isset($parameters['cc'])){
-            foreach($parameters['cc'] as $cc) {
+        if (isset($parameters['cc'])) {
+            foreach ($parameters['cc'] as $cc) {
                 $email = $email->addcc($cc);
             }
         }
 
 
         // template
-        $email = $email->htmlTemplate('emails/'.$parameters['template']);
+        $email = $email->htmlTemplate('emails/' . $parameters['template']);
 
         // passez les variables
         $email = $email->context(isset($parameters['template_vars']) ? $parameters['template_vars'] : []);
@@ -168,10 +168,10 @@ class MailerService
 
 
         //try{
-            $this->mailer->send($email);
+        $this->mailer->send($email);
         //} catch (TransportExceptionInterface $e) {
-            // some error prevented the email sending; display an
-            // error message or try to resend the message
+        // some error prevented the email sending; display an
+        // error message or try to resend the message
         //     echo 'erreur : '.$e->getMessage();
         //}
 
@@ -202,29 +202,31 @@ class MailerService
             ->subject($mail['subject'])
             ->html($mail['body']);
 
-        $to = $to === null ? $mail['to'] : $to;    
-        if(gettype($to) == "array"){
+        $to = $to === null ? $mail['to'] : $to;
+        if (gettype($to) == "array") {
             $email = $email->to(...$to);
         } else {
             $email = $email->to($to);
         }
 
-        foreach($attachmentsPath as $path){
-            $email->attachFromPath($this->parameterBag->get('kernel.project_dir')."/public/files/".$path);
+        foreach ($attachmentsPath as $path) {
+            $email->attachFromPath($this->parameterBag->get('kernel.project_dir') . "/public/files/" . $path);
         }
 
-        foreach($embeddedImages as $key => $value){
-            $email->embedFromPath($this->parameterBag->get('kernel.project_dir')."/public/".$value, $key);
+        foreach ($embeddedImages as $key => $value) {
+            $email->embedFromPath($this->parameterBag->get('kernel.project_dir') . "/public/" . $value, $key);
         }
         $this->mailer->send($email);
     }
 
-    public function renderTwig($filePath, $options = []){
+    public function renderTwig($filePath, $options = [])
+    {
         return $this->twig->render($filePath, $options);
     }
 
-    public function sendFactureProduit(Order $order){
-        
+    public function sendFactureProduit(Order $order)
+    {
+
         $body = $this->renderTwig('emails/commande.html.twig', [
             'nomClient' => $order->getAddress()->getNom(),
             'prenomClient' => $order->getAddress()->getPrenom(),
@@ -234,7 +236,7 @@ class MailerService
         $attachmentsPath = [$order->getInvoicePath()];
         $embeddedImages = ['logo' => 'assets/img/logo/pixelforce/logo-pixelforce-min.png'];
         $this->mySendMail([
-            'subject' => 'Confirmation de commande '.$order->getId(),
+            'subject' => 'Confirmation de commande ' . $order->getId(),
             'to' => $order->getAddress()->getEmail(),
             'body' => $body
         ], $attachmentsPath, null, $embeddedImages);
@@ -252,8 +254,25 @@ class MailerService
 
     }
 
-    public function sendFactureSecu(OrderSecu $order){
-        
+    public function sendUserWelcome(User $user)
+    {
+
+        $body = $this->renderTwig('emails/user_welcome.html.twig', [
+            'user' => $user,
+        ]);
+
+        $attachmentsPath = [];
+        $embeddedImages = ['logo' => 'assets/img/logo/pixelforce/logo-pixelforce-min.png'];
+        $this->mySendMail([
+            'subject' => 'Bienvenue chez Pixelforce !',
+            'to' => $user->getEmail(),
+            'body' => $body
+        ], $attachmentsPath, null, $embeddedImages);
+    }
+
+    public function sendFactureSecu(OrderSecu $order)
+    {
+
         $body = $this->renderTwig('emails/commande_secu.html.twig', [
             'nomClient' => $order->getClient()->getNom(),
             'prenomClient' => $order->getClient()->getPrenom(),
@@ -263,7 +282,7 @@ class MailerService
         $attachmentsPath = [$order->getInvoicePath(), $order->getContratSigned()];
         $embeddedImages = ['logo' => 'assets/img/logo/pixelforce/logo-pixelforce-min.png'];
         $this->mySendMail([
-            'subject' => 'Confirmation de commande '.$order->getId(),
+            'subject' => 'Confirmation de commande ' . $order->getId(),
             'to' => $order->getClient()->getEmail(),
             'body' => $body
         ], $attachmentsPath, null, $embeddedImages);
@@ -281,8 +300,9 @@ class MailerService
 
     }
 
-    public function sendFactureAroma(OrderAroma $order){
-        
+    public function sendFactureAroma(OrderAroma $order)
+    {
+
         $body = $this->renderTwig('emails/commande_aroma.html.twig', [
             'nomClient' => $order->getAddress()->getLastname(),
             'prenomClient' => $order->getAddress()->getFirstname(),
@@ -292,7 +312,7 @@ class MailerService
         $attachmentsPath = [$order->getInvoicePath()];
         $embeddedImages = ['logo' => 'assets/img/home/af_logo_d2-min.png'];
         $this->mySendMail([
-            'subject' => 'Confirmation de commande '.$order->getId(),
+            'subject' => 'Confirmation de commande ' . $order->getId(),
             'to' => $order->getAddress()->getMail(),
             'body' => $body
         ], $attachmentsPath, null, $embeddedImages);
@@ -310,7 +330,8 @@ class MailerService
 
     }
 
-    public function sendDeliveryOrder(OrderAroma $order){
+    public function sendDeliveryOrder(OrderAroma $order)
+    {
 
         $body = $this->renderTwig('emails/livraison_aroma.html.twig', [
             'nomClient' => $order->getAddress()->getLastname(),
@@ -321,15 +342,16 @@ class MailerService
         $attachmentsPath = [$order->getDeliveryOrderPath()];
         $embeddedImages = ['logo' => 'assets/img/home/af_logo_d2-min.png'];
         $this->mySendMail([
-            'subject' => 'Livraison de commande '.$order->getId(),
+            'subject' => 'Livraison de commande ' . $order->getId(),
             'to' => $order->getAddress()->getMail(),
             'body' => $body
         ], $attachmentsPath, null, $embeddedImages);
 
     }
 
-    public function sendFactureDevisCompanyDigital(DevisCompany $devisCompany){
-        
+    public function sendFactureDevisCompanyDigital(DevisCompany $devisCompany)
+    {
+
         $body = $this->renderTwig('emails/commande_devis_company_digital.html.twig', [
             'prenomClient' => $devisCompany->getClientLastname(),
             'devisCompany' => $devisCompany
@@ -338,7 +360,7 @@ class MailerService
         $attachmentsPath = [$devisCompany->getPjFilename()];
         $embeddedImages = ['logo' => 'assets/img/logo/pixelforce/logo-pixelforce-min.png'];
         $this->mySendMail([
-            'subject' => 'Confirmation du devis '.$devisCompany->getId(),
+            'subject' => 'Confirmation du devis ' . $devisCompany->getId(),
             'to' => $devisCompany->getClientMail(),
             'body' => $body
         ], $attachmentsPath, null, $embeddedImages);
@@ -356,8 +378,9 @@ class MailerService
 
     }
 
-    public function sendFactureOrderDigital(OrderDigital $order){
-        
+    public function sendFactureOrderDigital(OrderDigital $order)
+    {
+
         $body = $this->renderTwig('emails/commande_digital.html.twig', [
             'prenomClient' => $order->getDevis()->getDemandeDevis()->getPrenom(),
             'order' => $order
@@ -366,7 +389,7 @@ class MailerService
         $attachmentsPath = [$order->getInvoicePath(), $order->getDevis()->getContratFileName()];
         $embeddedImages = ['logo' => 'assets/img/logo/pixelforce/logo-pixelforce-min.png'];
         $this->mySendMail([
-            'subject' => 'Confirmation de la commande '.$order->getId(),
+            'subject' => 'Confirmation de la commande ' . $order->getId(),
             'to' => $order->getDevis()->getDemandeDevis()->getEmail(),
             'body' => $body
         ], $attachmentsPath, null, $embeddedImages);
