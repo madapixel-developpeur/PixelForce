@@ -3,6 +3,7 @@
 namespace App\Twig;
 
 use App\Repository\SecteurRepository;
+use Symfony\Bundle\SecurityBundle\SecurityBundle;
 use Twig\TwigFunction;
 use Twig\Extension\AbstractExtension;
 use App\Services\Stat\StatAgentService;
@@ -18,18 +19,21 @@ class HelperFunction extends AbstractExtension
     private $security;
     private $session;
 
-    public function __construct(UrlGeneratorInterface $router, RequestStack $requestStack,
-    private StatAgentService $statAgentService,
-    Security $security,
-    SessionInterface $session,
-    private SecteurRepository $secteurRepository)
-    {
+
+    public function __construct(
+        UrlGeneratorInterface $router,
+        RequestStack $requestStack,
+        private StatAgentService $statAgentService,
+        Security $security,
+        SessionInterface $session,
+        private SecteurRepository $secteurRepository
+    ) {
         $this->router = $router;
         $this->requestStack = $requestStack;
         $this->security = $security;
         $this->session = $session;
     }
-    
+
     public function getFunctions(): array
     {
         return [
@@ -54,7 +58,12 @@ class HelperFunction extends AbstractExtension
 
     public function customPath($name, $parameters = [], $relative = false)
     {
-        $arrayLink  = [
+        $agent = (object) $this->security->getUser();
+        $ref = null;
+        if ($agent) {
+            $ref = "?ref=" . $this->generateReference($agent->getId(), $agent->getId());
+        }
+        $arrayLink = [
             "service_seo" => "/seo",
             "service_dev_web" => "/developpement-web",
             "service_conception_graphique" => "/conception-graphique",
@@ -62,15 +71,16 @@ class HelperFunction extends AbstractExtension
             "service_adwords" => "/adwords",
             "service_dev_app_mobile" => "/developpement-application-mobile",
         ];
-        if(isset($arrayLink[$name])){
-            return $_ENV['PBB_WS_URL']."/services".$arrayLink[$name];
+        if (isset($arrayLink[$name])) {
+            return $_ENV['PBB_WS_URL'] . "/services" . $arrayLink[$name] . ($ref ?? "");
         }
         return "#";
     }
 
-    public function getStat(){
+    public function getStat()
+    {
         $agent = (object) $this->security->getUser();
         $secteur = $this->secteurRepository->findOneBy(['id' => $this->session->get('secteurId')]);
-        return $this->statAgentService->getAgentStat($agent,$secteur);
+        return $this->statAgentService->getAgentStat($agent, $secteur);
     }
 }
