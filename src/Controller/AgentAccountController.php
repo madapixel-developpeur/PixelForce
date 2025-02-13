@@ -160,7 +160,7 @@ class AgentAccountController extends AbstractController
         $this->session->set('typeSecteurId', $secteur->getType()->getId());
 
         $user = $this->getUser();
-        if($secteur->getId() == $_ENV['SECTEUR_DIGITAL_ID'] && !in_array(User::ROLE_REVENDEUR,$user->getRoles()) ){
+        if ($secteur->getId() == $_ENV['SECTEUR_DIGITAL_ID'] && !in_array(User::ROLE_REVENDEUR, $user->getRoles())) {
             return $this->redirectToRoute('professionnel_info');
         }
         return $this->redirectToRoute('agent_dashboard_secteur', ['id' => $secteur->getId()]);

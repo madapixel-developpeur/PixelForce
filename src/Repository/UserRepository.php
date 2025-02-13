@@ -519,7 +519,10 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->addOrderBy('u.id', 'ASC')
             ->setParameter('userId', $currentUser)
             ->setParameter('search', '%' . strtolower($search) . '%');
-
+        if (!in_array(User::ROLE_COACH, $currentUser->getRoles()) && !in_array(User::ROLE_ADMINISTRATEUR, $currentUser->getRoles())) {
+            $andCond = "u.roles LIKE '%" . User::ROLE_COACH . "%' OR u.roles LIKE '%" . User::ROLE_ADMINISTRATEUR . "%'";
+            $query->andWhere($andCond);
+        }
 
         return $query;
     }
