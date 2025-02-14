@@ -148,7 +148,7 @@
             {% endif %}
 
             <div class="row match-height">
-                {% if secteurAgent.isFonctionnaliteActive(constant('App\\Util\\FonctionnalitesTypeSecteur::FONCTIONNALITE_COMMON_FORMATION')) %}
+                {# {% if secteurAgent.isFonctionnaliteActive(constant('App\\Util\\FonctionnalitesTypeSecteur::FONCTIONNALITE_COMMON_FORMATION')) %}
                 <div class="col-xl-8 col-md-6 col-12">
                     <h4 class=" mt-2 mb-3 choix-secteur-primary">Progression</h4>
                     <div class="">
@@ -177,7 +177,7 @@
                         </div>
                     </div>
                 </div>
-                {% endif %}
+                {% endif %} #}
                 {% if secteurAgent.isFonctionnaliteActive(constant('App\\Util\\FonctionnalitesTypeSecteur::FONCTIONNALITE_COMMON_AGENDA')) %}
                 {% if app.user.canAccessFonct('AGENDA', app.session.get('secteurId')) %}
                     <div class="col-lg-4 col-md-6 col-12">
