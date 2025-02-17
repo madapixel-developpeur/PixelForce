@@ -24,8 +24,9 @@
                 {% endfor %}
                 <div class="my-form-widget">
                     <label>Image de couverture</label>
-                    <input type="file" name="temp_image_cover" class="form-control">
+                    <input type="file" accept="image/*" name="temp_image_cover" class="form-control">
                     {{form_errors(form.imageCover)}}
+                    <img class="my-form-img-preview {% if ressource.imageCover %}d-none{% endif %}" id="my-form-img-preview" data-path="{{ asset( filesDirectory ~ '[imagePath]') }}" src="{% if ressource.imageCover %}{{ asset( filesDirectory ~ ressource.imageCover) }}{% endif %}" />
                 </div>
                 <div class="my-form-widget">
                     {{form_label(form.name)}}
@@ -37,7 +38,7 @@
                     {{form_widget(form.content)}}
                     {{form_errors(form.content)}}
                 </div>
-                <input type="hidden" name="image_cover_temp" >
+                <input type="hidden" name="image_cover_temp" value="{{ressource.imageCover}}">
                 {{form_widget(form.imageCover)}}
                 <div class="my-form-widget">
                     <div class="d-flex align-items-center justify-content-between " >
@@ -181,6 +182,32 @@
                 addLink({link: '', customName: ''});
             });
 
+            $('input[name="temp_image_cover"]').change(function () {
+                if(this.files.length > 0){
+                    const file = this.files[0]; // Get only the first file
+                    this.value = ''
+                    const formData = new FormData();
+                    formData.append('file', file);
+                    $.ajax({
+                        url: "{{path('app_ressource_file_upload')}}",
+                        type: 'POST',
+                        data: formData,
+                        processData: false, // Prevent jQuery from converting FormData to a string
+                        contentType: false, // Ensure correct content type is set
+                        success: function (response) {
+                        addFile(response);
+                            $('input[name="image_cover_temp"]').val(response.path);
+                            $('#my-form-img-preview').attr('src', $('#my-form-img-preview').data('path').replace('[imagePath]', response.path));
+                            $('#my-form-img-preview').removeClass('d-none');
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            const errorMessage = jqXHR.responseJSON?.message || jqXHR.responseText || 'An unknown error occurred';
+                            alert(errorMessage);
+                        },
+                    });
+                }
+            })
+
             $('#file-input').change(function () {
                 if(this.files.length > 0){
                     const file = this.files[0]; // Get only the first file
@@ -205,6 +232,8 @@
             })
 
             document.getElementById('{{form.vars.id}}').addEventListener('submit', function (e){
+                const imagePath = $('input[name="image_cover_temp"]').val();
+                $('#{{form.imageCover.vars.id}}').val(imagePath);
                 const filePaths = [];
                 $('#files-wrapper .file-block-wrapper').each(function(index, element) {
                     filePaths.push({
