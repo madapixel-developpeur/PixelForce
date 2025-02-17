@@ -1,0 +1,247 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	Ressource
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %} 
+    <div class="block block--bordered block--rounded">
+        <h1 class="block__text block__text--center mt-2" >{% if isEdit %}Modifier la ressource{% else %} Ajouter une ressource{% endif %} :</h1>
+            
+            {{ form_start(form, {'attr': {'class': 'my-form', 'id': form.vars.id}}) }}
+                {% for label, messages in app.flashes() %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ label }}">
+                            <div class="alert-body">
+                            {{ message }}
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+                <div class="my-form-widget">
+                    <label>Image de couverture</label>
+                    <input type="file" name="temp_image_cover" class="form-control">
+                    {{form_errors(form.imageCover)}}
+                </div>
+                <div class="my-form-widget">
+                    {{form_label(form.name)}}
+                    {{form_widget(form.name)}}
+                    {{form_errors(form.name)}}
+                </div>
+                <div class="my-form-widget">
+                    {{form_label(form.content)}}
+                    {{form_widget(form.content)}}
+                    {{form_errors(form.content)}}
+                </div>
+                <input type="hidden" name="image_cover_temp" >
+                {{form_widget(form.imageCover)}}
+                <div class="my-form-widget">
+                    <div class="d-flex align-items-center justify-content-between " >
+                    <label>Fichiers</label>
+                     <button class="btn btn-success btn-large" type="button" id="btn-add-file"><i class="fa fa-plus" aria-hidden="true"></i>&nbsp;Ajouter</button>
+                    </div>
+                    
+                        <table class="table table-bordered mt-2 d-none" id="files-wrapper">
+                        <thead>
+                            <tr>
+                            <th scope="col">Nom</th>
+                            <th scope="col">Fichier</th>
+                            <th scope="col"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {# <tr>
+                            <td>
+                            <input type="text" name="customfilename" class="form-control" value="${data.name}">
+                            </td>
+                            <td>
+                            <div class="file-block m-2" data-path="${data.path}">
+                                <span><i class="fa-regular fa-file fa-lg"></i></i>&nbsp;${data.name}</span>
+                            </div>
+                            </td>
+                            <td >
+                            <button class="btn btn-danger btn-sm" type="button"><i class="fa fa-trash"></i></button>
+                            </td>
+                            </tr> #}
+                            
+                        </tbody>
+                        </table>
+                    <input type="file" class="d-none" id="file-input" >
+                    <input type="hidden" id="files" name="files" >
+                </div>
+                <div class="my-form-widget">
+                    <div class="d-flex align-items-center justify-content-between " >
+                    <label>Liens</label>
+                     <button class="btn btn-success btn-large" type="button" id="btn-add-link"><i class="fa fa-plus" aria-hidden="true"></i>&nbsp;Ajouter</button>
+                    </div>
+                    
+                        <table class="table table-bordered mt-2 d-none" id="links-wrapper">
+                        <thead>
+                            <tr>
+                            <th scope="col">Nom</th>
+                            <th scope="col">Lien</th>
+                            <th scope="col"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            
+                            
+                        </tbody>
+                        </table>
+                    <input type="hidden" id="links" name="links" >
+                </div>
+                
+                <div class="btn-wrap">
+                    <button class="btn btn-primary" type="submit"><i data-feather="save"></i>Enregistrer</button>
+                </div>
+            {{ form_end(form) }}
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $(document).ready(function (){
+            
+            function addLink(data){
+                
+                
+                const linkBlockWrapper = $(`<tr class="link-block-wrapper" >
+                            <td>
+                            <input type="text" name="customlinkname" class="form-control customlinkname" value="${data.customName??data.link}">
+                            </td>
+                            <td>
+                                <input type="text" name="link" class="form-control link" value="${data.link}">
+                            </td>
+                            <td >
+                            <button class="btn btn-danger btn-sm remove-link" type="button"><i class="fa fa-trash"></i></button>
+                            </td>
+                            </tr>`);
+
+                
+
+                $(linkBlockWrapper).find('.remove-link').click(function () {
+                    $(linkBlockWrapper).remove();
+                    if($('#links-wrapper tbody > *').length == 0 && !$('#links-wrapper').hasClass('d-none')){
+                        $('#links-wrapper').addClass('d-none')
+                    }
+                })
+
+                $('#links-wrapper tbody').append(linkBlockWrapper);
+                if($('#links-wrapper tbody > *').length > 0){
+                    $('#links-wrapper').removeClass('d-none');
+                }
+            }
+
+            function addFile(data){
+                let downloadPath = "{{path('app_ressource_file_download', {'filename': 'custom-file-name'})}}";
+                downloadPath = downloadPath.replace('custom-file-name', data.path);
+                
+                const fileBlockWrapper = $(`<tr class="file-block-wrapper" data-path="${data.path}">
+                            <td>
+                            <input type="text" name="customfilename" class="form-control customfilename" value="${data.customName??data.name}">
+                            </td>
+                            <td>
+                            <div class="file-block" >
+                                <span><i class="fa-regular fa-file fa-lg"></i></i>&nbsp;${data.name}</span>
+                                <div class="file-close download-file" style="cursor: pointer"><i class="fa-solid fa-download fa-lg"></i></div>
+                            </div>
+                            </td>
+                            <td >
+                            <button class="btn btn-danger btn-sm remove-file" type="button"><i class="fa fa-trash"></i></button>
+                            </td>
+                            </tr>`);
+
+                $(fileBlockWrapper).find('.download-file').click(function () {
+                    window.location.href = downloadPath;
+                })
+
+                $(fileBlockWrapper).find('.remove-file').click(function () {
+                    $(fileBlockWrapper).remove();
+                    if($('#files-wrapper tbody > *').length == 0 && !$('#files-wrapper').hasClass('d-none')){
+                        $('#files-wrapper').addClass('d-none')
+                    }
+                })
+
+                $('#files-wrapper tbody').append(fileBlockWrapper);
+                if($('#files-wrapper tbody > *').length > 0){
+                    $('#files-wrapper').removeClass('d-none');
+                }
+            }
+            $('#btn-add-file').click(function (){
+                $('#file-input').click();
+            });
+
+            $('#btn-add-link').click(function (){
+                addLink({link: '', customName: ''});
+            });
+
+            $('#file-input').change(function () {
+                if(this.files.length > 0){
+                    const file = this.files[0]; // Get only the first file
+                    this.value = ''
+                    const formData = new FormData();
+                    formData.append('file', file);
+                    $.ajax({
+                        url: "{{path('app_ressource_file_upload')}}",
+                        type: 'POST',
+                        data: formData,
+                        processData: false, // Prevent jQuery from converting FormData to a string
+                        contentType: false, // Ensure correct content type is set
+                        success: function (response) {
+                        addFile(response);
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            const errorMessage = jqXHR.responseJSON?.message || jqXHR.responseText || 'An unknown error occurred';
+                            alert(errorMessage);
+                        },
+                    });
+                }
+            })
+
+            document.getElementById('{{form.vars.id}}').addEventListener('submit', function (e){
+                const filePaths = [];
+                $('#files-wrapper .file-block-wrapper').each(function(index, element) {
+                    filePaths.push({
+                        path: $(element).data('path'),
+                        customName: ($(element).find('.customfilename').val()??'').trim()
+                    });
+                })
+                $('#files').val(JSON.stringify(filePaths));
+                const linksVal = [];
+                let error = false;
+                $('#links-wrapper .link-block-wrapper').each(function(index, element) {
+                    const val = {
+                        link: ($(element).find('.link').val()??'').trim(),
+                        customName: ($(element).find('.customlinkname').val()??'').trim()
+                    };
+                    if(val.link == ''){
+                        alert('Lien invalide: le lien ne peut pas être vide');
+                        e.preventDefault();
+                        error = true;
+                    }
+                    linksVal.push(val);
+                })
+                if(error) return;
+                $('#links').val(JSON.stringify(linksVal));
+            });
+
+            const existingFiles = {{files | json_encode() | raw}};
+            existingFiles.forEach((file) => {
+                addFile(file);
+            })
+
+            const existingLinks = {{links | json_encode() | raw}};
+            existingLinks.forEach((link) => {
+                addLink(link);
+            })
+        }); 
+    </script>
+
+{% endblock %}
+

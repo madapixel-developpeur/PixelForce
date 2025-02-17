@@ -1,0 +1,98 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	Ressource
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+
+{% block body %}
+<section class="invoice-preview-wrapper">
+    <div class="row invoice-preview">
+        <!-- Invoice -->
+        <div class="col-12">
+            {% for label, messages in app.flashes() %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ label }}">
+                            <div class="alert-body">
+                            {{ message }}
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+            <div class="card invoice-preview-card">
+                <div class="card-body invoice-padding pb-0">
+                <div class="row">
+                <div class="col-md-3 col-0"></div>
+                <div class="col-md-6 col-12 py-3">
+                    <h3 class="text-primary invoice-logo text-center">{{res.name}}</h3>
+                    {% if res.content %}<div class="mt-3">{{res.content | raw}}</div>{% endif %}
+                    {% if res.files|length > 0 %}
+                    <div class="mt-3">
+                        <div class="d-flex align-items-center" >
+                        <span><b>Fichiers :</b></span> 
+                        <div class="d-flex align-items-start flex-wrap ms-2" style="gap: 5px;">
+                            {% for file in res.filesParsed %}
+                            <div class="file-block" >
+                                <span><i class="fa-regular fa-file fa-lg"></i></i>&nbsp;{{file.customName}}</span>
+                                <div class="file-close download-file" style="cursor: pointer" data-path="{{file.path}}"><i class="fa-solid fa-download fa-lg"></i></div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        </div >
+                    </div>
+                    {% endif %}
+                    {% if res.links|length > 0 %}
+                    <div class="mt-3">
+                        <div class="d-flex align-items-center" >
+                        <div><b>Liens :</b></div> 
+                        <div class="d-flex align-items-start flex-wrap ms-2" style="gap: 5px;">
+                        {% for link in res.links %}
+                        <div >
+                        <a href="{{link.link}}">{{link.customName??link.link}}</a>
+                        {% if loop.index < (res.links|length) %},{% endif %}
+                        </div>
+                        {% endfor %}
+                        </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="d-flex align-items-center justify-content-center mt-3">
+                        <a role="button" class="btn btn-warning me-2" href="{{path('app_ressource_edit', {'id': res.id})}}" ><i data-feather="edit"></i>&nbsp;Modifier</a>
+                        <form action="{{path('app_ressource_delete', {'id': res.id})}}" method="post">
+                        <button type="submit" class="btn btn-danger" ><i data-feather="trash"></i>&nbsp;Supprimer</button>
+                        </for>
+                    </div>
+                    
+                </div>
+                <div class="col-md-3 col-0"></div>
+                
+            </div>
+
+        </div>
+        
+    </div>
+</section>
+
+
+
+    
+{% endblock %}
+            
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $(document).ready(function (){
+            $('.download-file').click(function (){
+                let downloadPath = "{{path('app_ressource_file_download', {'filename': 'custom-file-name'})}}";
+                downloadPath = downloadPath.replace('custom-file-name', $(this).data('path'));
+                window.location.href = downloadPath;
+            })
+        }); 
+    </script>
+
+{% endblock %}

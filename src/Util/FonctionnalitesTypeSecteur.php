@@ -16,6 +16,8 @@ class FonctionnalitesTypeSecteur
 
     const FONCTIONNALITE_COMMON_AUDIT = 'FONCTIONNALITE_COMMON_AUDIT';
 
+    const FONCTIONNALITE_COMMON_RESSOURCE = 'FONCTIONNALITE_COMMON_RESSOURCE';
+
     //standard
     const FONCTIONNALITE_STANDARD_PRODUIT = 'FONCTIONNALITE_STANDARD_PRODUIT';
     const FONCTIONNALITE_STANDARD_VENTE = 'FONCTIONNALITE_COMMON_VENTE';
@@ -27,7 +29,8 @@ class FonctionnalitesTypeSecteur
             self::FONCTIONNALITE_COMMON_AGENDA,
             self::FONCTIONNALITE_COMMON_TRANSACTION,
             self::FONCTIONNALITE_COMMON_RDV,
-            self::FONCTIONNALITE_COMMON_AUDIT
+            self::FONCTIONNALITE_COMMON_AUDIT,
+            self::FONCTIONNALITE_COMMON_RESSOURCE
         ],
         "type_" . self::TYPE_STANDARD => [
             self::FONCTIONNALITE_STANDARD_PRODUIT,
@@ -42,8 +45,10 @@ class FonctionnalitesTypeSecteur
         self::FONCTIONNALITE_COMMON_TRANSACTION => "Transaction",
         self::FONCTIONNALITE_COMMON_RDV => "Rendez-Vous",
         self::FONCTIONNALITE_COMMON_AUDIT => "Audit",
+        self::FONCTIONNALITE_COMMON_RESSOURCE => "Ressource",
         self::FONCTIONNALITE_STANDARD_PRODUIT => "Produit",
         self::FONCTIONNALITE_STANDARD_VENTE => "Vente",
+
     ];
 
     public static function getFonctionnalites($typeId)
