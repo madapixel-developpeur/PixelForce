@@ -91,8 +91,9 @@ class RemunerationService
             $orderId = intval($orderData['order']["id"]);
             $auditAgentId = intval($orderData['order']["auditAgentId"]);
             $userVenteId = intval($orderData['order']["userVenteId"]);
-            $userMeetingMakerId = intval($orderData['order']["userMeetingMakerId"]);
+            $userMeetingMakerId = intval($orderData['order']["userMeetingMaker"]);
             $amount = floatval($orderData['order']["amount"]);
+            $remunerationAmount =  floatval($orderData['order']["remuneration"]);
 
             $secteur = $this->secteurRepository->find($secteurId);
             $auditAgent = $this->userRepository->find($auditAgentId);
@@ -103,71 +104,88 @@ class RemunerationService
             $venteUserIn = false;
             $userMeetingMakerIn = false;
             $usersCheck =  [];
-            foreach ($orderData['filsParrainNiveau'] as $item) {
-                $item['user'] = $this->userRepository->find(intval($item['userId']));
-                $item['niveau'] = intval($item['niveau']);
-                if (!$auditAgentIn) $auditAgentIn = $auditAgent->getId() == $item['user']->getId();
-                if (!$venteUserIn) $venteUserIn = $userVente->getId() == $item['user']->getId();
-                if (!$userMeetingMakerIn) $userMeetingMakerIn = $userMeetingMaker->getId() == $item['user']->getId();
-                $usersCheck[] = $item;
+
+
+            if ($remunerationAmount > 0) {
+                $remuneration = new UserTransaction();
+                $remuneration->setAmount($remunerationAmount);
+                $remuneration->setUser($auditAgent);
+                $remuneration->setCreatedAt(new \DateTimeImmutable());
+                $remuneration->setStatus(UserTransaction::STATUS_VALID);
+                $remuneration->setSortie(false);
+                $remuneration->setType(UserTransaction::TYPE_REMUNERATION);
+                $remuneration->setSourceId($orderId);
+                $remuneration->setSecteur($secteur);
+                $this->entityManager->persist($remuneration);
             }
 
+            
+            // foreach ($orderData['filsParrainNiveau'] as $item) {
+            //     $item['user'] = $this->userRepository->find(intval($item['userId']));
+            //     $item['niveau'] = intval($item['niveau']);
+            //     if (!$auditAgentIn) $auditAgentIn = $auditAgent->getId() == $item['user']->getId();
+            //     if (!$venteUserIn) $venteUserIn = $userVente->getId() == $item['user']->getId();
+            //     if (!$userMeetingMakerIn) $userMeetingMakerIn = $userMeetingMaker->getId() == $item['user']->getId();
+            //     $usersCheck[] = $item;
+            // }
 
-            if (!$auditAgentIn) {
-                $usersCheck[] = ['user' => $auditAgent];
-                if (!$venteUserIn) $venteUserIn = $userVente->getId() == $auditAgent->getId();
-                if (!$userMeetingMakerIn) $userMeetingMakerIn = $userMeetingMaker->getId() == $auditAgent->getId();
-            }
-            if (!$venteUserIn) {
-                $usersCheck[] = ['user' => $userVente];
-                if (!$userMeetingMakerIn) $userMeetingMakerIn = $userMeetingMaker->getId() == $userVente->getId();
-            }
-            if (!$userMeetingMakerIn) {
-                $usersCheck[] = ['user' => $userMeetingMaker];
-            }
 
-            foreach ($usersCheck as $dataCheck) {
-                $user = $dataCheck['user'];
-                $positionBefore = $user->getPosition();
-                $niveau = null;
-                $filsNiveau = null;
-                $caNiveau = null;
-                if (isset($dataCheck['niveau'])) {
-                    $niveau = $dataCheck['niveau'];
-                    $filsNiveau = $dataCheck['filsIdNiveau'];
-                    $caNiveau = array_map(function ($item) {
-                        return floatval($item);
-                    }, $dataCheck['caNiveau']);
-                }
+            // if (!$auditAgentIn) {
+            //     $usersCheck[] = ['user' => $auditAgent];
+            //     if (!$venteUserIn) $venteUserIn = $userVente->getId() == $auditAgent->getId();
+            //     if (!$userMeetingMakerIn) $userMeetingMakerIn = $userMeetingMaker->getId() == $auditAgent->getId();
+            // }
+            // if (!$venteUserIn) {
+            //     $usersCheck[] = ['user' => $userVente];
+            //     if (!$userMeetingMakerIn) $userMeetingMakerIn = $userMeetingMaker->getId() == $userVente->getId();
+            // }
+            // if (!$userMeetingMakerIn) {
+            //     $usersCheck[] = ['user' => $userMeetingMaker];
+            // }
 
-                $total = 0;
-                foreach (self::CONDITIONS as $condition) {
-                    if ($condition['type'] == 'position' && $niveau === null) break;
-                    if (eval("return " . $condition['condition'] . ";")) {
-                        $total += floatval(eval("return " . $condition['gain'] . ";"));
-                        if ($condition['type'] == 'position' && $user->getPosition() < $condition['position']) {
-                            $user->setPosition($condition['position']);
-                        }
-                    } else if ($condition['type'] == 'position') {
-                        break;
-                    }
-                }
 
-                if ($total > 0) {
-                    $remuneration = new UserTransaction();
-                    $remuneration->setAmount($total);
-                    $remuneration->setUser($user);
-                    $remuneration->setCreatedAt(new \DateTimeImmutable());
-                    $remuneration->setStatus(UserTransaction::STATUS_VALID);
-                    $remuneration->setSortie(false);
-                    $remuneration->setType(UserTransaction::TYPE_REMUNERATION);
-                    $remuneration->setSourceId($orderId);
-                    $remuneration->setSecteur($secteur);
-                    $this->entityManager->persist($remuneration);
-                }
+            // foreach ($usersCheck as $dataCheck) {
+            //     $user = $dataCheck['user'];
+            //     $positionBefore = $user->getPosition();
+            //     $niveau = null;
+            //     $filsNiveau = null;
+            //     $caNiveau = null;
+            //     if (isset($dataCheck['niveau'])) {
+            //         $niveau = $dataCheck['niveau'];
+            //         $filsNiveau = $dataCheck['filsIdNiveau'];
+            //         $caNiveau = array_map(function ($item) {
+            //             return floatval($item);
+            //         }, $dataCheck['caNiveau']);
+            //     }
 
-                $this->entityManager->persist($user);
-            }
+            //     $total = 0;
+            //     foreach (self::CONDITIONS as $condition) {
+            //         if ($condition['type'] == 'position' && $niveau === null) break;
+            //         if (eval("return " . $condition['condition'] . ";")) {
+            //             $total += floatval(eval("return " . $condition['gain'] . ";"));
+            //             if ($condition['type'] == 'position' && $user->getPosition() < $condition['position']) {
+            //                 $user->setPosition($condition['position']);
+            //             }
+            //         } else if ($condition['type'] == 'position') {
+            //             break;
+            //         }
+            //     }
+
+            //     if ($total > 0) {
+            //         $remuneration = new UserTransaction();
+            //         $remuneration->setAmount($total);
+            //         $remuneration->setUser($user);
+            //         $remuneration->setCreatedAt(new \DateTimeImmutable());
+            //         $remuneration->setStatus(UserTransaction::STATUS_VALID);
+            //         $remuneration->setSortie(false);
+            //         $remuneration->setType(UserTransaction::TYPE_REMUNERATION);
+            //         $remuneration->setSourceId($orderId);
+            //         $remuneration->setSecteur($secteur);
+            //         $this->entityManager->persist($remuneration);
+            //     }
+
+            //     $this->entityManager->persist($user);
+            // }
             $this->entityManager->flush();
             $this->entityManager->commit();
         } catch (\Exception $ex) {
