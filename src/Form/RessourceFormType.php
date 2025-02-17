@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Produit;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -20,34 +21,47 @@ use Symfony\Component\Validator\Constraints\NotNull;
 
 class RessourceFormType extends AbstractType
 {
-    
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('name', TextType::class, [
-                "label" => "Nom",
+                "label" => "Titre",
                 "trim" => true,
                 "required" => true,
                 "constraints" => [
                     new NotBlank(["message" => "Nom obligatoire"])
                 ]
             ])
-            ->add('content', CKEditorType::class,  [
+            // ->add('content', CKEditorType::class, [
+            //     "label" => "Description",
+            //     "required" => false,
+            //     'config' => array(
+            //         'uiColor' => '#ffffff',
+            //         //'uiColor' => '#7367f0',
+            //     )
+            // ])
+            ->add('content', TextareaType::class, [
                 "label" => "Description",
                 "required" => false,
-                'config' => array(
-                    'uiColor' => '#ffffff',
-                    //'uiColor' => '#7367f0',
-                )])   
-            ->add('imageCover', HiddenType::class,  [
+            ])
+            ->add('imageCover', HiddenType::class, [
                 "label" => "Image de couverture",
                 "required" => true,
-                'trim' => true, 
+                'trim' => true,
                 "constraints" => [
                     new NotBlank(["message" => "Image de couverture obligatoire"])
                 ]
-            ]) 
-            
+            ])
+            ->add('type', ChoiceType::class, [
+                "label" => "Type",
+                'choices' => [
+                    Ressource::TYPE_LABEL[Ressource::TYPE_PROFESSIONNEL] => Ressource::TYPE_PROFESSIONNEL,
+                    Ressource::TYPE_LABEL[Ressource::TYPE_REVENDEUR] => Ressource::TYPE_REVENDEUR
+                ],
+                "required" => false,
+            ])
+
         ;
     }
 

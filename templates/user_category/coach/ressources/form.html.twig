@@ -23,20 +23,25 @@
                     {% endfor %}
                 {% endfor %}
                 <div class="my-form-widget">
-                    <label>Image de couverture</label>
-                    <input type="file" accept="image/*" name="temp_image_cover" class="form-control">
-                    {{form_errors(form.imageCover)}}
-                    <img class="my-form-img-preview {% if ressource.imageCover %}d-none{% endif %}" id="my-form-img-preview" data-path="{{ asset( filesDirectory ~ '[imagePath]') }}" src="{% if ressource.imageCover %}{{ asset( filesDirectory ~ ressource.imageCover) }}{% endif %}" />
-                </div>
-                <div class="my-form-widget">
                     {{form_label(form.name)}}
                     {{form_widget(form.name)}}
                     {{form_errors(form.name)}}
                 </div>
                 <div class="my-form-widget">
+                    <label>Image de couverture</label>
+                    <input type="file" accept="image/*" name="temp_image_cover" class="form-control">
+                    {{form_errors(form.imageCover)}}
+                    <img class="my-form-img-preview {% if not ressource.imageCover %}d-none{% endif %}" id="my-form-img-preview" data-path="{{ asset( files_directory_relative ~ '[imagePath]') }}" src="{% if ressource.imageCover %}{{ asset( files_directory_relative ~ ressource.imageCover) }}{% endif %}" />
+                </div>
+                <div class="my-form-widget">
                     {{form_label(form.content)}}
                     {{form_widget(form.content)}}
                     {{form_errors(form.content)}}
+                </div>
+                <div class="my-form-widget">
+                    {{form_label(form.type)}}
+                    {{form_widget(form.type)}}
+                    {{form_errors(form.type)}}
                 </div>
                 <input type="hidden" name="image_cover_temp" value="{{ressource.imageCover}}">
                 {{form_widget(form.imageCover)}}
@@ -74,27 +79,6 @@
                     <input type="file" class="d-none" id="file-input" >
                     <input type="hidden" id="files" name="files" >
                 </div>
-                <div class="my-form-widget">
-                    <div class="d-flex align-items-center justify-content-between " >
-                    <label>Liens</label>
-                     <button class="btn btn-success btn-large" type="button" id="btn-add-link"><i class="fa fa-plus" aria-hidden="true"></i>&nbsp;Ajouter</button>
-                    </div>
-                    
-                        <table class="table table-bordered mt-2 d-none" id="links-wrapper">
-                        <thead>
-                            <tr>
-                            <th scope="col">Nom</th>
-                            <th scope="col">Lien</th>
-                            <th scope="col"></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            
-                            
-                        </tbody>
-                        </table>
-                    <input type="hidden" id="links" name="links" >
-                </div>
                 
                 <div class="btn-wrap">
                     <button class="btn btn-primary" type="submit"><i data-feather="save"></i>Enregistrer</button>
@@ -109,35 +93,6 @@
     <script>
         $(document).ready(function (){
             
-            function addLink(data){
-                
-                
-                const linkBlockWrapper = $(`<tr class="link-block-wrapper" >
-                            <td>
-                            <input type="text" name="customlinkname" class="form-control customlinkname" value="${data.customName??data.link}">
-                            </td>
-                            <td>
-                                <input type="text" name="link" class="form-control link" value="${data.link}">
-                            </td>
-                            <td >
-                            <button class="btn btn-danger btn-sm remove-link" type="button"><i class="fa fa-trash"></i></button>
-                            </td>
-                            </tr>`);
-
-                
-
-                $(linkBlockWrapper).find('.remove-link').click(function () {
-                    $(linkBlockWrapper).remove();
-                    if($('#links-wrapper tbody > *').length == 0 && !$('#links-wrapper').hasClass('d-none')){
-                        $('#links-wrapper').addClass('d-none')
-                    }
-                })
-
-                $('#links-wrapper tbody').append(linkBlockWrapper);
-                if($('#links-wrapper tbody > *').length > 0){
-                    $('#links-wrapper').removeClass('d-none');
-                }
-            }
 
             function addFile(data){
                 let downloadPath = "{{path('app_ressource_file_download', {'filename': 'custom-file-name'})}}";
@@ -178,10 +133,6 @@
                 $('#file-input').click();
             });
 
-            $('#btn-add-link').click(function (){
-                addLink({link: '', customName: ''});
-            });
-
             $('input[name="temp_image_cover"]').change(function () {
                 if(this.files.length > 0){
                     const file = this.files[0]; // Get only the first file
@@ -195,7 +146,6 @@
                         processData: false, // Prevent jQuery from converting FormData to a string
                         contentType: false, // Ensure correct content type is set
                         success: function (response) {
-                        addFile(response);
                             $('input[name="image_cover_temp"]').val(response.path);
                             $('#my-form-img-preview').attr('src', $('#my-form-img-preview').data('path').replace('[imagePath]', response.path));
                             $('#my-form-img-preview').removeClass('d-none');
@@ -263,11 +213,6 @@
             const existingFiles = {{files | json_encode() | raw}};
             existingFiles.forEach((file) => {
                 addFile(file);
-            })
-
-            const existingLinks = {{links | json_encode() | raw}};
-            existingLinks.forEach((link) => {
-                addLink(link);
             })
         }); 
     </script>

@@ -66,6 +66,8 @@
                     <tr>
                         <th>Id</th>
                         <th>Nom</th>
+                        <th>Description</th>
+                        <th>Type</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -74,6 +76,8 @@
                     <tr>
                         <td>{{item.id}}</td>
                         <td>{{item.name}}</td>
+                        <td>{{item.content}}</td>
+                        <td>{{item.typeLabel}}</td>
                         
                         <td class="col-action col-action--edit">
                             <a href="{{path('app_ressource_details', {'id': item.id})}}">

@@ -11,6 +11,14 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Ressource
 {
+    public const TYPE_REVENDEUR = 'revendeur';
+    public const TYPE_PROFESSIONNEL = 'professionnel';
+
+    public const TYPE_LABEL = [
+        self::TYPE_REVENDEUR => 'Revendeur',
+        self::TYPE_PROFESSIONNEL => 'Professionnel'
+    ];
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -54,6 +62,10 @@ class Ressource
     private $imageCover;
 
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $type;
 
     public function getId(): ?int
     {
@@ -80,6 +92,18 @@ class Ressource
     public function setImageCover(string $imageCover): self
     {
         $this->imageCover = $imageCover;
+
+        return $this;
+    }
+
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function setType(string $type): self
+    {
+        $this->type = $type;
 
         return $this;
     }
@@ -158,4 +182,12 @@ class Ressource
         }
         return $filesParsed;
     }
+
+    public function getTypeLabel(): ?string
+    {
+        if ($this->getType())
+            return self::TYPE_LABEL[$this->getType()];
+        return null;
+    }
+
 }

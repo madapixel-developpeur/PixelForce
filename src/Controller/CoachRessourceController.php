@@ -69,20 +69,14 @@ class CoachRessourceController extends AbstractController
         $form = $this->createForm(RessourceFormType::class, $res);
         $form->handleRequest($request);
         $files = [];
-        $links = [];
         if ($form->isSubmitted()) {
             $filesStr = trim($request->request->get('files', ''));
             if ($filesStr) {
                 $files = json_decode($filesStr);
             }
-            $linksStr = trim($request->request->get('links', ''));
-            if ($linksStr) {
-                $links = json_decode($linksStr);
-            }
             if ($form->isValid()) {
                 try {
-
-                    $res->setLinks($links);
+                    $res->setSecteur($this->getUser()->getUniqueCoachSecteur());
                     $res->setFiles($files);
                     $res->setStatus(Status::VALID);
                     $this->entityManager->persist($res);
@@ -97,13 +91,13 @@ class CoachRessourceController extends AbstractController
             }
         }
 
-        return $this->render('user_category/coach/ressource/form.html.twig', [
+        return $this->render('user_category/coach/ressources/form.html.twig', [
             'form' => $form->createView(),
             'isEdit' => false,
             'files' => array_map(function ($file) {
                 return ['path' => $file['path'], 'name' => basename($file['path']), 'customName' => $file['customName']];
             }, $files),
-            'links' => $links
+            "ressource" => $res
         ]);
     }
 
@@ -114,19 +108,14 @@ class CoachRessourceController extends AbstractController
         $form = $this->createForm(RessourceFormType::class, $res);
         $form->handleRequest($request);
         $files = $res->getFiles();
-        $links = $res->getLinks();
         if ($form->isSubmitted()) {
             $filesStr = trim($request->request->get('files', ''));
             if ($filesStr) {
                 $files = json_decode($filesStr);
             }
-            $linksStr = trim($request->request->get('links', ''));
-            if ($linksStr) {
-                $links = json_decode($linksStr);
-            }
             if ($form->isValid()) {
                 try {
-                    $res->setLinks($links);
+                    $res->setSecteur($this->getUser()->getUniqueCoachSecteur());
                     $res->setFiles($files);
                     $res->setStatus(Status::VALID);
                     $this->entityManager->persist($res);
@@ -141,13 +130,13 @@ class CoachRessourceController extends AbstractController
             }
         }
 
-        return $this->render('user_category/coach/ressource/form.html.twig', [
+        return $this->render('user_category/coach/ressources/form.html.twig', [
             'form' => $form->createView(),
             'isEdit' => true,
             'files' => array_map(function ($file) {
                 return ['path' => $file['path'], 'name' => basename($file['path']), 'customName' => $file['customName']];
             }, $files),
-            'links' => $links
+            "ressource" => $res
         ]);
     }
 
@@ -155,7 +144,7 @@ class CoachRessourceController extends AbstractController
     #[Route('/{id}/details', name: 'app_ressource_details')]
     public function details(Ressource $res): Response
     {
-        return $this->render('user_category/common-admin/ressource/details.html.twig', [
+        return $this->render('user_category/coach/ressources/details.html.twig', [
             'res' => $res,
         ]);
     }
@@ -202,8 +191,9 @@ class CoachRessourceController extends AbstractController
         ;
 
         $where = $searchService->getWhere($filter, new MyCriteriaParam($criteria, 'r'));
-        $query->where($where["where"] . " and r.status = :statusValid ");
+        $query->where($where["where"] . " and r.status = :statusValid and r.secteur = :secteurId ");
         $where["params"]["statusValid"] = Status::VALID;
+        $where["params"]["secteurId"] = $this->getUser()->getUniqueCoachSecteur()?->getId();
         $searchService->setAllParameters($query, $where["params"]);
         $searchService->addOrderBy($query, $filter, ['sort' => 'r.id', 'direction' => 'asc']);
 
@@ -213,7 +203,7 @@ class CoachRessourceController extends AbstractController
             $limit
         );
 
-        return $this->render('user_category/coach/ressource/list.html.twig', [
+        return $this->render('user_category/coach/ressources/list.html.twig', [
             'result' => $result,
             'form' => $form->createView(),
             'page' => $page
