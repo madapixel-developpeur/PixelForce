@@ -1,0 +1,134 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	Rémunérations
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+    <div class="row mb-3">
+		<div class="col-12  mt-2 mt-md-3">
+			<h4 class="my-auto general-primary-text">Historiques des rémunérations</h4>
+		</div>
+	</div>
+	<div class="card card-company-table p-5 rounded-3" style="">
+				<div class="card-body p-0">
+					<div class="card-head mb-3">
+						<div class="row">
+							<div class="col-0 col-md-6">
+							</div>
+							<div class="col-12 col-md-6 d-flex justify-content-end">
+								{# <form action="" class="input-group rounded-3 m-2 w-75">
+                                    <button class="input-group-text border-0" id="search-addon" type="submit">
+										<i class="fas fa-search"></i>
+									</button>
+                                    <input type="search"name="search" class="form-control  input-group-text border-0" placeholder="Chercher" aria-label="Search" aria-describedby="search-addon" />
+                                </form> #}
+								<div class="">
+                                    <div class="input-group rounded-3 m-2">
+                                        <button class="input-group-text border-0 w-100" type="button" data-toggle="collapse" data-target="#filters" aria-expanded="false" aria-controls="filters">
+                                            <span class="input-group-text border-0 w-25 rounded-4 me-4" id="filter-toggle">
+                                                <i class="fa-solid fa-bars-staggered"></i>
+                                            </span>
+                                            Filtres
+                                        </button>
+                                    </div>
+                                </div>
+							</div>
+						</div>
+                    </div>
+                    <div class="collapse" id="filters">
+                        <div class="block block--bordered block--rounded">
+                             <h1 class="block__text block__text--center mt-2" >Options de filtre :</h1>
+                             <div class="filter-wrap">
+                                    <!-- Formulaire de recherche -->
+                                    <div class="search-form">
+                                        {{ form_start(form, {'attr': {'class': 'filter-form'}}) }}
+                                            <div class="col-12 col-md-2">
+                                                {{form_label(form.label)}}
+                                                {{form_widget(form.label)}}
+                                                {{form_errors(form.label)}}
+                                            </div>
+                                           
+                                            <div class="col-12 col-md-2">
+                                                {{form_label(form.minAmount)}}
+                                                {{form_widget(form.minAmount)}}
+                                                {{form_errors(form.minAmount)}}
+                                            </div>
+                                             <div class="col-12 col-md-2">
+                                                {{form_label(form.maxAmount)}}
+                                                {{form_widget(form.maxAmount)}}
+                                                {{form_errors(form.maxAmount)}}
+                                            </div>
+                                            <div class="col-12 col-md-2">
+                                                {{form_label(form.dateMin)}}
+                                                {{form_widget(form.dateMin)}}
+                                                {{form_errors(form.dateMin)}}
+                                            </div>
+                                            <div class="col-12 col-md-2">
+                                                {{form_label(form.dateMax)}}
+                                                {{form_widget(form.dateMax)}}
+                                                {{form_errors(form.dateMax)}}
+                                            </div>
+                                             <div class="col-12 col-md-3">
+                                                {{form_label(form.type)}}
+                                                {{form_widget(form.type)}}
+                                                {{form_errors(form.type)}}
+                                            </div>
+                                           
+                                            
+                                           
+
+                                            <div class="btn-wrap">
+                                                <button class="btn btn-primary" type="submit"><i data-feather="filter"></i>Filtrer</button>
+                                            </div>
+                                        {{ form_end(form) }}
+                                    </div>
+                             </div>
+                        </div>
+                    </div>
+                    
+                    {% if remunerations|length ==0 %}
+                        <div class="alert alert-primary p-3 text-center" role="alert">
+                            <div class="alert-body">
+                                Historique vide
+                            </div>
+                        </div>
+                    {% endif %}
+                    {% if remunerations|length !=0 %}
+					<div class="table-responsive">
+						<table class="table">
+							<tbody class="align-items-center">
+								<tr>
+                                    <th>Date</th>
+                                    <th>Description</th>
+                                    <th>Type</th>
+                                    <th class="text-right">Montant</th>
+                                    <th></th>
+                                </tr>
+
+								{% for remuneration in remunerations %}
+                                    <tr>
+                                        <td>{{remuneration.dateReference | date("d/m/Y H:i")}}</td>
+                                        <td class="text-left">{{remuneration.label}}</td>
+                                        <td class="text-left">{{remuneration.typeStr}}</td>
+                                        <td class="text-right">{{remuneration.amount | number_format(2, ',', ' ') }}</td> 
+                                    </tr>
+                                {% endfor %}
+
+							</tbody>
+						</table>
+					</div>
+					<div class="pagination d-flex justify-content-center">
+						{{ knp_pagination_render(remunerations)}}
+					</div>
+                     {% endif %}
+				</div>
+	</div>
+
+{% endblock %}
+
+

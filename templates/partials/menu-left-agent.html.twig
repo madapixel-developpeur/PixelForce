@@ -52,6 +52,7 @@
             {% else %}
                 <li class=" nav-item {% if not app.user.canAccessFonct('VENTE', app.session.get('secteurId')) %}disabled{% endif %}"><a class="d-flex align-items-center" href="{{path('admin_ordersecu_list')}}"><i data-feather="eye"></i><span class="menu-title text-truncate" data-i18n="Calendar">Ventes</span></a></li>
             {% endif %}
+            {% if secteurAgent.isFonctionnaliteActive(constant('App\\Util\\FonctionnalitesTypeSecteur::FONCTIONNALITE_STANDARD_VENTE')) and app.session.get('secteurId') == secteurDigitalId %} <li class=" nav-item {% if not app.user.canAccessFonct('VENTE', app.session.get('secteurId')) %}{% endif %}"><a class="d-flex align-items-center" href="{{path('agent_remuneration_list_digital')}}" ><i data-feather="credit-card"></i><span class="menu-title text-truncate" data-i18n="Calendar">Rémunération</span></a></li>{% endif %}
         {% endif %}
         {% if  is_granted(constant('App\\Entity\\User::ROLE_PROFESSIONNEL')) and app.session.get('secteurId') == secteurDigitalId  %}
             <li class=" navigation-header mt-3 text-white"><span data-i18n="User Interface">Espace professionnel</span><i data-feather="more-horizontal"></i></li>

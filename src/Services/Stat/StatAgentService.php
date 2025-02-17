@@ -168,6 +168,18 @@ class StatAgentService
         return $content;
     }
 
+    public function getRemunerations($params)
+    {
+        $pbb_ws_url = $this->parameterBag->get('pbb_ws_url');
+        $response = $this->client->request(
+            'GET',
+            $pbb_ws_url . '/api/remuneration/search',
+            ['query' => $params]
+        );
+        $content = json_decode($response->getContent(), true);
+        return $content;
+    }
+
     public function getOrderById($id)
     {
         $pbb_ws_url = $this->parameterBag->get('pbb_ws_url');
