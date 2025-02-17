@@ -49,14 +49,14 @@ class RemunerationFilterType extends AbstractType
                     'class' => 'form-control'
                 ]
             ])
-            ->add('minAmount', NumberType::class, [
+            ->add('minAmount', IntegerType::class, [
                 'required' => false,
                 'label' => 'Montant min',
                 'attr' => [
                     'class' => 'form-control'
                 ]
             ])
-            ->add('maxAmount', NumberType::class, [
+            ->add('maxAmount', IntegerType::class, [
                 'required' => false,
                 'label' => 'Montant max',
                 'attr' => [
