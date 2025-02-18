@@ -49,8 +49,8 @@ class AgentRessourceController extends AbstractController
 
 
 
-    #[Route('/', name: 'app_agent_ressource_list')]
-    public function index(Request $request, PaginatorInterface $paginator, SearchService $searchService): Response
+    #[Route('/{type}', name: 'app_agent_ressource_list')]
+    public function index(string $type, Request $request, PaginatorInterface $paginator, SearchService $searchService): Response
     {
         $sessionSecteurId = $this->session->get('secteurId');
         $user = $this->getUser();
@@ -79,7 +79,7 @@ class AgentRessourceController extends AbstractController
         $query->where($where["where"] . " and r.status = :statusValid and r.secteur = :secteurId and (r.type is null or r.type = :type)");
         $where["params"]["statusValid"] = Status::VALID;
         $where["params"]["secteurId"] = $sessionSecteurId;
-        $where["params"]["type"] = in_array(User::ROLE_PROFESSIONNEL, $user->getRoles()) ? Ressource::TYPE_PROFESSIONNEL : Ressource::TYPE_REVENDEUR;
+        $where["params"]["type"] = $type;
         $searchService->setAllParameters($query, $where["params"]);
         $searchService->addOrderBy($query, $filter, ['sort' => 'r.id', 'direction' => 'asc']);
 
