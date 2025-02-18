@@ -264,7 +264,7 @@ class MailerService
         $attachmentsPath = [];
         $embeddedImages = ['logo' => 'assets/img/logo/pixelforce/logo-pixelforce-min.png'];
         $this->mySendMail([
-            'subject' => 'Bienvenue chez Pixelforce !',
+            'subject' => 'Bienvenue sur Pixelforce 🚀 - Votre aventure commence maintenant !',
             'to' => $user->getEmail(),
             'body' => $body
         ], $attachmentsPath, null, $embeddedImages);

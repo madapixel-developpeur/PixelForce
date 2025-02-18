@@ -10,8 +10,8 @@
     </style>
 </head>
 <body>
-    <div>
-        Bonjour {{user.prenom}} {{user.nom}},
+    {# <div>
+        Bonjour {{user.prenom}},
         <br />
         <br />
         Bienvenue dans la communauté Pixelforce ! Nous sommes ravis de vous compter parmi nous.
@@ -32,7 +32,14 @@
         À très bientôt,
         <br />
         L’équipe Pixelforce
-    </div>
+    </div> #}
+    <p><strong>Bonjour {{user.prenom}},</strong></p>
+<p><span style="font-weight: 400;">F&eacute;licitations, vous faites d&eacute;sormais partie de Pixelforce ! 🎉 Nous sommes ravis de vous accueillir parmi nous.</span></p>
+<p><span style="font-weight: 400;">Voici quelques informations importantes pour bien d&eacute;marrer :</span></p>
+<p><span style="font-weight: 400;">✅ </span><strong>Votre email d&rsquo;inscription :</strong><span style="font-weight: 400;"> {{user.email}}</span><span style="font-weight: 400;"><br /></span><span style="font-weight: 400;">✅ </span><strong>Acc&eacute;dez &agrave; votre compte ici :</strong><span style="font-weight: 400;"> <a href="{{ app.request.getSchemeAndHttpHost() }}">{{ app.request.getSchemeAndHttpHost() }}</a></span></p>
+<p><span style="font-weight: 400;">💡 </span><strong>Profitez de votre lien de parrainage</strong><strong><br /></strong><span style="font-weight: 400;">Recommandez Pixelforce et b&eacute;n&eacute;ficiez d&rsquo;avantages exclusifs ! Partagez votre lien d&egrave;s maintenant :</span><span style="font-weight: 400;"><br /></span><span style="font-weight: 400;">👉 </span><strong><a href="{{url('agent_inscription', {'ambassador_username':  user.username != "" ?  user.username : ' '})}}">{{url('agent_inscription', {'ambassador_username':  user.username != "" ?  user.username : ' '})}}</a></strong></p>
+<p><span style="font-weight: 400;">📢 </span><strong>Et maintenant ?</strong><strong><br /></strong><span style="font-weight: 400;">Il ne vous reste plus qu&rsquo;&agrave; explorer la plateforme et d&eacute;couvrir toutes les opportunit&eacute;s qui vous attendent. Si vous avez la moindre question, notre &eacute;quipe est &agrave; votre disposition &agrave; </span><strong><a href="mailto:contact@pixelforce.com">contact@pixelforce.com</a></strong><span style="font-weight: 400;">.</span></p>
+<p><span style="font-weight: 400;">&Agrave; tr&egrave;s vite !</span><span style="font-weight: 400;"><br /></span><strong>L&rsquo;&eacute;quipe Pixelforce 🚀</strong></p>
     <div>
         <img src="cid:logo" />
     </div>
