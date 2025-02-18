@@ -24,7 +24,7 @@
       index: 0,
       nodePadding: 9,
       collapseCircleRadius: 7,
-      nodeHeight: 80,
+      nodeHeight: 100,
       nodeWidth: 230,
       duration: 750,
       rootNodeTopMargin: 20,
@@ -42,7 +42,7 @@
     dynamic.nodeTextLeftMargin = attrs.nodePadding * 2 + dynamic.nodeImageWidth
     dynamic.rootNodeLeftMargin = attrs.width / 3.5;
     dynamic.nodePositionNameTopMargin = attrs.nodePadding + 8 + dynamic.nodeImageHeight / 4 * 1
-    dynamic.nodeChildCountTopMargin = attrs.nodePadding + 14 + dynamic.nodeImageHeight / 4 * 3
+    dynamic.nodeChildCountTopMargin = attrs.nodePadding + 24 + dynamic.nodeImageHeight / 4 * 3
 
     var tree = d3.layout.tree().nodeSize([attrs.nodeWidth + 40, attrs.nodeHeight]);
     var diagonal = d3.svg.diagonal()
@@ -229,6 +229,7 @@
         .attr("x", dynamic.nodeTextLeftMargin)
         .attr("y", attrs.nodePadding + 10)
         .attr('class', 'emp-name')
+        .attr("dy", ".25em")
         .attr("text-anchor", "left")
         .text(function(d) {
           let text = d.name.trim();
@@ -240,7 +241,7 @@
         .attr("x", dynamic.nodeTextLeftMargin)
         .attr("y", dynamic.nodePositionNameTopMargin)
         .attr('class', 'emp-position-name')
-        .attr("dy", ".35em")
+        .attr("dy", ".25em")
         .attr("text-anchor", "left")
         .text(function(d) {
           var position =  d.positionName.substring(0,27);
@@ -252,9 +253,9 @@
 
       nodeGroup.append("text")
         .attr("x", dynamic.nodeTextLeftMargin)
-        .attr("y", attrs.nodePadding + 10 + dynamic.nodeImageHeight / 4 * 2)
+        .attr("y", attrs.nodePadding + 4 + dynamic.nodeImageHeight / 4 * 2)
         .attr('class', 'emp-area')
-        .attr("dy", ".35em")
+        .attr("dy", ".25em")
         .attr("text-anchor", "left")
         .text(function(d) {
           var area =  d.area.substring(0,27);
@@ -263,6 +264,17 @@
           }
           return area;
         })
+
+        nodeGroup.append("text")
+        .attr("x", dynamic.nodeTextLeftMargin)
+        .attr("y", dynamic.nodeChildCountTopMargin - 20)
+        .attr('class', 'emp-area')
+        .attr("text-anchor", "left")
+        .style('font-family', 'Roboto, sans-serif')
+        .style('font-weight', '600')
+        .text(function(d) {
+           return d.CA;
+        });
 
       nodeGroup.append("text")
         .attr("x", dynamic.nodeTextLeftMargin)
@@ -279,8 +291,7 @@
         .attr("y", dynamic.nodeChildCountTopMargin)
         .attr('class', 'emp-count')
         .attr("text-anchor", "left")
-
-      .text(function(d) {
+        .text(function(d) {
         if (d.children) return d.children.length;
         if (d._children) return d._children.length;
         return;

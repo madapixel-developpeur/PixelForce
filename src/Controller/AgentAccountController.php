@@ -344,6 +344,7 @@ class AgentAccountController extends AbstractController
             $unilevel = $this->statAgentService->getInovaUnilevelChildren($user, true);
         } else {
             $unilevel = $this->agentService->getUnilevelChildren($user, 1, true, $limit);
+            $unilevel = $this->statAgentService->addSummaryCaToUnilevel($unilevel);
         }
 
         $data = ['equipe' => $unilevel];

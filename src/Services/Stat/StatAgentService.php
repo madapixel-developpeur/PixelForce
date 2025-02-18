@@ -2,18 +2,20 @@
 
 namespace App\Services\Stat;
 
-use App\Services\ConfigSecteurService;
+use DateTime;
 use Exception;
 use App\Entity\User;
 use App\Entity\Secteur;
 use App\Entity\TypeSecteur;
+use App\Services\User\AgentService;
 use App\Services\RemunerationService;
+use App\Services\ConfigSecteurService;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\ResultSetMapping;
 use App\Repository\UserTransactionRepository;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
-use App\Services\User\AgentService;
+
 class StatAgentService
 {
     private $entityManager;
@@ -396,5 +398,44 @@ class StatAgentService
         }
 
         return $data;
+    }
+
+    public function getCaByIds($ids, DateTime $reference = new DateTime()){
+        $pbb_ws_url = $this->parameterBag->get('pbb_ws_url');
+        $response = $this->client->request(
+            'GET',
+            $pbb_ws_url . '/api/get-ca-array',
+            [
+                'json' => array_merge( ['ids' => $ids], ['date' =>  $reference->format('Y-m-d H:i:s')])
+            ]
+        );
+        $result = json_decode($response->getContent(), true);
+        return $result;
+    }
+
+    public function addSummaryCaToUnilevel($unilevel){
+        if(!isset($unilevel['children'])) return $unilevel;
+        $childrenIds = array_column($unilevel['children'],'ID');
+        if(!isset($unilevel['CA'])) $childrenIds[] = $unilevel['ID'];
+        $childrenCaArray = $this->getCaByIds($childrenIds);
+        if(count($childrenIds) > 0){
+            foreach ($unilevel['children'] as &$children) {
+                $item = array_filter($childrenCaArray, fn($item) => $item['id'] == $children['ID']);
+                if(count($item) != 1){
+                    $children['CA'] = number_format(0).'€';
+                }
+                else{
+                    $children['CA'] = number_format(reset($item)['amount'],2).'€';
+                }
+                $children = $this->addSummaryCaToUnilevel($children);
+
+            };
+        }
+
+        if(!isset($unilevel['CA'])) {
+            $item = array_filter($childrenCaArray, fn($item) => $item['id'] == $unilevel['ID']);
+            $unilevel['CA'] = (count($item) != 1) ? number_format(0).'€' : number_format(reset($item)['amount'],2).'€';
+        }
+        return $unilevel;
     }
 }
