@@ -414,11 +414,16 @@ class StatAgentService
     }
 
     public function addSummaryCaToUnilevel($unilevel){
-        if(!isset($unilevel['children'])) return $unilevel;
-        $childrenIds = array_column($unilevel['children'],'ID');
-        if(!isset($unilevel['CA'])) $childrenIds[] = $unilevel['ID'];
+        if(!isset($unilevel['children']) && isset($unilevel['CA']) ) return $unilevel;
+        $childrenIds = array_column($unilevel['children'] ?? [],'ID');
+        if(!isset($unilevel['CA'])){
+            $childrenIds[] = $unilevel['ID'];
+        } 
         $childrenCaArray = $this->getCaByIds($childrenIds);
-        if(count($childrenIds) > 0){
+
+
+
+        if(isset($unilevel['children'])){
             foreach ($unilevel['children'] as &$children) {
                 $item = array_filter($childrenCaArray, fn($item) => $item['id'] == $children['ID']);
                 if(count($item) != 1){
