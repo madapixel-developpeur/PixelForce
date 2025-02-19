@@ -261,7 +261,7 @@ class RemunerationService
     public function checkUserRemuneration(DateTime $dateOfTheMonthToCheck){
         $users = $this->userRepository->findUserByRoleAndSecteur(User::ROLE_REVENDEUR,$_ENV['SECTEUR_DIGITAL_ID']);
         $arrayWithFilleulData = [];
-        $limitLevel = 3;
+        $limitLevel = $_ENV['LIMIT_NIVEAU_EQUIPE_LINEAIRE'];
         foreach ($users as $user) {
             $arrayWithFilleulData[] = [
                 'id' => $user->getId(),

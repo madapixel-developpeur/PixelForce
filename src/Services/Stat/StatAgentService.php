@@ -7,6 +7,7 @@ use Exception;
 use App\Entity\User;
 use App\Entity\Secteur;
 use App\Entity\TypeSecteur;
+use App\Repository\UserRepository;
 use App\Services\User\AgentService;
 use App\Services\RemunerationService;
 use App\Services\ConfigSecteurService;
@@ -28,7 +29,8 @@ class StatAgentService
         RemunerationService $remunerationService,
         private UserTransactionRepository $userTransactionRepository,
         private ConfigSecteurService $configSecteurService,
-        private AgentService $agentService
+        private AgentService $agentService,
+        private UserRepository $userRepository
     ) {
         $this->entityManager = $entityManager;
         $this->remunerationService = $remunerationService;
@@ -209,6 +211,37 @@ class StatAgentService
             return [
                 "totalAmount" => 0,
                 "orderCount" => 0
+            ];
+        }
+    }
+
+    public function getAgentCaStatEquipe($agent,$secteurId)
+    {
+        try {
+            
+            if ($secteurId == $this->parameterBag->get('secteur_digital_id')) {
+                $pbb_ws_url = $this->parameterBag->get('pbb_ws_url');
+
+                $userData =  [
+                    'id' => $agent->getId(),
+                    'filleul' => $this->userRepository->getFilsJusqueNiveau($agent->getId(),$_ENV['LIMIT_NIVEAU_EQUIPE_LINEAIRE'],true)
+                ];
+                $response = $this->client->request(
+                    'GET',
+                    $pbb_ws_url . '/api/get-agent-ca-equipe-stat',
+                    [
+                        'json' => array_merge( ['user_data' => $userData], ['date' =>  (new DateTime())->format('Y-m-d H:i:s')])
+                    ]
+                );
+                $content = json_decode($response->getContent(), true);
+                return $content;
+            }else{
+                throw new Exception();
+            }
+        } catch (\Exception $exception) {
+            return [
+                "ca_perso" => 0,
+                "ca_equipe" => 0
             ];
         }
     }

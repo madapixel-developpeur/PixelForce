@@ -288,6 +288,7 @@ class AgentAccountController extends AbstractController
         $sessionSecteurId = $this->session->get('secteurId');
         $ambassadeur = $this->getUser();
         $type = '';
+        $caStat = ['ca_perso' => 0 , 'ca_equipe' => 0 ];
         if ($sessionSecteurId == $secteur_finance_id) {
             $type = 'finance';
             $userFinance = $statAgentService->getStatFinance($this->getUser()->getEmail());
@@ -305,7 +306,7 @@ class AgentAccountController extends AbstractController
                 $request->query->getInt('page', 1),
                 5
             );
-
+            $caStat = $statAgentService->getAgentCaStatEquipe($ambassadeur,$sessionSecteurId);
             $countEquipe = $this->agentService->getNumberOfTeam($ambassadeur, 1);
             $countDirect = count($result);
         }
@@ -316,7 +317,8 @@ class AgentAccountController extends AbstractController
             'filleul' => $filleul,
             'countEquipe' => $countEquipe,
             'countDirect' => $countDirect,
-            'type' => $type
+            'type' => $type,
+            'caStat' => $caStat
         ]);
     }
 

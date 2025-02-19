@@ -16,7 +16,7 @@
 			<section class="app-user-view-account">
 				<div class="row">
 					<!-- User Sidebar -->
-					<div class="col-12  col-md-7 order-1 order-md-0">
+					<div class="col-12  col-md-7 order-1 order-md-0 d-flex">
 						{{ include ('global/card/_card_agent_information.html.twig', {user : ambassadeur}) }}
 					</div>
 					<div class=" m-md-0 col-12  col-md-5 order-1 order-md-0">
@@ -32,7 +32,7 @@
 								</div>
 							</div>
 					  		<div class="row">
-								<h4 class="general-primary-text mt-2 mb-2">Equipe</h4>
+								{# <h4 class="general-primary-text mt-2 mb-2">Equipe</h4> #}
 								<div class="card card-statistics rounde">
 									<div class="card-body ">
 										<div class="row">
@@ -40,7 +40,33 @@
 												<div class="d-flex flex-row m-2">
 													<div class="rounded-circle bg-light-secondary me-2 detail-agent-equipe">
 														<div class="text-center">
-															<a href="#"><i class="fa-solid fa-people-arrows fs-4 pt-3"></i></a>
+															<a href="#"><i class="fa fa-dollar fs-4 pt-3"></i></a>
+														</div>
+													</div>
+													<div class="my-auto">
+														<a href="#"><p class="card-text font-small-3 mb-0 text-black">C.A personnel</p></a>
+														<h4 class="fw-bolder mb-0">{{ caStat.ca_perso | number_format(2, ',', ' ')  }} €</h4>
+													</div>
+												</div>
+											</div>
+											<div class="col-xl-6 col-sm-12 col-12 mb-2 mb-xl-0 border-start border-3">
+												<div class="d-flex justify-content-start align-items-center m-2">
+													<div class="rounded-circle bg-light-secondary me-2 detail-agent-equipe">
+														<div class="text-center">
+															<a href="#"><i class="fa fa-dollar fs-4 pt-3"></i></a>
+														</div>
+													</div>
+													<div class="my-auto">
+														<a href="#"><p class="card-text font-small-3 mb-0 text-black">C.A equipe</p></a>
+														<h4 class="fw-bolder mb-0">{{ caStat.ca_equipe | number_format(2, ',', ' ')  }} €</h4>
+													</div>
+												</div>
+											</div>     
+											<div class="col-xl-6 col-sm-12 col-12 m-2 m-xl-0">
+												<div class="d-flex flex-row m-2">
+													<div class="rounded-circle bg-light-secondary me-2 detail-agent-equipe">
+														<div class="text-center">
+															<a href="#"><i class="fa fa-people-arrows fs-4 pt-3"></i></a>
 														</div>
 													</div>
 													<div class="my-auto">
@@ -49,8 +75,8 @@
 													</div>
 												</div>
 											</div>
-											<div class="col-xl-6 col-sm-12 col-12 mb-1 mb-xl-0 border-start border-3">
-												<div class="d-flex justify-content-center align-items-center m-2">
+											<div class="col-xl-6 col-sm-12 col-12 mb-2 mb-xl-0 border-start border-3">
+												<div class="d-flex justify-content-start align-items-center m-2">
 													<div class="rounded-circle bg-light-secondary me-2 detail-agent-equipe">
 														<div class="text-center">
 															<a href="#"><i class="fa fa-users fs-4 pt-3" aria-hidden="true"></i></a>
@@ -61,7 +87,8 @@
 														<h4 class="fw-bolder mb-0">{{ countEquipe  }}</h4>
 													</div>
 												</div>
-											</div>                
+											</div>      
+										              
 											
 										</div>
 									</div>
