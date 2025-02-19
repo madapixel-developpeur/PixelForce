@@ -2,23 +2,26 @@
 
 namespace App\Controller\Order;
 
+use DateTime;
+use Exception;
 use App\Entity\Order;
-use App\Form\OrderClientFilterType;
-use App\Form\OrderSearchTypeDigital;
-use App\Repository\OrderRepository;
 use App\Services\OrderService;
 use App\Services\SearchService;
-use App\Services\Stat\StatAgentService;
+use App\Form\OrderClientFilterType;
+use App\Repository\OrderRepository;
+use App\Form\OrderSearchTypeDigital;
 use App\Util\Search\MyCriteriaParam;
+use App\Services\Stat\StatAgentService;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
 use Knp\Component\Pager\PaginatorInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
  * @Route("/agent/order")
@@ -180,6 +183,62 @@ class OrderControllerAdmin extends AbstractController
             'error' => $error,
             'order' => $this->statAgentService->getOrderById($id),
             'filesDirectory' => $this->getParameter('files_directory_relative')
+        ]);
+
+    }
+
+    /**
+     * @Route("/digital/historique-chiffre-d-affaire", name="agent_ca_list_digital")
+     */
+    public function getCaHistory(Request $request, PaginatorInterface $paginator, SearchService $searchService): Response
+    {
+
+        $user = (object)$this->getUser();
+        $secteurId = $this->session->get('secteurId');
+        $page = $request->query->get('page', 1);
+        
+        $filter = [];
+
+        $form = $this->createFormBuilder()
+        ->add('dateMin', TextType::class, [
+            'label' => 'Mois min',
+            'attr' => [
+                'type' => 'month', 
+                'class' => 'form-control month-picker-input',
+                'placeholder' => 'YYYY-MM', 
+            ],
+            'required' => false,
+        ])
+        ->add('dateMax', TextType::class, [
+            'label' => 'Mois max',
+            'attr' => [
+                'type' => 'month', 
+                'class' => 'form-control month-picker-input',
+                'placeholder' => 'YYYY-MM',
+            ],
+            'required' => false,
+        ])
+        ->getForm();
+
+        
+        $form->handleRequest($request);
+        $filter = $form->getData();
+        if(!$filter) $filter = [];
+        $filter['ibiId'] = $user->getId();
+
+        if(isset($filter['dateMin']) && $filter['dateMin'])  $filter['dateMin'] =  (new DateTime($filter['dateMin'] . "-01"))->setTime(0,0,0)->format('Y-m-d H:i:s');
+        if(isset($filter['dateMax']) && $filter['dateMax'])  $filter['dateMax'] = (new DateTime($filter['dateMax'] . "-01"))->modify('last day of this month')->setTime(23,59,59)->format('Y-m-d H:i:s');
+        $filter['page'] = $page;
+        $result = $this->statAgentService->getCaHistory($filter);
+        $historiquesCa = $result['result'];
+        $totalCa = $result['totalCa'];
+
+       
+
+        return $this->render('user_category/agent/order/chiffre_affaire_historique.html.twig', [
+            'historiquesCa' => $historiquesCa,
+            'totalCa' => $totalCa,
+            'form' => $form->createView(),
         ]);
 
     }

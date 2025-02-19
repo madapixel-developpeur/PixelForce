@@ -476,4 +476,23 @@ class StatAgentService
         }
         return $unilevel;
     }
+
+    public function getCaHistory($parameters){
+        try {
+            $url = $this->parameterBag->get('pbb_ws_url');
+            if (!trim($url))
+                throw new \Exception('API unavailable');
+            $response = $this->client->request(
+                'GET',
+                $url.'/api/get-ca-history',
+                [
+                    'query' => $parameters
+                ]
+            );
+            $content = json_decode($response->getContent(), true);
+            return $content;
+        } catch (\Exception $exception) {
+            return [];
+        }
+    }
 }
