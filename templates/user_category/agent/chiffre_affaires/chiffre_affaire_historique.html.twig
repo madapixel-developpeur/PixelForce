@@ -94,7 +94,7 @@
                                         <td class="text-end">{{ ca.total_vente }}</td>
                                         <td class="text-end">{{ ca.amount | number_format(2, ',', ' ') }} € </td>
                                         <td class="col-action ">
-                                            <a href="">
+                                            <a href="{{ path('agent_ca_details',{ month : ca.month })}}">
                                                 <i data-feather="eye"></i>
                                             </a>
                                         </td>   

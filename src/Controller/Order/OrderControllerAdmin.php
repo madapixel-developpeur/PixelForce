@@ -235,11 +235,52 @@ class OrderControllerAdmin extends AbstractController
 
        
 
-        return $this->render('user_category/agent/order/chiffre_affaire_historique.html.twig', [
+        return $this->render('user_category/agent/chiffre_affaires/chiffre_affaire_historique.html.twig', [
             'historiquesCa' => $historiquesCa,
             'totalCa' => $totalCa,
             'form' => $form->createView(),
         ]);
+
+    }
+
+
+    /**
+     * @Route("digital/detail-chiffre-d-affaire/{month}", name="agent_ca_details")
+     */
+    public function detailsCa(Request $request, PaginatorInterface $paginator,string $month): Response
+    {
+        try {
+            $page = $request->query->get('page', 1);
+            $start = (new DateTime($month . "-01"))->setTime(0,0,0)->format('Y-m-d H:i:s');
+            $end = (new DateTime($month . "-01"))->modify('last day of this month')->setTime(23,59,59)->format('Y-m-d H:i:s');
+
+            $filter = [
+                'dateMin' => $start,
+                'dateMax' => $end,
+                'ibiId' => $this->getUser()->getId(),
+                'page' => $page
+            ];
+
+            $result = $this->statAgentService->getOrders($filter);
+            $orderList = $paginator->paginate(
+                $result['items'],
+                1,
+                $result['itemNumberPerPage']
+            );
+            
+            $orderList->setTotalItemCount($result['total']);
+            $orderList->setCurrentPageNumber($result['currentPageNumber']);
+
+            return $this->render('user_category/agent/chiffre_affaires/chiffre_affaire_historique_detail.html.twig',[
+                'orderList' => $orderList,
+                'month'  => $month,
+                'totalAmount' => $result['totalAmount']
+            ]);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return $this->redirectToRoute('agent_ca_list_digital');    
+        }
+      
 
     }
 
