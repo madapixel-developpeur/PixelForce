@@ -19,6 +19,27 @@
 {% block body %}
     <div class="mt-3">
         <section id="dashboard-ecommerce">
+            <div  class="col-md-12" >
+                <div id="carouselExampleControls" class="carousel slide custom-carousel" data-ride="carousel" style="min-height: 320px">
+                    <div class="carousel-inner">
+                        {% for announcement in announcements %}
+                            <div class="carousel-item {% if loop.first %}active{% endif %} ">
+                                <img class="d-block w-100" src="{{ asset('files') ~ announcement.filePath }}" alt="{{ announcement.nom }}">
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <a class="carousel-control-prev custom-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next custom-next" href="#carouselExampleControls" role="button" data-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </div>
+			</div>
+
+
            <div class="row match-height">
                 {% if secteurAgent.isFonctionnaliteActive(constant('App\\Util\\FonctionnalitesTypeSecteur::FONCTIONNALITE_COMMON_FORMATION')) %}
                 <div class="col-lg-8 col-12">
@@ -762,7 +783,7 @@
         })
 
         function terminerFormation(){
-             $('#formFinishFormation').submit();
+            $('#formFinishFormation').submit();
         }
     </script>
     {% endif %}

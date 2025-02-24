@@ -18,6 +18,7 @@ use App\Entity\SearchEntity\UserSearch;
 use App\Repository\FormationRepository;
 use App\Services\Stat\StatAgentService;
 use App\Repository\AgentSecteurRepository;
+use App\Repository\AnnouncementRepository;
 use App\Repository\CoachSecteurRepository;
 use App\Repository\CalendarEventRepository;
 use Knp\Component\Pager\PaginatorInterface;
@@ -72,7 +73,8 @@ class AgentAccountController extends AbstractController
         private EntityManager $entityManager,
         CoachSecteurRepository $repoCoachSecteur,
         private SecteurVideoFormationRepository $secteurVideoFormationRepository,
-        private StatAgentService $statAgentService
+        private StatAgentService $statAgentService,
+        private AnnouncementRepository $announcementRepository
     ) {
         $this->repoSecteur = $repoSecteur;
         $this->repoAgentSecteur = $repoAgentSecteur;
@@ -245,7 +247,7 @@ class AgentAccountController extends AbstractController
 
 
         $videoFinFormation = $this->secteurVideoFormationRepository->findOneBy(['secteur' => $sessionSecteurId]);
-
+        $announcements = $this->announcementRepository->getActiveAnnoncement($secteur,new \DateTime());
         return $this->render('user_category/agent/dashboard_secteur.html.twig', [
             'secteur' => $secteur,
             'firstFormation' => $firstFormation,
@@ -275,7 +277,8 @@ class AgentAccountController extends AbstractController
             'repoCoachSecteur' => $this->repoCoachSecteur,
             'visible' => $visible,
             'expert' => $expert,
-            'videoFinFormation' => $videoFinFormation
+            'videoFinFormation' => $videoFinFormation,
+            'announcements' => $announcements
         ]);
     }
 
