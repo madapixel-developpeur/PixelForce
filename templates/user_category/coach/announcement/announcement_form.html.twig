@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	Annonce - Nouveau
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %} 
+    <a href="{{ path('app_coach_announcement_list') }}" class="btn btn-secondary my-3"> <i class="fa-solid fa-circle-arrow-left"></i> Retour </a>
+    <div class="block block--bordered block--rounded">
+        <h1 class="block__text block__text--center mt-2" >{% if announcement is defined %}Modifier l'annonce{% else %} Ajouter une annonce{% endif %}</h1>
+            {{ form_start(form, {attr:{
+                enctype:"multipart/form-data",
+                'class': 'my-form'
+            }}) }}
+            {{ form_rest(form) }}
+            {% if announcement is defined %}
+                <div class="col-md-12 py-5 d-flex justify-content-center">
+                    <img class="d-block w-75" src="{{ asset('files/') ~ announcement.filePath }}" alt="{{ announcement.nom }}">
+                </div>
+            {% endif %}
+            <div>
+                <button class="btn btn-primary" type="submit">Enregistrer</button>
+            </div>
+            {{ form_end(form) }}
+    </div>
+{% endblock %}
+
+

@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\AnnouncementRepository;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -49,6 +50,7 @@ class Announcement
      * @var \DateTime|null
      *
      * @ORM\Column(type="datetime", nullable=true)
+     * @Assert\GreaterThan(propertyPath="startDate", message="La date de fin doit être postérieure à la date de début.")
      */
     private $endDate;
 

@@ -1,0 +1,91 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	Annonce
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .banniere-img{
+            max-width: 100%;  /* L'image ne dépasse pas la cellule */
+            height: auto;  /* Ajuste la hauteur en conservant le ratio */
+            display: block; 
+        }
+    </style>
+{% endblock %}
+
+{% block body %} 
+<div class="block block--bordered block--rounded">
+        {% for label, message in app.flashes %}
+            <div class="alert alert-{{label}} p-3 text-center" role="alert">
+                <div class="alert-body">
+                    {{message}}
+                </div>
+            </div>
+        {% endfor %}
+        <div class="block__header mb-1" >
+            <h1 class="block__title">Liste des annonces :</h1>
+            <div class="fab-btn-wrap">
+                <a  href="{{ path('app_announcement_add') }}" class="btn btn-primary btn--rounded fab-btn"><i data-feather="plus"></i>Ajouter</a>
+            </div>
+        </div>
+        {% if result|length ==0 %}
+                <div class="alert alert-primary p-3 text-center" role="alert">
+                    <div class="alert-body">
+                        Aucun résultat.
+                    </div>
+                </div>
+        {% endif %}
+        {% if result|length > 0 %}
+        <div class="table-responsive mb-1">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th class="col-2">Titre</th>
+                        <th class="col-3">Description</th>
+                        <th class="col-2" >Date</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in result %}
+                    <tr>
+                        <td>{{ item.nom }}</td>
+                        <td>{{ item.description }}</td>
+                        <td>
+                            <p><b>Début :</b> {{ item.startDate | date('Y-m-d H:m:s')  }} </p>
+                            <p><b>Fin :</b>{{ item.startDate | date('Y-m-d H:m:s')  }} </p></td>
+                        {# <td>{{ item.endDate | date('Y-m-d H:m:s') }}</td> #}
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <div class="img">
+                                    <img src="{{ asset('files/' ~ item.filePath ) }}" class="banniere-img" alt="{{ item.nom }}">
+                                </div>
+                            </div>
+                        </td>
+                        <td class="justify-content-center d-flex h-100">
+                            <a href="{{ path('app_announcement_edit', {'id': item.id}) }}" class="btn btn-success ms-1">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <form method="post" id="delete_announcement" class="ms-1" style="display: inline-block;" onsubmit="confirmationForm('delete_announcement','{{ path('app_announcement_delete', { id : item.id })  }}','Êtes-vous sûr(e) de vouloir supprimer cette annonce?')">
+                                <button class="btn btn-danger"><i class="fas fa-trash-alt"></i></button>
+                            </form>  
+                        </td>
+                       
+                        
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            
+        </div>
+        <div class="d-flex justify-content-center scale-up-center">
+            {{ knp_pagination_render(result) }}
+        <div>
+        {% endif %}
+    </div>
+
+{% endblock %}

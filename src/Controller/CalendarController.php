@@ -3,26 +3,29 @@
 
 namespace App\Controller;
 
-use App\Entity\Commentaire;
 use App\Entity\User;
+use App\Form\CalendlyType;
+use App\Entity\Commentaire;
 use App\Entity\CalendarEvent;
-use App\Entity\CalendarEventLabel;
 
 
 use App\Manager\EntityManager;
 use App\Services\CalendarService;
-use App\Form\CalendlyType;
+use App\Entity\CalendarEventLabel;
 
-use App\Repository\CalendarEventLabelRepository;
-use App\Repository\CalendarEventRepository;
 use App\Repository\UserRepository;
+use App\Repository\SecteurRepository;
+use App\Repository\AnnouncementRepository;
 
 
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Repository\CalendarEventRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Repository\CalendarEventLabelRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
  * @Route("/calendar")
@@ -52,7 +55,12 @@ class CalendarController extends AbstractController
      */
     private $userRepository;
 
-    public function __construct(CalendarService $calendarService, EntityManager $entityManager, UserRepository $userRepository,CalendarEventLabelRepository $calendarEventLabelRepository, CalendarEventRepository $calendarEventRepository)
+    public function __construct(CalendarService $calendarService, EntityManager $entityManager, UserRepository $userRepository,CalendarEventLabelRepository $calendarEventLabelRepository, CalendarEventRepository $calendarEventRepository,
+        private AnnouncementRepository $announcementRepository,
+        private SecteurRepository $secteurRepository,
+        private SessionInterface $session,
+         
+    )
     {
         $this->calendarService = $calendarService;
         $this->entityManager = $entityManager;
@@ -88,13 +96,14 @@ class CalendarController extends AbstractController
         }
 
         $calendarEventLabelList = $this->calendarEventLabelRepository->findAll();
-
+        $secteur = $this->secteurRepository->findOneBy(['id' => $this->session->get('secteurId') ]);
+        $announcements = $this->announcementRepository->getActiveAnnoncement($secteur,new \DateTime());
         return $this->render('calendar/calendar.html.twig', [
             'lienCalendly' => $lienCalendly,
             'form' => $form->createView(),
             'error' => $error,
             'userId' => $user->getId(),
-
+            'announcements' => $announcements,
             'calendarEventLabelList'=>$calendarEventLabelList
         ]);
     }
