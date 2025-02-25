@@ -5,10 +5,12 @@ namespace App\Form;
 
 
 use App\Entity\User;
+use Symfony\Component\Intl\Countries;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use App\Form\FormEvents\SecteurChoiceListListener;
 use Symfony\Component\Validator\Constraints\NotNull;
+use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Form\Extension\Core\Type\TelType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -132,12 +134,15 @@ class InscriptionAgentType extends AbstractType
                 ],
                 "required" => false
             ])
-            ->add('pays', TextType::class, [
-                'label' => false,
-                'attr' => [
-                    'placeholder' => 'Pays'
+            ->add('pays', ChoiceType::class, [
+                'label' => 'Pays',
+                'placeholder' => 'Sélectionnez un pays',
+                'choices' => array_flip(Countries::getNames('fr')),
+                'required' => true,
+                'constraints' => [
+                    new NotBlank(["message" => "Veuillez choisir un pays"]),
                 ],
-                "required" => false
+                'attr' => ['class' => 'form-control'],
             ])
             ->add('roles', ChoiceType::class, [
                 'choices' => User::SIGNING_UP_ROLES,

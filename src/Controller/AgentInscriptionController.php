@@ -4,24 +4,25 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Entity\AgentSecteur;
-use App\Entity\PlanAgentAccount;
 use App\Entity\Secteur;
-use App\Form\InscriptionAgentType;
+use App\Entity\AgentSecteur;
+use App\Manager\UserManager;
 use App\Manager\EntityManager;
 use App\Manager\StripeManager;
-use App\Manager\UserManager;
-use App\Repository\AgentSecteurRepository;
-use App\Repository\PlanAgentAccountRepository;
-use App\Repository\SecteurRepository;
-use App\Repository\UserRepository;
 use App\Services\MailerService;
-use App\Services\Stat\StatAgentService;
 use App\Services\StripeService;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Entity\PlanAgentAccount;
+use App\Exception\CustomException;
+use App\Form\InscriptionAgentType;
+use App\Repository\UserRepository;
+use App\Repository\SecteurRepository;
+use App\Services\Stat\StatAgentService;
+use App\Repository\AgentSecteurRepository;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use App\Repository\PlanAgentAccountRepository;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class AgentInscriptionController extends AbstractController
 {
@@ -89,7 +90,10 @@ class AgentInscriptionController extends AbstractController
             if ($form->isSubmitted() && $form->isValid()) {
                 $roles = $form->get('roles')->getData();
                 if (empty($roles)) {
-                    throw new \Exception('Vous devez sélectionner au moins un type de compte.');
+                    throw new CustomException('Vous devez sélectionner au moins un type de compte.');
+                }
+                if(in_array(User::ROLE_PROFESSIONNEL, $roles) && $user->getPays() == 'FR'){
+                    throw new CustomException("À ce jour, la plateforme ".$_ENV['PLATFORM_NAME']." n'est pas ouverte aux professionnels basés en France.");
                 }
                 $this->userManager->setUserPasword($user, $request->request->get('inscription_agent')['password']['first'], '', false);
                 array_unshift($roles, User::ROLE_AGENT);
@@ -108,12 +112,18 @@ class AgentInscriptionController extends AbstractController
                 return $this->redirectToRoute('app_login');
             }
 
-        } catch (\Exception $e) {
+        } catch (CustomException $e) {
             $this->addFlash(
                 'danger',
                 $e->getMessage()
             );
+        } catch (\Exception $e) {
+            $this->addFlash(
+                'danger',
+                $_ENV['CUSTOM_ERROR_MESSAGE']
+            );
         }
+       
 
         //dd($user);
 
