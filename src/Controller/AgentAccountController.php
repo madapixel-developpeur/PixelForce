@@ -247,7 +247,7 @@ class AgentAccountController extends AbstractController
 
 
         $videoFinFormation = $this->secteurVideoFormationRepository->findOneBy(['secteur' => $sessionSecteurId]);
-        $announcements = $this->announcementRepository->getActiveAnnoncement($secteur,new \DateTime());
+        $announcements = $this->announcementRepository->getActiveAnnoncement($secteur,new \DateTime(),['type' => User::ROLE_REVENDEUR]);
         return $this->render('user_category/agent/dashboard_secteur.html.twig', [
             'secteur' => $secteur,
             'firstFormation' => $firstFormation,

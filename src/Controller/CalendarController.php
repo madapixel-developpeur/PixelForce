@@ -97,7 +97,7 @@ class CalendarController extends AbstractController
 
         $calendarEventLabelList = $this->calendarEventLabelRepository->findAll();
         $secteur = $this->secteurRepository->findOneBy(['id' => $this->session->get('secteurId') ]);
-        $announcements = $this->announcementRepository->getActiveAnnoncement($secteur,new \DateTime());
+        $announcements = $this->announcementRepository->getActiveAnnoncement($secteur,new \DateTime(),['type' => User::ROLE_REVENDEUR]);
         return $this->render('calendar/calendar.html.twig', [
             'lienCalendly' => $lienCalendly,
             'form' => $form->createView(),

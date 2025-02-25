@@ -22,13 +22,17 @@ class AnnouncementRepository extends ServiceEntityRepository
         parent::__construct($registry, Announcement::class);
     }
 
-    public function getActiveAnnoncement(Secteur $secteur,\DateTime $date){
+    public function getActiveAnnoncement(Secteur $secteur,\DateTime $date,$options = []){
         $query = $this->createQueryBuilder('a')
         ->where('a.startDate <= :now AND a.endDate >= :now')
         ->andwhere('a.secteur = :secteur')
         ->setParameter('now', $date)
         ->setParameter('secteur', $secteur);
 
+        if(isset($options['type'])){
+            $query->andWhere('a.type LIKE :type')
+            ->setParameter('type',$options['type']);
+        }
         return $query->orderBy('a.startDate','DESC')
         ->getQuery()
         ->getResult();

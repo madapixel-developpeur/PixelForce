@@ -60,6 +60,11 @@ class Announcement
      */
     private $secteur;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $type;
+
 
     public function getId(): ?int
     {
@@ -173,5 +178,33 @@ class Announcement
         $this->secteur = $secteur;
 
         return $this;
+    }
+
+    /**
+     * Get the value of type
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * Set the value of type
+     */
+    public function setType($type): self
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    public function getTypeStr(){
+        try {
+            //code...
+            return array_flip(User::SIGNING_UP_ROLES)[$this->getType()];
+        } catch (\Throwable $th) {
+            //throw $th;
+            return '';
+        }
     }
 }

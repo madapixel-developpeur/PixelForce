@@ -2,6 +2,8 @@
 
 namespace App\Form;
 
+use App\Entity\User;
+use App\Entity\Ressource;
 use App\Entity\Announcement;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -11,6 +13,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
@@ -53,6 +56,11 @@ class AnnouncementFormType extends AbstractType
                 "constraints" => [
                     new NotBlank(["message" => "Date de fin obligatoire"])
                 ]
+            ])
+            ->add('type', ChoiceType::class, [
+                "label" => "Type",
+                'choices' => User::SIGNING_UP_ROLES,
+                "required" => true,
             ])
             ->add('filepath', FileType::class, [
                 "label" => "Bannière",

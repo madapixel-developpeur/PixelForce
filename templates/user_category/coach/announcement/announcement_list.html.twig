@@ -44,7 +44,7 @@
                     <tr>
                         <th class="col-2">Titre</th>
                         <th class="col-3">Description</th>
-                        <th class="col-2" >Date</th>
+                        <th class="col-2" >Détails</th>
                         <th></th>
                         <th></th>
                     </tr>
@@ -55,8 +55,9 @@
                         <td>{{ item.nom }}</td>
                         <td>{{ item.description }}</td>
                         <td>
-                            <p><b>Début :</b> {{ item.startDate | date('Y-m-d H:m:s')  }} </p>
-                            <p><b>Fin :</b>{{ item.startDate | date('Y-m-d H:m:s')  }} </p></td>
+                            <b>Début :</b> {{ item.startDate | date('Y-m-d H:m:s')  }} </br>
+                            <b>Fin :</b>{{ item.startDate | date('Y-m-d H:m:s')  }} </br>
+                            <b>Type :</b> {{ item.typeStr   }} </p></td>
                         {# <td>{{ item.endDate | date('Y-m-d H:m:s') }}</td> #}
                         <td>
                             <div class="d-flex align-items-center">
