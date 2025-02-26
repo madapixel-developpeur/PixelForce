@@ -129,3 +129,50 @@
 .custom-next {
     right: 10px; /* Adjust to position inside */
 }
+
+
+ 
+.logo-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 160px; /* Adjust as needed */
+    overflow: hidden;
+}
+
+.social-media-logo{
+    width: 150px;  /* Adjust to your needs */
+    height: auto;
+}
+
+.bd-services-2__description {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 15px;
+}
+.bd-services-2__item-btn .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: 0.3s;
+    border: none;
+}
+
+.bd-services-2__item-btn .btn-primary i {
+    margin-left: 8px;
+    transition: transform 0.3s ease;
+}
+
+.bd-services-2__item-btn .btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.bd-services-2__item-btn .btn-primary:hover i {
+    transform: translateX(5px);
+}
+

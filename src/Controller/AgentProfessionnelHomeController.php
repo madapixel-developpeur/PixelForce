@@ -7,6 +7,7 @@ use App\Entity\User;
 use App\Entity\Secteur;
 use App\Repository\SecteurRepository;
 use App\Repository\AnnouncementRepository;
+use App\Repository\SocialMediaInfoRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -21,6 +22,7 @@ class AgentProfessionnelHomeController extends AbstractController
         private AnnouncementRepository $announcementRepository,
         private SecteurRepository $secteurRepository,
         private SessionInterface $session,
+        private SocialMediaInfoRepository $socialMediaInfoRepository
     ) {
 
     }
@@ -32,11 +34,12 @@ class AgentProfessionnelHomeController extends AbstractController
         if($user->getProfesionnalInformationState() == User::INFORMATION_EMPTY){
             return $this->redirectToRoute('professionnel_add_info');     
         }
-        // $secteur = $this->secteurRepository->findOneBy(['id' => $this->session->get('secteurId') ]);
+        $socialMedias = $this->socialMediaInfoRepository->findBy(['secteur' => $secteur]);
         $announcements = $this->announcementRepository->getActiveAnnoncement($secteur,new \DateTime(),['type' => User::ROLE_PROFESSIONNEL]);
         return $this->render('user_category/professionnel/dashboard/dashboard_pro.html.twig',[
             'announcements' => $announcements,
-            'secteur' => $secteur
+            'secteur' => $secteur,
+            'socialMedias' => array_chunk($socialMedias,4)
         ]);
     }
 
