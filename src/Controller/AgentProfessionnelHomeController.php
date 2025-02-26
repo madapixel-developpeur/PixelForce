@@ -27,7 +27,11 @@ class AgentProfessionnelHomeController extends AbstractController
 
     #[Route('/dashboard/secteur/{id}',name : 'agent_pro_dashboard')]
     public function index(Secteur $secteur): Response
-    {
+    {   
+        $user = $this->getUser();
+        if($user->getProfesionnalInformationState() == User::INFORMATION_EMPTY){
+            return $this->redirectToRoute('professionnel_add_info');     
+        }
         // $secteur = $this->secteurRepository->findOneBy(['id' => $this->session->get('secteurId') ]);
         $announcements = $this->announcementRepository->getActiveAnnoncement($secteur,new \DateTime(),['type' => User::ROLE_PROFESSIONNEL]);
         return $this->render('user_category/professionnel/dashboard/dashboard_pro.html.twig',[
