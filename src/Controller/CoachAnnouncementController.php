@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Util\Status;
 use App\Entity\Ressource;
 use App\Entity\Announcement;
+use App\Form\AnnouncementFilterType;
 use App\Form\AnnouncementFormType;
 use App\Services\FileHandler;
 use App\Form\RessourceFormType;
@@ -119,13 +120,33 @@ class CoachAnnouncementController extends AbstractController
     {
         $page = $request->query->get('page', 1);
         $limit = 20;
+
+        $criteria = [
+            ['prop' => 'nom', 'op' => 'LIKE'],
+            ['prop' => 'description', 'op' => 'LIKE'],
+            ['prop' => 'type','op' => '='],
+        ];  
+
+        $filter = [];
+
+        $form = $this->createForm(AnnouncementFilterType::class, $filter, [
+            'method' => 'GET'
+        ]);
+
+        $form->handleRequest($request);
+        $filter = $form->getData();
+
     
         $query = $this->entityManager
             ->createQueryBuilder()
             ->select('a')
-            ->from(Announcement::class, 'a')
-            ->where('a.secteur = :secteur')
-            ->setParameter('secteur', $this->getUser()->getUniqueCoachSecteur()?->getId());
+            ->from(Announcement::class, 'a');
+
+        $where = $searchService->getWhere($filter, new MyCriteriaParam($criteria, 'a'));
+        $query->where($where["where"] . " and a.secteur = :secteurId ");
+        $where["params"]["secteurId"] = $this->getUser()->getUniqueCoachSecteur()?->getId();
+        $searchService->setAllParameters($query, $where["params"]);
+        $searchService->addOrderBy($query, $filter, ['sort' => 'a.startDate', 'direction' => 'DESC']);
 
         $announcements = $paginator->paginate(
             $query,
@@ -135,6 +156,7 @@ class CoachAnnouncementController extends AbstractController
 
         return $this->render('user_category/coach/announcement/announcement_list.html.twig', [
             'result' => $announcements,
+            'form' => $form->createView(),
             'page' => $page
         ]);
 

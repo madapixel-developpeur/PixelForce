@@ -17,6 +17,33 @@
 
 {% block body %} 
 <div class="block block--bordered block--rounded">
+    <h1 class="block__text block__text--center mt-2" >Options de filtre :</h1>
+    <div class="filter-wrap">
+        
+        {{ form_start(form, {'attr': {'class': 'filter-form'}}) }}
+            
+            <div class="my-form-widget">
+                {{form_label(form.nom)}}
+                {{form_widget(form.nom)}}
+                {{form_errors(form.nom)}}
+            </div>
+            <div class="my-form-widget">
+                {{form_label(form.description)}}
+                {{form_widget(form.description)}}
+                {{form_errors(form.description)}}
+            </div>
+            <div class="my-form-widget">
+                {{form_label(form.type)}}
+                {{form_widget(form.type)}}
+                {{form_errors(form.type)}}
+            </div>
+            <div class="btn-wrap">
+                <button class="btn btn-primary" type="submit"><i data-feather="filter"></i>Filtrer</button>
+            </div>
+        {{ form_end(form) }}
+    </div>
+</div>
+<div class="block block--bordered block--rounded">
         {% for label, message in app.flashes %}
             <div class="alert alert-{{label}} p-3 text-center" role="alert">
                 <div class="alert-body">
