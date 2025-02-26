@@ -40,28 +40,30 @@
                 <div class="col-md-12">
                     <h4 class=" mt-2 mb-3 choix-secteur-primary">Réseaux sociaux</h4>
                     <div class="row carousel-container carousel-service "> 
-                        <div id="secteurCarousel" class="carousel carousel-dark slide mt-5" data-ride="carousel">
+                        <div id="secteurCarousel" class="carousel carousel-dark slide mt-3" data-ride="carousel">
                             <div class="carousel-inner">
                             {% for chunk in socialMedias %}
                                 <div class="carousel-item {% if loop.first %} active{% endif %} ">
-                                    <div class="row">
+                                    <div class="row ">
                                         {% for item in chunk %}
-                                            <div class="col-md-3">
-                                                <div class="bd-services-2__item text-center mb-30 wow fadeInUp card">
+                                            <div class="col-md-3 d-flex ">
+                                                <div class="bd-services-2__item text-center mb-30 wow fadeInUp card d-flex flex-column w-100">
                                                     <h3 class="bd-services-2__title"><a href="{{ item.link }}" target="_blank">{{ item.name }}</a></h3>
-                                                    <div class=" text-center logo-container">
-                                                        <img src="{{asset( files_directory_relative ~ item.logo )}}" alt="{{ item.name }}" class="social-media-logo">
+                                                    <div class="d-flex flex-column flex-grow-1">
+                                                        <div class=" text-center logo-container  mt-auto">
+                                                            <img src="{{asset( files_directory_relative ~ item.logo )}}" alt="{{ item.name }}" class="social-media-logo">
+                                                        </div>
                                                     </div>
                                                     <div class="bd-services-2__content">
                                                         <p class="bd-services-2__description">
                                                             {# Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet dolorem earum, eum sint dicta optio! Accusantium quaerat vel voluptatem, autem placeat iure labore dolorem. Dolorum veniam amet expedita dolore similique. #}
                                                         </p>
 
-                                                        <div class="bd-services-2__item-btn">
-                                                            <a href="{{ item.link }}" class="btn btn-primary" target="_blank">
-                                                                Rejoindre <i class="fas fa-chevron-right"></i>
-                                                            </a>
-                                                        </div>
+                                                    </div>
+                                                    <div class="bd-services-2__item-btn mt-auto">
+                                                        <a href="{{ item.link }}" class="btn btn-primary" target="_blank">
+                                                            Rejoindre <i class="fas fa-chevron-right"></i>
+                                                        </a>
                                                     </div>
                                                 </div>
                                             </div>
