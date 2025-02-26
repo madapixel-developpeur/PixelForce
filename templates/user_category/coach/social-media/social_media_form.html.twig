@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	Réseaux sociaux - Nouveau
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %} 
+    <a href="{{ path('app_coach_social_media_list') }}" class="btn btn-secondary my-3"> <i class="fa-solid fa-circle-arrow-left"></i> Retour </a>
+    <div class="block block--bordered block--rounded">
+        <h1 class="block__text block__text--center mt-2" >{% if scMedia is defined %}Modifier "{{ scMedia.name  }}"{% else %} Ajouter un réseau social{% endif %}</h1>
+            {{ form_start(form, {attr:{
+                enctype:"multipart/form-data",
+                'class': 'my-form'
+            }}) }}
+            {{ form_rest(form) }}
+            {% if scMedia is defined %}
+                <div class="col-md-12 py-5 d-flex justify-content-center">
+                    <img class="d-block w-75" src="{{ asset('files/') ~ scMedia.logo }}" alt="{{ scMedia.name }}">
+                </div>
+            {% endif %}
+            <div>
+                <button class="btn btn-primary" type="submit">Enregistrer</button>
+            </div>
+            {{ form_end(form) }}
+    </div>
+{% endblock %}
+
+

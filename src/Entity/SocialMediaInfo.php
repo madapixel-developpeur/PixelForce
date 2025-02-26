@@ -3,10 +3,12 @@
 namespace App\Entity;
 
 use App\Repository\SocialMediaInfoRepository;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=SocialMediaInfoRepository::class)
+ * @UniqueEntity(fields={"name"}, message="Ce réseau social a déjà été ajouté.")
  */
 class SocialMediaInfo
 {
