@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	Bientôt disponible
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+          .icon {
+            width: 50px;
+            height: 50px;
+            margin-bottom: 15px;
+        }
+    </style>
+{% endblock %}
+
+{% block body %} 
+<div class="block block--bordered block--rounded d-flex flex-column justify-content-center align-items-center text-center p-4" style="height: 75vh;">
+    <i class="fas fa-clock display-1 mb-3 color-pixelforce"></i>
+    <h1 class="fw-bold">Bientôt Disponible</h1>
+    <p class="fs-5 text-muted">Cette fonctionnalité sera bientôt disponible. Restez à l'écoute !</p>
+   
+    {# <a href="#" class="btn btn-primary btn-lg mt-3">
+        <i class="fas fa-envelope me-2"></i> Soyez informé
+    </a> #}
+</div>
+
+
+
+{% endblock %}
+
+
+

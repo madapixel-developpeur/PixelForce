@@ -436,4 +436,12 @@ class AgentAccountController extends AbstractController
             200
         );
     }
+
+
+    
+    #[Route('/agent/bientôt-disponible',name : 'app_coming_soon')]
+    public function comingSoonPage( Request $request)
+    {
+        return $this->render('user_category/agent/utility/coming_soon.html.twig');
+    }
 }
