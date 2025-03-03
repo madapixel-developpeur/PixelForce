@@ -20,6 +20,7 @@ class RemunerationFilterType extends AbstractType
             'Commission achat' => 1,
             'Rémunération équipe' => 2,
             'Bonus palier' => 3,
+            'Bonus de lancement' => 4
         ];
         $builder->add('dateMin', DateType::class, [
                 'required' => false,
