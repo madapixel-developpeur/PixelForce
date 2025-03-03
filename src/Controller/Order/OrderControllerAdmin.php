@@ -153,7 +153,7 @@ class OrderControllerAdmin extends AbstractController
         $filter['ibiId'] = $user->getId();
         // $filter['ibiId'] = 1;
         if(isset($filter['dateMin']) && $filter['dateMin'])  $filter['dateMin'] = $filter['dateMin']->format('Y-m-d');
-        if(isset($filter['dateMax']) && $filter['dateMax'])  $filter['dateMax'] = $filter['dateMax']->format('Y-m-d');
+        if(isset($filter['dateMax']) && $filter['dateMax'])  $filter['dateMax'] = $filter['dateMax']->format('Y-m-d')." 23:59:59";
         $filter['page'] = $page;
         $result = $this->statAgentService->getOrders($filter);
 
