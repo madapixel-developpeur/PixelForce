@@ -19,10 +19,13 @@ use App\Repository\SecteurRepository;
 use App\Services\Stat\StatAgentService;
 use App\Repository\AgentSecteurRepository;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Security;
 use App\Repository\PlanAgentAccountRepository;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class AgentInscriptionController extends AbstractController
 {
@@ -49,7 +52,9 @@ class AgentInscriptionController extends AbstractController
     /** @var PlanAgentAccountRepository $repoPlanAgentAccount */
     protected $repoPlanAgentAccount;
     private $secteurRepository;
-    public function __construct(EntityManager $entityManager, UserManager $userManager, StripeManager $stripeManager, SessionInterface $session, UserRepository $userRepository, AgentSecteurRepository $repoAgentSecteur, PlanAgentAccountRepository $repoPlanAgentAccount, SecteurRepository $secteurRepository, private MailerService $mailerService)
+    public function __construct(EntityManager $entityManager, UserManager $userManager, StripeManager $stripeManager, SessionInterface $session, UserRepository $userRepository, AgentSecteurRepository $repoAgentSecteur, PlanAgentAccountRepository $repoPlanAgentAccount, SecteurRepository $secteurRepository, private MailerService $mailerService,
+        private TokenStorageInterface $tokenStorage,
+        private Security $security)
     {
         $this->entityManager = $entityManager;
         $this->userManager = $userManager;
@@ -105,11 +110,16 @@ class AgentInscriptionController extends AbstractController
                 $this->entityManager->save($user);
                 $this->mailerService->sendUserWelcome($user);
                 $this->session->set('agentId', $user->getId());
+
+                
+                $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
+                $this->tokenStorage->setToken($token);
+
                 $this->addFlash(
                     'success',
                     'Votre inscription sur Pixelforce a été effectuée avec succès'
                 );
-                return $this->redirectToRoute('app_login');
+                return $this->redirectToRoute('agent_home');
             }
 
         } catch (CustomException $e) {
