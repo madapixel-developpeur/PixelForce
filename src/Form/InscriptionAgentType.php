@@ -49,7 +49,7 @@ class InscriptionAgentType extends AbstractType
                 'attr' => [
                     'placeholder' => 'Votre adresse'
                 ],
-                "required" => false
+                "required" => true
             ])
             ->add('telephone', TelType::class, [
                 'label' => false,
@@ -65,7 +65,7 @@ class InscriptionAgentType extends AbstractType
                 'attr' => [
                     'placeholder' => 'Code postal'
                 ],
-                "required" => false
+                "required" => true
             ])
             ->add('username', TextType::class, [
                 'label' => false,
@@ -125,14 +125,14 @@ class InscriptionAgentType extends AbstractType
                 'attr' => [
                     'placeholder' => 'Numéro de rue'
                 ],
-                "required" => false
+                "required" => true
             ])
             ->add('ville', TextType::class, [
                 'label' => false,
                 'attr' => [
                     'placeholder' => 'Ville'
                 ],
-                "required" => false
+                "required" => true
             ])
             ->add('pays', ChoiceType::class, [
                 'label' => 'Pays',
