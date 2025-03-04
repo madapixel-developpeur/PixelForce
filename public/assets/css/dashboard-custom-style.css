@@ -81,6 +81,9 @@
 }
 
 
+.carousel-item {
+    transition: transform 0.4s ease-in-out !important;
+}
 
 
 .carousel-container.carousel-service {
@@ -90,46 +93,30 @@
 }
 
 
-.carousel-control-prev,
-.carousel-control-next {
+.custom-prev.carousel-control-prev,
+.custom-next.carousel-control-next {
     width: 5%;
     /* Adjust width as needed */
 }
 
-.carousel-control-prev span,
-.carousel-control-next span {
+.custom-prev.carousel-control-prev span,
+.custom-next.carousel-control-next span {
     font-size: 2rem;
     /* Adjust icon size as needed */
 }
 
-.carousel-control-next {
+.custom-next.carousel-control-next {
     right: 0;
     transform: translateX(50px);
     /* Move the control further right without affecting layout */
 }
 
-.carousel-control-prev {
+.custom-prev.carousel-control-prev {
     left: -4%;
 }
 
 
-.custom-prev,
-.custom-next {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 10;
-    width: 5%; /* Keep consistent with the existing size */
-}
 
-/* Move buttons slightly inside */
-.custom-prev {
-    left: 10px; /* Adjust to position inside */
-}
-
-.custom-next {
-    right: 10px; /* Adjust to position inside */
-}
 
 
  
@@ -177,3 +164,18 @@
     transform: translateX(5px);
 }
 
+.custom-command.carousel-control-prev,
+.custom-command.carousel-control-next {
+    position: absolute;
+    top: 50%; /* Vertically center the buttons */
+    transform: translateY(-50%);
+    z-index: 5;
+}
+
+.custom-command.carousel-control-prev {
+    left: -30px; /* Move to the left outside the carousel */
+}
+
+.custom-command.carousel-control-next {
+    right: -30px; /* Move to the right outside the carousel */
+}
