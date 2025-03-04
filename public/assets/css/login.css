@@ -4,6 +4,7 @@
     background-position: center; /* Centre l'image */
     width: 100%; /* Assurez-vous que la div prend toute la largeur possible */
     height: 100%; /* Ajustez selon la hauteur souhaitée */
+    background-repeat: no-repeat; /* Prevents tiling */
 }
 .pixelforce-logo{
     margin: auto;
