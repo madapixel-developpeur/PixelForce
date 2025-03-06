@@ -28,7 +28,8 @@ class InscriptionAgentType extends AbstractType
             ->add('nom', TextType::class, [
                 'label' => false,
                 'attr' => [
-                    'placeholder' => 'Entrer votre nom'
+                    'placeholder' => 'Entrer votre nom',
+                    'step' => 1
                 ],
                 'constraints' => [
                     new NotNull([],'Champ obligatoire')
@@ -37,7 +38,8 @@ class InscriptionAgentType extends AbstractType
             ->add('prenom', TextType::class, [
                 'label' => false,
                 'attr' => [
-                    'placeholder' => 'Entrer votre prénom'
+                    'placeholder' => 'Entrer votre prénom',
+                    'step' => 1
                 ],
                 'constraints' => [
                     new NotNull([],'Champ obligatoire')
@@ -47,14 +49,16 @@ class InscriptionAgentType extends AbstractType
             ->add('adresse', TextType::class, [
                 'label' => false,
                 'attr' => [
-                    'placeholder' => 'Votre adresse'
+                    'placeholder' => 'Votre adresse',
+                    'step' => 1
                 ],
                 "required" => true
             ])
             ->add('telephone', TelType::class, [
                 'label' => false,
                 'attr' => [
-                    'placeholder' => 'Numéro téléphone'
+                    'placeholder' => 'Numéro téléphone',
+                    'step' => 1
                 ],
                 'constraints' => [
                     new NotNull([],'Champ obligatoire')
@@ -63,14 +67,16 @@ class InscriptionAgentType extends AbstractType
             ->add('codePostal', TextType::class, [
                 'label' => false,
                 'attr' => [
-                    'placeholder' => 'Code postal'
+                    'placeholder' => 'Code postal',
+                    'step' => 1
                 ],
                 "required" => true
             ])
             ->add('username', TextType::class, [
                 'label' => false,
                 'attr' => [
-                    'placeholder' => 'Nom d\'utilisateur'
+                    'placeholder' => 'Nom d\'utilisateur',
+                    'step' => 2
                 ],
                 'constraints' => [
                     new NotNull([],'Champ obligatoire')
@@ -80,7 +86,8 @@ class InscriptionAgentType extends AbstractType
             ->add('email', EmailType::class, [
                 'label' => false,
                 'attr' => [
-                    'placeholder' => 'Adresse mail'
+                    'placeholder' => 'Adresse mail',
+                    'step' => 1
                 ],
                 'constraints' => [
                     new NotNull([],'Champ obligatoire'),
@@ -100,19 +107,22 @@ class InscriptionAgentType extends AbstractType
                     'attr' =>
                         [
                             'class' => 'password-field',
+                            'step' => 2
                         ]
                 ],
                 'required' => true,
                 'first_options'  => [
                     'label' => false,
                     'attr' => [
-                        'placeholder' => 'Mot de passe'
+                        'placeholder' => 'Mot de passe',
+                        'step' => 2
                     ]
                 ],
                 'second_options' => [
                     'label' => false,
                     'attr' => [
-                        'placeholder' => 'Confirmation Mot de passe'
+                        'placeholder' => 'Confirmation Mot de passe',
+                        'step' => 2
                     ]
                 ],
                 'constraints' => [
@@ -123,14 +133,16 @@ class InscriptionAgentType extends AbstractType
             ->add('numero_rue', TextType::class, [
                 'label' => false,
                 'attr' => [
-                    'placeholder' => 'Numéro de rue'
+                    'placeholder' => 'Numéro de rue',
+                    'step' => 1
                 ],
                 "required" => true
             ])
             ->add('ville', TextType::class, [
                 'label' => false,
                 'attr' => [
-                    'placeholder' => 'Ville'
+                    'placeholder' => 'Ville',
+                    'step' => 1
                 ],
                 "required" => true
             ])
@@ -142,7 +154,7 @@ class InscriptionAgentType extends AbstractType
                 'constraints' => [
                     new NotBlank(["message" => "Veuillez choisir un pays"]),
                 ],
-                'attr' => ['class' => 'form-control'],
+                'attr' => ['class' => 'form-control', 'step' => 1],
             ])
             ->add('roles', ChoiceType::class, [
                 'choices' => User::SIGNING_UP_ROLES,

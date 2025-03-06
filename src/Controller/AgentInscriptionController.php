@@ -66,6 +66,24 @@ class AgentInscriptionController extends AbstractController
         $this->secteurRepository = $secteurRepository;
     }
 
+    public function getStepWithError($fields){
+        $stepWithError = 99;
+        foreach ($fields as $field) {
+            // Check if there are any errors for this field
+            if ($field->getErrors()->count() > 0) {
+                
+                // Get the 'step' attribute from the field's configuration
+                $step = $field->getConfig()->getOption('attr')['step'] ?? null;
+                // If the step is not set, you can skip or set it to a default value
+                if ($step === null) {
+                    continue;  
+                }
+    
+                $stepWithError = min($step,$stepWithError);
+            }
+        }
+        return $stepWithError == 99 ? 0 : $stepWithError ;
+    }
 
     /**
      * @Route("/inscription/agent/index/{ambassador_username?}", name="agent_inscription")
@@ -86,40 +104,47 @@ class AgentInscriptionController extends AbstractController
             $user->setAmbassadorUsername($ambassador_username);
         }
         $parrain = null;
-        $form = $this->createForm(InscriptionAgentType::class, $user);
+        $form = $this->createForm(InscriptionAgentType::class, $user, [
+            'attr' => ['id' => 'sign-up-form']
+        ]);
         $form->handleRequest($request);
+        $currentStep = $request->request->getInt('currentStep', 0);
         try {
             if (!$parrain) {
                 $parrain = $this->getParainByUsername($ambassador_username);
             }
-            if ($form->isSubmitted() && $form->isValid()) {
-                $roles = $form->get('roles')->getData();
-                if (empty($roles)) {
-                    throw new CustomException('Vous devez sélectionner au moins un type de compte.');
-                }
-                if(in_array(User::ROLE_PROFESSIONNEL, $roles) && $user->getPays() == 'FR'){
-                    throw new CustomException("À ce jour, la plateforme ".$_ENV['PLATFORM_NAME']." n'est pas ouverte aux professionnels basés en France.");
-                }
-                $this->userManager->setUserPasword($user, $request->request->get('inscription_agent')['password']['first'], '', false);
-                array_unshift($roles, User::ROLE_AGENT);
-                $user->setRoles($roles);
-                $user->setActive(1);
-                $user->setParrain($parrain);
-                // $user->setAccountStatus(User::ACCOUNT_STATUS['UNPAID']);
-                $user->setAccountStatus(User::ACCOUNT_STATUS['ACTIVE']); // On met temporairement le statut comme ACTIVE
-                $this->entityManager->save($user);
-                $this->mailerService->sendUserWelcome($user);
-                $this->session->set('agentId', $user->getId());
+            if ($form->isSubmitted() ) {
+                if($form->isValid()){
+                    $roles = $form->get('roles')->getData();
+                    if (empty($roles)) {
+                        throw new CustomException('Vous devez sélectionner au moins un type de compte.');
+                    }
+                    if(in_array(User::ROLE_PROFESSIONNEL, $roles) && $user->getPays() == 'FR'){
+                        throw new CustomException("À ce jour, la plateforme ".$_ENV['PLATFORM_NAME']." n'est pas ouverte aux professionnels basés en France.");
+                    }
+                    $this->userManager->setUserPasword($user, $request->request->get('inscription_agent')['password']['first'], '', false);
+                    array_unshift($roles, User::ROLE_AGENT);
+                    $user->setRoles($roles);
+                    $user->setActive(1);
+                    $user->setParrain($parrain);
+                    // $user->setAccountStatus(User::ACCOUNT_STATUS['UNPAID']);
+                    $user->setAccountStatus(User::ACCOUNT_STATUS['ACTIVE']); // On met temporairement le statut comme ACTIVE
+                    $this->entityManager->save($user);
+                    $this->mailerService->sendUserWelcome($user);
+                    $this->session->set('agentId', $user->getId());
 
-                
-                $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
-                $this->tokenStorage->setToken($token);
+                    
+                    $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
+                    $this->tokenStorage->setToken($token);
 
-                $this->addFlash(
-                    'success',
-                    'Votre inscription sur Pixelforce a été effectuée avec succès'
-                );
-                return $this->redirectToRoute('agent_home');
+                    $this->addFlash(
+                        'success',
+                        'Votre inscription sur Pixelforce a été effectuée avec succès'
+                    );
+                    return $this->redirectToRoute('agent_home');
+                }else{
+                    $currentStep = $this->getStepWithError($form->all());
+                }
             }
 
         } catch (CustomException $e) {
@@ -138,7 +163,8 @@ class AgentInscriptionController extends AbstractController
         //dd($user);
 
         return $this->render('security/signin.html.twig', [
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'currentStep' =>  $currentStep
         ]);
 
     }
