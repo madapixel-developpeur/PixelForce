@@ -165,7 +165,23 @@
                                                 {% endif %}
 
                                                 {{ form_row(form.username,{ 'attr': { 'autocomplete': 'off' } }) }}
-                                                {{ form_row(form.password,{ 'attr': { 'autocomplete': 'off' } }) }}
+                                                <div class="input-group mb-3">
+                                                    {{ form_widget(form.password.first) }}
+                                                    <span class="input-group-text cursor-pointer">
+                                                        <i data-feather="eye"  class="icon-password"></i>
+                                                    </span>
+                                                    {{ form_errors(form.password.first) }}
+
+                                                </div>
+
+                                                <div class="input-group mb-3">
+                                                    {{ form_widget(form.password.second) }}
+                                                    <span class="input-group-text cursor-pointer" >
+                                                        <i data-feather="eye" class="icon-password"></i>
+                                                    </span>
+                                                    {{ form_errors(form.password.second) }}
+
+                                                </div>
                                                 {% do form.roles.setRendered %}
                                             
                                                 <div class="d-flex justify-content-between">  
@@ -230,6 +246,19 @@
             const steps = $(".form-step");
             const nextBtns = $(".next-step");
             const prevBtns = $(".prev-step");
+
+            $('.cursor-pointer').on('click', function () {
+                var inputField = $(this).prev('input'); // The password input field
+                if (inputField.attr('type') === 'password') {
+                    inputField.attr('type', 'text');
+                    $(this).find('.icon-password').attr('data-feather', 'eye-off');
+                } else {
+                    inputField.attr('type', 'password');
+                    $(this).find('.icon-password').attr('data-feather', 'eye');
+                }
+                feather.replace();  // Re-initialize Feather icons
+            });
+
 
             function showStep(step) {
                 steps.each(function (index) {
