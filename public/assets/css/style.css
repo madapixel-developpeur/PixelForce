@@ -499,7 +499,7 @@ a, a:hover{
 	background-color: #192030;
 }
 .left-sidebar .navigation li a{
-	color: #a3a5ac;
+	color: #ECEEF5;
 	padding: 10px 15px 10px 15px;
 	line-height: 1.45;	
 }
@@ -646,3 +646,14 @@ body{
     overflow: hidden;
     text-overflow: ellipsis;  
 }
+
+.nav-item.disabled {
+	opacity: 0.5;
+}
+
+
+.lock-icon {
+	color: gray !important;  /* Make it different from other icons */
+	opacity: 0.7;            /* Make it faded */
+}
+
