@@ -271,15 +271,17 @@ class OrderControllerAdmin extends AbstractController
             $orderList->setTotalItemCount($result['total']);
             $orderList->setCurrentPageNumber($result['currentPageNumber']);
 
-            return $this->render('user_category/agent/chiffre_affaires/chiffre_affaire_historique_detail.html.twig',[
-                'orderList' => $orderList,
-                'month'  => $month,
-                'totalAmount' => $result['totalAmount']
-            ]);
+           
         } catch (\Throwable $th) {
             //throw $th;
             return $this->redirectToRoute('agent_ca_list_digital');    
         }
+        return $this->render('user_category/agent/chiffre_affaires/chiffre_affaire_historique_detail.html.twig',[
+            'orderList' => $orderList,
+            'month'  => $month,
+            'totalAmount' => $result['totalAmount'],
+            'usedTVA' => $result['TVA'] ?? 20
+        ]);
       
 
     }

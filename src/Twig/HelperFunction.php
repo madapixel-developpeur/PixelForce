@@ -40,6 +40,7 @@ class HelperFunction extends AbstractExtension
             new TwigFunction('generateReference', [$this, 'generateReference']),
             new TwigFunction('custom_path', [$this, 'customPath']),
             new TwigFunction('get_stat', [$this, 'getStat']),
+            new TwigFunction('get_order_amount_HT', [$this, 'getOrderAmountHt']),
         ];
     }
 
@@ -82,5 +83,13 @@ class HelperFunction extends AbstractExtension
         $agent = (object) $this->security->getUser();
         $secteur = $this->secteurRepository->findOneBy(['id' => $this->session->get('secteurId')]);
         return $this->statAgentService->getAgentStat($agent, $secteur);
+    }
+
+    public function getOrderAmountHt($amountTTC,$savedAmountHT,$TVA){
+        if($savedAmountHT == 0 &&  $amountTTC > 0 ){
+            return $amountTTC / (1. + $TVA/100);
+        }
+        return $savedAmountHT;
+
     }
 }

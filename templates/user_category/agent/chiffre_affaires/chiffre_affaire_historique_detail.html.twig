@@ -31,7 +31,7 @@
                         <th>Date</th>
                         <th>Client</th>
                         <th>Pack - (service)</th>
-                        <th>Montant</th>
+                        <th class="text-center">Montant</th>
                         <th>Référence</th>
                         <th>Statut</th>
                     </tr>
@@ -42,7 +42,7 @@
                         <td>{{order.createdAt | date("d/m/Y H:i")}}</td>
                         <td>{{order.infoClient.firstName}} {{order.infoClient.lastName}}</td>
                         <td>{{order.package.name}} - ({{order.package.service}})</td>
-                        <td class="text-right">{{order.amount | number_format(2, ',', ' ') }}</td>
+                        <td class="text-end">{{get_order_amount_HT(order.amount,order.savedAmountHT,usedTVA) | number_format(2, ',', ' ') }}</td>
                         <td>
                             <a href="{{ path('agent_order_list_digital',{'referenceVente' : order.infoClient.referenceVente }) }}">{{order.infoClient.referenceVente}}</a>
                             {# <a class="p-2" href="#" onclick="copyLink('{{ url('agent_order_list_digital',{'referenceVente' : order.infoClient.referenceVente }) }}','Liens de la référence {{  order.infoClient.referenceVente }} copié avec succès') "><i class="fa-solid fa-copy"></i></a>  #}
