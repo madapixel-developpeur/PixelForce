@@ -22,6 +22,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Security;
 use App\Repository\PlanAgentAccountRepository;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
@@ -69,18 +70,26 @@ class AgentInscriptionController extends AbstractController
     public function getStepWithError($fields){
         $stepWithError = 99;
         foreach ($fields as $field) {
-            // Check if there are any errors for this field
-            if ($field->getErrors()->count() > 0) {
-                
-                // Get the 'step' attribute from the field's configuration
-                $step = $field->getConfig()->getOption('attr')['step'] ?? null;
-                // If the step is not set, you can skip or set it to a default value
-                if ($step === null) {
-                    continue;  
+            $config = $field->getConfig();
+
+            if ($config->getType()->getInnerType() instanceof RepeatedType) {
+                foreach ($field->all() as $childField) {  // Loop through both password fields
+                    if ($childField->getErrors()->count() > 0) {  // Check errors on children
+                        $step = $childField->getConfig()->getOption('attr')['step'] ?? null;
+                        if ($step !== null) {
+                            $stepWithError = min($step, $stepWithError);
+                        }
+                    }
                 }
-    
-                $stepWithError = min($step,$stepWithError);
+            } else {
+                if ($field->getErrors()->count() > 0) {
+                    $step = $config->getOption('attr')['step'] ?? null;
+                    if ($step !== null) {
+                        $stepWithError = min($step, $stepWithError);
+                    }
+                }
             }
+
         }
         return $stepWithError == 99 ? 0 : $stepWithError ;
     }

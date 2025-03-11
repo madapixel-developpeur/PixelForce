@@ -103,6 +103,10 @@ class InscriptionAgentType extends AbstractType
                 'label' => false,
                 'type' => PasswordType::class,
                 'invalid_message' => 'Le mot de passe saisi doit être le même.',
+                'attr' =>
+                    [
+                        'step' => 2
+                    ],
                 'options' => [
                     'attr' =>
                         [
