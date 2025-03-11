@@ -15,7 +15,7 @@
                 <div class="carousel-inner">
                     {% for announcement in announcements %}
                         <div class="carousel-item {% if loop.first %}active{% endif %} ">
-                            <img class="d-block w-100 rounded-2 border" style="height: 320px" src="{{ asset('files/') ~ announcement.filePath }}" alt="{{ announcement.nom }}">
+                            <img class="d-block w-100 rounded-2 border" style="max-height: 320px;object-fit: cover;" src="{{ asset('files/') ~ announcement.filePath }}" alt="{{ announcement.nom }}">
                         </div>
                     {% endfor %}
                 </div>  
