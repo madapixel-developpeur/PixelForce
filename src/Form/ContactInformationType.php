@@ -99,13 +99,13 @@ class ContactInformationType extends AbstractType
                 'label' => 'Nombre de personnes du foyer',
                 'required' => false
             ])
-            ->add('note', CKEditorType::class, [
+            ->add('note', TextareaType::class, [
                 'required' => false,
                 'label' => 'Note',
                 'mapped' => false,
                 'data' => $contact ? $contact->getNote() : '',
-                'config' => [
-                    'toolbar' => 'note_contact_toolbar'
+                'attr' => [
+                    "rows" => 10
                 ]
             ])
             ->add('type', ChoiceType::class, [
