@@ -83,6 +83,13 @@ class CategorieFormation
      */
     private $isInProgression;
 
+
+      /**
+     * @ORM\Column(type="boolean", nullable=false , options={"default": false})
+     * 
+     */
+    private $unlockedByDefault;
+
     public function __construct()
     {
         $this->formations = new ArrayCollection();
@@ -271,5 +278,27 @@ class CategorieFormation
             return "Prise en compte";
         }
         return "Non prise en compte";
+    }
+
+    /**
+     * Get the value of unlockedByDefault
+     */
+    public function getUnlockedByDefault()
+    {
+        return $this->unlockedByDefault;
+    }
+
+    /**
+     * Set the value of unlockedByDefault
+     */
+    public function setUnlockedByDefault($unlockedByDefault): self
+    {
+        $this->unlockedByDefault = $unlockedByDefault;
+
+        return $this;
+    }
+
+    public function unlockedByDefaulStatetString(){
+        return $this->unlockedByDefault ? "Débloquée" : "Bloquée";
     }
 }

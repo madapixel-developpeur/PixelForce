@@ -82,7 +82,7 @@
 													{% set formationAgentRelation = formationAgentRepository.findOneBy({agent:app.user.id, formation:formation}) %}
 													{# {% set statut = formationAgentRelation ? formationAgentRelation.statut : constant('App\\Entity\\Formation::STATUT_BLOQUEE') %} #}
 													{% set statut = formationAgentRelation ? formationAgentRelation.statut : constant('App\\Entity\\Formation::STATUT_DISPONIBLE') %}
-													{% if formation.categorieFormation.ordreCatFormation > (agentSecteur.currentFormationRank ?? 1)  %}
+													{% if formation.categorieFormation.ordreCatFormation > (agentSecteur.currentFormationRank ?? 1) and formation.categorieFormation.unlockedByDefault == false %}
 														{% set statut = constant('App\\Entity\\Formation::STATUT_BLOQUEE') %}
 													{% endif %}
 													<div class="row week-item">

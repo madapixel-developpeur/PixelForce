@@ -61,6 +61,16 @@ class CategorieFormationSearchType extends AbstractType
                     "Non prise en compte" => false
                 ],
             ])
+            ->add('unlockedByDefault', ChoiceType::class, [
+                'required' => false,
+                'label' => false,
+                'placeholder' => 'STATUT FORMATION',
+                'choices' => [
+                    'Tout' => null,
+                    "Débloquée" => true,
+                    "Bloquée" => false
+                ],
+            ])
             
             ->add('ordre', EntityType::class, [
                 'placeholder' => 'ORDRE',

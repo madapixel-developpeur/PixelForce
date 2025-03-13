@@ -30,6 +30,11 @@ class CategorieFormationSearch {
      */
     private $isInProgression;
 
+           /**
+     * @var boolean|null
+     */
+    private $unlockedByDefault;
+
     /**
      * Get the value of nom
      *
@@ -133,6 +138,24 @@ class CategorieFormationSearch {
     public function setIsInProgression(string $isInProgression): self
     {
         $this->isInProgression = $isInProgression;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of unlockedByDefault
+     */
+    public function getUnlockedByDefault()
+    {
+        return $this->unlockedByDefault;
+    }
+
+    /**
+     * Set the value of unlockedByDefault
+     */
+    public function setUnlockedByDefault($unlockedByDefault): self
+    {
+        $this->unlockedByDefault = $unlockedByDefault;
 
         return $this;
     }

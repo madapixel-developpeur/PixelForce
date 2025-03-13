@@ -26,6 +26,10 @@ class CategorieFormationType extends AbstractType
                 'required' => false,
                 'data'     => true, 
             ])
+            ->add('unlockedByDefault', CheckboxType::class, [
+                'label'    => "Débloquer les formations par défaut", 
+                'required' => false,
+            ])
         ;
     }
 

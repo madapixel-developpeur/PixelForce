@@ -75,6 +75,12 @@ class CategorieFormationRepository extends ServiceEntityRepository
                 ->andwhere('cf.isInProgression = :isInProgression')
                 ->setParameter('isInProgression', $param);
         }
+        if (!is_null($search->getUnlockedByDefault())) {
+            $param = ($search->getUnlockedByDefault()) ? true : false;
+            $query = $query
+                ->andwhere('cf.unlockedByDefault = :unlockedByDefault')
+                ->setParameter('unlockedByDefault', $param);
+        }
         if ($search->getOrdre()) {
             $query = $query
                 ->andwhere('cf.ordreCatFormation LIKE :ordre')

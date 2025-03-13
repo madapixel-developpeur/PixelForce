@@ -126,14 +126,6 @@ class AgentFormationController extends AbstractController
                 $request->query->getInt('page', 1),
                 20
             );
-            // return $this->render('formation/video/agent_formation_list.html.twig', [
-            //     'formations' => $formations,
-            //     'criteres' => $criteres,
-            //     'formationAgentRepository' => $this->formationAgentRepository,
-            //     'categories' => $this->repoCatFormation->findBy(['statut' => 1]),
-            //     'nbrAllMyContacts' => count($this->repoContact->findAll()),
-            //     'agentSecteur' => $agentSecteur
-            // ]);
             $configuration = $this->formationPageConfigurationRepository->findBySectionAndSecteur($secteur,$roles);
             return $this->render('formation/video/agent_detail_categorie_formation.html.twig', [
                 'formations' => $formations,
