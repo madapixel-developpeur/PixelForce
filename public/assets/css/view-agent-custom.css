@@ -1,0 +1,16 @@
+.custom-audio {
+    width: 100%; /* Full width */
+    border-radius: 5px; /* Less rounded */
+    background-color: #7d78e1; /* Green theme */
+    color: white; /* White text/icons */
+}
+
+/* Style the default controls */
+.custom-audio::-webkit-media-controls-panel {
+    background-color: #7d78e1 !important; /* Green background */
+}
+
+.custom-audio::-webkit-media-controls-play-button,
+.custom-audio::-webkit-media-controls-volume-slider {
+    filter: invert(1); /* Make icons white */
+}
