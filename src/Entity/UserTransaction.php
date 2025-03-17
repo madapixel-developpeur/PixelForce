@@ -201,4 +201,8 @@ class UserTransaction
 
         return $this;
     }
+
+    public function getCreatedAtStr(){
+        return $this->getCreatedAt()->format('Y-m-d H:i:s');
+    }
 }

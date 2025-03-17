@@ -64,15 +64,17 @@
 			<div class="card card-company-table p-5 rounded-3" style="">
 				<div class="card-body p-0">
 					<div class="card-head mb-3">
-						<div class="row">
-							<div class="col-0 col-md-7">
-							</div>
-							<div class="col-12 col-md-5 d-flex justify-content-center">
+						<div class="row ">
+							<div class="col-12 col-md-12 d-flex justify-content-end">
 								<form action="{{path('agent_transaction_retrait')}}" class="input-group rounded-3 m-2 w-75">
-                                        <button class="input-group-text border-0" id="search-addon" type="submit">
-											<i class="fas fa-search"></i>
-										</button>
-                                        <input type="search"name="search" class="form-control  input-group-text border-0" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
+									<button class="input-group-text border-0" name="action_button" value="search_action" id="search-addon" type="submit">
+										<i class="fas fa-search"></i>
+									</button>
+									<input type="search"name="search" class="form-control  input-group-text border-0 mr-2" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
+									<button name="action_button" value="excel"  class=" mt-2 btn btn-success btn-sm mx-2 rounded-3"><i class="fa fa-print"></i> <span class="ms-1">Exporter excel</span></button>
+									<button name="action_button" value="csv"  class=" mt-2 btn btn-success btn-sm mx-2 rounded-3"><i class="fa fa-print"></i> <span class="ms-1">Exporter csv</span></button>
+									<button name="action_button" value="pdf"  class=" mt-2  btn btn-danger btn-sm mx-2 rounded-3"><i class="fa fa-file-text"></i> <span class="ms-1">Exporter pdf</span></button>
+
                                 </form>
 							</div>
 						</div>

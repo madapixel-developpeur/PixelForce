@@ -59,3 +59,7 @@ services:
     # App\Controller\ErrorController:
     #     tags: ['controller.service_arguments']
 
+    App\Services\PdfExport:
+        arguments:
+            $projectDir: "%kernel.project_dir%"
+

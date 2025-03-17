@@ -2,8 +2,9 @@
 
 namespace App\Services;
 
-use App\Util\GenericUtil;
 use SplFileObject;
+use App\Util\GenericUtil;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
 class ExcelService
 {
@@ -60,4 +61,44 @@ class ExcelService
     {
         return array_map("utf8_decode", $tab);
     }
+
+    public function exportXlsx($data, array $fields, array $headers){
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+    
+        $col = 'A'; 
+        foreach ($headers as $header) {
+            $sheet->setCellValue($col . '1', $header);
+            $col = $this->incrementColumn($col); 
+        }
+        
+   
+        $row = 2;
+        foreach ($data as $item) {
+            $col = 'A'; 
+            foreach ($fields as $field) {
+                $value = GenericUtil::getPropertyValue($item, $field);
+                $sheet->setCellValue($col . $row,$value ?? ''); 
+                $col = $this->incrementColumn($col); 
+            }
+            $row++;
+        }
+
+        return $spreadsheet;
+    }
+
+    function incrementColumn($col)
+    {
+        $lastChar = substr($col, -1);
+        $rest = substr($col, 0, -1);
+
+        if ($lastChar == 'Z') {
+            $col = $rest . 'A';  // Reset the last letter to 'A' and increment the previous part
+        } else {
+            $col = $rest . chr(ord($lastChar) + 1);  // Increment the last letter
+        }
+
+        return $col;
+    }
+
 }

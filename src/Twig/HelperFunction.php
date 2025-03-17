@@ -2,12 +2,13 @@
 
 namespace App\Twig;
 
-use App\Repository\SecteurRepository;
-use Symfony\Bundle\SecurityBundle\SecurityBundle;
 use Twig\TwigFunction;
+use App\Util\GenericUtil;
+use App\Repository\SecteurRepository;
 use Twig\Extension\AbstractExtension;
 use App\Services\Stat\StatAgentService;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\SecurityBundle;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -41,6 +42,7 @@ class HelperFunction extends AbstractExtension
             new TwigFunction('custom_path', [$this, 'customPath']),
             new TwigFunction('get_stat', [$this, 'getStat']),
             new TwigFunction('get_order_amount_HT', [$this, 'getOrderAmountHt']),
+            new TwigFunction('attribute', [$this, 'getAttribute']),
         ];
     }
 
@@ -91,5 +93,15 @@ class HelperFunction extends AbstractExtension
         }
         return $savedAmountHT;
 
+    }
+
+    public function getAttribute($obj,$field){
+        try {
+            $value = GenericUtil::getPropertyValue($obj, $field);
+            return $value;
+        } catch (\Throwable $th) {
+            //throw $th;
+            return '';
+        }
     }
 }
