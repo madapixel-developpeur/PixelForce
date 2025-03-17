@@ -11,7 +11,7 @@
 {% block body %}
     <div class="row mb-3">
 		<div class="col-12  mt-2 mt-md-3">
-			<h4 class="my-auto general-primary-text">Historiques des rémunérations</h4>
+			<h4 class="my-auto general-primary-text">Historique des rémunérations</h4>
 		</div>
 	</div>
 	<div class="card card-company-table p-5 rounded-3" style="">
@@ -83,7 +83,10 @@
                                            
 
                                             <div class="btn-wrap">
-                                                <button class="btn btn-primary" type="submit"><i data-feather="filter"></i>Filtrer</button>
+                                                <button class="btn btn-primary" type="submit" name="action_button" value="search_action"><i data-feather="filter"></i>Filtrer</button>
+                                                <button name="action_button" value="excel"  class=" mt-2 btn btn-success btn-sm mx-2 rounded-3"><i class="fa fa-print"></i> <span class="ms-1">Exporter excel</span></button>
+                                                <button name="action_button" value="csv"  class=" mt-2 btn btn-success btn-sm mx-2 rounded-3"><i class="fa fa-print"></i> <span class="ms-1">Exporter csv</span></button>
+                                                <button name="action_button" value="pdf"  class=" mt-2  btn btn-danger btn-sm mx-2 rounded-3"><i class="fa fa-file-text"></i> <span class="ms-1">Exporter pdf</span></button>
                                             </div>
                                         {{ form_end(form) }}
                                     </div>
@@ -115,7 +118,7 @@
                                         <td>{{remuneration.dateReference | date("d/m/Y H:i")}}</td>
                                         <td class="text-left">{{remuneration.label}}</td>
                                         <td class="text-left">{{remuneration.typeStr}}</td>
-                                        <td class="text-right">{{remuneration.amount | number_format(2, ',', ' ') }}</td> 
+                                        <td class="text-right">{{remuneration.amount | number_format(2, ',', ' ') }} €</td> 
                                     </tr>
                                 {% endfor %}
 
