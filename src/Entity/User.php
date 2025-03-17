@@ -1880,4 +1880,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
                 break;
         }
     }
+
+    public function getCoachSecteursStr()
+    {
+        return $this->allSecteursOfUser($this->getCoachSecteurs()->toArray());
+    }
+
+    public function getFullName(){
+        return $this->fullName();
+    }
 }

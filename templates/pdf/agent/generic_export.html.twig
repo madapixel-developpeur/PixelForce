@@ -60,7 +60,7 @@
         <thead>
             <tr>
                 {% for header in headers %}
-                    <th class="text-center">{{ header }}</th>
+                    <th class="{{ header.class ?? 'text-center' }}">{{ header.name }}</th>
                 {% endfor %}
             </tr>
         </thead>

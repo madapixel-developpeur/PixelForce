@@ -142,7 +142,12 @@ class AgentTransactionController extends AbstractController
             
             }
             elseif($action == "pdf"){
-                $headers = ["Date", "Montant", "RIB", "Statut"];
+                $headers = [
+                    ['name' =>"Date"],
+                    ['name' =>"Montant"], 
+                    ['name' =>"RIB"], 
+                    ['name' =>"Statut"]
+                ];
                 $fields = [
                     ['name' => "createdAtStr", 'class' => "text-center"],
                     ['name' => "amount", 'class' => "text-end"],
