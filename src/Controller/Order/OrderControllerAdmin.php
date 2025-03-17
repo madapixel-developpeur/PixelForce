@@ -165,7 +165,8 @@ class OrderControllerAdmin extends AbstractController
         $filter['page'] = $page;
         $result = $this->statAgentService->getOrders($filter);
         if(!empty($action) && $action != 'search_action'){
-            return $this->export($result['items'],$action);
+            $venteExportParameter = $this->getExportOptionParameter("vente");
+            return $this->export($result['items'],$action,$venteExportParameter);
         }
         $orderList = $paginator->paginate(
             $result['items'],
@@ -202,7 +203,7 @@ class OrderControllerAdmin extends AbstractController
      */
     public function getCaHistory(Request $request, PaginatorInterface $paginator, SearchService $searchService): Response
     {
-
+        $action = $request->get('action_button');
         $user = (object)$this->getUser();
         $secteurId = $this->session->get('secteurId');
         $page = $request->query->get('page', 1);
@@ -240,6 +241,10 @@ class OrderControllerAdmin extends AbstractController
         if(isset($filter['dateMax']) && $filter['dateMax'])  $filter['dateMax'] = (new DateTime($filter['dateMax'] . "-01"))->modify('last day of this month')->setTime(23,59,59)->format('Y-m-d H:i:s');
         $filter['page'] = $page;
         $result = $this->statAgentService->getCaHistory($filter);
+        if(!empty($action) && $action != 'search_action'){
+            $caHistoryExportParameter = $this->getExportOptionParameter("ca_history");
+            return $this->export($result['result'],$action,$caHistoryExportParameter);
+        }
         $historiquesCa = $result['result'];
         $totalCa = $result['totalCa'];
 
@@ -296,23 +301,78 @@ class OrderControllerAdmin extends AbstractController
 
     }
 
+    public function getExportOptionParameter($type){
+        if($type == 'vente'){
+            return [
+                'csv_excel' => [
+                    'headers' => ["Date", "Client", "Pack - (service)", "Montant", "Référence", "Statut"],
+                    'fields' =>  [
+                        "createdAt",
+                        "infoClient.firstName",
+                        "package.name",
+                        "amount",
+                        "infoClient.referenceVente",
+                        "statusStr"
+                    ]
+                ],
+                'pdf' => [
+                    'headers' =>  [
+                        ['name' => "Date"],
+                        ['name' => "Client"],
+                        ['name' => "Pack - (service)"],
+                        ['name' => "Montant"],
+                        ['name' => "Référence"],
+                        ['name' => "Statut"],
+                    ],
+                    "fields" =>  [
+                        ['name' => "createdAt"],
+                        ['name' => "infoClient.firstName" ],
+                        ['name' => "package.name"],
+                        ['name' => "amount", 'class' => "text-end","symbol" => "€","format_number" => true],
+                        ['name' => "infoClient.referenceVente"],
+                        ['name' => "statusStr"],
+                    ],
+                    'title' => "Liste des commandes"
+                ],
+            ];
+        }else{
+            return [
+                'csv_excel' => [
+                    'headers' => ["Mois", "Nombre de vente", "Chiffre d'affaire"],
+                    'fields' =>  [
+                        "month",
+                        "total_vente",
+                        "amount",
+                    ]
+                ],
+                'pdf' => [
+                    'headers' =>  [
+                        ['name' => "Mois"],
+                        ['name' => "Nombre de vente"],
+                        ['name' => "Chiffre d'affaire"]
+                    ],
+                    "fields" =>  [
+                        ['name' => "month"],
+                        ['name' => "total_vente", 'class' => "text-end", ],
+                        ['name' => "amount", 'class' => "text-end", "symbol" => "€" , "format_number" => true],
+                    ],
+                    'title' => "Historique du chiffre d'affaires"
+                ],
+            ];
 
-    public function export($data,$action): Response
+        }
+    }
+
+    public function export($data,$action,$options): Response
     {
-        
          try{
             $common_file_name = 'liste-commandes';
             $date = (new \DateTime())->format('Y-m-d m:s');
             if($action == "csv"){
-                $headers = ["Date", "Client", "Pack - (service)", "Montant", "Référence", "Statut"];
-                $fields = [
-                    "createdAt",
-                    "infoClient.firstName",
-                    "package.name",
-                    "amount",
-                    "infoClient.referenceVente",
-                    "statusStr"
-                ];
+                $headers = $options['csv_excel']['headers'];
+                $fields = $options['csv_excel']['fields'];
+
+
                 $file = $this->excelService->export($data, $fields, $headers);
     
                 $name = $common_file_name."-$date.csv";
@@ -323,15 +383,8 @@ class OrderControllerAdmin extends AbstractController
                 ]);
             }
             elseif($action == 'excel'){
-                $headers = ["Date", "Client", "Pack - (service)", "Montant", "Référence", "Statut"];
-                $fields = [
-                    "createdAt",
-                    "infoClient.firstName",
-                    "package.name",
-                    "amount",
-                    "infoClient.referenceVente",
-                    "statusStr"
-                ];
+                $headers = $options['csv_excel']['headers'];
+                $fields = $options['csv_excel']['fields'];
                 $spreadsheet = $this->excelService->exportXlsx($data, $fields, $headers);
         
              
@@ -356,24 +409,9 @@ class OrderControllerAdmin extends AbstractController
             }
             elseif($action == "pdf"){
 
-                $headers = [
-                    ['name' => "Date"],
-                    ['name' => "Client"],
-                    ['name' => "Pack - (service)"],
-                    ['name' => "Montant", 'class' => "text-right"],
-                    ['name' => "Référence"],
-                    ['name' => "Statut"],
-                ];
-
-                $fields = [
-                    ['name' => "createdAt"],
-                    ['name' => "infoClient.firstName" ],
-                    ['name' => "package.name"],
-                    ['name' => "amount", 'class' => "text-end","symbol" => "€"],
-                    ['name' => "infoClient.referenceVente"],
-                    ['name' => "statusStr"],
-                ];
-                $pdf = $this->pdfExport->generateGenericPDF("Liste des commandes",$data,$headers,$fields);
+                $headers = $options['pdf']['headers'];
+                $fields = $options['pdf']['fields'];
+                $pdf = $this->pdfExport->generateGenericPDF($options['pdf']['title'],$data,$headers,$fields);
 
                 $fileName = $common_file_name."-$date.pdf";
                 $response = new Response($pdf);

@@ -68,8 +68,15 @@
             {% for item in data %}
                 <tr>
                     {% for field in fields %}
-                        <td class="{{ field.class ?? 'text-center' }}">{{ obj_attribute(item, field.name) }} {{ field.symbol ?? '' }}</td>
+                        <td class="{{ field.class ?? 'text-center' }}">
+                            {{ field.format_number is defined ? (obj_attribute(item, field.name) | number_format(2, ',', ' ')) : obj_attribute(item, field.name) }}
+                            {{ field.symbol ?? '' }}
+                        </td>
                     {% endfor %}
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="{{ fields| length }}" class="text-center">Vide</td>
                 </tr>
             {% endfor %}
         </tbody>
