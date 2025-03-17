@@ -70,7 +70,7 @@
 									<button class="input-group-text border-0" name="action_button" value="search_action" id="search-addon" type="submit">
 										<i class="fas fa-search"></i>
 									</button>
-									<input type="search"name="search" class="form-control  input-group-text border-0 mr-2" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
+									<input type="search"name="search" class="form-control  input-group-text border-0 mr-2" value='{{  app.request.get('search')}}' placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
 									<button name="action_button" value="excel"  class=" mt-2 btn btn-success btn-sm mx-2 rounded-3"><i class="fa fa-print"></i> <span class="ms-1">Exporter excel</span></button>
 									<button name="action_button" value="csv"  class=" mt-2 btn btn-success btn-sm mx-2 rounded-3"><i class="fa fa-print"></i> <span class="ms-1">Exporter csv</span></button>
 									<button name="action_button" value="pdf"  class=" mt-2  btn btn-danger btn-sm mx-2 rounded-3"><i class="fa fa-file-text"></i> <span class="ms-1">Exporter pdf</span></button>
