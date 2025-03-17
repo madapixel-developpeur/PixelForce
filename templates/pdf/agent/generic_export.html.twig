@@ -68,7 +68,7 @@
             {% for item in data %}
                 <tr>
                     {% for field in fields %}
-                        <td class="{{ field.class ?? 'text-center' }}">{{ obj_attribute(item, field.name) }}</td>
+                        <td class="{{ field.class ?? 'text-center' }}">{{ obj_attribute(item, field.name) }} {{ field.symbol ?? '' }}</td>
                     {% endfor %}
                 </tr>
             {% endfor %}

@@ -150,7 +150,7 @@ class AgentTransactionController extends AbstractController
                 ];
                 $fields = [
                     ['name' => "createdAtStr", 'class' => "text-center"],
-                    ['name' => "amount", 'class' => "text-end"],
+                    ['name' => "amount", 'class' => "text-end","symbol" => "€"],
                     ['name' => "rib",'class' => "text-center"],
                     ['name' => "statusRetraitStr"],
                 ];

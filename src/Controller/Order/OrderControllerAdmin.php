@@ -5,6 +5,8 @@ namespace App\Controller\Order;
 use DateTime;
 use Exception;
 use App\Entity\Order;
+use App\Services\PdfExport;
+use App\Services\ExcelService;
 use App\Services\OrderService;
 use App\Services\SearchService;
 use App\Form\OrderClientFilterType;
@@ -13,13 +15,16 @@ use App\Form\OrderSearchTypeDigital;
 use App\Util\Search\MyCriteriaParam;
 use App\Services\Stat\StatAgentService;
 use Doctrine\ORM\EntityManagerInterface;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -33,7 +38,10 @@ class OrderControllerAdmin extends AbstractController
     private $orderService;
     private $session; 
 
-    public function __construct(EntityManagerInterface $entityManager, OrderRepository $orderRepository, OrderService $orderService, SessionInterface $session, private StatAgentService $statAgentService)
+    public function __construct(EntityManagerInterface $entityManager, OrderRepository $orderRepository, OrderService $orderService, SessionInterface $session, private StatAgentService $statAgentService,
+        private ExcelService $excelService,
+        private PdfExport $pdfExport
+    )
     {
         $this->entityManager = $entityManager;
         $this->orderRepository = $orderRepository;
@@ -138,7 +146,7 @@ class OrderControllerAdmin extends AbstractController
      */
     public function indexDigital(Request $request, PaginatorInterface $paginator, SearchService $searchService): Response
     {
-
+        $action = $request->get('action_button');
         $user = (object)$this->getUser();
         $secteurId = $this->session->get('secteurId');
         $page = $request->query->get('page', 1);
@@ -156,7 +164,9 @@ class OrderControllerAdmin extends AbstractController
         if(isset($filter['dateMax']) && $filter['dateMax'])  $filter['dateMax'] = $filter['dateMax']->format('Y-m-d')." 23:59:59";
         $filter['page'] = $page;
         $result = $this->statAgentService->getOrders($filter);
-
+        if(!empty($action) && $action != 'search_action'){
+            return $this->export($result['items'],$action);
+        }
         $orderList = $paginator->paginate(
             $result['items'],
             1,
@@ -283,6 +293,104 @@ class OrderControllerAdmin extends AbstractController
             'usedTVA' => $result['TVA'] ?? 20
         ]);
       
+
+    }
+
+
+    public function export($data,$action): Response
+    {
+        
+         try{
+            $common_file_name = 'liste-commandes';
+            $date = (new \DateTime())->format('Y-m-d m:s');
+            if($action == "csv"){
+                $headers = ["Date", "Client", "Pack - (service)", "Montant", "Référence", "Statut"];
+                $fields = [
+                    "createdAt",
+                    "infoClient.firstName",
+                    "package.name",
+                    "amount",
+                    "infoClient.referenceVente",
+                    "statusStr"
+                ];
+                $file = $this->excelService->export($data, $fields, $headers);
+    
+                $name = $common_file_name."-$date.csv";
+
+                return new BinaryFileResponse($file, 200, [
+                    'Content-Type' => 'text/csv',
+                    'Content-Disposition' => ResponseHeaderBag::DISPOSITION_ATTACHMENT . "; filename=\"$name\"",
+                ]);
+            }
+            elseif($action == 'excel'){
+                $headers = ["Date", "Client", "Pack - (service)", "Montant", "Référence", "Statut"];
+                $fields = [
+                    "createdAt",
+                    "infoClient.firstName",
+                    "package.name",
+                    "amount",
+                    "infoClient.referenceVente",
+                    "statusStr"
+                ];
+                $spreadsheet = $this->excelService->exportXlsx($data, $fields, $headers);
+        
+             
+                $name = $name = $common_file_name."-$date.xlsx";
+
+                $writer = new Xlsx($spreadsheet);
+            
+                $response = new Response();
+            
+                // Set headers for the file download
+                $response->headers->set('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+                $response->headers->set('Content-Disposition', 'attachment;filename="' . $name . '"');
+                $response->headers->set('Cache-Control', 'max-age=0'); // Ensure the file is not cached
+            
+                ob_start();
+                $writer->save('php://output');
+                $content = ob_get_clean();
+                $response->setContent($content);
+        
+                return $response;
+            
+            }
+            elseif($action == "pdf"){
+
+                $headers = [
+                    ['name' => "Date"],
+                    ['name' => "Client"],
+                    ['name' => "Pack - (service)"],
+                    ['name' => "Montant", 'class' => "text-right"],
+                    ['name' => "Référence"],
+                    ['name' => "Statut"],
+                ];
+
+                $fields = [
+                    ['name' => "createdAt"],
+                    ['name' => "infoClient.firstName" ],
+                    ['name' => "package.name"],
+                    ['name' => "amount", 'class' => "text-end","symbol" => "€"],
+                    ['name' => "infoClient.referenceVente"],
+                    ['name' => "statusStr"],
+                ];
+                $pdf = $this->pdfExport->generateGenericPDF("Liste des commandes",$data,$headers,$fields);
+
+                $fileName = $common_file_name."-$date.pdf";
+                $response = new Response($pdf);
+                $response->headers->set('Content-Type', 'application/pdf');
+                $response->headers->set('Content-Disposition', 'attachment; filename="'.$fileName.'"');
+        
+                return $response;
+
+            }
+        } 
+        catch (Exception $ex) {
+            $this->addFlash(
+                'danger',
+                $_ENV['CUSTOM_ERROR_MESSAGE']
+            );
+        }
+        return $this->redirectToRoute('agent_order_list_digital');
 
     }
 
