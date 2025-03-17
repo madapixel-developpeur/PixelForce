@@ -42,7 +42,7 @@ class HelperFunction extends AbstractExtension
             new TwigFunction('custom_path', [$this, 'customPath']),
             new TwigFunction('get_stat', [$this, 'getStat']),
             new TwigFunction('get_order_amount_HT', [$this, 'getOrderAmountHt']),
-            new TwigFunction('attribute', [$this, 'getAttribute']),
+            new TwigFunction('obj_attribute', [$this, 'getAttribute']),
         ];
     }
 

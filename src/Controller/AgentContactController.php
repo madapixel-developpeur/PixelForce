@@ -3,8 +3,10 @@
 
 namespace App\Controller;
 
+use Exception;
 use App\Entity\User;
 use App\Entity\Contact;
+use App\Services\PdfExport;
 use App\Form\UserSearchType;
 use App\Manager\EntityManager;
 use App\Services\ExcelService;
@@ -17,14 +19,17 @@ use App\Form\ContactInformationType;
 use App\Repository\ContactRepository;
 use App\Repository\SecteurRepository;
 use App\Entity\SearchEntity\UserSearch;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\ContactInformationRepository;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Nucleos\DompdfBundle\Wrapper\DompdfWrapperInterface;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -42,7 +47,10 @@ class AgentContactController extends AbstractController
      */
     private $tagRepository;
 
-    public function __construct(TagRepository $tagRepository, UserRepository $repoUser, ContactRepository $repoContact, ContactInformationRepository $repoContactInfo, SessionInterface $session, SecteurRepository $repoSecteur, EntityManager $entityManager)
+    public function __construct(TagRepository $tagRepository, UserRepository $repoUser, ContactRepository $repoContact, ContactInformationRepository $repoContactInfo, SessionInterface $session, SecteurRepository $repoSecteur, EntityManager $entityManager,
+        private ExcelService $excelService,
+        private PdfExport $pdfExport
+    )
     {
         $this->repoUser = $repoUser;
         $this->repoContact = $repoContact;
@@ -58,6 +66,7 @@ class AgentContactController extends AbstractController
      */
     public function agent_contact_list(Request $request, PaginatorInterface $paginator)
     {
+        $action = $request->get('action_button');
         $secteurId = $this->session->get('secteurId');
         $agent = $this->getUser();
         $search = new UserSearch();
@@ -80,6 +89,9 @@ class AgentContactController extends AbstractController
                 ]
             ]);
         $searchForm->handleRequest($request);
+        if(!empty($action) && $action != 'search_action'){
+            return $this->export($this->repoContact->findContactBySecteur($search, $agent, null, $request->get('search'), true),$action);
+        }
 
         $contacts = $paginator->paginate(
             $this->repoContact->findContactBySecteur($search, $agent, null, $request->get('search'), true),
@@ -138,7 +150,7 @@ class AgentContactController extends AbstractController
         $secteur = $this->repoSecteur->find($secteurId);
         $contacts = $this->repoContact->findBy(['agent' => $this->getUser(), 'secteur' => $secteur]);
 
-        $headers = ["NOM ET PRÉNOMS", "EMAIL", "TÉLÉPHONE", "ADRESSE", "TYPE DU LOGEMENT", "RUE", "NUMÉRO", "CODE POSTAL", "VILLE", "COMPOSITION DU FOYER", "NOMBRE DE PERSONNE", "COMMENTAIRE"];
+        $headers = ["NOM ET PRÉNOMS", "EMAIL", "TÉLÉPHONE", "ADRESSE", "TYPE DU LOGEMENT", "RUE", "NUMÉRO", "CODE POSTAL", "VILLE", "COMPOSITION DU FOYER", "NOMBRE DE PERSONNE", 'NOTE',"COMMENTAIRE"];
         $fields = [
             "information.lastname",
             "information.email",
@@ -151,7 +163,8 @@ class AgentContactController extends AbstractController
             "information.ville",
             "information.compositionFoyer",
             "information.nbrPersonne",
-            "information.commentaire"
+            "information.note",
+            "note",
         ];
         $file = $excelService->export($contacts, $fields, $headers);
 
@@ -411,5 +424,115 @@ class AgentContactController extends AbstractController
             $this->addFlash('danger', 'Contact supprimé');
         }
         return $this->redirectToRoute('agent_contact_list');
+    }
+
+    public function export($data,$action): Response
+    {
+        
+         try{
+            $common_file_name = 'liste-contact';
+            $date = (new \DateTime())->format('Y-m-d m:s');
+            if($action == "csv"){
+                $headers = ["NOM ET PRÉNOMS", "EMAIL", "TÉLÉPHONE", "ADRESSE", "TYPE DU LOGEMENT", "RUE", "NUMÉRO", "CODE POSTAL", "VILLE", "COMPOSITION DU FOYER", "NOMBRE DE PERSONNE", 'NOTE',"COMMENTAIRE"];
+                $fields = [
+                    "information.fullName",
+                    "information.email",
+                    "information.phone",
+                    "information.address",
+                    "information.typeLogement.nom",
+                    "information.rue",
+                    "information.numero",
+                    "information.codePostal",
+                    "information.ville",
+                    "information.compositionFoyer",
+                    "information.nbrPersonne",
+                    "information.note",
+                    "note",
+                ];
+                $file = $this->excelService->export($data, $fields, $headers);
+    
+                $name = $common_file_name."-$date.csv";
+
+                return new BinaryFileResponse($file, 200, [
+                    'Content-Type' => 'text/csv',
+                    'Content-Disposition' => ResponseHeaderBag::DISPOSITION_ATTACHMENT . "; filename=\"$name\"",
+                ]);
+            }
+            elseif($action == 'excel'){
+                $headers = ["NOM ET PRÉNOMS", "EMAIL", "TÉLÉPHONE", "ADRESSE", "TYPE DU LOGEMENT", "RUE", "NUMÉRO", "CODE POSTAL", "VILLE", "COMPOSITION DU FOYER", "NOMBRE DE PERSONNE", 'NOTE',"COMMENTAIRE"];
+                $fields = [
+                    "information.fullName",
+                    "information.email",
+                    "information.phone",
+                    "information.address",
+                    "information.typeLogement.nom",
+                    "information.rue",
+                    "information.numero",
+                    "information.codePostal",
+                    "information.ville",
+                    "information.compositionFoyer",
+                    "information.nbrPersonne",
+                    "information.note",
+                    "note",
+                ];
+                $spreadsheet = $this->excelService->exportXlsx($data, $fields, $headers);
+        
+             
+                $name = $name = $common_file_name."-$date.xlsx";
+
+                $writer = new Xlsx($spreadsheet);
+            
+                $response = new Response();
+            
+                // Set headers for the file download
+                $response->headers->set('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+                $response->headers->set('Content-Disposition', 'attachment;filename="' . $name . '"');
+                $response->headers->set('Cache-Control', 'max-age=0'); // Ensure the file is not cached
+            
+                ob_start();
+                $writer->save('php://output');
+                $content = ob_get_clean();
+                $response->setContent($content);
+        
+                return $response;
+            
+            }
+            elseif($action == "pdf"){
+                $headers = [
+                    ['name' => "Nom et prénoms", 'class' => "text-left"],
+                    ['name' => "Email"],
+                    ['name' => "Téléphone"],
+                    ['name' => "Adresse"],
+                    ['name' => "Note"],
+                    ['name' => "Commentaire"],
+                ];
+
+                $fields = [
+                    ['name' => "information.fullName", 'class' => "text-left"],
+                    ['name' => "information.email"],
+                    ['name' => "information.phone"],
+                    ['name' => "information.fullAddress"],
+                    ['name' => "information.note"],
+                    ['name' => "note"],
+                ];
+                $pdf = $this->pdfExport->generateGenericPDF("Liste des mes contacts",$data,$headers,$fields);
+
+                $fileName = $common_file_name."-$date.pdf";
+                $response = new Response($pdf);
+                $response->headers->set('Content-Type', 'application/pdf');
+                $response->headers->set('Content-Disposition', 'attachment; filename="'.$fileName.'"');
+        
+                return $response;
+
+            }
+        } 
+        catch (Exception $ex) {
+            $this->addFlash(
+                'danger',
+                $_ENV['CUSTOM_ERROR_MESSAGE']
+            );
+        }
+        return $this->redirectToRoute('agent_contact_list');
+
     }
 }

@@ -461,4 +461,13 @@ class ContactInformation
             throw new \Exception("Getter method '$methodName' not found in class " . get_class($this));
         }
     }
+
+    public function getFullAddress(){
+        return $this->getAddress().','.$this->getNumero().','.$this->getRue().','.$this->getVille().'-'.$this->getCodePostal();
+    }
+
+    public function getFullName(){
+        return $this->fullName();
+    }
+    
 }
