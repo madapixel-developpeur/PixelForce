@@ -3,30 +3,37 @@
 
 namespace App\Controller;
 
-use App\Entity\CoachSecteur;
-use App\Entity\SearchEntity\UserSearch;
-use App\Entity\Secteur;
+use Exception;
 use App\Entity\User;
-use App\Form\AgentSecteurType;
-use App\Form\CoachSecteurType;
-use App\Form\ResetPasswordType;
+use App\Form\UserType;
+use App\Entity\Secteur;
 use App\Form\SecteurType;
 use App\Form\UserLoginType;
+use App\Services\PdfExport;
+use App\Entity\CoachSecteur;
 use App\Form\UserSearchType;
-use App\Form\UserSecteurType;
-use App\Form\UserType;
-use App\Manager\EntityManager;
 use App\Manager\UserManager;
-use App\Repository\CoachAgentRepository;
-use App\Repository\CoachSecteurRepository;
-use App\Repository\SecteurRepository;
+use App\Form\UserSecteurType;
+use App\Form\AgentSecteurType;
+use App\Form\CoachSecteurType;
+use App\Manager\EntityManager;
+use App\Services\ExcelService;
+use App\Form\ResetPasswordType;
 use App\Repository\UserRepository;
+use App\Repository\SecteurRepository;
 use App\Services\AgentSecteurService;
+use App\Entity\SearchEntity\UserSearch;
+use App\Repository\CoachAgentRepository;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use App\Repository\CoachSecteurRepository;
 use Knp\Component\Pager\PaginatorInterface;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class AdminCoachController extends AbstractController
 {
@@ -40,12 +47,16 @@ class AdminCoachController extends AbstractController
 
     protected $repoCoachSecteur;
 
-    public function __construct(UserRepository $repoUser,
-                                EntityManager $entityManager,
-                                UserManager $userManager,
-                                CoachAgentRepository $repoCoachAgent,
-                                SecteurRepository $repoSecteur,
-                                CoachSecteurRepository $repoCoachSecteur)
+    public function __construct(
+        UserRepository $repoUser,
+        EntityManager $entityManager,
+        UserManager $userManager,
+        CoachAgentRepository $repoCoachAgent,
+        SecteurRepository $repoSecteur,
+        CoachSecteurRepository $repoCoachSecteur,
+        private ExcelService $excelService,
+        private PdfExport $pdfExport
+    )
     {
         $this->repoUser = $repoUser;
         $this->entityManager = $entityManager;
@@ -60,10 +71,14 @@ class AdminCoachController extends AbstractController
      */
     public function admin_coach_list(Request $request, PaginatorInterface $paginator)
     {
+        $action = $request->get('action_button');
         $search = new UserSearch();
         $searchForm = $this->createForm(UserSearchType::class, $search)->remove('tag');
         $searchForm->handleRequest($request);
         // dd($this->repoUser->findCoachOrAgentQuery($search, User::ROLE_COACH));
+        if(!empty($action) && $action != 'search_action'){
+            return $this->export($this->repoUser->findCoachOrAgentQuery($search, User::ROLE_COACH),$action);
+        }
         $coachs = $paginator->paginate(
             $this->repoUser->findCoachOrAgentQuery($search, User::ROLE_COACH),
             $request->query->getInt('page', 1),
@@ -271,5 +286,94 @@ class AdminCoachController extends AbstractController
                 'newSector' => $secteur->getNom()
             ], 200);    
         }
-    }    
+    }  
+    
+    public function export($data,$action): Response
+    {
+        
+         try{
+            $common_file_name = 'liste-coachs';
+            $date = (new \DateTime())->format('Y-m-d m:s');
+            if($action == "csv"){
+                $headers = ["Nom et prénoms	", "Email", "Téléphone", "Date d'inscription","Secteur"];
+                $fields = [
+                    "fullName",
+                    "email",
+                    "telephone",
+                    "createdAtStr",
+                    "coachSecteursStr"
+                ];
+                $file = $this->excelService->export($data, $fields, $headers);
+    
+                $name = $common_file_name."-$date.csv";
+
+                return new BinaryFileResponse($file, 200, [
+                    'Content-Type' => 'text/csv',
+                    'Content-Disposition' => ResponseHeaderBag::DISPOSITION_ATTACHMENT . "; filename=\"$name\"",
+                ]);
+            }
+            elseif($action == 'excel'){
+                $headers = ["Nom et prénoms	", "Email", "Téléphone", "Date d'inscription","Secteur"];
+                $fields = [
+                    "fullName",
+                    "email",
+                    "telephone",
+                    "createdAtStr",
+                    "coachSecteursStr"
+                ];
+                $spreadsheet = $this->excelService->exportXlsx($data, $fields, $headers);
+        
+             
+                $name = $name = $common_file_name."-$date.xlsx";
+
+                $writer = new Xlsx($spreadsheet);
+            
+                $response = new Response();
+            
+                // Set headers for the file download
+                $response->headers->set('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+                $response->headers->set('Content-Disposition', 'attachment;filename="' . $name . '"');
+                $response->headers->set('Cache-Control', 'max-age=0'); // Ensure the file is not cached
+            
+                ob_start();
+                $writer->save('php://output');
+                $content = ob_get_clean();
+                $response->setContent($content);
+        
+                return $response;
+            
+            }
+            elseif($action == "pdf"){
+                $headers = [
+                    ['name' =>"Nom et prénoms", 'class' => "text-left"],
+                    ['name' =>"Contact"],
+                    ['name' =>"Date d'inscription"],
+                    ['name' =>"Secteur"]
+                ];
+                $fields = [
+                    ['name' => "fullName", 'class' => "text-left"],
+                    ['name' => "fullContact",'raw'=>true, 'class' => "text-left"],
+                    ['name' => "createdAtStr"],
+                    ['name' => "coachSecteursStr"],
+                ];
+                $pdf = $this->pdfExport->generateGenericPDF("Liste des coachs",$data,$headers,$fields);
+
+                $fileName = $common_file_name."-$date.pdf";
+                $response = new Response($pdf);
+                $response->headers->set('Content-Type', 'application/pdf');
+                $response->headers->set('Content-Disposition', 'attachment; filename="'.$fileName.'"');
+        
+                return $response;
+
+            }
+        } 
+        catch (Exception $ex) {
+            $this->addFlash(
+                'danger',
+                $_ENV['CUSTOM_ERROR_MESSAGE']
+            );
+        }
+        return $this->redirectToRoute('admin_coach_list');
+
+    }
 }

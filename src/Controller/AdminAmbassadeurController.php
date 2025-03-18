@@ -360,7 +360,7 @@ class AdminAmbassadeurController extends AbstractController
                 $headers = [
                     ['name' => "Nom et prénoms",],
                     ['name' => "Username",],
-                    ['name' => "Téléphone",],
+                    ['name' => "Contact",],
                     ['name' => "Date d'inscription"],
                     ['name' => "Nombre filleul"],
                     ['name' => "Secteur",],

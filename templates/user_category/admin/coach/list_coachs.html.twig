@@ -47,7 +47,10 @@
                     {{form_row(searchForm.dateInscriptionMax)}}
                 </div>
                 <div class="col-12 col-sm-12 col-md-12 mt-3">
-                    <button class="btn btn-primary "><i class="fa-solid fa-magnifying-glass"></i> Rechercher</button>
+                    <button class="btn btn-primary "  name="action_button" value="search_action" ><i class="fa-solid fa-magnifying-glass"></i> Rechercher</button>
+                     <button name="action_button" value="excel"  class=" mt-2 btn btn-success btn-sm mx-2 rounded-3"><i class="fa fa-print"></i> <span class="ms-1">Exporter excel</span></button>
+                    <button name="action_button" value="csv"  class=" mt-2 btn btn-success btn-sm mx-2 rounded-3"><i class="fa fa-print"></i> <span class="ms-1">Exporter csv</span></button>
+                    <button name="action_button" value="pdf"  class=" mt-2  btn btn-danger btn-sm mx-2 rounded-3"><i class="fa fa-file-text"></i> <span class="ms-1">Exporter pdf</span></button>
                 </div>
             </div>
             {{form_end(searchForm)}}
