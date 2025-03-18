@@ -301,4 +301,9 @@ class CategorieFormation
     public function unlockedByDefaulStatetString(){
         return $this->unlockedByDefault ? "Débloquée" : "Bloquée";
     }
+
+    
+    public function getUnlockedByDefaulStatetString(){
+        return $this->unlockedByDefaulStatetString();
+    }
 }
