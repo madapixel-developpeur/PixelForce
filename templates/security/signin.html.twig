@@ -58,8 +58,8 @@
                         </div>
                         <!-- /Left Text-->
                         <!-- Login-->
-                        <div class=" col-md-5 auth-bg px-1 d-flex justify-content-center align-items-center">
-                            <div class="col-12 col-sm-8 col-md-8 col-lg-12 p-lg-3 mx-auto">
+                        <div class=" col-md-5 auth-bg px-1 d-flex flex-column justify-content-center align-items-center">
+                            <div class="col-12 col-sm-8 col-md-8 col-lg-12 p-lg-3 mx-auto flex-grow-1">
                                 <div class="p-lg-4 p-3">
                                     <h2 class="card-title   text-center  pixelforce-logo">
                                             <a href="{{ path('app_dashboard') }}" class="text-center text-muted  d-flex align-items-center justify-content-center ">
@@ -221,6 +221,7 @@
 
                                 </div>
                             </div>
+                            {{ include ('global/footer/auth_footer.html.twig') }}
                         </div>
                         <!-- /Login-->
                     </div>

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        {% if app.environment == 'prod' %}
+            <script async src="https://www.googletagmanager.com/gtag/js?id=G-8PBBKR57JN"></script>
+            <script type="text/javascript" src="{{ asset('assets/js/google_analytics.js') }}"></script>
+        {% endif %}
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="google-site-verification" content="O5bvNXZxdhGiT5VN5hPxisFh_XZeZCQr4aN4yoy0Ilk" />
+        <title>{% block title %}Authentification{% endblock %}</title>
+        <link rel="stylesheet" href="/assets/fontawesome-free-6.0.0-web/css/all.css" />
+        <link rel="stylesheet" href="{{ asset('/assets/vuexy/css/pages/authentication.css') }}" />
+        <link rel="stylesheet" type="text/css" href="{{asset('assets/css/animations.css')}}">
+        <link rel="stylesheet" type="text/css" href="{{asset('assets/css/style.css?date=202406271222')}}">
+        <link rel="stylesheet" type="text/css" href="{{asset('assets/css/login.css')}}">
+        {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
+        {% block stylesheets %}
+            {{ encore_entry_link_tags('vuexy_colors') }}
+            {{ encore_entry_link_tags('vuexy_components') }}
+            {{ encore_entry_link_tags('app') }}
+        {% endblock %}
+
+        <script src="{{ asset('assets/vuexy/vendors/js/vendors.min.js') }}" ></script>
+    </head>
+
+    <body>
+{% block body %}
+<body class="horizontal-layout horizontal-menu blank-page navbar-floating footer-static  " data-open="hover" data-menu="horizontal-menu" data-col="blank-page">
+    <div class="app-content content ">
+        <div class="content-wrapper">
+            <div class="row d-flex justify-content-center">
+                <div class="col-md-8 pt-3">
+                    <div class="card">
+                        <h4 class="pt-2 pb-2 mb-4"></h4>
+                        <div  class="text-center text-muted  d-flex align-items-center justify-content-center pixelforce-logo mt-5 ">
+                            <img src="/assets/img/logo/pixelforce/logo-pixelforce-00.png" class="img-fluid  m-2" alt="logo-pixelforce">
+                            <h2 class="ml-0 fw-bold">PIXELFORCE</h2>
+                        </div> 
+                        <div class="row mb-4 justify-content-center mx-4">
+                            <div class="col-md-12 text-center ">
+                                <h4 class="text-center mb-4">
+                                {% if type == "CGU"  %}
+                                    Conditions générales d'utilisations (CGU)
+                                {%  elseif type == "CGV" %}
+                                    Conditions générales de vente (CGV)
+                                {%  endif %}
+                                <a href="{{ path('app_document_preview',{ type : type , option :'download' })}}" class="" type="button" ><i class="fa fa-download"></i></a>
+                                </h4>
+                                <div class=" d-sm-flex justify-content-center align-items-center mb-3">
+                                
+                                </div>
+                                <div style="height: 850px;overflow: auto;">
+                                    <div id="contrat"  style=" background-color: #f0f0f0; padding: 10px; border-radius: 5px;">
+                                        <div class="spinner" id="spinner-contrat">
+                                        
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('vuexy_app') }}
+    {{ encore_entry_script_tags('app') }}
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="{{asset('js/sweetalert.js')}}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
+    <script>
+       pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js";
+    </script>
+   
+    <script>
+
+
+        $(document).ready(function () { 
+            generatePDF('contrat',"{{ path('app_document_preview',{'type': type }) }}");	
+        });
+       
+
+
+
+        function generatePDF(id,pdfUrl){
+            const loadingTask = pdfjsLib.getDocument(pdfUrl);
+            loadingTask.promise.then(pdf => {
+                for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+                    pdf.getPage(pageNum).then(page => {
+                        const scale = 1.2;
+                        const viewport = page.getViewport({ scale });
+                        const canvas = document.createElement('canvas');
+                        const context = canvas.getContext('2d');
+                        canvas.height = viewport.height;
+                        canvas.width = viewport.width;
+                        const renderContext = {
+                            canvasContext: context,
+                            viewport: viewport
+                        };
+                        document.getElementById(id).appendChild(canvas);
+                        page.render(renderContext);
+                    });
+                }
+                $('#spinner-'+id).remove();
+            });
+
+
+        }
+        
+        
+    </script>
+{% endblock %}

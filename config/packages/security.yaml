@@ -61,6 +61,7 @@ security:
   access_control:
     - { path: ^/admin, roles: ROLE_ADMINISTRATEUR }
     - { path: ^/login$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+    - { path: ^/auth/condition-generale/, roles: IS_AUTHENTICATED_ANONYMOUSLY }
     - { path: ^/user/addClient, roles: IS_AUTHENTICATED_ANONYMOUSLY }
     - { path: ^/anonymous, roles: IS_AUTHENTICATED_ANONYMOUSLY }
     - { path: ^/forgetPassword.*, roles: IS_AUTHENTICATED_ANONYMOUSLY }

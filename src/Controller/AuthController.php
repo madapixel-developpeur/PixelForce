@@ -2,25 +2,27 @@
 
 namespace App\Controller;
 
-use App\Entity\User;
-use App\Form\ClientSignUpType;
-use App\Repository\UserRepository;
-use App\Services\AuthService;
 use DateTime;
-use Doctrine\ORM\EntityManagerInterface;
 use Exception;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Entity\User;
+use App\Services\AuthService;
+use App\Form\ClientSignUpType;
+use App\Services\DocumentService;
+use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 
 class AuthController extends AbstractController
@@ -110,6 +112,37 @@ class AuthController extends AbstractController
             'token' => $token
         ]);
     
+    }
+
+    #[Route('auth/condition-generale/{type}', name: 'app_show_document')]
+    public function showDocument($type): Response
+    {
+        return $this->render('term_condition/show_document.html.twig',[
+            'type' => $type 
+        ]);
+    }
+
+    #[Route('auth/condition-generale/pdf/{type}/{option}', name: 'app_document_preview')]
+    public function getDocument($type,Request $request,DocumentService $documentService,$option = '') : Response
+    {
+
+
+        $file = $documentService->getFileDocument($type);
+
+        // Create a BinaryFileResponse object
+        $response = new BinaryFileResponse($file['filePath']);
+
+        // Set response headers
+        if($option == "download"){
+            $response->setContentDisposition(
+                'attachment',
+                $file['filename']
+            );
+        }else{
+            $response->headers->set('Content-Type', 'application/pdf');
+        }
+
+        return $response;
     }
 
     

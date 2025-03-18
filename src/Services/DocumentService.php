@@ -2,23 +2,24 @@
 
 namespace App\Services;
 
+use DateTime;
+use Exception;
+use DateInterval;
+use App\Entity\User;
+use setasign\Fpdi\Fpdi;
+use mikehaertl\pdftk\Pdf;
+use App\Entity\ForgotPassword;
 use App\Entity\AccountValidation;
 use App\Entity\DocumentRecipient;
-use App\Entity\ForgotPassword;
-use App\Entity\User;
-use App\Repository\AccountValidationRepository;
-use App\Repository\DocumentRepository;
-use App\Repository\ForgotPasswordRepository;
 use App\Repository\UserRepository;
-use DateInterval;
-use DateTime;
+use App\Repository\DocumentRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
-use setasign\Fpdi\Fpdi;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Twig\Environment as Twig_Environment;
-use mikehaertl\pdftk\Pdf;
+use App\Repository\ForgotPasswordRepository;
+use App\Repository\AccountValidationRepository;
+use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class DocumentService 
 {
@@ -52,7 +53,8 @@ class DocumentService
         DocumentRepository $documentRepository, 
         StripeService $stripeService,
         Twig_Environment $twig ,
-        MailerService $mailerService
+        MailerService $mailerService,
+        private KernelInterface $kernel
     )
     {
         $this->entityManager = $entityManager;
@@ -191,5 +193,28 @@ class DocumentService
         } finally{
             $this->entityManager->clear();
         }
+    }
+
+    public function getFileDocument($type)
+    {
+        $document_array = [
+           "CGU" =>  "/contrat-template/CGU_Pixelforce.pdf",
+           "CGV" =>  "/contrat-template/CGV_Pixelforce.pdf",
+        ];
+       
+
+        $filePath = $document_array[$type];
+
+        $filePath = $this->kernel->getProjectDir(). $filePath;
+
+
+        if (!file_exists($filePath)) {
+            throw new Exception('Fichier introuvable');
+        }
+        return [
+            'filePath' => $filePath,
+            'filename' => basename($document_array[$type]),
+            'typeName' => $type
+        ];
     }
 }
