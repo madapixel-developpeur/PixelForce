@@ -535,7 +535,7 @@ class AdminAgentController extends AbstractController
                 $_ENV['CUSTOM_ERROR_MESSAGE']
             );
         }
-        return $this->redirectToRoute('admin_coach_list');
+        return $this->redirectToRoute('admin_agent_list');
 
     }
 

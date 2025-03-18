@@ -14,6 +14,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Secteur implements JsonSerializable
 {
+
+    public CONST ACTIVE_STATE = 1 ;
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -553,5 +555,13 @@ class Secteur implements JsonSerializable
     public function isFonctionnaliteActive($fonct): bool
     {
         return in_array($fonct, $this->getFonctionnalites());
+    }
+
+    public function getSecteurTypeName(){
+        return $this->getType()?->getNom();
+    }
+
+    public function getActiveStateStr(){
+        return $this->getActive() == self::ACTIVE_STATE ? "Activé": "Désactivé";
     }
 }

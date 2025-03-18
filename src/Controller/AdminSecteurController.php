@@ -3,24 +3,31 @@
 
 namespace App\Controller;
 
-use App\Entity\CoachSecteur;
-use App\Entity\SearchEntity\SecteurSearch;
-use App\Entity\Secteur;
+use Exception;
 use App\Entity\User;
-use App\Form\SecteurSearchType;
+use App\Entity\Secteur;
 use App\Form\SecteurType;
-use App\Manager\EntityManager;
+use App\Services\PdfExport;
+use App\Entity\CoachSecteur;
 use App\Manager\UserManager;
-use App\Repository\CoachAgentRepository;
-use App\Repository\CoachSecteurRepository;
-use App\Repository\SecteurRepository;
+use App\Services\FileHandler;
+use App\Manager\EntityManager;
+use App\Services\ExcelService;
+use App\Form\SecteurSearchType;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityRepository;
+use App\Repository\SecteurRepository;
+use App\Repository\CoachAgentRepository;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use App\Entity\SearchEntity\SecteurSearch;
+use App\Repository\CoachSecteurRepository;
 use Knp\Component\Pager\PaginatorInterface;
-use App\Services\FileHandler;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class AdminSecteurController extends AbstractController
 {
@@ -39,7 +46,10 @@ class AdminSecteurController extends AbstractController
         CoachAgentRepository $repoCoachAgent,
         SecteurRepository $repoSecteur,
         FileHandler $fileHandler,
-        CoachSecteurRepository $repoCoachSecteur)
+        CoachSecteurRepository $repoCoachSecteur,
+        private ExcelService $excelService,
+        private PdfExport $pdfExport
+    )
     {
         $this->repoUser = $repoUser;
         $this->entityManager = $entityManager;
@@ -55,9 +65,15 @@ class AdminSecteurController extends AbstractController
      */
     public function admin_sector_list(Request $request, PaginatorInterface $paginator)
     {
+        $action = $request->get('action_button');
         $secteurSearch = new SecteurSearch();
         $sectorFormSearch = $this->createForm(SecteurSearchType::class, $secteurSearch);
         $sectorFormSearch->handleRequest($request);
+
+        if(!empty($action) && $action != 'search_action'){
+            return $this->export( $this->repoSecteur->filter($secteurSearch)->getResult(),$action);
+        }
+        
         $sectors = $paginator->paginate(
             $this->repoSecteur->filter($secteurSearch),
             $request->query->getInt('page', 1),
@@ -183,4 +199,92 @@ class AdminSecteurController extends AbstractController
             $this->addFlash( 'success', 'Secteur restauré');
         return $this->redirectToRoute('admin_sector_list');    
     }
+
+    public function export($data,$action): Response
+    {
+        
+         try{
+            $common_file_name = 'liste-secteurs';
+            $date = (new \DateTime())->format('Y-m-d m:s');
+            if($action == "csv"){
+                $headers = ["Nom", "Description", "Type", "Etat"];
+                $fields = [
+                    "nom",
+                    "description",
+                    "secteurTypeName",
+                    "activeStateStr",
+                ];
+                $file = $this->excelService->export($data, $fields, $headers);
+    
+                $name = $common_file_name."-$date.csv";
+
+                return new BinaryFileResponse($file, 200, [
+                    'Content-Type' => 'text/csv',
+                    'Content-Disposition' => ResponseHeaderBag::DISPOSITION_ATTACHMENT . "; filename=\"$name\"",
+                ]);
+            }
+            elseif($action == 'excel'){
+                $headers = ["Nom", "Description", "Type", "Etat"];
+                $fields = [
+                    "nom",
+                    "description",
+                    "secteurTypeName",
+                    "activeStateStr",
+                ];
+                $spreadsheet = $this->excelService->exportXlsx($data, $fields, $headers);
+        
+             
+                $name = $name = $common_file_name."-$date.xlsx";
+
+                $writer = new Xlsx($spreadsheet);
+            
+                $response = new Response();
+            
+                // Set headers for the file download
+                $response->headers->set('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+                $response->headers->set('Content-Disposition', 'attachment;filename="' . $name . '"');
+                $response->headers->set('Cache-Control', 'max-age=0'); // Ensure the file is not cached
+            
+                ob_start();
+                $writer->save('php://output');
+                $content = ob_get_clean();
+                $response->setContent($content);
+        
+                return $response;
+            
+            }
+            elseif($action == "pdf"){
+                $headers = [
+                    ['name' =>"Nom", 'class' => "text-left"],
+                    ['name' =>"Description"],
+                    ['name' =>"Type"],
+                    ['name' =>"Etat"]
+                ];
+                $fields = [
+                    ['name' => "nom", 'class' => "text-left"],
+                    ['name' => "description",'raw'=>true],
+                    ['name' => "secteurTypeName"],
+                    ['name' => "activeStateStr"],
+                ];
+                $pdf = $this->pdfExport->generateGenericPDF("Liste des secteurs",$data,$headers,$fields);
+
+                $fileName = $common_file_name."-$date.pdf";
+                $response = new Response($pdf);
+                $response->headers->set('Content-Type', 'application/pdf');
+                $response->headers->set('Content-Disposition', 'attachment; filename="'.$fileName.'"');
+        
+                return $response;
+
+            }
+        } 
+        catch (Exception $ex) {
+            $this->addFlash(
+                'danger',
+                $_ENV['CUSTOM_ERROR_MESSAGE']
+            );
+        }
+        return $this->redirectToRoute('admin_sector_list');
+
+    }
+
 }
