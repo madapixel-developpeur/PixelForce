@@ -304,6 +304,8 @@ class OrderControllerAdmin extends AbstractController
     public function getExportOptionParameter($type){
         if($type == 'vente'){
             return [
+                'file_name' => "liste-commandes",
+                'route_name' => "agent_order_list_digital",
                 'csv_excel' => [
                     'headers' => ["Date", "Client", "Pack - (service)", "Montant", "Référence", "Statut"],
                     'fields' =>  [
@@ -337,6 +339,8 @@ class OrderControllerAdmin extends AbstractController
             ];
         }else{
             return [
+                'file_name' => "historique-chiffres-affaire",
+                'route_name' => "agent_ca_list_digital",
                 'csv_excel' => [
                     'headers' => ["Mois", "Nombre de vente", "Chiffre d'affaire"],
                     'fields' =>  [
@@ -366,7 +370,7 @@ class OrderControllerAdmin extends AbstractController
     public function export($data,$action,$options): Response
     {
          try{
-            $common_file_name = 'liste-commandes';
+            $common_file_name =  $options['file_name'];
             $date = (new \DateTime())->format('Y-m-d m:s');
             if($action == "csv"){
                 $headers = $options['csv_excel']['headers'];
@@ -428,7 +432,7 @@ class OrderControllerAdmin extends AbstractController
                 $_ENV['CUSTOM_ERROR_MESSAGE']
             );
         }
-        return $this->redirectToRoute('agent_order_list_digital');
+        return $this->redirectToRoute( $options['route_name']);
 
     }
 
