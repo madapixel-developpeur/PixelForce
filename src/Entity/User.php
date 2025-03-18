@@ -1560,6 +1560,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
         return count($this->fils);
     }
 
+    public function getCountFils()
+    {
+        return count($this->fils);
+    }
+
     public function jsonSerialize()
     {
         /* $vars = get_object_vars($this);
@@ -1888,5 +1893,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
 
     public function getFullName(){
         return $this->fullName();
+    }
+
+    public function getCreatedAtStr(){
+        return $this->getCreatedAt()->format('Y-m-d H:i:s');
+    }
+
+    public function getFullContact(){
+        $email = $this->getEmail();
+        $phone = $this->getTelephone() ?? "---";
+        $text = "<b>Email:</b>{$email}<br><b>Téléphone:</b>{$phone}";
+        return $text;
     }
 }

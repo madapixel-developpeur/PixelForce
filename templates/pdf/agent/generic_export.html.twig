@@ -69,8 +69,14 @@
                 <tr>
                     {% for field in fields %}
                         <td class="{{ field.class ?? 'text-center' }}">
-                            {{ field.format_number is defined ? (obj_attribute(item, field.name) | number_format(2, ',', ' ')) : obj_attribute(item, field.name) }}
-                            {{ field.symbol ?? '' }}
+                        {% if field.format_number is defined %}
+                            {{ (obj_attribute(item, field.name) | number_format(2, ',', ' ')) }}
+                        {% elseif field.raw is defined %}
+                            {{ obj_attribute(item, field.name)| raw }}
+                        {% else %}
+                            {{ obj_attribute(item, field.name) }}
+                        {% endif %}
+                        {{ field.symbol ?? '' }}
                         </td>
                     {% endfor %}
                 </tr>
