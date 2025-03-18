@@ -1143,7 +1143,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
         $mySecteurs = [];
         /** @var AgentSecteur $secteur */
         foreach ($agentSecteurs as $agentSecteur) {
-            $mySecteurs[] = $agentSecteur->getSecteur()?->getNom();
+            $name = $agentSecteur->getSecteur()?->getNom();
+            if(!in_array($name,  $mySecteurs)){
+                $mySecteurs[] = $name;
+            }
         }
 
         $joinSecteur = join(', ', $mySecteurs);

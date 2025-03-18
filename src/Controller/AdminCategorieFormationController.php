@@ -207,7 +207,7 @@ class AdminCategorieFormationController extends AbstractController
                 
                 $fields = [
                     ['name' => "nom", 'class' => "text-left"],
-                    ['name' => "description"],
+                    ['name' => "description",'raw'=> true],
                     ['name' => "ordreCatFormation", 'class' => "text-center"],
                     ['name' => "statutType"],
                     ['name' => "isInProgressionStateString"],
