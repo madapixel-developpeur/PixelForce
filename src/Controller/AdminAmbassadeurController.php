@@ -374,7 +374,7 @@ class AdminAmbassadeurController extends AbstractController
                     ['name' => "countFils","class" => "text-end"],
                     ['name' => "coachSecteursStr", 'class' => "text-left"],
                 ];
-                $pdf = $this->pdfExport->generateGenericPDF("Liste des Ambassadeurs",$data,$headers,$fields);
+                $pdf = $this->pdfExport->generateGenericPDF("Liste des ambassadeurs",$data,$headers,$fields);
 
                 $fileName = $common_file_name."-$date.pdf";
                 $response = new Response($pdf);

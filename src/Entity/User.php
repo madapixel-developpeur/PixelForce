@@ -1143,7 +1143,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
         $mySecteurs = [];
         /** @var AgentSecteur $secteur */
         foreach ($agentSecteurs as $agentSecteur) {
-            $mySecteurs[] = $agentSecteur->getSecteur()->getNom();
+            $mySecteurs[] = $agentSecteur->getSecteur()?->getNom();
         }
 
         $joinSecteur = join(', ', $mySecteurs);
@@ -1904,5 +1904,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
         $phone = $this->getTelephone() ?? "---";
         $text = "<b>Email:</b>{$email}<br><b>Téléphone:</b>{$phone}";
         return $text;
+    }
+
+    public function getAgentSecteursStr()
+    {
+        return $this->allSecteursOfUser($this->getAgentSecteurs()->toArray());
     }
 }
