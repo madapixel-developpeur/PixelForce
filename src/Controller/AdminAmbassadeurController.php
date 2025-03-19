@@ -304,9 +304,10 @@ class AdminAmbassadeurController extends AbstractController
             $common_file_name = 'liste-ambassadeurs';
             $date = (new \DateTime())->format('Y-m-d m:s');
             if($action == "csv"){
-                $headers = ["Nom et prénoms", "Username", "Email", "Téléphone","Date d'inscription","Nombre filleul","Secteur"];
+                $headers = ["Nom ","Prénoms", "Username", "Email", "Téléphone","Date d'inscription","Nombre filleul","Secteur"];
                 $fields = [
-                    "fullName",
+                    "nom",
+                    "prenom",
                     "username",
                     "email",
                     "telephone",
@@ -324,9 +325,10 @@ class AdminAmbassadeurController extends AbstractController
                 ]);
             }
             elseif($action == 'excel'){
-                $headers = ["Nom et prénoms", "Username", "Email", "Téléphone","Date d'inscription","Nombre filleul","Secteur"];
+                $headers = ["Nom ","Prénoms", "Username", "Email", "Téléphone","Date d'inscription","Nombre filleul","Secteur"];
                 $fields = [
-                    "fullName",
+                    "nom",
+                    "prenom",
                     "username",
                     "email",
                     "telephone",

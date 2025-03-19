@@ -457,9 +457,10 @@ class AdminAgentController extends AbstractController
             $common_file_name = 'liste-agents';
             $date = (new \DateTime())->format('Y-m-d m:s');
             if($action == "csv"){
-                $headers = ["Nom et prénoms	", "Email", "Téléphone", "Date d'inscription","Secteur"];
+                $headers = ["Nom","Prénoms	", "Email", "Téléphone", "Date d'inscription","Secteur"];
                 $fields = [
-                    "fullName",
+                    "nom",
+                    "prenom",
                     "email",
                     "telephone",
                     "createdAtStr",
@@ -475,9 +476,10 @@ class AdminAgentController extends AbstractController
                 ]);
             }
             elseif($action == 'excel'){
-                $headers = ["Nom et prénoms	", "Email", "Téléphone", "Date d'inscription","Secteur"];
+                $headers = ["Nom","Prénoms	", "Email", "Téléphone", "Date d'inscription","Secteur"];
                 $fields = [
-                    "fullName",
+                    "nom",
+                    "prenom",
                     "email",
                     "telephone",
                     "createdAtStr",

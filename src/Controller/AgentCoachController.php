@@ -96,12 +96,13 @@ class AgentCoachController extends AbstractController
     {
         
          try{
-            $common_file_name = 'liste-coach';
+            $common_file_name = 'liste-coachs';
             $date = (new \DateTime())->format('Y-m-d m:s');
             if($action == "csv"){
-                $headers = ["Nom et prénoms	", "Email", "Téléphone", "Secteur"];
+                $headers = ["Nom","Prénoms", "Email", "Téléphone", "Secteur"];
                 $fields = [
-                    "fullName",
+                    "nom",
+                    "prenom",
                     "email",
                     "telephone",
                     "coachSecteursStr"
@@ -116,9 +117,10 @@ class AgentCoachController extends AbstractController
                 ]);
             }
             elseif($action == 'excel'){
-                $headers = ["Nom et prénoms	", "Email", "Téléphone", "Secteur"];
+                $headers = ["Nom","Prénoms", "Email", "Téléphone", "Secteur"];
                 $fields = [
-                    "fullName",
+                    "nom",
+                    "prenom",
                     "email",
                     "telephone",
                     "coachSecteursStr"

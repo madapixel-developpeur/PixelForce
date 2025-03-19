@@ -430,12 +430,13 @@ class AgentContactController extends AbstractController
     {
         
          try{
-            $common_file_name = 'liste-contact';
+            $common_file_name = 'liste-contacts';
             $date = (new \DateTime())->format('Y-m-d m:s');
             if($action == "csv"){
-                $headers = ["NOM ET PRÉNOMS", "EMAIL", "TÉLÉPHONE", "ADRESSE", "TYPE DU LOGEMENT", "RUE", "NUMÉRO", "CODE POSTAL", "VILLE", "COMPOSITION DU FOYER", "NOMBRE DE PERSONNE", 'NOTE',"COMMENTAIRE"];
+                $headers = ["NOM","PRENOMS", "EMAIL", "TÉLÉPHONE", "ADRESSE", "TYPE DU LOGEMENT", "RUE", "NUMÉRO", "CODE POSTAL", "VILLE", "COMPOSITION DU FOYER", "NOMBRE DE PERSONNE", 'NOTE',"COMMENTAIRE"];
                 $fields = [
-                    "information.fullName",
+                    "information.lastname",
+                    "information.firstname",
                     "information.email",
                     "information.phone",
                     "information.address",
@@ -459,9 +460,10 @@ class AgentContactController extends AbstractController
                 ]);
             }
             elseif($action == 'excel'){
-                $headers = ["NOM ET PRÉNOMS", "EMAIL", "TÉLÉPHONE", "ADRESSE", "TYPE DU LOGEMENT", "RUE", "NUMÉRO", "CODE POSTAL", "VILLE", "COMPOSITION DU FOYER", "NOMBRE DE PERSONNE", 'NOTE',"COMMENTAIRE"];
+                $headers = ["NOM","PRENOMS", "EMAIL", "TÉLÉPHONE", "ADRESSE", "TYPE DU LOGEMENT", "RUE", "NUMÉRO", "CODE POSTAL", "VILLE", "COMPOSITION DU FOYER", "NOMBRE DE PERSONNE", 'NOTE',"COMMENTAIRE"];
                 $fields = [
-                    "information.fullName",
+                    "information.lastname",
+                    "information.firstname",
                     "information.email",
                     "information.phone",
                     "information.address",

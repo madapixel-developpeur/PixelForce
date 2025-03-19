@@ -295,9 +295,10 @@ class AdminCoachController extends AbstractController
             $common_file_name = 'liste-coachs';
             $date = (new \DateTime())->format('Y-m-d m:s');
             if($action == "csv"){
-                $headers = ["Nom et prénoms	", "Email", "Téléphone", "Date d'inscription","Secteur"];
+                $headers = ["Nom","Prénoms", "Email", "Téléphone", "Date d'inscription","Secteur"];
                 $fields = [
-                    "fullName",
+                    "nom",
+                    "prenom",
                     "email",
                     "telephone",
                     "createdAtStr",
@@ -313,9 +314,10 @@ class AdminCoachController extends AbstractController
                 ]);
             }
             elseif($action == 'excel'){
-                $headers = ["Nom et prénoms	", "Email", "Téléphone", "Date d'inscription","Secteur"];
+                $headers = ["Nom","Prénoms", "Email", "Téléphone", "Date d'inscription","Secteur"];
                 $fields = [
-                    "fullName",
+                    "nom",
+                    "prenom",
                     "email",
                     "telephone",
                     "createdAtStr",
