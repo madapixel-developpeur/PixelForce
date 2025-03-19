@@ -311,7 +311,7 @@
       nodeGroup.append("svg:image")
         .attr('y', 2 + attrs.nodePadding)
         .attr('x', attrs.nodePadding)
-        .attr('preserveAspectRatio', 'none')
+        .attr('preserveAspectRatio', 'xMidYMid slice') 
         .attr('width', dynamic.nodeImageWidth)
         .attr('height', dynamic.nodeImageHeight - 4)
         .attr('clip-path', "url(#clip)")
@@ -464,7 +464,7 @@
         strVar += "    <!--";
         strVar += "    <div class=\"tooltip-image-wrapper\"> <img width=\"300\" src=\"https:\/\/raw.githubusercontent.com\/bumbeishvili\/Assets\/master\/Projects\/D3\/Organization%20Chart\/cto.jpg\"> <\/div>";
         strVar += "-->";
-        strVar += "    <div class=\"profile-image-wrapper\" style='background-image: url(" + item.imageUrl + "); background-size: cover;'>";
+        strVar += "    <div class=\"profile-image-wrapper\" style='background-image: url(" + item.imageUrl + "); background-size: cover;background-position: center;'>";
         strVar += "    <\/div>";
         strVar += "    <div class=\"tooltip-hr\"><\/div>";
         strVar += "    <div class=\"tooltip-desc\">";
