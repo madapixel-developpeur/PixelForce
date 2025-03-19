@@ -65,6 +65,13 @@ class Announcement
      */
     private $type;
 
+     /**
+     * @var string|null
+     *
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $link;
+
 
     public function getId(): ?int
     {
@@ -206,5 +213,23 @@ class Announcement
             //throw $th;
             return '';
         }
+    }
+
+    /**
+     * Get the value of link
+     */
+    public function getLink()
+    {
+        return $this->link;
+    }
+
+    /**
+     * Set the value of link
+     */
+    public function setLink($link): self
+    {
+        $this->link = $link;
+
+        return $this;
     }
 }

@@ -20,25 +20,7 @@
     <div class="mt-3">
         <section id="dashboard-ecommerce">
             <div  class="col-md-12" >
-                <div id="carouselExampleControls" class="carousel slide custom-carousel" data-bs-ride="carousel">
-                    <div class="carousel-inner rounded-3" style="min-height: 320px;background-color:white">
-                        {% for announcement in announcements %}
-                            <div class="carousel-item {% if loop.first %}active{% endif %} ">
-                                <img class="d-block w-100 rounded-3 border" style="max-height: 320px;object-fit: cover;" src="{{ asset('files/') ~ announcement.filePath }}" alt="{{ announcement.nom }}">
-                            </div>
-                        {% endfor %}
-                    </div>
-                    <button class="carousel-control-prev " type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev" style="justify-content: start">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Previous</span>
-                    </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next" style="justify-content: end">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Next</span>
-                    </button>
-                  
-                    </a>
-                </div>
+                {{ include ('global/util/banner.html.twig') }}
 			</div>
 
 

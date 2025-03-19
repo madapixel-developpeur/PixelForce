@@ -84,7 +84,12 @@
                         <td>
                             <b>Début :</b> {{ item.startDate | date('Y-m-d H:m:s')  }} </br>
                             <b>Fin :</b>{{ item.startDate | date('Y-m-d H:m:s')  }} </br>
-                            <b>Type :</b> {{ item.typeStr   }} </p></td>
+                            <b>Type :</b> {{ item.typeStr   }} 
+                            {% if item.link is not empty %}
+                                </br>
+                                <b>Lien :</b> <a href="{{ item.link   }}" target="_blank" >{{ item.link   }}</a>
+                            {% endif %}
+                            </td>
                         {# <td>{{ item.endDate | date('Y-m-d H:m:s') }}</td> #}
                         <td>
                             <div class="d-flex align-items-center">

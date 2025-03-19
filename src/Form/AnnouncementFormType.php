@@ -7,6 +7,7 @@ use App\Entity\Ressource;
 use App\Entity\Announcement;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints\Url;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -61,6 +62,17 @@ class AnnouncementFormType extends AbstractType
                 "label" => "Type",
                 'choices' => User::SIGNING_UP_ROLES,
                 "required" => true,
+            ])
+            ->add('link', TextType::class, [
+                "label" => "Lien",
+                "trim" => true,
+                "required" => false,
+                'constraints' => [
+                    new Url(['message' => 'Veuillez entrer un lien valide.']),
+                ],
+                'row_attr' => [
+                    'type' => 'url', // Forces the correct HTML type
+                ],
             ])
             ->add('filepath', FileType::class, [
                 "label" => "Bannière",
