@@ -29,3 +29,6 @@
 .login-other-button{
     color:black
 }
+.min-vh-95{
+    min-height: 95vh;
+}
