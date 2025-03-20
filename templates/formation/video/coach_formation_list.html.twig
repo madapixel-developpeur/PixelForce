@@ -100,7 +100,12 @@
         <div>
             {% for categorie in categories %}
                 <div class="bg-white border p-4 my-5">
+                <div class="d-flex align-items-center justify-content-between">
                     <h1>{{ categorie.nom }}</h1>
+                    {% if is_granted('ROLE_COACH') %}
+                <a href="{{ path('app_coach_formation_theme_add',{ 'categorieFormationId' : categorie.id })}}" class="btn bg-info text-white ms-2"><i class="fa fa-plus"></i> Ajouter un thème</a>
+                    {% endif %}
+                    </div>
                     {% for formation in formations %}
                         {% if formation.categorieFormation ==  categorie %}
                             <hr class="my-5" style="height: 2px;">

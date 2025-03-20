@@ -4,6 +4,7 @@
 namespace App\Controller;
 
 
+use App\Repository\FormationThemeRepository;
 use Exception;
 use App\Entity\User;
 use App\Entity\Media;
@@ -33,6 +34,7 @@ use App\Form\FormationPageConfigurationFormType;
 use App\Repository\CategorieFormationRepository;
 use App\Repository\SecteurVideoFormationRepository;
 use App\Repository\FormationPageConfigurationRepository;
+use App\Util\Status;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -99,6 +101,7 @@ class CoachFormationController extends AbstractController
         private SecteurVideoFormationRepository $secteurVideoFormationRepository,
         private FormationPageConfigurationRepository $formationPageConfigurationRepository,
         private FileHandler $fileHandler,
+        private FormationThemeRepository $formationThemeRepository
 
     ) {
         $this->fileUploader = $fileUploader;
@@ -137,7 +140,6 @@ class CoachFormationController extends AbstractController
             $request->query->getInt('page', 1),
             20
         );
-
 
         //$agent = $this->userRepository->findOneBy(['id' => $request->query->get('agent')]);
         //$agent = $agent && in_array($secteur->getId(), $agent->getSecteursIdsByAgent()) ? $agent : null;
@@ -212,7 +214,8 @@ class CoachFormationController extends AbstractController
         return $this->render('formation/video/coach_formation_fiche.html.twig', [
             'form' => $form->createView(),
             'medias' => $medias,
-            'formation' => $formation
+            'formation' => $formation,
+            'themes' => $this->formationThemeRepository->findBy(['statut' => Status::VALID])
         ]);
     }
 
@@ -253,7 +256,8 @@ class CoachFormationController extends AbstractController
 
         return $this->render('formation/video/coach_formation_add.html.twig', [
             'form' => $form->createView(),
-            'section' => $section
+            'section' => $section,
+            'themes' => $this->formationThemeRepository->findBy(['statut' => Status::VALID])
         ]);
     }
 

@@ -14,7 +14,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
-class FormationType extends AbstractType
+class FormationThemeFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -22,25 +22,9 @@ class FormationType extends AbstractType
             ->add('titre', TextType::class, [
                 'required' => true,
             ])
-            ->add('description', TextareaType::class, [
-                'required' => true,
-            ])
-            // ->add('description_deblocage', TextareaType::class, [
-            //     'required' => false,
-            //     'label' => 'Description déblocage'
-            // ])
-            ->add('contenu', CKEditorType::class, [
-                'config' => [
-                    'uiColor' => '#cccccc',
-                ],
-                'required' => true,
-            ])
-            // ->add('debloqueAgent', null, [
-            //     'label' => 'Disponible pour tous les agents'
-            // ])
-            ->add('brouillon')
             ->add('categorieFormation', EntityType::class, [
-                'placeholder' => 'CATEGORIE',
+                'placeholder' => 'Catégorie',
+                'required' => true,
                 'label' => false,
                 'class' => CategorieFormation::class,
                 'choice_label' => 'nom',
@@ -50,24 +34,13 @@ class FormationType extends AbstractType
                     ;
                 },
             ])
-            ->add('theme', EntityType::class, [
-                'label' => 'Thème',
-                'class' => FormationTheme::class,
-                'choice_label' => 'titre',
-                // 'query_builder' => function (EntityRepository $er) {
-                //     return $er->createQueryBuilder('ft')
-                //         ->where('ft.statut = 1')
-                //     ;
-                // },
-                'required' => false
-            ])
         ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Formation::class,
+            'data_class' => FormationTheme::class,
         ]);
     }
 }

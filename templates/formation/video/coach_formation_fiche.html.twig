@@ -35,8 +35,12 @@
                 {{ form_row(form.description, {attr:{rows:10}, label_attr: {class:'fw-bold'}}) }}
                 {# {{ form_row(form.description_deblocage, {attr:{rows:10}, label_attr: {class:'fw-bold'}}) }} #}
                 {{ form_row(form.contenu, {attr:{rows:20}, label_attr: {class:'fw-bold'}}) }}
+                
                 <h5 class="fw-bolder">Catégorie</h5>
                 {{ form_row(form.categorieFormation ) }}
+                {{ form_row(form.theme, {label_attr: {
+                    class:'fw-bold'
+                }} ) }}
                 <div class="bg-light-info text-dark p-4 border">
                     <div class="border-bottom border-2  border-bottom-black">
                         <strong>Informations</strong>
@@ -175,5 +179,36 @@
                 $('#btn-add-video').removeAttr('disabled');
             }
         }
+
+        $(document).ready(function () {
+            let $categorieSelect = $("#{{ form.categorieFormation.vars.id }}");
+            let $themeSelect = $("#{{ form.theme.vars.id }}");
+            let themeOptions = {{ themes | json_encode() | raw()}}; // Store all theme options
+            console.log(themeOptions)
+            function updateThemeOptions() {
+                let selectedCategorie = $categorieSelect.val();
+
+                if (selectedCategorie) {
+                    console.log(themeOptions)
+                    const tos = themeOptions.filter((to) => to.categorieFormationId == selectedCategorie);
+                    $themeSelect.html('');
+                    $themeSelect.append('<option value="">--</option>');
+                    for(const to of tos) {
+                        
+                        $themeSelect.append('<option value="'+to.id+'">'+to.titre+'</option>')
+                    }
+                    
+                } else {
+                    
+                    $themeSelect.html('');
+                    $themeSelect.append('<option value="">--</option>');
+                }
+
+                
+            }
+
+            $categorieSelect.on("change", updateThemeOptions);
+            updateThemeOptions(); // Initialize on page load
+        });
     </script>
 {% endblock %}

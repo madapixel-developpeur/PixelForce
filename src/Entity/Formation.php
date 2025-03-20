@@ -120,6 +120,12 @@ class Formation
     */
     private $roles = [];
 
+    /**
+     * @ORM\ManyToOne(targetEntity=FormationTheme::class)
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $theme;
+
     public function __construct()
     {
         $this->medias = new ArrayCollection();
@@ -462,5 +468,17 @@ class Formation
             $roles[] = User::ROLE_PROFESSIONNEL;
         }
         return $roles;
+    }
+
+    public function getTheme(): ?FormationTheme
+    {
+        return $this->theme;
+    }
+
+    public function setTheme(?FormationTheme $theme): self
+    {
+        $this->theme = $theme;
+
+        return $this;
     }
 }

@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	Thème de formation
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %} 
+    <div class="block block--bordered block--rounded">
+        <h1 class="block__text block__text--center mt-2" >{% if isEdit %}Modifier le thème de formation{% else %} Ajouter un thème de formation{% endif %} :</h1>
+            
+            {{ form_start(form, {'attr': {'class': 'my-form', 'id': form.vars.id}}) }}
+                {% for label, messages in app.flashes() %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ label }}">
+                            <div class="alert-body">
+                            {{ message }}
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+                <div class="my-form-widget">
+                    {{form_label(form.titre)}}
+                    {{form_widget(form.titre)}}
+                    {{form_errors(form.titre)}}
+                </div>
+                <div class="my-form-widget">
+                    {{form_label(form.categorieFormation)}}
+                    {{form_widget(form.categorieFormation)}}
+                    {{form_errors(form.categorieFormation)}}
+                </div>
+                
+                
+                
+                <div class="btn-wrap">
+                    <button class="btn btn-primary" type="submit"><i data-feather="save"></i>Enregistrer</button>
+                </div>
+            {{ form_end(form) }}
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $(document).ready(function (){
+            
+
+           
+        }); 
+    </script>
+
+{% endblock %}
+
