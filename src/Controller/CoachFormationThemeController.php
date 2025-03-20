@@ -64,11 +64,19 @@ class CoachFormationThemeController extends AbstractController
     #[Route('/{id}/edit', name: 'app_coach_formation_theme_edit')]
     public function edit(FormationTheme $theme, Request $request): Response
     {
+        $categorieFormationBefore = $theme->getCategorieFormation(); 
         $form = $this->createForm(FormationThemeFormType::class, $theme);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             
             try {
+                if($categorieFormationBefore->getId() != $theme->getCategorieFormation()->getId()){
+                    $formations = $this->formationRepository->findBy(['theme' => $theme]);
+                    for($i=0; $i<count($formations); $i++) {
+                        $formations[$i]->setTheme(null);
+                        $this->entityManager->persist($formations[$i]);
+                    }
+                }
                 $theme->setSecteur($this->getUser()->getUniqueCoachSecteur());
                 $theme->setStatut(Status::VALID);
                 $this->entityManager->persist($theme);
@@ -91,7 +99,7 @@ class CoachFormationThemeController extends AbstractController
 
     
 
-    #[Route('/{id}/delete', name: 'app_coach_formation_theme_delete', methods: ['POST'])]
+    #[Route('/{id}/delete', name: 'app_coach_formation_theme_delete')]
     public function delete(FormationTheme $theme): Response
     {
         try {

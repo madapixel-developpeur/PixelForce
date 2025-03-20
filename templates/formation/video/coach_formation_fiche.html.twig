@@ -184,10 +184,10 @@
             let $categorieSelect = $("#{{ form.categorieFormation.vars.id }}");
             let $themeSelect = $("#{{ form.theme.vars.id }}");
             let themeOptions = {{ themes | json_encode() | raw()}}; // Store all theme options
-            console.log(themeOptions)
-            function updateThemeOptions() {
+             let formationThemeId = {% if formation and formation.theme %}{{formation.theme.id}}{% else %}undefined{% endif %};
+            function updateThemeOptions(first = false) {
                 let selectedCategorie = $categorieSelect.val();
-
+               
                 if (selectedCategorie) {
                     console.log(themeOptions)
                     const tos = themeOptions.filter((to) => to.categorieFormationId == selectedCategorie);
@@ -195,7 +195,7 @@
                     $themeSelect.append('<option value="">--</option>');
                     for(const to of tos) {
                         
-                        $themeSelect.append('<option value="'+to.id+'">'+to.titre+'</option>')
+                        $themeSelect.append(`<option value="${to.id}" ${(first && formationThemeId == to.id) ? 'selected':''}>${to.titre}</option>`)
                     }
                     
                 } else {
@@ -207,8 +207,11 @@
                 
             }
 
-            $categorieSelect.on("change", updateThemeOptions);
-            updateThemeOptions(); // Initialize on page load
+            $categorieSelect.on("change", function () {
+                console.log('here')
+                updateThemeOptions();
+            });
+            updateThemeOptions(true); // Initialize on page load
         });
     </script>
 {% endblock %}

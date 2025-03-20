@@ -22,6 +22,7 @@ twig:
         inova_referral_link: '%env(INOVA_REFERRAL_LINK)%'
         catalogues_base_url: '%env(CATALOGUES_BASE_URL)%'
         platform_name: '%env(PLATFORM_NAME)%' 
+        formationThemeRepository: '@App\Repository\FormationThemeRepository'
         
     paths:
         # pour spécifier le namespace des image. Exemple d'utilisation : email.image('@images/logo.png')
