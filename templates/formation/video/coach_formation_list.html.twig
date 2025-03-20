@@ -111,7 +111,7 @@
                     
                         {% if formation.categorieFormation ==  categorie and not formation.theme %}
                         {% if i == 1 %}
-                        <hr class="my-3" style="height: 2px;">
+                        <hr class="my-3" style="height: 3px;">
                         {% else %}
                             <hr class="my-3" style="height: 1px;">
                             {% endif %}
@@ -136,7 +136,7 @@
                     {% endfor %}
                     {% set themes = formationThemeRepository.findBy({'secteur': app.user.uniqueCoachSecteur.id, 'categorieFormation': categorie.id, 'statut': 1}) %}
                     {% for theme in themes %}
-                    <hr class="my-3" style="height: 2px;">
+                    <hr class="my-3" style="height: 3px;">
                     <div class="d-flex align-items-center justify-content-between">
                     <h4>Thème: {{theme.titre}}</h4>
                     {% set countFormationsTheme = 0 %}

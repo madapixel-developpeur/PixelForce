@@ -7,7 +7,7 @@
 
 {% endblock %}
 {% block body %}
-{% set configuration = {'introductionPhoto': null, 'heureFormation': null, 'description': null, 'introductionVideo': null } %}
+{# {% set configuration = {'introductionPhoto': null, 'heureFormation': null, 'description': null, 'introductionVideo': null } %} #}
 	<div class="row px-3 content-formation">
 		<div class="card card-body-custom mt-2">
 			<div class="row mt-3">
@@ -54,7 +54,7 @@
 							</div>
 
 							<div class="ratio ratio-16x9 mt-3" >
-								<iframe class="rounded-custom" 
+								<iframe class="rounded-custom"  id="formationVideo"
 								{% if configuration.introductionVideo %}
 									src="{{ configuration.introductionVideo }}" 
 								{% else %}
@@ -356,8 +356,16 @@
                 });
 				
 			});
+
+
+			var iframe = document.getElementById('formationVideo');
+            if(iframe) {
+                const player = new Vimeo.Player(iframe);
+                player.play();
+            }
 			
 		})
 	</script>
+	
 
 {% endblock %}
