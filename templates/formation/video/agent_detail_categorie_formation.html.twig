@@ -7,6 +7,7 @@
 
 {% endblock %}
 {% block body %}
+{% set configuration = {'introductionPhoto': null, 'heureFormation': null, 'description': null, 'introductionVideo': null } %}
 	<div class="row px-3 content-formation">
 		<div class="card card-body-custom mt-2">
 			<div class="row mt-3">
@@ -76,7 +77,7 @@
 										<div class="card-body">
 											{% set countFomrationInside = 0 %}
 											{% for formation in formations %}
-												{% if formation.categorieFormation ==  categorie %}
+												{% if formation.categorieFormation ==  categorie and not formation.theme %}
 													{% set countFomrationInside = countFomrationInside + 1 %}
 													{% set isQuiz = formation.type == constant('App\\Entity\\Formation::TYPE_QUIZ') %}
 													{% set formationAgentRelation = formationAgentRepository.findOneBy({agent:app.user.id, formation:formation}) %}
@@ -185,7 +186,131 @@
 																											</div> #}
 												{% endif %}
 											{% endfor %}
-											{% if countFomrationInside < 1 %}
+											{% set themes = formationThemeRepository.findBy({'secteur': app.session.get('secteurId'), 'categorieFormation': categorie.id, 'statut': 1}) %}
+											{% for theme in themes %}
+											<hr class="my-3" style="height: 2px;">
+											<h4 class="text-center">Thème: {{theme.titre}}</h4>
+											{% set countFormationsTheme = 0 %}
+											{% for formation in formations %}
+												{% if formation.categorieFormation ==  categorie and formation.theme and formation.theme.id == theme.id %}
+													{% set countFomrationInside = countFomrationInside + 1 %}
+													{% set countFormationsTheme = countFormationsTheme + 1 %}
+													{% set isQuiz = formation.type == constant('App\\Entity\\Formation::TYPE_QUIZ') %}
+													{% set formationAgentRelation = formationAgentRepository.findOneBy({agent:app.user.id, formation:formation}) %}
+													{# {% set statut = formationAgentRelation ? formationAgentRelation.statut : constant('App\\Entity\\Formation::STATUT_BLOQUEE') %} #}
+													{% set statut = formationAgentRelation ? formationAgentRelation.statut : constant('App\\Entity\\Formation::STATUT_DISPONIBLE') %}
+													{% if formation.categorieFormation.ordreCatFormation > (agentSecteur.currentFormationRank ?? 1) and formation.categorieFormation.unlockedByDefault == false %}
+														{% set statut = constant('App\\Entity\\Formation::STATUT_BLOQUEE') %}
+													{% endif %}
+													<div class="row week-item">
+														<div class="col-md-3">
+															<div class="ratio ratio-16x9 mt-3">
+															{% if isQuiz %}
+																	<img src="{{ asset('assets/vuexy/images/pages/login-images.png' )}}" alt="Image" width="100" height="100">
+															{% else %}
+																<iframe class="rounded-custom formationVideo" data-status="{{ statut }}" data-formation-id="{{ formation.id }}" src="https://player.vimeo.com/video/{{ formation.videoId }}?loop=0&byline=0&portrait=0&title=0&muted=1" allow="autoplay; fullscreen; picture-in-picture; clipboard-write"  data-path="{{ path('agent_formation_terminer', {id: formation.id}) }}" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe>
+															{% endif %}
+															
+															</div>
+														</div>
+														<div class="col-md-9">
+															<h5 class="{{isQuiz ? 'text-warning': 'text-primary'}}">{{isQuiz ? 'QUIZ: ': ''}}{{ formation.titre }}
+																{% if formation.brouillon %}
+																	<small class="text-danger">[ brouillon ]</small>
+																{% endif %}
+															</h5>
+															<p>{{ (formation.description??'')|slice(0, 300) }}</p>
+															{% if formationAgentRelation and isQuiz and statut != constant('App\\Entity\\Formation::STATUT_BLOQUEE') %}
+																<p>
+																	<b>Dernièr résultat:</b>
+																	{{formationAgentRelation.lastResultScore | number_format(2, ',', ' ')}}
+																	%</p>
+																<p>
+																	<b>Résultat maximum:</b>
+																	{{formationAgentRelation.maxResultScore | number_format(2, ',', ' ')}}
+																	%</p>
+																<p>
+																	<b>Statut:</b>&nbsp;
+																	{% if formationAgentRelation.statut == constant('App\\Entity\\Formation::STATUT_TERMINER') %}
+																		<b class="text-success">RÉUSSI</b>
+																	{% else %}
+																		<b class="text-danger">ÉCHOUÉ</b>
+																	{% endif %}
+																</p>
+															{% endif %}
+															{% if isQuiz %}
+																{% if statut == constant('App\\Entity\\Formation::STATUT_BLOQUEE') %}
+																	{# title="Information de déblocage" data-bs-content="{{formation.DescriptionDeblocage}}" data-trigger="hover" data-bs-toggle="popover" data-bs-placement="left" #}
+																	<button type="button" class="btn btn-sm btn-danger">
+																		<i class="fa fa-lock"></i>
+																		Quiz bloqué</button>
+																{% elseif statut == constant('App\\Entity\\Formation::STATUT_DISPONIBLE')%}
+																	<a href="{{ path('agent_quiz_begin', {id:formation.id}) }}" class="btn btn-primary btn-sm">
+																		{# <i class="fa fa-chevron-right"></i> #}
+																		Commencer</a>
+																{% elseif statut == constant('App\\Entity\\Formation::STATUT_IN_PROGRESS') or statut == constant('App\\Entity\\Formation::STATUT_TERMINER') %}
+																	<a href="{{ path('agent_quiz_begin', {id:formation.id}) }}" class="btn btn-primary btn-sm">
+																		{# <i class="fa fa-repeat"></i> #}
+																		Réessayer</a>
+																	<a href="{{ path('agent_quiz_result', {id:formationAgentRelation.id}) }}" class="btn btn-success btn-sm ms-2">
+																		{# <i class="fa fa-chevron-right"></i> #}
+																		Voir le dérnier résultat</a>
+																{% endif %}
+															{% else %}
+																{% if statut == constant('App\\Entity\\Formation::STATUT_BLOQUEE') %}
+																	<button type="button" class="btn btn-sm btn-danger">
+																		{# <i class="fa fa-lock"></i> #}
+																		Formation bloquée</button>
+																{% elseif statut == constant('App\\Entity\\Formation::STATUT_DISPONIBLE')%}
+																	<a href="{{ path('agent_formation_fiche', {id:formation.id}) }}" class="btn btn-primary btn-sm">
+																		{# <i class="fa fa-chevron-right"></i> #}
+																		Fiche formation</a>
+																{% elseif statut == constant('App\\Entity\\Formation::STATUT_TERMINER')%}
+																	<a href="{{ path('agent_formation_fiche', {id:formation.id}) }}" class="btn btn-success btn-sm">
+																		{# <i class="fa fa-check"></i> #}
+																		Formation terminée</a>
+																{% endif %}
+															{% endif %}
+
+														</div>
+													</div>
+
+													{# <div class="row week-item">
+																												<div class="col-md-6">
+																													<div class="ratio ratio-16x9 mt-3">
+																														<iframe id="" class="rounded-custom" src="{{video_information_vimeo_src}}" allow="autoplay; fullscreen; picture-in-picture; clipboard-write"></iframe>
+																													</div>
+																												</div>
+																												<div class="col-md-6">
+													
+																													<h5>Introduction</h5>
+																													<p>Reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat non proident.</p>
+													
+																												</div>
+																											</div>
+																											<div class="row week-item">
+																												<div class="col-md-6">
+																													<div class="ratio ratio-16x9 mt-3">
+																														<img src="{{ asset('assets/vuexy/images/pages/login-images.png' )}}" alt="Image" width="100" height="100">
+													
+																													</div>
+																												</div>
+																												<div class="col-md-6">
+																													<h5>Quiz</h5>
+																													<p>Reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat non proident.</p>
+																												</div>
+																											</div> #}
+												{% endif %}
+											{% endfor %}
+											{% if countFormationsTheme < 1 %}
+											<div class="row">
+													<div class="col-md-12 text-center">
+														<p>Aucune formation pour cet thème</p>
+													</div>
+												</div>
+											{% endif %}
+											{% endfor %}
+											{% if countFomrationInside < 1 and themes|length < 1 %}
 												<div class="row">
 													<div class="col-md-12 text-center">
 														<h4>Aucune formation</h4>
