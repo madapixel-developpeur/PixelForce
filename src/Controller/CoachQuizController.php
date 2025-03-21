@@ -11,6 +11,7 @@ use App\Form\QuizItemChoiceFormType;
 use App\Form\QuizItemFormType;
 use App\Repository\FormationQuizItemChoiceRepository;
 use App\Repository\FormationQuizItemRepository;
+use App\Repository\FormationThemeRepository;
 use App\Util\Status;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
@@ -26,7 +27,7 @@ use Symfony\Component\HttpFoundation\Response;
   */
 class CoachQuizController extends AbstractController
 {
-    public function __construct(private EntityManagerInterface $entityManager, private FormationQuizItemRepository $formationQuizItemRepository, private FormationQuizItemChoiceRepository $formationQuizItemChoiceRepository){
+    public function __construct(private EntityManagerInterface $entityManager, private FormationQuizItemRepository $formationQuizItemRepository, private FormationQuizItemChoiceRepository $formationQuizItemChoiceRepository, private FormationThemeRepository $formationThemeRepository){
 
     }
     /**
@@ -51,6 +52,7 @@ class CoachQuizController extends AbstractController
     $isEdit = $quiz->getId() !== null;
     $form = $this->createForm(QuizFormType::class, $quiz);
     $form->handleRequest($request);
+    $secteur = $this->getUser()->getUniqueCoachSecteur();
     if($form->isSubmitted() && $form->isValid()) {
         try{
             $quiz->setStatut(Formation::STATUS_CREATED);
@@ -68,6 +70,8 @@ class CoachQuizController extends AbstractController
 
     return $this->render('formation/quiz/coach_add_quiz.html.twig', [
         'form' => $form->createView(),
+        'themes' => $this->formationThemeRepository->findBy(['statut' => Status::VALID, 'secteur' => $secteur]),
+        'formation' => $quiz
     ]);
    }
 

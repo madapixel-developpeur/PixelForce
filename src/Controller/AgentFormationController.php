@@ -244,7 +244,7 @@ class AgentFormationController extends AbstractController
         $this->entityManager->persist($formationAgent);
         if ($formationAgent->getStatut() === Formation::STATUT_TERMINER) {
             $formationRank = $formation->getCategorieFormation()->getOrdreCatFormation();
-            if (count($this->formationRepository->getNextFormationsByCategorieAndSecteur($formation->getSecteur(), $formation->getCategorieFormation(), $formation->getId(), $formation->getType())) == 0) {
+            if (count($this->formationRepository->getNextFormationsByCategorieAndSecteur($formation->getSecteur(), $formation->getCategorieFormation(), $formation->getId(), $formation->getType(), $formation->getTheme())) == 0) {
                 // $formationRank++;
                 $formationRank = $this->formationRepository->findNextFormationRank($formation->getSecteur(), $formationRank);
             }

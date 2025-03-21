@@ -34,7 +34,7 @@
                                 <div class="row">
                                     <div class="col-12">
                                         <div class="border ratio ratio-16x9 rounded-3">
-                                            <iframe src="{{ videoFinFormation.urlVideo ~"?loop=0&byline=0&portrait=0&title=0&muted=1" }}" width="700" height="400" class="m-auto" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen allow="autoplay; encrypted-media"></iframe>
+                                            <iframe id="formationVideo" src="{{ videoFinFormation.urlVideo ~"?loop=0&byline=0&portrait=0&title=0&muted=1" }}" width="700" height="400" class="m-auto" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen allow="autoplay; encrypted-media"></iframe>
                                         </div>  
                                     </div>
                                 </div>
@@ -785,11 +785,10 @@
        
 
     </script>
-    {% if firstFormation %}
     <script type="text/javascript">
         $(document).ready(function (){
             var iframe = document.getElementById('formationVideo');
-            if(formationVideo) {
+            if(iframe) {
                 const player = new Vimeo.Player(iframe);
 
                 player.on('play', () => {
@@ -801,7 +800,9 @@
                 });
                 player.on('ended', () => {
                     console.log('video ended')
-                    $('#formFinishFormation').submit();
+                    if ($('#formFinishFormation').length){
+                        $('#formFinishFormation').submit();
+                    }
                 });
                 player.play();
             }
@@ -812,5 +813,4 @@
             $('#formFinishFormation').submit();
         }
     </script>
-    {% endif %}
 {% endblock %}

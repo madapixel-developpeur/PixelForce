@@ -5,6 +5,7 @@ namespace App\Form;
 
 use App\Entity\CategorieFormation;
 use App\Entity\Formation;
+use App\Entity\FormationTheme;
 use App\Util\Status;
 use Doctrine\ORM\EntityRepository;
 use FOS\CKEditorBundle\Form\Type\CKEditorType;
@@ -44,6 +45,17 @@ class QuizFormType extends AbstractType
                         ->orderBy('c.ordreCatFormation','ASC')
                     ;
                 },
+            ])
+            ->add('theme', EntityType::class, [
+                'label' => 'Thème',
+                'class' => FormationTheme::class,
+                'choice_label' => 'titre',
+                // 'query_builder' => function (EntityRepository $er) {
+                //     return $er->createQueryBuilder('ft')
+                //         ->where('ft.statut = 1')
+                //     ;
+                // },
+                'required' => false
             ])
         ;
         // if( $options['isEdit'] ) {

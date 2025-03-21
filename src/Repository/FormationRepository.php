@@ -240,13 +240,14 @@ class FormationRepository extends ServiceEntityRepository
         return $queryBuilder->getQuery();
     }
 
-    public function getNextFormationsByCategorieAndSecteur($secteur, $categorie, $formationId, $formationType)
+    public function getNextFormationsByCategorieAndSecteur($secteur, $categorie, $formationId, $formationType, $themeId = 0)
     {
         $qb = $this->createQueryBuilder('f');
 
         return $qb->andWhere('f.CategorieFormation = :categorie')
+            ->leftJoin('f.theme', 'th')
             ->andWhere('f.secteur = :secteur')
-            ->andWhere('(coalesce(f.type, 1) = :formationType and f.id > :formationId) or coalesce(f.type, 1) > :formationType')
+            ->andWhere('(coalesce(th.id, 0) = :themeId and ((coalesce(f.type, 1) = :formationType and f.id > :formationId) or coalesce(f.type, 1) > :formationType)) or coalesce(th.id, 0) > :themeId')
             ->andWhere($qb->expr()->orX(
                 $qb->expr()->isNull('f.brouillon'),
                 $qb->expr()->eq('f.brouillon', ':brouillon')
@@ -257,6 +258,7 @@ class FormationRepository extends ServiceEntityRepository
             ->setParameter('secteur', $secteur)
             ->setParameter('formationId', $formationId)
             ->setParameter('formationType', $formationType ?? 1)
+            ->setParameter('themeId', $themeId ?? 0)
             ->addOrderBy('f.type', 'ASC')
             ->addOrderBy('f.id', 'ASC')
             ->getQuery()
@@ -329,9 +331,10 @@ class FormationRepository extends ServiceEntityRepository
         $sql = '
             SELECT f.id as formationId FROM formation f join categorie_formation cf on f.categorie_formation_id = cf.id
             left join formation_agent fa ON f.id = fa.formation_id AND fa.agent_id = :agent 
+            left join formation_theme ft on f.theme_id = ft.id
             WHERE cf.statut = :statutValid AND f.secteur_id = :secteur AND f.statut = :statusCreated AND (f.brouillon IS NULL OR f.brouillon =0)
             AND cf.ordre_cat_formation >= :formationRank
-            AND (fa.statut != :finishedStatus OR fa.agent_id IS NULL) ORDER BY cf.ordre_cat_formation, f.type, f.id LIMIT 1
+            AND (fa.statut != :finishedStatus OR fa.agent_id IS NULL) ORDER BY cf.ordre_cat_formation, coalesce(ft.id, 0), f.type, f.id LIMIT 1
         ';
         $stmt = $this->getEntityManager()->getConnection()->prepare($sql);
         $resultSet = $stmt->executeQuery([

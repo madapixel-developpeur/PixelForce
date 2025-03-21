@@ -12,6 +12,7 @@
                 {# {{ form_row(form.description_deblocage) }} #}
                 {{ form_row(form.contenu) }}
                 {{ form_row(form.categorieFormation) }}
+                {{ form_row(form.theme) }}
                 <div class="row">
                     <div class="col-12 col-md-6">
                         {{ form_row(form.brouillon) }}
@@ -76,6 +77,37 @@
                $('#btn-add-video').removeAttr('disabled');
            }
         }
+
+        $(document).ready(function () {
+            let $categorieSelect = $("#{{ form.categorieFormation.vars.id }}");
+            let $themeSelect = $("#{{ form.theme.vars.id }}");
+            let themeOptions = {{ themes | json_encode() | raw()}}; // Store all theme options
+            console.log(themeOptions)
+            function updateThemeOptions() {
+                let selectedCategorie = $categorieSelect.val();
+
+                if (selectedCategorie) {
+                    console.log(themeOptions)
+                    const tos = themeOptions.filter((to) => to.categorieFormationId == selectedCategorie);
+                    $themeSelect.html('');
+                    $themeSelect.append('<option value="">--</option>');
+                    for(const to of tos) {
+                        
+                        $themeSelect.append('<option value="'+to.id+'">'+to.titre+'</option>')
+                    }
+                    
+                } else {
+                    
+                    $themeSelect.html('');
+                    $themeSelect.append('<option value="">--</option>');
+                }
+
+                
+            }
+
+            $categorieSelect.on("change", updateThemeOptions);
+            updateThemeOptions(); // Initialize on page load
+        });
     </script>
 {% endblock %}
 
