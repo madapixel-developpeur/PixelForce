@@ -52,6 +52,7 @@ class CoachQuizController extends AbstractController
     $isEdit = $quiz->getId() !== null;
     $form = $this->createForm(QuizFormType::class, $quiz);
     $form->handleRequest($request);
+    $secteur = $this->getUser()->getUniqueCoachSecteur();
     if($form->isSubmitted() && $form->isValid()) {
         try{
             $quiz->setStatut(Formation::STATUS_CREATED);
@@ -69,7 +70,7 @@ class CoachQuizController extends AbstractController
 
     return $this->render('formation/quiz/coach_add_quiz.html.twig', [
         'form' => $form->createView(),
-        'themes' => $this->formationThemeRepository->findBy(['statut' => Status::VALID]),
+        'themes' => $this->formationThemeRepository->findBy(['statut' => Status::VALID, 'secteur' => $secteur]),
         'formation' => $quiz
     ]);
    }

@@ -197,6 +197,7 @@ class CoachFormationController extends AbstractController
      */
     public function coach_formation_fiche(Formation $formation, Request $request)
     {
+        $secteur = $this->getUser()->getUniqueCoachSecteur();
         $form = $this->createForm(FormationType::class, $formation);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -215,7 +216,7 @@ class CoachFormationController extends AbstractController
             'form' => $form->createView(),
             'medias' => $medias,
             'formation' => $formation,
-            'themes' => $this->formationThemeRepository->findBy(['statut' => Status::VALID])
+            'themes' => $this->formationThemeRepository->findBy(['statut' => Status::VALID, 'secteur' => $secteur])
         ]);
     }
 
@@ -229,6 +230,7 @@ class CoachFormationController extends AbstractController
         $relationFormationCategorie = new RFormationCategorie();
         $form = $this->createForm(FormationType::class, $formation);
         $form->handleRequest($request);
+        $secteur = $this->getUser()->getUniqueCoachSecteur();
         if ($form->isSubmitted() && $form->isValid()) {
             $formation->setRoles([$role]);
             $formation->testStatut();
@@ -257,7 +259,7 @@ class CoachFormationController extends AbstractController
         return $this->render('formation/video/coach_formation_add.html.twig', [
             'form' => $form->createView(),
             'section' => $section,
-            'themes' => $this->formationThemeRepository->findBy(['statut' => Status::VALID])
+            'themes' => $this->formationThemeRepository->findBy(['statut' => Status::VALID, 'secteur' => $secteur])
         ]);
     }
 
