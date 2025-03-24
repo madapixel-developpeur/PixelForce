@@ -28,22 +28,32 @@
                     </div>
                 </div>
         {% endif %}
-        {% if result|length > 0 %}
-        {% set rubriqueId = null %}
+        {% if result|length == 0 and rubriques|length==0 %}
+        <p class="text-center">Aucune formation</p>
+        {% else %}
+        {% set rubriques = [null]|merge(rubriques) %}
+        {% for rb in rubriques %}
+        {% set countItem = 0 %}
         <div class="row">
+        {% if rb %}
+        <div class="col-12">
+        {% if loop.index == 1 %}
+        {% else %}
+        
+            <hr class="mb-1" style="height: 2px;">
+            
+        
+        {% endif %}
+        {% if rb %}
+        <h4 class="text-center mb-3">{{rb.name}}</h4>
+        {% endif %}
+        </div>
+        {% endif %}
         {% for item in result %}
-            {% if item.rubrique and item.rubrique.id != rubriqueId %}
-                {% if loop.index == 1 %}
-                {% else %}
-                </div>
-                <div class="row mt-2">
-                {% endif %}
-                <div class="col-12">
-                    <hr class="mb-1" style="height: 2px;">
-                    <h4 class="text-center mb-3">{{item.rubrique.name}}</h4>
-                </div>
-                {% set rubriqueId = item.rubrique.id %}
-            {% endif %}
+            {% if (not item.rubrique and not rb) or  (item.rubrique and rb and item.rubrique.id == rb.id) %}
+            {% set countItem = countItem + 1 %}
+                
+            
 
             <div class="card col-md-4">
             {% if item.imageCover %}
@@ -70,8 +80,13 @@
                     {% endif %}
                 </div>
             </div>
+            {% endif %}
         {% endfor %}
+        {% if countItem == 0 %}
+        <p class="text-center">Aucune formation</p>
+        {% endif %}
         </div>
+        {% endfor %}
         
         {# <div class="card">
         <div class="card-body">
