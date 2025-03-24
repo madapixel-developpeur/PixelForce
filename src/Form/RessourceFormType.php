@@ -3,6 +3,8 @@
 namespace App\Form;
 
 use App\Entity\Produit;
+use App\Repository\RessourceRubriqueRepository;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -14,16 +16,22 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 
 use App\Entity\Ressource;
+use App\Entity\RessourceRubrique;
 use Symfony\Component\Validator\Constraints\File;
 
 use FOS\CKEditorBundle\Form\Type\CKEditorType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Validator\Constraints\NotNull;
 
 class RessourceFormType extends AbstractType
 {
 
+    public function __construct(private RessourceRubriqueRepository $ressourceRubriqueRepository){}
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $rubriques = $this->ressourceRubriqueRepository->createQueryBuilder('r')
+        ->where('r.status = 1 and (r.secteur = :secteur or r.secteur is null)')
+        ->setParameter('secteur', $options['secteur'])->getQuery()->getResult();
         $builder
             ->add('name', TextType::class, [
                 "label" => "Titre",
@@ -61,6 +69,13 @@ class RessourceFormType extends AbstractType
                 ],
                 "required" => false,
             ])
+            ->add('rubrique', EntityType::class, [
+                'label' => 'Rubrique',
+                'class' => RessourceRubrique::class,
+                'choice_label' => 'name',
+                'choices' => $rubriques,
+                'required' => false
+            ])
 
         ;
     }
@@ -69,6 +84,7 @@ class RessourceFormType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Ressource::class,
+            'secteur' => null
         ]);
     }
 }

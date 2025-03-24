@@ -67,6 +67,12 @@ class Ressource
      */
     private $type;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=RessourceRubrique::class)
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $rubrique;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -188,6 +194,18 @@ class Ressource
         if ($this->getType())
             return self::TYPE_LABEL[$this->getType()];
         return null;
+    }
+
+    public function getRubrique(): ?RessourceRubrique
+    {
+        return $this->rubrique;
+    }
+
+    public function setRubrique(?RessourceRubrique $rubrique): self
+    {
+        $this->rubrique = $rubrique;
+
+        return $this;
     }
 
 }

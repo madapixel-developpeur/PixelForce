@@ -28,6 +28,11 @@
                     {{form_errors(form.name)}}
                 </div>
                 <div class="my-form-widget">
+                    {{form_label(form.rubrique)}}
+                    {{form_widget(form.rubrique)}}
+                    {{form_errors(form.rubrique)}}
+                </div>
+                <div class="my-form-widget">
                     <label>Image de couverture</label>
                     <input type="file" accept="image/*" name="temp_image_cover" class="form-control">
                     {{form_errors(form.imageCover)}}

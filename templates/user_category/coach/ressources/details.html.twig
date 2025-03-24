@@ -39,6 +39,13 @@
                         
                         </div >
                     </div>
+                    <div class="mt-1">
+                        <div class="d-flex align-items-center" >
+                        <span><b style="white-space: nowrap;">Rubrique :</b> {% if res.rubrique %}{{res.rubrique.name}}{% else %}--{% endif %}</span> 
+                        
+                        </div >
+                    </div>
+                    
                     {% if res.files|length > 0 %}
                     <div class="mt-3">
                         <div class="d-flex align-items-center" >

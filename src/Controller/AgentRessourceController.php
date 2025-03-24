@@ -21,6 +21,8 @@ use App\Services\SearchService;
 use App\Util\Search\MyCriteriaParam;
 use Knp\Component\Pager\PaginatorInterface;
 use App\Form\RessourceFilterType;
+use App\Repository\RessourceRubriqueRepository;
+use App\Entity\RessourceRubrique;
 
 #[Route('/agent/ressources')]
 class AgentRessourceController extends AbstractController
@@ -50,29 +52,30 @@ class AgentRessourceController extends AbstractController
 
 
     #[Route('/{type}', name: 'app_agent_ressource_list')]
-    public function index(string $type, Request $request, PaginatorInterface $paginator, SearchService $searchService): Response
+    public function index(string $type, Request $request, PaginatorInterface $paginator, SearchService $searchService, RessourceRubriqueRepository $ressourceRubriqueRepository): Response
     {
         $sessionSecteurId = $this->session->get('secteurId');
         $user = $this->getUser();
-        $page = $request->query->get('page', 1);
-        $limit = 5;
+        // $page = $request->query->get('page', 1);
+        // $limit = 5;
         $criteria = [
             ['prop' => 'name', 'op' => 'LIKE']
         ];
 
         $filter = [];
 
-        $form = $this->createForm(RessourceFilterType::class, $filter, [
-            'method' => 'GET'
-        ]);
+        // $form = $this->createForm(RessourceFilterType::class, $filter, [
+        //     'method' => 'GET'
+        // ]);
 
-        $form->handleRequest($request);
-        $filter = $form->getData();
+        // $form->handleRequest($request);
+        // $filter = $form->getData();
 
         $query = $this->entityManager
             ->createQueryBuilder()
             ->select('r')
             ->from(Ressource::class, 'r')
+            ->leftJoin('r.rubrique', 'rb')
         ;
 
         $where = $searchService->getWhere($filter, new MyCriteriaParam($criteria, 'r'));
@@ -81,18 +84,32 @@ class AgentRessourceController extends AbstractController
         $where["params"]["secteurId"] = $sessionSecteurId;
         $where["params"]["type"] = $type;
         $searchService->setAllParameters($query, $where["params"]);
-        $searchService->addOrderBy($query, $filter, ['sort' => 'r.id', 'direction' => 'asc']);
+        $query->addOrderBy('rb.id', 'asc');
+        // $query->addOrderBy('rb.id', 'asc');
+        $query->addOrderBy('r.id', 'asc');
+        // $searchService->addOrderBy($query, $filter, ['sort' => 'r.id', 'direction' => 'asc']);
 
-        $result = $paginator->paginate(
-            $query,
-            $page,
-            $limit
-        );
+        // $result = $paginator->paginate(
+        //     $query,
+        //     $page,
+        //     $limit
+        // );
+        $result = $query->getQuery()->getResult();
 
         return $this->render('user_category/agent/ressource/list.html.twig', [
             'result' => $result,
-            'form' => $form->createView(),
-            'page' => $page
+            'rubriques' => $this->entityManager
+                ->createQueryBuilder()
+                ->select('rb')
+                ->from(RessourceRubrique::class, 'rb')
+                ->where('rb.status = :statusValid and (rb.secteur = :secteur or rb.secteur is null)')
+                ->addOrderBy('rb.id', 'asc')
+                ->setParameter('secteur', $sessionSecteurId)
+                ->setParameter('statusValid', Status::VALID)
+                ->getQuery()
+                ->getResult()
+            // 'form' => $form->createView(),
+            // 'page' => $page
         ]);
 
     }

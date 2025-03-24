@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-	Ressource
+	Rubriques des ressources
 {% endblock %}
 
 {% block stylesheets %}
@@ -47,9 +47,9 @@
             </div>
         {% endfor %}
         <div class="block__header mb-1" >
-            <h1 class="block__title">Liste des ressources :</h1>
+            <h1 class="block__title">Liste des rubriques de ressources:</h1>
             <div class="fab-btn-wrap">
-                <a  href="{{path('app_ressource_add')}}" class="btn btn-primary btn--rounded fab-btn"><i data-feather="plus"></i>Ajouter</a>
+                <a  href="{{path('app_coach_ressource_rubrique_add')}}" class="btn btn-primary btn--rounded fab-btn"><i data-feather="plus"></i>Ajouter</a>
             </div>
         </div>
         {% if result|length ==0 %}
@@ -66,9 +66,6 @@
                     <tr>
                         <th>Id</th>
                         <th>Nom</th>
-                        <th>Rubrique</th>
-                        <th>Description</th>
-                        <th>Type</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -77,14 +74,16 @@
                     <tr>
                         <td>{{item.id}}</td>
                         <td>{{item.name}}</td>
-                        <td>{% if item.rubrique %}{{item.rubrique.name}}{% else %}--{% endif %}</td>
-                        <td>{{item.content}}</td>
-                        <td>{{item.typeLabel}}</td>
                         
                         <td class="col-action col-action--edit">
-                            <a href="{{path('app_ressource_details', {'id': item.id})}}">
-                                 <i data-feather="eye"></i>
+                            <div class="d-flex align-items-center justify-content-center">
+                            <a class="me-1" href="{{path('app_coach_ressource_rubrique_edit', {'id': item.id})}}">
+                                 <i data-feather="edit"></i>
                             </a>
+                            <a href="{{path('app_coach_ressource_rubrique_delete', {'id': item.id})}}">
+                                 <i data-feather="trash"></i>
+                            </a>
+                            </div>
                         </td>
                         
                     </tr>
