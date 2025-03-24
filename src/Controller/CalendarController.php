@@ -96,7 +96,12 @@ class CalendarController extends AbstractController
         }
 
         $calendarEventLabelList = $this->calendarEventLabelRepository->findAll();
-        $secteur = $this->secteurRepository->findOneBy(['id' => $this->session->get('secteurId') ]);
+        if(in_array(User::ROLE_AGENT,$user->getRoles())) {
+            $secteur = $this->secteurRepository->findOneBy(['id' => $this->session->get('secteurId') ]);
+        }
+        elseif(in_array(User::ROLE_COACH,$user->getRoles())){
+            $secteur = $this->getUser()->getUniqueCoachSecteur();
+        }
         $announcements = $this->announcementRepository->getActiveAnnoncement($secteur,new \DateTime(),['type' => User::ROLE_REVENDEUR]);
         return $this->render('calendar/calendar.html.twig', [
             'lienCalendly' => $lienCalendly,

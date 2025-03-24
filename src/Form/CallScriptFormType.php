@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\CallScript;
 use Symfony\Component\Form\AbstractType;
 use FOS\CKEditorBundle\Form\Type\CKEditorType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -23,12 +24,10 @@ class CallScriptFormType extends AbstractType
                     new NotBlank(["message" => "Intitulé obligatoire"])
                 ]
             ])
-            ->add('content', CKEditorType::class,  array(
+            ->add('content', TextareaType::class,  array(
                 'required' => true,
-                'config' => array(
-                        'uiColor' => '#ffffff',
-                    )
-                ))
+                'attr' => ['class' => 'tinymce']
+            ))
         ;
     }
 
