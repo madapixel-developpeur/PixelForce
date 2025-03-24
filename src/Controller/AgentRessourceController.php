@@ -84,7 +84,8 @@ class AgentRessourceController extends AbstractController
         $where["params"]["secteurId"] = $sessionSecteurId;
         $where["params"]["type"] = $type;
         $searchService->setAllParameters($query, $where["params"]);
-        $query->addOrderBy('coaclesce(rb.id, 0)', 'asc');
+        $query->addOrderBy('rb.id', 'asc');
+        // $query->addOrderBy('rb.id', 'asc');
         $query->addOrderBy('r.id', 'asc');
         // $searchService->addOrderBy($query, $filter, ['sort' => 'r.id', 'direction' => 'asc']);
 
@@ -96,7 +97,7 @@ class AgentRessourceController extends AbstractController
         $result = $query->getQuery()->getResult();
 
         return $this->render('user_category/agent/ressource/list.html.twig', [
-            'result' => $query->getResult(),
+            'result' => $result,
             'rubriques' => $this->entityManager
                 ->createQueryBuilder()
                 ->select('rb')

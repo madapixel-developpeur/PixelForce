@@ -17,7 +17,7 @@
                 </div>
             </div>
         {% endfor %}
-        <div class="block__header mb-1" >
+        <div class="block__header mb-3" >
             <h1 class="block__title">Liste des ressources :</h1>
             
         </div>
@@ -33,20 +33,21 @@
         <div class="row">
         {% for item in result %}
             {% if item.rubrique and item.rubrique.id != rubriqueId %}
-                {% if loop.index ===1 %}
+                {% if loop.index == 1 %}
                 {% else %}
                 </div>
                 <div class="row mt-2">
                 {% endif %}
                 <div class="col-12">
-                    <h4 class="text-center">{{item.rubrique.name}}</h4>
+                    <hr class="mb-1" style="height: 2px;">
+                    <h4 class="text-center mb-3">{{item.rubrique.name}}</h4>
                 </div>
                 {% set rubriqueId = item.rubrique.id %}
             {% endif %}
 
             <div class="card col-md-4">
             {% if item.imageCover %}
-                <img class="card-img-top" src="{{ asset( files_directory_relative ~ item.imageCover) }}" alt="Card image cap">
+                <img class="card-img-top" style="max-height: 100px; object-fit: cover;" src="{{ asset( files_directory_relative ~ item.imageCover) }}" alt="Card image cap">
             {% endif %}
                 <div class="card-body">
                     <h5 class="card-title">{{item.name}}</h5>

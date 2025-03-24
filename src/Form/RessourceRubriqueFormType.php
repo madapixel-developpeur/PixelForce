@@ -20,7 +20,7 @@ class RessourceRubriqueFormType extends AbstractType
     {
         $builder
             ->add('name', TextType::class, [
-                'lable' => 'Nom',
+                'label' => 'Nom',
                 'required' => true,
             ])
         ;

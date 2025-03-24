@@ -196,12 +196,12 @@ class Ressource
         return null;
     }
 
-    public function getRessourceRubrique(): ?RessourceRubrique
+    public function getRubrique(): ?RessourceRubrique
     {
         return $this->rubrique;
     }
 
-    public function setRessourceRubrique(?RessourceRubrique $rubrique): self
+    public function setRubrique(?RessourceRubrique $rubrique): self
     {
         $this->rubrique = $rubrique;
 
