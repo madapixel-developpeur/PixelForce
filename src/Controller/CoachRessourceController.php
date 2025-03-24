@@ -66,7 +66,7 @@ class CoachRessourceController extends AbstractController
     public function add(Request $request): Response
     {
         $res = new Ressource();
-        $form = $this->createForm(RessourceFormType::class, $res);
+        $form = $this->createForm(RessourceFormType::class, $res, ['secteur' => $this->getUser()->getUniqueCoachSecteur()]);
         $form->handleRequest($request);
         $files = [];
         if ($form->isSubmitted()) {
@@ -105,7 +105,7 @@ class CoachRessourceController extends AbstractController
     #[Route('/{id}/edit', name: 'app_ressource_edit')]
     public function edit(Ressource $res, Request $request): Response
     {
-        $form = $this->createForm(RessourceFormType::class, $res);
+        $form = $this->createForm(RessourceFormType::class, $res, ['secteur' => $this->getUser()->getUniqueCoachSecteur()]);
         $form->handleRequest($request);
         $files = $res->getFiles();
         if ($form->isSubmitted()) {

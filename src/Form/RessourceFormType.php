@@ -14,6 +14,7 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 
 use App\Entity\Ressource;
+use App\Entity\RessourceRubrique;
 use Symfony\Component\Validator\Constraints\File;
 
 use FOS\CKEditorBundle\Form\Type\CKEditorType;
@@ -24,6 +25,7 @@ class RessourceFormType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $secteur = $options['secteur'];
         $builder
             ->add('name', TextType::class, [
                 "label" => "Titre",
@@ -60,6 +62,18 @@ class RessourceFormType extends AbstractType
                     Ressource::TYPE_LABEL[Ressource::TYPE_REVENDEUR] => Ressource::TYPE_REVENDEUR
                 ],
                 "required" => false,
+            ])
+            ->add('rubrique', EntityType::class, [
+                'label' => 'Rubrique',
+                'class' => RessourceRubrique::class,
+                'choice_label' => 'name',
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('r')
+                        ->where('r.status = 1 and (r.secteur = :secteur or r.secteur is null)')
+                        ->setParameter('secteur', $secteur)
+                    ;
+                },
+                'required' => false
             ])
 
         ;
