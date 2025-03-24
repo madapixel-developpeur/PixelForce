@@ -21,15 +21,9 @@
             <h1 class="block__title">Liste des ressources :</h1>
             
         </div>
-        {% if result|length ==0 %}
-                <div class="alert alert-primary p-3 text-center" role="alert">
-                    <div class="alert-body">
-                        Aucun résultat.
-                    </div>
-                </div>
-        {% endif %}
+        
         {% if result|length == 0 and rubriques|length==0 %}
-        <p class="text-center">Aucune formation</p>
+        <p class="text-center">Aucun résultat</p>
         {% else %}
         {% set rubriques = [null]|merge(rubriques) %}
         {% for rb in rubriques %}
@@ -83,7 +77,7 @@
             {% endif %}
         {% endfor %}
         {% if countItem == 0 %}
-        <p class="text-center">Aucune formation</p>
+        <p class="text-center">Aucune ressource</p>
         {% endif %}
         </div>
         {% endfor %}
