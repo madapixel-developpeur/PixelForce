@@ -9,6 +9,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 class CategorieFormationType extends AbstractType
 {
@@ -16,7 +17,12 @@ class CategorieFormationType extends AbstractType
     {
         $builder
             ->add('nom')
-            ->add('description', CKEditorType::class)
+            ->add('description', TextareaType::class, [
+                'label' => 'Descritpion',
+                'attr' => [
+                    'class' => 'tinymce'
+                ]
+            ])
              ->add('ordreCatFormation', NumberType::class, [
                  'required' => false,
                  'label' => 'Ordre'

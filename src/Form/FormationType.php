@@ -29,10 +29,8 @@ class FormationType extends AbstractType
             //     'required' => false,
             //     'label' => 'Description déblocage'
             // ])
-            ->add('contenu', CKEditorType::class, [
-                'config' => [
-                    'uiColor' => '#cccccc',
-                ],
+            ->add('contenu', TextareaType::class, [
+                'attr' => ['class' => 'tinymce'],
                 'required' => true,
             ])
             // ->add('debloqueAgent', null, [
