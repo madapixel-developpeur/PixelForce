@@ -10,6 +10,7 @@ use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class FormationPageConfigurationFormType extends AbstractType
@@ -44,10 +45,8 @@ class FormationPageConfigurationFormType extends AbstractType
                     new NotBlank(["message" => "Durée de la formation obligatoire"])
                 ]
             ])
-            ->add('description', CKEditorType::class, [
-                'config' => [
-                    'uiColor' => '#cccccc',
-                ],
+            ->add('description', TextareaType::class, [
+                'attr' => ['class' => 'tinymce'],
                 'required' => true,
             ])
         ;
