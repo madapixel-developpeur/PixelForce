@@ -15,6 +15,7 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Validator\Constraints\File;
 use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 class SecteurType extends AbstractType
 {
@@ -35,12 +36,10 @@ class SecteurType extends AbstractType
                 ]
             )
             ->add('description', null, ['attr' => ['placeholder' => 'Description du secteur']])
-            ->add('longDescription', CKEditorType::class, [
+            ->add('longDescription', TextareaType::class, [
                 'required' => false,
                 'label' => "Longue description",
-                'config' => [
-                    'toolbar' => 'note_contact_toolbar'
-                ]
+                'attr' => ['class' => 'tinymce'],
             ])
             ->add('liens', null, 
                 [

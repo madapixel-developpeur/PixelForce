@@ -1,6 +1,6 @@
 const Encore = require('@symfony/webpack-encore');
 const dotenv = require('dotenv');
-
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 // Manually configure the runtime environment if not already configured yet by the "encore" command.
 // It's useful when you use tools that rely on webpack.config.js file.
@@ -46,7 +46,7 @@ Encore
     .addEntry('StripeAgentRegistration', './assets/js/stripe/stripe-agent-registration.js')
     .addEntry('StripeAgentRegistrationSubscription', './assets/js/stripe/stripe-agent-registration-subscription.js')
     .addEntry('datatableJs', './assets/js/plugins/datatable.js')
-
+    .addEntry('tinymce', './assets/js/tinymce.js') 
     
     // Vuexy: Vendor JS
     .addEntry('vuexyJS', './assets/js/vuexy/vuexy.js')
@@ -158,6 +158,13 @@ Encore
         //options['process.env'].MERCURE_JWT_SECRET_LONG = JSON.stringify(env.parsed.MERCURE_JWT_SECRET_LONG);
 
     })
+    .addPlugin(new CopyWebpackPlugin({
+        patterns: [
+          { from: 'node_modules/tinymce/skins', to: 'skins' },
+          { from: 'node_modules/tinymce/icons', to: 'icons' },
+          { from: 'node_modules/tinymce/themes', to: 'themes' },
+        ]
+    }))
 ;
 
 module.exports = Encore.getWebpackConfig();

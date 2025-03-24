@@ -15,6 +15,7 @@ global.$ = global.jQuery = $;
 import 'datatables.net-bs5';
 // start the Stimulus application
 import './bootstrap';
+import './js/tinymce';
 $(document).ready(function() {
     $('.sortable').DataTable({
         paging: false,

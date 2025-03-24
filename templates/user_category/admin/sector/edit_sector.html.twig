@@ -62,6 +62,9 @@
 
 {% block javascripts %}
 	{{parent()}}
+	<!-- Include the compiled TinyMCE script -->
+	<script src="{{ asset('build/tinymce.js') }}"></script>
+
 	<script type="text/javascript">
 		console.log('hello from here 2');
 	</script>

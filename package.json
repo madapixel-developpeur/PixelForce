@@ -8,6 +8,7 @@
         "@symfony/webpack-encore": "^4.6.1",
         "@types/bootstrap": "^5.1.11",
         "autoprefixer": "^10.4.2",
+        "copy-webpack-plugin": "^13.0.0",
         "core-js": "^3.0.0",
         "file-loader": "6.0.0",
         "postcss-loader": "6.0.0",
@@ -35,6 +36,7 @@
         "event-source-polyfill": "^1.0.31",
         "jquery": "^3.6.0",
         "jquery-validation": "^1.19.4",
-        "popper.js": "^1.16.1"
+        "popper.js": "^1.16.1",
+        "tinymce": "^5.10.9"
     }
 }
