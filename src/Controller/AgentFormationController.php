@@ -12,6 +12,7 @@ use App\Services\MailerService;
 use App\Repository\ContactRepository;
 use App\Repository\SecteurRepository;
 use App\Entity\CategorieFormationAgent;
+use App\Entity\FormationPageConfiguration;
 use App\Repository\FormationRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\AgentSecteurRepository;
@@ -126,7 +127,7 @@ class AgentFormationController extends AbstractController
                 $request->query->getInt('page', 1),
                 20
             );
-            $configuration = $this->formationPageConfigurationRepository->findBySectionAndSecteur($secteur,$roles);
+            $configuration = $this->formationPageConfigurationRepository->findBySectionAndSecteur($secteur,$roles) ?? new FormationPageConfiguration();
             return $this->render('formation/video/agent_detail_categorie_formation.html.twig', [
                 'formations' => $formations,
                 'criteres' => $criteres,

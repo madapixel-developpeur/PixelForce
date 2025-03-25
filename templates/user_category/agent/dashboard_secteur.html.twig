@@ -142,10 +142,10 @@
                                 {% endif %}
                                 {# <a class="regular-button w-100 text-center mb-3 d-none" href="#" onclick='terminerFormation()' id="terminerFormationButton" >Terminer la formation</a>   #}
                                 {% if app.session.get('secteurId') == secteurDigitalId %}
-                                <a class="regular-button w-100 text-center mb-3 action-button" target="__blank" href="{{ catalogues_base_url }}?ref={{generateReference(app.user.id,app.user.id) }}">Découvrir les services Pixelforce</a>  
-                                <a class="regular-button w-100 text-center mb-3 action-button" href="#" onclick="copyLink('{{ catalogues_base_url }}?ref={{generateReference(app.user.id,app.user.id) }}','Lien de référence {{ catalogues_base_url }}?ref={{generateReference(app.user.id,app.user.id) }} copié avec succès') ">Inviter un client</a>  
+                                <a class="regular-button w-100 text-center mb-3 action-button" target="__blank" href="{{ catalogues_base_url }}?ref={{generateReference(app.user.id,app.user.id) }}">Je veux découvrir les services de Pixelsior</a>  
+                                <a class="regular-button w-100 text-center mb-3 action-button" href="#" onclick="copyLink('{{ catalogues_base_url }}?ref={{generateReference(app.user.id,app.user.id) }}','Lien de référence {{ catalogues_base_url }}?ref={{generateReference(app.user.id,app.user.id) }} copié avec succès') ">J’ai un client qui veut prendre un service</a>  
                                 {% endif %}
-                                <a class="regular-button w-100 text-center mb-3 action-button" href="{{ path('agent_view') }}"  >Parrainer un revendeur</a>  
+                                <a class="regular-button w-100 text-center mb-3 action-button" href="{{ path('agent_view') }}"  >J’ai un partenaire qui veut rejoindre mon équipe</a>  
                             </div>
                         {% endif %}
                         {% if secteurAgent.isFonctionnaliteActive(constant('App\\Util\\FonctionnalitesTypeSecteur::FONCTIONNALITE_COMMON_AGENDA')) %}
