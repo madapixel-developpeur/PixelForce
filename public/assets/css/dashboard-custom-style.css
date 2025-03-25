@@ -30,7 +30,7 @@
 }
 
 .bd-services-2__item a {
-    color: #7d78e1;
+    color: #0030f6;
     /* Set link color to red */
     text-decoration: none;
     /* Optional: remove underline from links */
@@ -38,7 +38,7 @@
 
 /* Optional: style links on hover */
 .bd-services-2__item a:hover {
-    color: #3E4F9C;
+    color: #0030f6;
     /* Change color on hover if desired */
 }
 
@@ -46,7 +46,7 @@
 .bd-services-2__icon {
     width: 60px;
     height: 60px;
-    background-color: #3E4F9C;
+    background-color: #0030f6;
     font-size: 25px;
     color: white;
     line-height: 60px;

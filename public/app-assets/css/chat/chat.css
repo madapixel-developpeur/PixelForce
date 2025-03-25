@@ -20,7 +20,7 @@
     bottom: 20px;
     right: 40px;
     box-shadow: 0 5px 40px rgba(0, 0, 0, 0.16);
-    background: #1976d2;
+    background: #0030f6;
     border-radius: 50%;
     border: none;
     outline: none;
@@ -55,7 +55,7 @@
     /* flex-direction: column; */
 
     box-shadow: 0 5px 40px rgba(0, 0, 0, 0.16);
-    background: #1976d2;
+    background: #0030f6;
     pointer-events: initial;
 }
 
@@ -65,11 +65,11 @@
 
 
 .custom-chat .chat-button {
-    background: #1976d2;
+    background: #0030f6;
 }
 
 .custom-chat .chat-box {
-    background: #1976d2;
+    background: #0030f6;
 }
 
 
@@ -166,7 +166,7 @@
     bottom: 10px;
     right: 10px;
     box-shadow: 0 5px 40px rgba(0, 0, 0, 0.16);
-    background: #1976d2;
+    background: #0030f6;
     border-radius: 50%;
     border: none;
     outline: none;
@@ -224,7 +224,7 @@
     bottom: 10px;
     right: 10px;
     box-shadow: 0 5px 40px rgba(0, 0, 0, 0.16);
-    background: #1976d2;
+    background: #0030f6;
     border-radius: 50%;
     border: none;
     outline: none;
