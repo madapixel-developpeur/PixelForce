@@ -14,6 +14,14 @@
     {{ encore_entry_link_tags('vuexy_dashboard_ecommerce') }}
     <link rel="stylesheet" href="{{asset('assets/css/stepper.css')}}">
     <link rel="stylesheet" href="{{asset('assets/css/dashboard-custom-style.css?v=202503251139')}}">
+    <style>
+        .linkstyle:visited{
+            color: white !important;
+        }
+        .linkstyle{
+            text-decoration: underline !important;
+        }
+    </style>
 {% endblock %}
 
 {% block body %}
@@ -293,7 +301,7 @@
                                     <div class="col-md-7 vision-section-1">
                                         <h4 class="general-primary-text fs-2 mb-3 text-white">{{secteur.title}}</h4>
                                         <p>
-                                            {{secteur.longDescriptionForDarkBackground | raw}}  
+                                            {{secteur.longDescriptionForDarkBackground |replace({'[the_link]': catalogues_base_url ~ '?ref=' ~ generateReference(app.user.id,app.user.id) }) | raw }}  
                                         </p>
                                         {% if secteurAgent.id ==  secteurDigitalId %}
                                         <h6 class="mt-3">
