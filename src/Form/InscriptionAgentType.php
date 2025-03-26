@@ -158,7 +158,7 @@ class InscriptionAgentType extends AbstractType
                 'constraints' => [
                     new NotBlank(["message" => "Veuillez choisir un pays"]),
                 ],
-                'attr' => ['class' => 'form-control', 'step' => 1],
+                'attr' => ['class' => 'form-control', 'step' => 0],
             ])
             ->add('roles', ChoiceType::class, [
                 'choices' => User::SIGNING_UP_ROLES,

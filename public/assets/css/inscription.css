@@ -12,11 +12,11 @@
     color:black;
 }
 .sign-in-button{
-    background-color: #7d78e1;
+    background-color: #0030f6;
     color: white;
     border-width: 1px; /* Width of the border */
     border-style: solid; /* Style of the border */
-    border-color: #7d78e1; /* Color of the border */
+    border-color: #0030f6; /* Color of the border */
 }
 .login-other-button{
     color:black
@@ -54,8 +54,8 @@
 
 /* Change the entire button's background and border color when selected */
 .toggle-input:checked + .toggle-button {
-    background-color: #7d78e1; /* Selected background color */
-    border-color: #7d78e1; /* Selected border color */
+    background-color: #0030f6; /* Selected background color */
+    border-color: #0030f6; /* Selected border color */
 }
 
 .toggle-input:checked + .toggle-button .toggle-label {
@@ -82,4 +82,16 @@
     color: #4CAF50; /* Green checkmark */
     opacity: 0; /* Hidden by default */
     transition: opacity 0.3s;
+}
+
+.disabled-label {
+    color: #888; /* Texte encore plus clair */
+    cursor: not-allowed;
+    opacity: 0.5; /* Augmenter la transparence */
+}
+
+.toggle-input:disabled + .toggle-button {
+    background-color: #ddd; /* Plus clair pour mieux contraster */
+    border-color: #bbb;
+    text-decoration: line-through; /* Optionnel pour plus de clarté */
 }
