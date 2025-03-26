@@ -25,7 +25,7 @@ class FormationPageConfigurationFormType extends AbstractType
             ->add('introductionPhoto', FileType::class, [
                 "label" => "Image",
                 'mapped' => false,
-                "required" => $options['isCreation'],
+                "required" => false,
                 'constraints' => [
                     new File([
                         // 'maxSize' => '1024k',

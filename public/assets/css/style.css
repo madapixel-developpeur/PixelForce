@@ -538,7 +538,7 @@ a, a:hover{
 }
 /* Partie vision */
 .vision-section{
-	background-color: #7d78e1;
+	background-color: #0030f6;
 }
 .vision-section-1 p{
 	color: white;
@@ -551,8 +551,8 @@ a, a:hover{
 	display:inline-block
 }
 .vision-button:hover {
-    color:#ebedf5 !important;
-	background-color:#192030;
+    color:#192030 !important;
+	background-color:#ebedf5;
 }
 /* Gestion projet */
 .gestion-projet{
@@ -664,4 +664,9 @@ body{
 }
 .arrow-swiper{
 	color:#0030f6;
+}
+
+
+.swal2-confirm.swal2-styled {
+	background-color: #0030f6 !important;
 }

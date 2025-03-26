@@ -291,15 +291,15 @@
                             <div class=" p-0">
                                 <div class="row p-5 align-items-center">
                                     <div class="col-md-7 vision-section-1">
-                                        <h4 class="general-primary-text fs-2 mb-3">{{secteur.title}}</h4>
+                                        <h4 class="general-primary-text fs-2 mb-3 text-white">{{secteur.title}}</h4>
                                         <p>
-                                            {{secteur.longDescription | raw}}  
+                                            {{secteur.longDescriptionForDarkBackground | raw}}  
                                         </p>
                                         {% if secteurAgent.id ==  secteurDigitalId %}
                                         <h6 class="mt-3">
                                         <span class="text-white">Référence :</span> 
-                                        <a class="text-dark-template fs-5" href="{{ path('agent_order_list_digital',{'referenceVente' : generateReference(app.user.id,app.user.id) }) }}" >  {{ generateReference(app.user.id,app.user.id) }} </a>
-                                        <a class="p-2 text-dark-template fs-5" href="#" onclick="copyLink('{{configSecteurService.getRefUrl(generateReference(app.user.id,app.user.id)) }}','Lien de référence {{ generateReference(app.user.id,app.user.id) }} copié avec succès') "><i class="fa-solid fa-copy"></i></a> 
+                                        <a class="text-white fs-5" href="{{ path('agent_order_list_digital',{'referenceVente' : generateReference(app.user.id,app.user.id) }) }}" >  {{ generateReference(app.user.id,app.user.id) }} </a>
+                                        <a class="p-2 text-white fs-5" href="#" onclick="copyLink('{{configSecteurService.getRefUrl(generateReference(app.user.id,app.user.id)) }}','Lien de référence {{ generateReference(app.user.id,app.user.id) }} copié avec succès') "><i class="fa-solid fa-copy"></i></a> 
                                         </h6>
                                         
                                         <a target="_blank" class="vision-button w-100 text-center rounded-3 mt-4 mb-4 mb-md-0 p-3 " href="{{configSecteurService.getRefUrl(generateReference(app.user.id,app.user.id))}}">Explorez nos offres</a>    

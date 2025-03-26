@@ -216,6 +216,12 @@ class Secteur implements JsonSerializable
         return $this->longDescription;
     }
 
+    
+    public function getLongDescriptionForDarkBackground(): ?string
+    {
+        return str_replace('#000000','#FFFFFF ',$this->longDescription);
+    }
+
     public function setLongDescription(?string $longDescription): self
     {
         $this->longDescription = $longDescription;
