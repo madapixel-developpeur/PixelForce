@@ -9,7 +9,11 @@
     <link rel="stylesheet" type="text/css" href="{{asset('app-assets/css/pages/app-home-agent.css')}}">
     <link  rel="stylesheet"   href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
     <style>
-
+        .btn-primary {
+        border-color: #7367f0 !important;
+        /*background-color: #7367f0 !important;*/
+        background-color: #3e4f9c !important;
+        color: #fff !important; }
 
     </style>
 {% endblock %}
@@ -48,17 +52,27 @@
                             <div class="swiper-wrapper my-custom-swiper-wrapper" >
                             {% for secteur in allSecteurs|batch(2) %}
                                 <div class="swiper-slide d-flex align-items-center">
-                                    <div class="row ">
+                                    <div class="row w-100">
                                         <div class="up-arrow-button text-center arrow-swiper">
                                             <i class="fas fa-chevron-up"></i>
                                         </div>
                                         {% for s in secteur %}
                                             {% set agentSecteur = repoAgentSecteur.findOneBy({'secteur' : s, 'agent' : agent}) %}
                                             
-                                            <div class="col-12 col-md-12 d-flex align-items-center">
-                                                <div class="card choix-secteur-card" style="margin-bottom:10px">
-                                                    <img src="{{ asset('files/')}}/{{s.affiche}}" class="card-img-top" alt="...">
-                                                    <div class="card-body choix-secteur-card-body rounded-bottom d-flex align-items-center">
+                                            <div class="col-12 col-md-12 d-flex align-items-center ">
+                                                <div class="card choix-secteur-card w-100">
+                                                  <div class="d-flex align-items-center justify-content-center " style="height: 180px; background-color: #6A5FB2; overflow: hidden;">
+                                                        {% if s.affiche %}
+                                                            
+                                                            <img src="{{ asset('files/') }}/{{ s.affiche }}" 
+                                                                class="img-fluid" 
+                                                                style="max-height: 100%; max-width: 100%; object-fit: contain;" 
+                                                                alt="...">
+                                                    
+                                                                
+                                                        {% endif %}
+                                                    </div>
+                                                    <div class="card-body choix-secteur-card-body rounded-bottom d-flex align-items-end">
                                                         <div class="row card-body-part-a w-100" >
                                                             <div class="col-8 d-flex align-items-center">
                                                                 <h5 class=" text-white fw-bold m-0">{{ s.nom }}</h5>
