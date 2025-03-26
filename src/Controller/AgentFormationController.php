@@ -128,6 +128,7 @@ class AgentFormationController extends AbstractController
                 20
             );
             $configuration = $this->formationPageConfigurationRepository->findBySectionAndSecteur($secteur,$roles) ?? new FormationPageConfiguration();
+            $nbrVideo = $this->formationRepository->countAvailableVideo($secteur);
             return $this->render('formation/video/agent_detail_categorie_formation.html.twig', [
                 'formations' => $formations,
                 'criteres' => $criteres,
@@ -138,6 +139,7 @@ class AgentFormationController extends AbstractController
                 'agentSecteur' => $agentSecteur,
                 'filesDirectory' => $this->getParameter('files_directory_relative'),
                 'configuration' => $configuration,
+                'nbrVideo'=> $nbrVideo
             ]);
         }
 

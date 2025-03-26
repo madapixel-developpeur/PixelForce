@@ -480,4 +480,25 @@ class FormationRepository extends ServiceEntityRepository
         }
         return $nextRank;
     }
+
+    public function countAvailableVideo(Secteur $secteur){
+        $queryBuilder = $this->createQueryBuilder('f');
+
+        $queryBuilder
+            ->select('COUNT(f)')
+            ->join('f.CategorieFormation', 'cf')
+            ->where('f.secteur=:secteur')
+            ->andWhere('f.brouillon IS NULL OR f.brouillon = :brouillon')
+            ->andWhere('f.video_id IS NOT NULL')
+            ->andWhere('f.statut = :statusCreated')
+            ->andwhere('cf.statut = :statut')
+            ->setParameter('statut', Status::VALID)
+            ->setParameter('secteur', $secteur->getId())
+            ->setParameter('brouillon',0)
+            ->setParameter('statusCreated', Formation::STATUS_CREATED)
+        ;
+
+        return $queryBuilder->getQuery()->getSingleScalarResult();
+
+    }
 }
