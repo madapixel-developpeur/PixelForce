@@ -304,8 +304,8 @@ myChatApp.controller('chatUserList', function ($scope, chat) {
         }
         const myRoles = me.data?.roles ?? [];
         const otherRoles = other.data?.roles ?? [];
-        if (!myRoles.includes("ROLE_ADMIN") && !myRoles.includes("ROLE_COACH")) {
-            if (!otherRoles.includes("ROLE_ADMIN") && !otherRoles.includes("ROLE_COACH")) return false;
+        if (!myRoles.includes("ROLE_ADMINISTRATEUR") && !myRoles.includes("ROLE_COACH")) {
+            if (!otherRoles.includes("ROLE_ADMINISTRATEUR") && !otherRoles.includes("ROLE_COACH")) return false;
         }
         return true;
     }
