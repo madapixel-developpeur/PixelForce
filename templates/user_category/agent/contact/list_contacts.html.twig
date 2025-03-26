@@ -64,68 +64,72 @@
             
                             </div>
                         </div>
-                        <div class="collapse" id="filters">
-                            <div class="block block--bordered block--rounded">
-                                <h1 class="block__text block__text--center mt-2" >Options de filtre :</h1>
-                                <div class="filter-wrap">
-                                        <!-- Formulaire de recherche -->
-                                        <div class="search-form">
-                                            {{form_start(searchForm)}}
-                                                <div class="row text-center">
-                                                    <div class="col-12 col-sm-3 col-md-2">
-                                                        {{form_row(searchForm.prenom)}}
+                        {{form_start(searchForm)}}
+                            <div class="collapse" id="filters">
+                                <div class="block block--bordered block--rounded">
+                                    <h1 class="block__text block__text--center mt-2" >Options de filtre :</h1>
+                                    <div class="filter-wrap">
+                                            <!-- Formulaire de recherche -->
+                                            <div class="search-form">
+                                                    <div class="row text-center">
+                                                        <div class="col-12 col-sm-3 col-md-2">
+                                                            {{form_row(searchForm.prenom)}}
+                                                        </div>
+                                                        <div class="col-12 col-sm-6 col-md-2">
+                                                            {{form_row(searchForm.email)}}
+                                                        </div>
+                                                        <div class="col-12 col-sm-3 col-md-2">
+                                                            {{form_row(searchForm.telephone)}}
+                                                        </div>
+                                                        <div class="col-12 col-sm-3 col-md-3">
+                                                            {{form_row(searchForm.adresse)}}
+                                                        </div>
+                                                        <div class="col-12 col-sm-1 col-md-1">
+                                                            <select class="form-select" name="ordre">
+                                                                <option value="ASC"selected>Ordre</option>
+                                                                <option value="ASC">ASC</option>
+                                                                <option value="DESC">DESC</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class=" col-12 col-sm-2 col-md-2">
+                                                            {{form_row(searchForm.tag)}}
+                                                        </div>
+                                                        <div class="col-2">
+                                                            <label for="dateInscriptionMin" class="form-label">Type du contact</label>
+                                                            {{form_widget(searchForm.type)}}
+                                                        </div>
+                                                        <div class="col-5">
+                                                            <label for="dateInscriptionMin" class="form-label">Date d'enregistrement à partir de</label>
+                                                            {{form_widget(searchForm.dateInscriptionMin)}}
+                                                        </div>
+                                                        <div class="col-5">
+                                                            <label for="dateInscriptionMax" class="form-label">Date d'enregistrement jusqu'à</label>
+                                                            {{form_widget(searchForm.dateInscriptionMax)}}
+                                                        </div>
+                                                    
                                                     </div>
-                                                    <div class="col-12 col-sm-6 col-md-2">
-                                                        {{form_row(searchForm.email)}}
+                                                    <div class="row">
+                                                        <div class="col-12 col-md-8 mt-3 d-flex align-items-center justify-content-start ">
+                                                            <a href="{{path('agent_contact_import_export_mobile')}}" class="mt-2 btn btn-secondary btn-sm mx-2"><i class="fa-solid fa-mobile-screen-button"></i><span class="imp-exp-text-js ms-1">Importer/Exportation mobile</span></a>
+                                                        </div>
+                                                        <div class="col-12  col-md-4 mt-3 d-flex align-items-center justify-content-end">
+                                                            <button class="regular-button w-50 rounded-3 fw-bolder" type='submit'   name="action_button" value="search_action" >Rechercher</button>
+                                                        </div>
                                                     </div>
-                                                    <div class="col-12 col-sm-3 col-md-2">
-                                                        {{form_row(searchForm.telephone)}}
-                                                    </div>
-                                                    <div class="col-12 col-sm-3 col-md-3">
-                                                        {{form_row(searchForm.adresse)}}
-                                                    </div>
-                                                    <div class="col-12 col-sm-1 col-md-1">
-                                                        <select class="form-select" name="ordre">
-                                                            <option value="ASC"selected>Ordre</option>
-                                                            <option value="ASC">ASC</option>
-                                                            <option value="DESC">DESC</option>
-                                                        </select>
-                                                    </div>
-                                                    <div class=" col-12 col-sm-2 col-md-2">
-                                                        {{form_row(searchForm.tag)}}
-                                                    </div>
-                                                    <div class="col-2">
-                                                        <label for="dateInscriptionMin" class="form-label">Type du contact</label>
-                                                        {{form_widget(searchForm.type)}}
-                                                    </div>
-                                                    <div class="col-5">
-                                                        <label for="dateInscriptionMin" class="form-label">Date d'enregistrement à partir de</label>
-                                                        {{form_widget(searchForm.dateInscriptionMin)}}
-                                                    </div>
-                                                    <div class="col-5">
-                                                        <label for="dateInscriptionMax" class="form-label">Date d'enregistrement jusqu'à</label>
-                                                        {{form_widget(searchForm.dateInscriptionMax)}}
-                                                    </div>
-                                                   
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-12 col-md-8 mt-3 d-flex align-items-center justify-content-start ">
-                                                        <button name="action_button" value="excel"  class=" mt-2 btn btn-success btn-sm mx-2 rounded-3"><i class="fa fa-print"></i> <span class="ms-1">Exporter excel</span></button>
-                                                        <button name="action_button" value="csv"  class=" mt-2 btn btn-success btn-sm mx-2 rounded-3"><i class="fa fa-print"></i> <span class="ms-1">Exporter csv</span></button>
-                                                        <button name="action_button" value="pdf"  class=" mt-2  btn btn-danger btn-sm mx-2 rounded-3"><i class="fa fa-file-text"></i> <span class="ms-1">Exporter pdf</span></button>
-                                                        <a href="{{path('agent_contact_import_export_mobile')}}" class="mt-2 btn btn-secondary btn-sm mx-2"><i class="fa-solid fa-mobile-screen-button"></i><span class="imp-exp-text-js ms-1">Importer/Exportation mobile</span></a>
-                                                    </div>
-                                                    <div class="col-12  col-md-4 mt-3 d-flex align-items-center justify-content-end">
-                                                        <button class="regular-button w-50 rounded-3 fw-bolder" type='submit'   name="action_button" value="search_action" >Rechercher</button>
-                                                    </div>
-                                                </div>
-                                                
-                                            {{form_end(searchForm)}}
-                                        </div>
-                                        
+                                                    
+                                            </div>
+                                            
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                            <div class="row ">
+                                <div class="col-12 col-md-12 mt-3 d-flex align-items-center justify-content-start p-0 mb-3 ">
+                                    <button name="action_button" value="excel"  class=" mt-2 btn btn-success btn-sm me-2 rounded-3"><i class="fa fa-print"></i> <span class="ms-1">Exporter excel</span></button>
+                                    <button name="action_button" value="csv"  class=" mt-2 btn btn-success btn-sm me-2 rounded-3"><i class="fa fa-print"></i> <span class="ms-1">Exporter csv</span></button>
+                                    <button name="action_button" value="pdf"  class=" mt-2  btn btn-danger btn-sm me-2 rounded-3"><i class="fa fa-file-text"></i> <span class="ms-1">Exporter pdf</span></button>
+                                </div>
+                            </div>
+                        {{form_end(searchForm)}}
                         
                         {% if contacts|length ==0 %}
                             <div class="alert alert-primary p-3 text-center" role="alert">
