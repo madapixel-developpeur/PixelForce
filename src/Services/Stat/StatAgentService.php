@@ -215,6 +215,31 @@ class StatAgentService
         }
     }
 
+    
+    public function getPbbAnnualAndMonthlyStat($pbb_id,DateTime $reference)
+    {
+        try {
+            $pbb_ws_url = $this->parameterBag->get('pbb_ws_url');
+            if (!trim($pbb_ws_url))
+                throw new \Exception('API unavailable');
+            $response = $this->client->request(
+                'GET',
+                $pbb_ws_url . '/api/pbb-stat-annual-monthly',
+                [
+                   'json' => array_merge( ['user_id' => $pbb_id], ['date_ref' =>  $reference->format('Y-m-d H:i:s')])
+                ]
+            );
+            $content = json_decode($response->getContent(), true);
+            return $content;
+        } catch (\Exception $exception) {
+            return [
+                "total_year" => 0,
+                "total_month" => 0
+            ];
+        }
+    }
+
+
     public function getAgentCaStatEquipe($agent,$secteurId)
     {
         try {
@@ -258,16 +283,30 @@ class StatAgentService
         }
     }
 
+    public function getGlobalStat($agentId, $secteurId,DateTime  $dateRef)
+    {
+        if ($secteurId == $this->parameterBag->get('secteur_digital_id')) {
+            return $this->getPbbAnnualAndMonthlyStat($agentId,$dateRef);
+        } else {
+            return [
+                "total_year" => 0,
+                "total_month" => 0
+            ];
+        }
+    }
+
     public function getAgentStat(User $agent, Secteur $secteur)
     {
         $statDigital = null;
         $statFinance = null;
         if ($secteur->getId() == $this->parameterBag->get('secteur_finance_id')) {
             $statFinance = $this->getStatFinance($agent->getEmail());
-        } else {
+        } elseif ( $secteur->getId() == $this->parameterBag->get('secteur_digital_id')) {
             // if ($secteur->getId() == $_ENV['SECTEUR_DIGITAL_ID']) {
-            $statDigital = $this->getStat($agent->getId(), $secteur->getId());
+            $statDigital = $this->getGlobalStat($agent->getId(), $secteur->getId(),new DateTime());
             // }
+        }else{
+            $statDigital = $this->getStat($agent->getId(), $secteur->getId());
         }
 
         $pbb_summary = $this->getSummary($agent->getId(), $secteur->getId());
@@ -276,6 +315,7 @@ class StatAgentService
         $nbVentesTotal = count($pbb_summary['orders']) + ($statVente != null ? $statVente['nbr_ventes'] : 0);
         $nbrRdv = $this->getNbrRdv($agent->getId());
         $soldeRemuneration = $this->userTransactionRepository->getSolde($agent, [$secteur->getId()]);
+        $statRemuneration = $this->userTransactionRepository->getStatRemunerationAnnualMonthly($agent, [$secteur->getId()],new DateTime());
         return [
             'statDigital' => $statDigital,
             'statFinance' => $statFinance,
@@ -283,6 +323,7 @@ class StatAgentService
             'chiffreAffaireTotal' => $chiffreAffaireTotal,
             'soldeRemuneration' => $soldeRemuneration,
             'nbVentesTotal' => $nbVentesTotal,
+            'statRemuneration' => $statRemuneration 
         ];
     }
 

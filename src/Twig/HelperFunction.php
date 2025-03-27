@@ -2,6 +2,10 @@
 
 namespace App\Twig;
 
+use DateTime;
+use Twig\TwigFilter;
+use DateTimeInterface;
+use IntlDateFormatter;
 use Twig\TwigFunction;
 use App\Util\GenericUtil;
 use App\Repository\SecteurRepository;
@@ -45,6 +49,14 @@ class HelperFunction extends AbstractExtension
             new TwigFunction('obj_attribute', [$this, 'getAttribute']),
         ];
     }
+
+    public function getFilters(): array
+    {
+        return [
+            new TwigFilter('localized_month', [$this, 'getLocalizedMonth']),
+        ];
+    }
+
 
     public function generateReference($agentId, $rendezVousUserId, $contactId = null, $meetingId = null)
     {
@@ -103,5 +115,18 @@ class HelperFunction extends AbstractExtension
             //throw $th;
             return '';
         }
+    }
+
+    public function getLocalizedMonth($date, string $locale = 'fr_FR'): string
+    {
+        // Convert string to DateTime if necessary
+        if (!$date instanceof DateTimeInterface) {
+            $date = new DateTime($date);
+        }
+
+        $formatter = new IntlDateFormatter($locale, IntlDateFormatter::FULL, IntlDateFormatter::NONE);
+        $formatter->setPattern('MMMM'); // Full month name
+        
+        return ucfirst($formatter->format($date)); // Capitalize first letter
     }
 }

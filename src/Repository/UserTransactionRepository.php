@@ -108,6 +108,29 @@ class UserTransactionRepository extends ServiceEntityRepository
         $qb = $this->getHistoryQuery($user, $secteurIds, $param);
         return $qb->getQuery()->getResult();
     }
+    
+
+    public function getStatRemunerationAnnualMonthly($agentID,$secteurIds,$dateRef){
+        $qb = $this->createQueryBuilder('u')
+            ->select(
+            'COALESCE(SUM(CASE WHEN YEAR(u.createdAt) = YEAR(:now) THEN u.amount ELSE 0 END), 0) AS total_year',
+            'COALESCE(SUM(CASE WHEN YEAR(u.createdAt) = YEAR(:now) AND MONTH(u.createdAt) = MONTH(:now) THEN u.amount ELSE 0 END), 0) AS total_month',
+        )
+        ->leftJoin('u.secteur', 's')
+        ->setParameter('now', $dateRef)
+        ->andWhere('u.type = :type')
+        ->setParameter('type', UserTransaction::TYPE_REMUNERATION)
+        ->andWhere('u.user = :user')
+        ->setParameter('user', $agentID);
+
+        
+        if ($secteurIds) {
+            $qb->andWhere('s.id in (:secteurIds)')
+                ->setParameter('secteurIds', $secteurIds);
+        }
+
+        return $qb->getQuery()->getSingleResult();
+    }
 
 
 
