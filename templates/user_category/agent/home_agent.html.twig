@@ -22,7 +22,7 @@
     {% set stripe_defaultButton =  "S'abonner (" ~ planPrice ~ " €)" %}
 
     <div class="container-page">
-        <h1 class="choix-secteur-primary mt-3">Bienvenue sur Pixelforce</h1>    
+        <h1 class="choix-secteur-primary mt-3">Bonjour {{app.user.prenom|default(' ')}}! Bienvenue sur Pixelforce</h1>    
 
         {% if app.session.get('enabledContent') == true %}
             {% if app.request.get('stripe_checkout') == 'successfully' %}
