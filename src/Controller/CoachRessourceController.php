@@ -72,7 +72,7 @@ class CoachRessourceController extends AbstractController
         if ($form->isSubmitted()) {
             $filesStr = trim($request->request->get('files', ''));
             if ($filesStr) {
-                $files = json_decode($filesStr);
+                $files = json_decode($filesStr, true);
             }
             if ($form->isValid()) {
                 try {
@@ -111,7 +111,7 @@ class CoachRessourceController extends AbstractController
         if ($form->isSubmitted()) {
             $filesStr = trim($request->request->get('files', ''));
             if ($filesStr) {
-                $files = json_decode($filesStr);
+                $files = json_decode($filesStr, true);
             }
             if ($form->isValid()) {
                 try {
