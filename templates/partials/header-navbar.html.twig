@@ -38,6 +38,7 @@
         {% set isDemandeDevis = typeSecteurId == constant('App\\Entity\\TypeSecteur::DEMANDE_DEVIS') %}
         {% set isEcommerce = typeSecteurId == constant('App\\Entity\\TypeSecteur::ECOMMERCE') %}
         {% set statRemuneration = dataStat.statRemuneration %}
+        {% set rankInfo = dataStat.rankInfo %}
 
        
         <ul class="d-none d-xl-block">
@@ -221,6 +222,14 @@
                                     <span class="user-status header-user">{{ app.user.prenom|default(' ') }}</span>
                                     <span class="user-name header-user" >{{ app.user.nom }}</span>
                                 </li>
+                                {% if is_granted('ROLE_AGENT') and app.session.get('secteurId')  %}
+                                    {% if dataStat.rankInfo and dataStat.rankInfo.rankName %}
+                                        <li class="d-flex p-0">
+                                            <span class="user-status header-user"> {{ dataStat.rankInfo.rankName }} <i class="fas fa-trophy"></i></span>
+                                        </li>
+                                    {% endif %}
+                                {% endif %}
+                                
                                 {% if app.session.get('secteurId') == secteurDigitalId %}
                                 <li class="d-flex p-0">
                                     <span class="">

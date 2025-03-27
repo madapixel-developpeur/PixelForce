@@ -4,6 +4,7 @@ namespace App\Services;
 
 use DateTime;
 use App\Entity\User;
+use App\Entity\RankHistory;
 use App\Entity\UserTransaction;
 use App\Repository\UserRepository;
 use App\Repository\SecteurRepository;
@@ -243,17 +244,27 @@ class RemunerationService
         );
         $result = json_decode($response->getContent(), true);
         $secteurDigital = $this->secteurRepository->find($_ENV['SECTEUR_DIGITAL_ID']);
+        $lastDayOfTheMonth = (clone $dateOfTheMonthToCheck)->modify('last day of this month');
         foreach ($result as $userData) {
             $user = $this->userRepository->find($userData['id']);
-            $remuneration = new UserTransaction();
-            $remuneration->setAmount($userData['amount']);
-            $remuneration->setUser($user);
-            $remuneration->setCreatedAt(new \DateTimeImmutable());
-            $remuneration->setStatus(UserTransaction::STATUS_VALID);
-            $remuneration->setSortie(false);
-            $remuneration->setType(UserTransaction::TYPE_REMUNERATION);
-            $remuneration->setSecteur($secteurDigital);
-            $this->entityManager->persist($remuneration);
+            if($userData['amount'] > 0){
+                $remuneration = new UserTransaction();
+                $remuneration->setAmount($userData['amount']);
+                $remuneration->setUser($user);
+                $remuneration->setCreatedAt(new \DateTimeImmutable());
+                $remuneration->setStatus(UserTransaction::STATUS_VALID);
+                $remuneration->setSortie(false);
+                $remuneration->setType(UserTransaction::TYPE_REMUNERATION);
+                $remuneration->setSecteur($secteurDigital);
+                $this->entityManager->persist($remuneration);
+            }
+            $rankHistory = new RankHistory();
+            $rankHistory->setUserRank($userData['rank']);
+            $rankHistory->setRankName($userData['rank_name']);
+            $rankHistory->setUser($user);
+            $rankHistory->setSecteur($secteurDigital);
+            $rankHistory->setCreatedAt($lastDayOfTheMonth);
+            $this->entityManager->persist($rankHistory);
         }
         return true;
     }
@@ -268,7 +279,7 @@ class RemunerationService
                 'filleul' => $this->userRepository->getFilsJusqueNiveau($user->getId(),$limitLevel,true)
             ];
         }
-        $chunks = array_chunk($arrayWithFilleulData, 100);
+        $chunks = array_chunk($arrayWithFilleulData, 200);
         try {
             $this->entityManager->beginTransaction();
             foreach ($chunks as $chunk) {

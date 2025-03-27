@@ -11,4 +11,5 @@ class Constants {
     public const SEP_OR = "OR";
 
     public const PORTFOLIO_FOLDER = "professionnel/portfolio";
+    public const MIN_RANK_MEEETING = 1;
 }

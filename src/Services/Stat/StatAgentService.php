@@ -13,6 +13,7 @@ use App\Services\RemunerationService;
 use App\Services\ConfigSecteurService;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\ResultSetMapping;
+use App\Repository\RankHistoryRepository;
 use App\Repository\UserTransactionRepository;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
@@ -30,7 +31,8 @@ class StatAgentService
         private UserTransactionRepository $userTransactionRepository,
         private ConfigSecteurService $configSecteurService,
         private AgentService $agentService,
-        private UserRepository $userRepository
+        private UserRepository $userRepository,
+        private RankHistoryRepository $rankHistoryRepository,
     ) {
         $this->entityManager = $entityManager;
         $this->remunerationService = $remunerationService;
@@ -295,15 +297,32 @@ class StatAgentService
         }
     }
 
+    public function getUserCurrentRank(User $user,DateTime $dateRef,Secteur $secteur){
+        $rankInfo = $this->rankHistoryRepository->getUserCurrentRank($user,$dateRef,$secteur);
+        if(!$rankInfo){
+            return [
+                'rank' => 1,
+                'rankName' => '',
+            ];
+        }
+        return [
+            'rank' => $rankInfo->getUserRank(),
+            'rankName' => $rankInfo->getRankName(),
+        ];
+    }
+
     public function getAgentStat(User $agent, Secteur $secteur)
     {
         $statDigital = null;
         $statFinance = null;
+        $rankInfo = null;
         if ($secteur->getId() == $this->parameterBag->get('secteur_finance_id')) {
             $statFinance = $this->getStatFinance($agent->getEmail());
         } elseif ( $secteur->getId() == $this->parameterBag->get('secteur_digital_id')) {
             // if ($secteur->getId() == $_ENV['SECTEUR_DIGITAL_ID']) {
             $statDigital = $this->getGlobalStat($agent->getId(), $secteur->getId(),new DateTime());
+            $lastDayOfLastMonth = (new DateTime('first day of last month'))->modify('last day of this month');
+            $rankInfo = $this->getUserCurrentRank($agent,$lastDayOfLastMonth,$secteur);
             // }
         }else{
             $statDigital = $this->getStat($agent->getId(), $secteur->getId());
@@ -323,7 +342,8 @@ class StatAgentService
             'chiffreAffaireTotal' => $chiffreAffaireTotal,
             'soldeRemuneration' => $soldeRemuneration,
             'nbVentesTotal' => $nbVentesTotal,
-            'statRemuneration' => $statRemuneration 
+            'statRemuneration' => $statRemuneration ,
+            'rankInfo' => $rankInfo
         ];
     }
 

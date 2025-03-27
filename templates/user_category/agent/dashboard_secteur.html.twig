@@ -182,9 +182,11 @@
                                                     </div>
                                                     
                                                 
-                                                    <div class="px-2 buttons py-2">
-                                                    <a href="{{ expert.lienCalendly}}" target="_blank" class="btn btn-primary w-100" href>Réserver un rendez-vous</a>
-                                                    </div>
+                                                        <div class="px-2 buttons py-2">
+                                                    {% if dataStat.rankInfo and dataStat.rankInfo.rank > constant('App\\Util\\Search\\Constants::MIN_RANK_MEEETING')  %}
+                                                        <a href="{{ expert.lienCalendly}}" target="_blank" class="btn btn-primary w-100" href>{{  dataStat.rankInfo.rank }}Réserver un rendez-vous</a>
+                                                    {% endif %}
+                                                        </div>
                                                     
                                                     
                                                 </div> 
@@ -310,7 +312,7 @@
                                         <a class="p-2 text-white fs-5" href="#" onclick="copyLink('{{configSecteurService.getRefUrl(generateReference(app.user.id,app.user.id)) }}','Lien de référence {{ generateReference(app.user.id,app.user.id) }} copié avec succès') "><i class="fa-solid fa-copy"></i></a> 
                                         </h6>
                                         
-                                        <a target="_blank" class="vision-button w-100 text-center rounded-3 mt-4 mb-4 mb-md-0 p-3 " href="{{configSecteurService.getRefUrl(generateReference(app.user.id,app.user.id))}}">Explorez nos offres</a>    
+                                        <a target="_blank" class="vision-button w-100 text-center rounded-3 mt-4 mb-4 mb-md-0 p-3 " href="{{configSecteurService.getRefUrl(generateReference(app.user.id,app.user.id))}}">Explorez nos off  </a>    
                                         {% elseif secteurAgent.id == secteur_finance_id %}
                                         
                                         <h6 class="mt-3">
