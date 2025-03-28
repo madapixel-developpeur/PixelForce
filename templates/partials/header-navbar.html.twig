@@ -22,6 +22,7 @@
           
             
         </ul>
+        {% if not app.session.has('secteurId') %}
         <ul class="nav navbar-nav d-none d-xl-block">
             <li class="nav-item  pixelforce-logo ms-3">
                <div  class="text-center text-muted  d-flex align-items-center justify-content-center ">
@@ -30,6 +31,7 @@
                 </div> 
             </li>
         </ul>
+        {% endif %}
         {% if is_granted('ROLE_AGENT') and app.session.get('secteurId') %}
         {% set statDigitalGlobalVariable = dataStat.statDigital %}
         {% set nbVentesTotalGlobalVariable = dataStat.nbVentesTotal %}
@@ -130,6 +132,24 @@
                         </div>
                     </div>
                 </div>
+
+                    {% if is_granted('ROLE_AGENT') and app.session.get('secteurId')  %}
+                        {% if dataStat.rankInfo and dataStat.rankInfo.rankName %}
+                            <div class="col-auto">
+                                <div class="d-flex flex-row  align-items-center mx-2">
+                                    <i class="fas fa-medal fa-2x new-pixelforce-color" > </i>
+                                    <div class="my-auto ms-2">
+                                        <h4 class="card-text font-small-1 mb-0 text-dark-template d-none d-xl-block">Statut</h4>
+                                        <h6 class="fw-bolder mb-0 ">
+                                            {{ dataStat.rankInfo.rankName }} 
+                                        </h6>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endif %}
+                 
                 {% else %}
                 {% set statFinance = dataStat.statFinance %}
                 {% if statFinance.total_invested_number is defined %}
@@ -225,13 +245,7 @@
                                     <span class="user-status header-user">{{ app.user.prenom|default(' ') }}</span>
                                     <span class="user-name header-user" >{{ app.user.nom }}</span>
                                 </li>
-                                {% if is_granted('ROLE_AGENT') and app.session.get('secteurId')  %}
-                                    {% if dataStat.rankInfo and dataStat.rankInfo.rankName %}
-                                        <li class="d-flex p-0">
-                                            <span class="user-status header-user"> {{ dataStat.rankInfo.rankName }} <i class="fas fa-trophy"></i></span>
-                                        </li>
-                                    {% endif %}
-                                {% endif %}
+                                
                                 
                                 {% if app.session.get('secteurId') == secteurDigitalId %}
                                 <li class="d-flex p-0">

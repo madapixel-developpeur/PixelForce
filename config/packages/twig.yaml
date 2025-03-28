@@ -23,6 +23,7 @@ twig:
         catalogues_base_url: '%env(CATALOGUES_BASE_URL)%'
         platform_name: '%env(PLATFORM_NAME)%' 
         formationThemeRepository: '@App\Repository\FormationThemeRepository'
+        asset_version: 'v=202503281525'
         
     paths:
         # pour spécifier le namespace des image. Exemple d'utilisation : email.image('@images/logo.png')
