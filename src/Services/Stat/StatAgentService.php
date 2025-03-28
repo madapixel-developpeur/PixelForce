@@ -302,7 +302,7 @@ class StatAgentService
         if(!$rankInfo){
             return [
                 'rank' => 1,
-                'rankName' => '',
+                'rankName' => "Apporteur d'affaire",
             ];
         }
         return [
