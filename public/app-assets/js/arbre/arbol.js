@@ -25,7 +25,7 @@
       nodePadding: 9,
       collapseCircleRadius: 7,
       nodeHeight: 100,
-      nodeWidth: 230,
+      nodeWidth: 280,
       duration: 750,
       rootNodeTopMargin: 20,
       minMaxZoomProportions: [0.05, 3],
@@ -232,8 +232,11 @@
         .attr("dy", ".25em")
         .attr("text-anchor", "left")
         .text(function(d) {
-          let text = d.name.trim();
-          return text;
+          var positionFullName =  d.name.substring(0,25);
+          if(positionFullName.length<d.name.length){
+            positionFullName = positionFullName.substring(0,22)+'...'
+          }
+          return positionFullName;
         })
         .call(wrap, attrs.nodeWidth);
 
