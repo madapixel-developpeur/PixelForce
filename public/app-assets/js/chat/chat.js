@@ -267,6 +267,7 @@ myChatApp.controller('chatUserList', function ($scope, chat) {
         };
         if($scope.messageType === null){}
         else {
+            httpParamsNotFlattened.filter.operator = 'and';
             httpParamsNotFlattened.filter.filters = [
                 {property: propertyNotViewed, cond: $scope.messageType > 0 ? 'notEqual' : 'equal', value: 1}
             ];
