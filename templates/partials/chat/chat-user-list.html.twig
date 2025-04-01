@@ -9,6 +9,17 @@
     </div>
   </div>
   <div class="chat-user-list-main">
+  <ul class="nav nav-tabs">
+      <li class="nav-item">
+        <a class="nav-link  {{ "{{messageType ? '' : 'active' }}" }}" ng-click="setNewMessageType(null)" href="#">Tous</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {{ "{{(messageType && messageType < 0)  ? 'active' : '' }}" }}" href="#" ng-click="setNewMessageType(-1)">Non Lus</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {{ "{{(messageType && messageType > 0) ? 'active' : '' }}" }}" href="#" ng-click="setNewMessageType(1)">Lus</a>
+      </li>
+    </ul>
     <div style="height:100%;" ng-if="isLoading">
       <div class="d-flex align-items-center justify-content-center" style="height: 100%;">
         <i class="ti ti-loader fs-2 my-loader"></i>

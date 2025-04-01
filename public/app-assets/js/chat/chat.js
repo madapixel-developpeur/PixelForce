@@ -251,7 +251,7 @@ myChatApp.controller('chatUserList', function ($scope, chat) {
     $scope.isLoadingMore = false;
     $scope.data = [];
     $scope.total = 0;
-    console.log('hereeeeeeeeeeee')
+    $scope.messageType = null;
     $scope.addConversation = function () {
         $scope.$parent.changeView('SEARCH');
     }
@@ -259,11 +259,19 @@ myChatApp.controller('chatUserList', function ($scope, chat) {
     $scope.fetchData = function (newPage = 1) {
         if (newPage == 1) $scope.isLoading = true;
         else $scope.isLoadingMore = true;
-        const httpParams = chat.flattenObject({
+        const propertyNotViewed = "((case when conversation.createdByUserId = :userId then conversation.lastUser1View else conversation.lastUser2View end) is null or (case when conversation.createdByUserId = :userId then conversation.lastUser1View else conversation.lastUser2View end) < lastMessage.createdAt)";
+        const httpParamsNotFlattened = {
             pagination: { page: newPage, nbrPerPage: $scope.nbrPerPage },
             sort: [{ property: 'coalesce(lastMessage.createdAt, conversation.createdAt)', order: 'DESC' }],
             filter: {}
-        });
+        };
+        if($scope.messageType === null){}
+        else {
+            httpParamsNotFlattened.filter.filters = [
+                {property: propertyNotViewed, cond: $scope.messageType > 0 ? 'notEqual' : 'equal', value: 1}
+            ];
+        }
+        const httpParams = chat.flattenObject(httpParamsNotFlattened);
         chat.findConversations(httpParams)
             .then(result => {
                 $scope.$apply(() => {
@@ -290,6 +298,11 @@ myChatApp.controller('chatUserList', function ($scope, chat) {
 
     $scope.conversationSelected = function (conversationIdSelected) {
         $scope.$parent.setConversationId(conversationIdSelected);
+    }
+
+    $scope.setNewMessageType = function (newMessageType) {
+        $scope.messageType = newMessageType;
+        $scope.fetchData();
     }
 
     $scope.isConversationCreator = function (conversation) {
