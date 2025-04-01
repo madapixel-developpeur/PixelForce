@@ -259,7 +259,7 @@ myChatApp.controller('chatUserList', function ($scope, chat) {
     $scope.fetchData = function (newPage = 1) {
         if (newPage == 1) $scope.isLoading = true;
         else $scope.isLoadingMore = true;
-        const propertyNotViewed = "((case when conversation.createdByUserId = :userId then conversation.lastUser1View else conversation.lastUser2View end) is null or (case when conversation.createdByUserId = :userId then conversation.lastUser1View else conversation.lastUser2View end) < lastMessage.createdAt)";
+        const propertyNotViewed = "(((case when conversation.createdByUserId = :userId then conversation.lastUser1View else conversation.lastUser2View end) is null or (case when conversation.createdByUserId = :userId then conversation.lastUser1View else conversation.lastUser2View end) < lastMessage.createdAt) and conversation.lastMessageId is not null)";
         const httpParamsNotFlattened = {
             pagination: { page: newPage, nbrPerPage: $scope.nbrPerPage },
             sort: [{ property: 'coalesce(lastMessage.createdAt, conversation.createdAt)', order: 'DESC' }],
