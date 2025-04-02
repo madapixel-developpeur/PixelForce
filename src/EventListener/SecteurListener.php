@@ -37,6 +37,8 @@ class SecteurListener
         $excludePaths = [
             $this->urlGenerator->generate('agent_home'),
             '/agent/secteur',
+            '/myapi',
+            '/chatutil'
         ];
 
         foreach($excludePaths as $path){
