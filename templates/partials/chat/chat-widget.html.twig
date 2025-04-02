@@ -1,12 +1,12 @@
-<div ng-app="myChatApp" class="custom-chat wrapper d-none" ng-controller="chatWidget">
-  <div class="chat-box" ng-show="visible">
+<div ng-app="myChatApp" class="custom-chat wrapper {{'{{expanded ? \'expanded\': \'\'}}'}}" ng-controller="chatWidget">
+  <div class="chat-box " ng-show="visible">
         <div ng-show="currentView == 'LIST'" style="height: 100%;">
             {% include '/partials/chat/chat-user-list.html.twig' %}
         </div>
         <div ng-show="currentView == 'SEARCH'" style="height: 100%;">
             {% include '/partials/chat/chat-user-search-list.html.twig' %}
         </div>
-        <div ng-show="currentView == 'USER'" style="height: 100%;">
+        <div ng-show="currentView == 'USER' || (expanded && !!currentView)" style="height: 100%;">
             {% include '/partials/chat/chat-user.html.twig' %}
         </div>
   </div>

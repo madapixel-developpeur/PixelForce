@@ -170,6 +170,7 @@ myChatApp.controller('chatWidget', function ($scope, socket, chat) {
     $scope.currentView = null; // in [LIST, USER, SEARCH]
     $scope.conversationId = null;
     $scope.data = [];
+    $scope.expanded = true;
     document.querySelector('div[ng-app="myChatApp"]').classList.remove('d-none');
     $scope.userId = window.userId;
     $scope.toggleChat = function () {
@@ -194,12 +195,12 @@ myChatApp.controller('chatWidget', function ($scope, socket, chat) {
     $scope.setConversationId = function (conversationId) {
         $scope.conversationId = conversationId;
         console.log('$scope.conversationId', $scope.conversationId)
-        $scope.changeView('USER');
+        $scope.changeView('USER', $scope.expanded);
     }
 
-    $scope.changeView = function (newView) {
-        $scope.currentView = newView;
-        $scope.$broadcast('changeView', { currentView: $scope.currentView });
+    $scope.changeView = function (newView, doNotChangeValue = false) {
+        if(!doNotChangeValue) $scope.currentView = newView;
+        $scope.$broadcast('changeView', { currentView: newView });
     }
 
     $scope.viewConversationGlobal = function (conversationId) {

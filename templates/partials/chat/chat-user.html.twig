@@ -3,17 +3,17 @@
     <div style="height:100%;" ng-if="conversationId">
       <div class="d-flex align-items-center">
 
-        <i class="ti ti-chevron-left fs-2" style="cursor: pointer;" ng-click="goBack()"></i>
+        <i class="ti ti-chevron-left fs-2" style="cursor: pointer;" ng-if="!expanded"  ng-click="goBack()"></i>
             <img src="{{asset('assets/img/avatar.webp')}}"  class="chat-avatar ms-2 me-1" ng-if="!isHeaderLoading"/>
-          <h3 class="operator-name" style="color: #fff;" ng-if="!isHeaderLoading">
+          <h4 class="operator-name" style="color: #fff;" ng-if="!isHeaderLoading">
             {{"{{isConversationCreator() ? conversation.inviteeUser.firstname + ' ' + conversation.inviteeUser.lastname :
             conversation.createdByUser.firstname + ' ' + conversation.createdByUser.lastname }}"}}
-          </h3>
+          </h4>
         
           <i class="ti ti-loader fs-2 my-loader ms-2 me-1" ng-if="isHeaderLoading"></i>
         </div>
     </div>
-    <div style="height:100%;" ng-if="!conversationId">
+    <div style="height:100%;" ng-if="!conversationId && !expanded">
       <div class="d-flex align-items-center">
         <i class="ti ti-chevron-left fs-2" style="cursor: pointer;" ng-click="goBack()"></i>
       </div>
