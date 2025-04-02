@@ -30,6 +30,7 @@ security:
     myapi:
       pattern:   ^/myapi
       stateless: true
+      provider: app_user_provider
       jwt: ~
 
     main:
