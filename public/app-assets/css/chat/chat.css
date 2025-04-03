@@ -137,9 +137,33 @@
 }
 
 
-.custom-chat .chat-user-list .chat-user-avatar {
-    width: 50px;
+.custom-chat .chat-user-avatar-wrapper {
+    width: 60px;
+    padding: 4px;
     height: auto;
+    border-radius: 50%;
+    border: 2px solid #CACDD0;
+    height: 60px;    
+}
+
+.custom-chat .chat-user-avatar-wrapper.revendeur{
+    border-color: #de74a4;
+}
+
+.custom-chat .chat-user-avatar-wrapper.professionnel{
+    border-color: #fa7e1e;
+}
+
+.custom-chat .chat-user-avatar-wrapper.both{
+    border-color: #962fbf;
+}
+
+
+
+.custom-chat .chat-user-avatar {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
     border-radius: 50%;
 }
 
@@ -200,11 +224,11 @@
 }
 
 
-.custom-chat .chat-user-search-list .chat-user-avatar {
+/* .custom-chat .chat-user-search-list .chat-user-avatar {
     height: 45px;
     width: auto;
     border-radius: 50%;
-}
+} */
 
 .custom-chat .chat-user-search-list .chat-one-user {
     cursor: pointer;

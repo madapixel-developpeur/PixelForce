@@ -27,7 +27,11 @@
 
       <div ng-repeat="user in data" class="d-flex p-3 chat-one-user new"
         ng-click="addConversation(user)">
-        <img src="{{ asset('assets/img/avatar.webp') }}" class="chat-user-avatar" />
+        <div class="chat-user-avatar-wrapper {{ "{{getAvatarClassUser(user)}}" }}">
+          <img ng-src="{{ '{{\'/user/avatar/\' + user.userId}}' }}"
+          onerror='this.onerror=null; this.src="{{ asset('assets/img/avatar.webp') }}"'
+           class="chat-user-avatar" />
+          </div>
         <div class="flex-grow-1 d-flex flex-column justify-content-between ms-2">
           <div class="d-flex justify-content-between">
             <span><b>{{ "{{user.firstname}} {{user.lastname}}" }}</b></span>

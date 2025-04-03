@@ -179,6 +179,24 @@ myChatApp.controller('chatWidget', function ($scope, socket, chat) {
             }
         });
     })
+
+    $scope.getAvatarClassRoles = function (roles){
+        roles = roles ?? [];
+        if (roles.includes("ROLE_REVENDEUR") && roles.includes("ROLE_PROFESSIONNEL")) {
+            return 'both';
+        } else if(roles.includes("ROLE_PROFESSIONNEL")) {
+            return 'professionnel';
+        } else if(roles.includes("ROLE_REVENDEUR")) {
+            return 'revendeur';
+        }
+        return '';
+        
+    }
+
+    $scope.getAvatarClassUser = function (user){
+        return $scope.getAvatarClassRoles(user.data?.roles);
+    }
+
     $scope.toogleExpanded = function (){
         const newExpanded = !$scope.expanded;
         if(newExpanded && $scope.currentView === 'USER'){
@@ -277,6 +295,12 @@ myChatApp.controller('chatUserList', function ($scope, chat) {
     $scope.isAnswered = function (conversation) {
         return conversation.lastMessage && conversation.lastMessage.senderUser.userIdApplication == window.userId;
         
+    }
+
+    $scope.getAvatarClassConversation = function (conversation){
+        let user = conversation.createdByUser;
+        if($scope.isConversationCreator(conversation)) user = conversation.inviteeUser;
+        return $scope.$parent.getAvatarClassUser(user);
     }
 
     $scope.fetchData = function (newPage = 1) {

@@ -37,7 +37,11 @@
         class="d-flex p-3 chat-one-user {{ "{{isNewMessage(conversation) ? 'new' : ''}}" }} {{ "{{conversation.id == conversationId ? 'selected' : ''}}" }}"
         ng-click="conversationSelected(conversation.id)" ng-if="displayConversation(conversation)">
         <div class="d-flex align-items-center justify-content-center flex-column" style="width: 80px;">
-          <img src="{{ asset('assets/img/avatar.webp') }}" class="chat-user-avatar" />
+          <div class="chat-user-avatar-wrapper {{ "{{getAvatarClassConversation(conversation)}}" }}">
+          <img ng-src="{{ '{{\'/user/avatar/\' + (isConversationCreator(conversation) ? conversation.inviteeUser.userIdApplication : conversation.createdByUser.userIdApplication)}}' }}"
+          onerror='this.onerror=null; this.src="{{ asset('assets/img/avatar.webp') }}"'
+           class="chat-user-avatar" />
+          </div>
           <span class="fs-6 profile-name"
             ng-if="isConversationCreator(conversation)">{{ "{{conversation.inviteeUser.data.roleLabel | truncate: 15}}" }}</span>
           <span class="fs-6 profile-name"

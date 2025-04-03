@@ -4,7 +4,9 @@
       <div class="d-flex align-items-center">
 
         <i class="ti ti-chevron-left fs-2" style="cursor: pointer;" ng-if="!expanded"  ng-click="goBack()"></i>
-            <img src="{{asset('assets/img/avatar.webp')}}"  class="chat-avatar ms-2 me-1" ng-if="!isHeaderLoading"/>
+            <img ng-src="{{ '{{\'/user/avatar/\' + (isConversationCreator() ? conversation.inviteeUser.userIdApplication : conversation.createdByUser.userIdApplication)}}' }}"
+            onerror='this.onerror=null; this.src="{{ asset('assets/img/avatar.webp') }}"'
+              class="chat-avatar ms-2 me-1" ng-if="!isHeaderLoading"/>
           <h4 class="operator-name" style="color: #fff;" ng-if="!isHeaderLoading">
             {{"{{isConversationCreator() ? conversation.inviteeUser.firstname + ' ' + conversation.inviteeUser.lastname :
             conversation.createdByUser.firstname + ' ' + conversation.createdByUser.lastname }}"}}
