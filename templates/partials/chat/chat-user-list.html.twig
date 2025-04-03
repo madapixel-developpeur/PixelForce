@@ -53,6 +53,7 @@
               <span class="badge rounded-pill bg-light-danger" ng-if="isNewMessage(conversation)">
                 1
               </span>
+              <img src="{{ asset('assets/img/answer.png') }}" style="width: 20px;" ng-if="isAnswered(conversation)"  />
             </div>
             <div class="d-flex justify-content-between" ng-if="isConversationCreator(conversation)">
               <span style="font-size: 0.65rem;">{{ "{{conversation.inviteeUser.email | truncate: 30}}" }}</span>

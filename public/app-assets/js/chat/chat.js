@@ -274,6 +274,11 @@ myChatApp.controller('chatUserList', function ($scope, chat) {
         $scope.$parent.changeView('SEARCH');
     }
 
+    $scope.isAnswered = function (conversation) {
+        return conversation.lastMessage && conversation.lastMessage.senderUser.userIdApplication == window.userId;
+        
+    }
+
     $scope.fetchData = function (newPage = 1) {
         if (newPage == 1) $scope.isLoading = true;
         else $scope.isLoadingMore = true;
