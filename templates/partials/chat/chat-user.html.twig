@@ -20,14 +20,19 @@
     </div>
 
   </div>
-  <div class="chat-box-main" ng-if="isLoading">
+  <div class="chat-box-main" ng-if="conversationId && isLoading">
     <div style="height:100%;" >
       <div class="d-flex align-items-center justify-content-center" style="height: 100%;">
         <i class="ti ti-loader fs-2 my-loader"></i>
       </div>
     </div>
    </div>
-    <div class="chat-box-main" ng-if="!isLoading">
+   <div style="height:100%; background-color: #fff;" ng-if="!conversationId">
+      <div class="d-flex align-items-center justify-content-center" style="height: 100%;">
+        <i class="ti ti-message" style="font-size: 70px; color: #84DCCF;"></i>
+      </div>
+    </div>
+    <div class="chat-box-main" ng-if="conversationId && !isLoading">
       <div class="chat-message-bottom" id="bottom"></div>
         <div ng-repeat="message in data" class="chat-message {{"{{message.senderUser.userIdApplication != userId ? 'chat-message-received' : ''}}"}} {{"{{message.senderUser.userIdApplication == userId ? 'chat-message-sent' : ''}}"}}">
           <div style="position: relative;">
@@ -51,7 +56,7 @@
         <i class="ti ti-loader fs-2 my-loader" ng-if="isLoadingMore"></i>
       </div>
     </div>
-  <div class="chat-box-footer">
+  <div class="chat-box-footer" ng-if="conversationId">
     
       <div class="d-flex align-items-center px-3 py-2" style="height: 100%;" ng-if="!isLoading && !isHeaderLoading">
     <textarea type="text" class="chat-input-text flex-grow-1 me-2" placeholder="Écrivez ici..." ng-model="ctrl.message"></textarea>

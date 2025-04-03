@@ -171,8 +171,14 @@ myChatApp.controller('chatWidget', function ($scope, socket, chat) {
     $scope.conversationId = null;
     $scope.data = [];
     $scope.expanded = false;
-    document.querySelector('div[ng-app="myChatApp"]').classList.remove('d-none');
     $scope.userId = window.userId;
+    $(document).ready(function () {
+        window.addEventListener('resize', () => {
+            if(window.innerWidth < 910 && $scope.expanded){
+                $scope.toogleExpanded();
+            }
+        });
+    })
     $scope.toogleExpanded = function (){
         const newExpanded = !$scope.expanded;
         if(newExpanded && $scope.currentView === 'USER'){
