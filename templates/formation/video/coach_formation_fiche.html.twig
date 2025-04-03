@@ -25,7 +25,14 @@
 </div>
     <div class="p-5 pb-5 mb-5 bg-white border position-relative" id="form-formation">
         <h3 class="mb-3"><i class="fa fa-book-open"></i> Fiche formation</h3>
-        {{ form_start(form,{attr:{id:'formation-fiche', action: path('coach_formation_fiche', {id:formation.id})}}) }}
+        {{ form_start(form, {
+            'attr': {
+                'id': 'formation-fiche',
+                'action': path('coach_formation_fiche', {id: formation.id}),
+                'enctype': 'multipart/form-data'  
+            }
+        }) }}
+
         <input type="hidden" id="inputVideo" class="hiddenVideoData">
         <div class="row">
             <div class="col-12 col-md-8">
@@ -48,7 +55,7 @@
                     <div class="row mt-4">
                         <div class="col-12 col-md-6">
                             <strong>Etat</strong> : {{ formation.brouillon ? 'Brouillon' : 'Créée' }} <br>
-                            <strong>Catégorie</strong> : {{ formation.categorieFormation.nom  }}
+                            <strong>Catégorie</strong> : {{ formation.categorieFormation ? formation.categorieFormation.nom : ''  }}
                             <hr>
                             {{ form_row(form.brouillon) }}
                         </div>
@@ -111,7 +118,7 @@
                                 </div>
                             {% endif %}
                             <div class="my-3" id="formation-document">
-                                <buton class="btn btn-primary btn-sm" id="btn-add-document"><i class="fa fa-plus"></i> Ajouter un document</buton>
+                                <button class="btn btn-primary btn-sm btn-add" id="btn-add-document"><i class="fa fa-plus"></i> Ajouter un document</button>
                                 <div id="document-upload-name" class="mt-3"></div>
                             </div>
                         </div>
@@ -141,11 +148,14 @@
                                 </div>
                             {% endif %}
                             <div class="my-3" id="formation-audio">
-                                <buton class="btn btn-primary btn-sm" id="btn-add-audio"><i class="fa fa-plus"></i> Ajouter un audio</buton>
+                                <button class="btn btn-primary btn-sm btn-add" id="btn-add-audio"><i class="fa fa-plus"></i> Ajouter un audio</button>
                                 <div id="audio-upload-name" class="mt-3"></div>
                             </div>
                         </div>
                     </div>
+                    <div class="media-container">
+                    </div>
+                    <input type="hidden" name="video_id" id='video_id'>
                 </div>
             </div>
         </div>
@@ -166,8 +176,9 @@
 {% block javascripts %}
     {{ parent() }}
     
-    {{ encore_entry_script_tags('formationForm')}}
-    {{ encore_entry_script_tags('ckeditorForm')}}
+    {# {{ encore_entry_script_tags('formationForm')}} #}
+    {{ encore_entry_script_tags('formationFormScript')}}
+    {# {{ encore_entry_script_tags('ckeditorForm')}} #}
     <script>
         function toggleInputUrl(e)
         {

@@ -4,7 +4,13 @@
     <div class="p-5 pb-5 mb-5 bg-white border position-relative" id="form-formation">
         <h3 class="mb-3">Création d'une formation</h3>
         <input type="hidden" id="section"  value={{ section }}>
-        {{ form_start(form,{attr:{id:'formation', action:path('coach_formation_add',{ 'section' : section })}}) }}
+        {{ form_start(form, {
+            attr: {
+                id: 'formation',
+                action: path('coach_formation_add', { 'section': section }),
+                enctype: 'multipart/form-data'
+            }
+        }) }}
         <div class="row">
             <div class="col-12 col-md-8">
                 {{ form_row(form.titre) }}
@@ -56,6 +62,9 @@
                 </div>
             </div>
         </div>
+             <div class="media-container">
+        </div>
+        <input type="hidden" name="video_id" id='video_id'>
 
 
         {{ form_end(form) }}
@@ -64,8 +73,10 @@
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
-    {{ encore_entry_script_tags('formationForm')}}
-    {{ encore_entry_script_tags('ckeditorForm')}}
+    {# {{ encore_entry_script_tags('formationForm')}} #}
+    {# {{ encore_entry_script_tags('ckeditorForm')}} #}
+    {{ encore_entry_script_tags('formationFormScript')}}
+
     <script>
         function toggleInputUrl(e)
         {
