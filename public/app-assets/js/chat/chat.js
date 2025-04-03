@@ -178,6 +178,9 @@ myChatApp.controller('chatWidget', function ($scope, socket, chat) {
         if(newExpanded && $scope.currentView === 'USER'){
             $scope.changeView('LIST');
         }
+        if(!newExpanded && $scope.currentView === 'LIST' && $scope.conversationId){
+            $scope.changeView('USER');
+        }
         $scope.expanded = newExpanded;
     }
 
