@@ -458,6 +458,7 @@
 
     .custom-chat.expanded .chat-box > div:not(:last-child){
         width: 350px;
+        border-right: solid 1px #CACDD0;
     }
 
     .custom-chat.expanded .chat-box > div:last-child{
@@ -471,4 +472,19 @@
     .custom-chat.expanded .chat-user-search-list .chat-user-list-main {
         border-bottom-right-radius: 0;
     }
+}
+
+.custom-chat.expanded .chat-box > div{
+    position: relative;
+} 
+
+.custom-chat .chat-box .expand-btn{
+    color: #fff;
+    position: absolute;
+    top: 20px;
+    right: 10px;
+    cursor: pointer;
+    text-align: center;
+    font-size: 25px;
+    z-index: 2050;
 }

@@ -170,9 +170,17 @@ myChatApp.controller('chatWidget', function ($scope, socket, chat) {
     $scope.currentView = null; // in [LIST, USER, SEARCH]
     $scope.conversationId = null;
     $scope.data = [];
-    $scope.expanded = true;
+    $scope.expanded = false;
     document.querySelector('div[ng-app="myChatApp"]').classList.remove('d-none');
     $scope.userId = window.userId;
+    $scope.toogleExpanded = function (){
+        const newExpanded = !$scope.expanded;
+        if(newExpanded && $scope.currentView === 'USER'){
+            $scope.changeView('LIST');
+        }
+        $scope.expanded = newExpanded;
+    }
+
     $scope.toggleChat = function () {
         $scope.visible = !$scope.visible;
         if ($scope.visible) {
@@ -546,3 +554,6 @@ myChatApp.controller('chatUser', function ($scope, $q, chat) {
     });
 })
 
+$(document).ready(function (){
+    $('.custom-chat').removeClass('d-none');
+})
