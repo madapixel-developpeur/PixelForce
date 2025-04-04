@@ -72,7 +72,7 @@ myChatApp.service('chat', function ($http) {
     }
 
     this.findMessageById = async function (messageId) {
-        const url = `${window.baseUrlChat}/chat/message/${messageId}`;
+        const url = `${window.baseUrlChat}/chat/message/${messageId}/with-user`;
         const response = await $http({
             method: "GET",
             url,
@@ -266,7 +266,7 @@ myChatApp.controller('chatWidget', function ($scope, socket, chat) {
                 $scope.$broadcast('newMessage', { message: result });
                 const conversationIndex = $scope.data.findIndex((conversation) => conversation.id == result.conversationId);
 
-                if (conversationIndex < 0) {
+                if (conversationIndex < 0 && result.senderUser.userIdApplication !== window.userId) {
                     $scope.data = [...$scope.data, result.conversation];
                 }
 
@@ -309,7 +309,7 @@ myChatApp.controller('chatUserList', function ($scope, chat) {
         const propertyNotViewed = "(((case when conversation.createdByUserId = :userId then conversation.lastUser1View else conversation.lastUser2View end) is null or (case when conversation.createdByUserId = :userId then conversation.lastUser1View else conversation.lastUser2View end) < lastMessage.createdAt) and conversation.lastMessageId is not null)";
         const httpParamsNotFlattened = {
             pagination: { page: newPage, nbrPerPage: $scope.nbrPerPage },
-            sort: [{ property: 'coalesce(lastMessage.createdAt, conversation.createdAt)', order: 'DESC' }],
+            sort: [{ property: 'conversation.isGroup', order: 'DESC' }, { property: 'coalesce(lastMessage.createdAt, conversation.createdAt)', order: 'DESC' }],
             filter: {}
         };
         if($scope.messageType === null){}
@@ -357,6 +357,7 @@ myChatApp.controller('chatUserList', function ($scope, chat) {
         return conversation.createdByUser?.userIdApplication == window.userId;
     }
     $scope.displayConversation = function (conversation) {
+        if(conversation.isGroup) return true;
         let me = conversation.createdByUser;
         let other = conversation.inviteeUser;
         if (!$scope.isConversationCreator(conversation)) {
@@ -371,8 +372,12 @@ myChatApp.controller('chatUserList', function ($scope, chat) {
         return true;
     }
     $scope.isNewMessage = function (conversation) {
-        const lastUserView = $scope.isConversationCreator(conversation) ? conversation.lastUser1View : conversation.lastUser2View;
         if (!conversation.lastMessage) return false;
+        if(conversation.isGroup) {
+            return !conversation.userLastViews[0].lastUserView || conversation.userLastViews[0].lastUserView < conversation.lastMessage.createdAt;
+        }
+        const lastUserView = $scope.isConversationCreator(conversation) ? conversation.lastUser1View : conversation.lastUser2View;
+        
         return !lastUserView || lastUserView < conversation.lastMessage.createdAt;
     }
 
@@ -501,6 +506,7 @@ myChatApp.controller('chatUser', function ($scope, $q, chat) {
         // }, 2000);
     }
     $scope.addMessage = function (message) {
+        if($scope.data.find((item) => item.id === message.id)) return;
         $scope.data = [message, ...$scope.data];
         $scope.scrollToBottom()
     }
