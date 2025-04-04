@@ -45,4 +45,24 @@ class CodePromoRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+
+    public function checkCodePromoValidity($code,$countryCode,$secteurId){
+        $qb = $this->createQueryBuilder('c')
+            ->select('c')
+            ->leftJoin('c.codePromoCountries', 'cpc')
+            ->where('cpc.countryCode = :countryCode')  
+            ->andWhere('c.code = :code')  
+            ->andWhere('c.secteur = :secteur')  
+            ->andWhere(':now >= c.startDate')  
+            ->andWhere('c.endDate IS NULL OR :now <= c.endDate')  
+            ->setParameter('countryCode', $countryCode)  
+            ->setParameter('code', TRIM($code))  
+            ->setParameter('secteur', $secteurId)  
+            ->setParameter('now', (new \DateTime)->format('Y-m-d H:i:s'))  
+            ->orderBy('c.startDate', 'ASC')
+            ->setMaxResults(1);
+
+        return $qb->getQuery()->getOneOrNullResult();
+    }
+
 }

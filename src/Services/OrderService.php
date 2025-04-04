@@ -1,21 +1,24 @@
 <?php
 namespace App\Services;
 
-use App\Entity\BasketItem;
-use App\Entity\Mouvement;
+use DateTime;
+use Exception;
+use App\Entity\User;
 use App\Entity\Order;
+use App\Entity\Secteur;
+use App\Entity\Mouvement;
+use App\Entity\BasketItem;
 use App\Entity\OrderAddress;
 use App\Entity\OrderProduct;
-use App\Entity\Secteur;
-use App\Entity\User;
-use App\Repository\ConfigSecteurRepository;
 use App\Repository\OrderRepository;
 use App\Repository\ProduitRepository;
-use DateTime;
+use App\Repository\CodePromoRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
+use App\Repository\ConfigSecteurRepository;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Nucleos\DompdfBundle\Wrapper\DompdfWrapperInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class OrderService
@@ -33,7 +36,11 @@ class OrderService
     private $fileHandler;
     private $wrapper;
 
-    public function __construct(SessionInterface $session, TokenStorageInterface $tokenStorage, BasketService $basketService, EntityManagerInterface $entityManager, ProduitRepository $produitRepository, OrderRepository $orderRepository, StripeService $stripeService, StockService $stockService, ConfigSecteurService $configSecteurService, MailerService $mailerService, DompdfWrapperInterface $wrapper, FileHandler $fileHandler)
+    public function __construct(SessionInterface $session, TokenStorageInterface $tokenStorage, BasketService $basketService, EntityManagerInterface $entityManager, ProduitRepository $produitRepository, OrderRepository $orderRepository, StripeService $stripeService, StockService $stockService, ConfigSecteurService $configSecteurService, MailerService $mailerService, DompdfWrapperInterface $wrapper,
+        FileHandler $fileHandler,
+        private CodePromoRepository $codePromoRepository,
+        private HttpClientInterface $client
+    )
     {
         $this->session = $session;
         $this->tokenStorage = $tokenStorage;
@@ -169,5 +176,30 @@ class OrderService
         $pj_filepath = $this->fileHandler->saveBinary($binary, "Facture Pixelforce-Commande n°".$order->getId()." du ".date('Y-m-d-H-i-s').'.pdf', $directory);
         $order->setInvoicePath($pj_filepath);
         $this->entityManager->flush();
+    }
+
+    public function getCountryCodeForIp(string $ip): ?string
+    {
+        $url = "http://ip-api.com/json/{$ip}";
+
+        try {
+            $response = $this->client->request('GET', $url);
+            $data = $response->toArray();
+            return $data['countryCode'] ?? null;
+        } catch (TransportExceptionInterface $e) {
+            return null;
+        }
+    }
+
+    public function checkCodePromoValidity($codePromo , $ipAdress ,$secteurId){
+        $countryCode = $this->getCountryCodeForIp($ipAdress);
+        if(is_null($countryCode)){
+            return 0;
+        }
+        $result = $this->codePromoRepository->checkCodePromoValidity($codePromo,$countryCode,$secteurId);
+        if($result){
+            return $result->getDiscount();
+        }
+        return 0;
     }
 }
