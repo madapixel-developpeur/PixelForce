@@ -4,6 +4,8 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Repository\UserRepository;
+use App\Services\MailerService;
 use App\Services\RemunerationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -46,4 +48,22 @@ class ApiController extends AbstractController
             return $this->json($e->getMessage(), 500);
         }
     }
+
+    #[Route('/notif-new-message', name: 'api_notif_new_message', methods: ['POST'])]
+    public function notifNewMessage(Request $request, MailerService $mailerService, UserRepository $userRepository): Response
+    {
+        $parameters = json_decode($request->getContent(), true);
+        try {
+            $user = $userRepository->find(intval($parameters['recipientUserId']));
+            $coach = $userRepository->find(intval($parameters['senderUserId']));
+            if (in_array('ROLE_COACH', $coach->getRoles())) {
+                $mailerService->sendNotifNewMessage($user, $coach);
+            }
+            return $this->json(['roles' => $coach->getRoles(), 'email' => $user->getEmail(), 'in_array' => in_array('ROLE_COACH', $coach->getRoles())]);
+        } catch (\Exception $e) {
+            return $this->json($e->getMessage(), 500);
+        }
+    }
+
+
 }
