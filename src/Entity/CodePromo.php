@@ -7,10 +7,12 @@ use App\Repository\CodePromoRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 
 /**
  * @ORM\Entity(repositoryClass=CodePromoRepository::class)
+ * @UniqueEntity(fields="code", message="Ce code promo a déjà été utilisé. Veuillez en essayer un autre.")
  */
 class CodePromo
 {
