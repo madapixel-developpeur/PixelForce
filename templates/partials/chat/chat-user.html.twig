@@ -3,35 +3,50 @@
     <div style="height:100%;" ng-if="conversationId">
       <div class="d-flex align-items-center">
 
-        <i class="ti ti-chevron-left fs-2" style="cursor: pointer;" ng-click="goBack()"></i>
-            <img src="{{asset('assets/img/avatar.webp')}}"  class="chat-avatar ms-2 me-1" ng-if="!isHeaderLoading"/>
-          <h3 class="operator-name" style="color: #fff;" ng-if="!isHeaderLoading">
+        <i class="ti ti-chevron-left fs-2" style="cursor: pointer;" ng-if="!expanded"  ng-click="goBack()"></i>
+            <img ng-src="{{ '{{\'/user/avatar/\' + (isConversationCreator() ? conversation.inviteeUser.userIdApplication : conversation.createdByUser.userIdApplication)}}' }}"
+            onerror='this.onerror=null; this.src="{{ asset('assets/img/avatar.webp') }}"'
+              class="chat-avatar ms-2 me-1" ng-if="!isHeaderLoading && !conversation.isGroup"/>
+          <h4 class="operator-name" style="color: #fff;" ng-if="!isHeaderLoading && !conversation.isGroup">
             {{"{{isConversationCreator() ? conversation.inviteeUser.firstname + ' ' + conversation.inviteeUser.lastname :
             conversation.createdByUser.firstname + ' ' + conversation.createdByUser.lastname }}"}}
-          </h3>
+          </h4>
+
+          <img src="{{ asset('assets/img/group-user.png') }}"
+              class="chat-avatar ms-2 me-1" ng-if="!isHeaderLoading && conversation.isGroup"/>
+          <h4 class="operator-name" style="color: #fff;" ng-if="!isHeaderLoading && conversation.isGroup">
+            {{"{{conversation.name}}"}}
+          </h4>
         
           <i class="ti ti-loader fs-2 my-loader ms-2 me-1" ng-if="isHeaderLoading"></i>
         </div>
     </div>
-    <div style="height:100%;" ng-if="!conversationId">
+    <div style="height:100%;" ng-if="!conversationId && !expanded">
       <div class="d-flex align-items-center">
         <i class="ti ti-chevron-left fs-2" style="cursor: pointer;" ng-click="goBack()"></i>
       </div>
     </div>
 
   </div>
-  <div class="chat-box-main" ng-if="isLoading">
+  <div class="chat-box-main" ng-if="conversationId && isLoading">
     <div style="height:100%;" >
       <div class="d-flex align-items-center justify-content-center" style="height: 100%;">
         <i class="ti ti-loader fs-2 my-loader"></i>
       </div>
     </div>
    </div>
-    <div class="chat-box-main" ng-if="!isLoading">
+   <div style="height:100%; background-color: #fff;" ng-if="!conversationId">
+      <div class="d-flex align-items-center justify-content-center" style="height: 100%;">
+        <i class="ti ti-message" style="font-size: 70px; color: #84DCCF;"></i>
+      </div>
+    </div>
+    <div class="chat-box-main" ng-if="conversationId && !isLoading">
       <div class="chat-message-bottom" id="bottom"></div>
         <div ng-repeat="message in data" class="chat-message {{"{{message.senderUser.userIdApplication != userId ? 'chat-message-received' : ''}}"}} {{"{{message.senderUser.userIdApplication == userId ? 'chat-message-sent' : ''}}"}}">
           <div style="position: relative;">
+            
             <img src="{{asset('assets/img/avatar.webp')}}"  class="chat-message-from-avatar chat-avatar" />
+            
             <div class="chat-message-text" style="position: relative;">
               {{"{{message.content}}"}}
             </div>
@@ -39,6 +54,7 @@
           <div class="chat-message-date">
             {{"{{message.createdAt | date: 'short'}}"}}
           </div>
+          <span style="font-size: 10px; padding-left: 5px;" ng-if="message.senderUser.userIdApplication != userId && conversation.isGroup">{{"{{message.senderUser.firstname + ' ' + message.senderUser.lastname}}"}}</span>
         </div>
       <div class="d-flex p-3 align-items-center justify-content-center mb-2">
         <div class="d-flex flex-column align-items-center font-weight-bold" style="cursor: pointer;"
@@ -51,7 +67,7 @@
         <i class="ti ti-loader fs-2 my-loader" ng-if="isLoadingMore"></i>
       </div>
     </div>
-  <div class="chat-box-footer">
+  <div class="chat-box-footer" ng-if="conversationId">
     
       <div class="d-flex align-items-center px-3 py-2" style="height: 100%;" ng-if="!isLoading && !isHeaderLoading">
     <textarea type="text" class="chat-input-text flex-grow-1 me-2" placeholder="Écrivez ici..." ng-model="ctrl.message"></textarea>

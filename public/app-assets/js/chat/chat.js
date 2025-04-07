@@ -72,7 +72,7 @@ myChatApp.service('chat', function ($http) {
     }
 
     this.findMessageById = async function (messageId) {
-        const url = `${window.baseUrlChat}/chat/message/${messageId}`;
+        const url = `${window.baseUrlChat}/chat/message/${messageId}/with-user`;
         const response = await $http({
             method: "GET",
             url,
@@ -170,8 +170,44 @@ myChatApp.controller('chatWidget', function ($scope, socket, chat) {
     $scope.currentView = null; // in [LIST, USER, SEARCH]
     $scope.conversationId = null;
     $scope.data = [];
-    document.querySelector('div[ng-app="myChatApp"]').classList.remove('d-none');
+    $scope.expanded = false;
     $scope.userId = window.userId;
+    $(document).ready(function () {
+        window.addEventListener('resize', () => {
+            if(window.innerWidth < 910 && $scope.expanded){
+                $scope.toogleExpanded();
+            }
+        });
+    })
+
+    $scope.getAvatarClassRoles = function (roles){
+        roles = roles ?? [];
+        if (roles.includes("ROLE_REVENDEUR") && roles.includes("ROLE_PROFESSIONNEL")) {
+            return 'both';
+        } else if(roles.includes("ROLE_PROFESSIONNEL")) {
+            return 'professionnel';
+        } else if(roles.includes("ROLE_REVENDEUR")) {
+            return 'revendeur';
+        }
+        return '';
+        
+    }
+
+    $scope.getAvatarClassUser = function (user){
+        return $scope.getAvatarClassRoles(user.data?.roles);
+    }
+
+    $scope.toogleExpanded = function (){
+        const newExpanded = !$scope.expanded;
+        if(newExpanded && $scope.currentView === 'USER'){
+            $scope.changeView('LIST');
+        }
+        if(!newExpanded && $scope.currentView === 'LIST' && $scope.conversationId){
+            $scope.changeView('USER');
+        }
+        $scope.expanded = newExpanded;
+    }
+
     $scope.toggleChat = function () {
         $scope.visible = !$scope.visible;
         if ($scope.visible) {
@@ -194,12 +230,12 @@ myChatApp.controller('chatWidget', function ($scope, socket, chat) {
     $scope.setConversationId = function (conversationId) {
         $scope.conversationId = conversationId;
         console.log('$scope.conversationId', $scope.conversationId)
-        $scope.changeView('USER');
+        $scope.changeView('USER', $scope.expanded);
     }
 
-    $scope.changeView = function (newView) {
-        $scope.currentView = newView;
-        $scope.$broadcast('changeView', { currentView: $scope.currentView });
+    $scope.changeView = function (newView, doNotChangeValue = false) {
+        if(!doNotChangeValue) $scope.currentView = newView;
+        $scope.$broadcast('changeView', { currentView: newView });
     }
 
     $scope.viewConversationGlobal = function (conversationId) {
@@ -230,7 +266,7 @@ myChatApp.controller('chatWidget', function ($scope, socket, chat) {
                 $scope.$broadcast('newMessage', { message: result });
                 const conversationIndex = $scope.data.findIndex((conversation) => conversation.id == result.conversationId);
 
-                if (conversationIndex < 0) {
+                if (conversationIndex < 0 && result.senderUser.userIdApplication !== window.userId) {
                     $scope.data = [...$scope.data, result.conversation];
                 }
 
@@ -256,13 +292,24 @@ myChatApp.controller('chatUserList', function ($scope, chat) {
         $scope.$parent.changeView('SEARCH');
     }
 
+    $scope.isAnswered = function (conversation) {
+        return conversation.lastMessage && conversation.lastMessage.senderUser.userIdApplication == window.userId;
+        
+    }
+
+    $scope.getAvatarClassConversation = function (conversation){
+        let user = conversation.createdByUser;
+        if($scope.isConversationCreator(conversation)) user = conversation.inviteeUser;
+        return $scope.$parent.getAvatarClassUser(user);
+    }
+
     $scope.fetchData = function (newPage = 1) {
         if (newPage == 1) $scope.isLoading = true;
         else $scope.isLoadingMore = true;
         const propertyNotViewed = "(((case when conversation.createdByUserId = :userId then conversation.lastUser1View else conversation.lastUser2View end) is null or (case when conversation.createdByUserId = :userId then conversation.lastUser1View else conversation.lastUser2View end) < lastMessage.createdAt) and conversation.lastMessageId is not null)";
         const httpParamsNotFlattened = {
             pagination: { page: newPage, nbrPerPage: $scope.nbrPerPage },
-            sort: [{ property: 'coalesce(lastMessage.createdAt, conversation.createdAt)', order: 'DESC' }],
+            sort: [{ property: 'conversation.isGroup', order: 'DESC' }, { property: 'coalesce(lastMessage.createdAt, conversation.createdAt)', order: 'DESC' }],
             filter: {}
         };
         if($scope.messageType === null){}
@@ -310,6 +357,7 @@ myChatApp.controller('chatUserList', function ($scope, chat) {
         return conversation.createdByUser?.userIdApplication == window.userId;
     }
     $scope.displayConversation = function (conversation) {
+        if(conversation.isGroup) return true;
         let me = conversation.createdByUser;
         let other = conversation.inviteeUser;
         if (!$scope.isConversationCreator(conversation)) {
@@ -324,8 +372,12 @@ myChatApp.controller('chatUserList', function ($scope, chat) {
         return true;
     }
     $scope.isNewMessage = function (conversation) {
-        const lastUserView = $scope.isConversationCreator(conversation) ? conversation.lastUser1View : conversation.lastUser2View;
         if (!conversation.lastMessage) return false;
+        if(conversation.isGroup) {
+            return !conversation.userLastViews[0].lastUserView || conversation.userLastViews[0].lastUserView < conversation.lastMessage.createdAt;
+        }
+        const lastUserView = $scope.isConversationCreator(conversation) ? conversation.lastUser1View : conversation.lastUser2View;
+        
         return !lastUserView || lastUserView < conversation.lastMessage.createdAt;
     }
 
@@ -454,6 +506,7 @@ myChatApp.controller('chatUser', function ($scope, $q, chat) {
         // }, 2000);
     }
     $scope.addMessage = function (message) {
+        if($scope.data.find((item) => item.id === message.id)) return;
         $scope.data = [message, ...$scope.data];
         $scope.scrollToBottom()
     }
@@ -545,3 +598,6 @@ myChatApp.controller('chatUser', function ($scope, $q, chat) {
     });
 })
 
+$(document).ready(function (){
+    $('.custom-chat').removeClass('d-none');
+})

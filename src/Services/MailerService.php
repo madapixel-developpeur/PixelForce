@@ -270,6 +270,23 @@ class MailerService
         ], $attachmentsPath, null, $embeddedImages);
     }
 
+    public function sendNotifNewMessage(User $user, User $coach)
+    {
+
+        $body = $this->renderTwig('emails/new_message.html.twig', [
+            'user' => $user,
+            'coach' => $coach
+        ]);
+
+        $attachmentsPath = [];
+        $embeddedImages = ['logo' => 'assets/img/logo/pixelforce/logo-pixelforce-min.png'];
+        $this->mySendMail([
+            'subject' => 'Nouveau message sur Pixelforce 🚀',
+            'to' => $user->getEmail(),
+            'body' => $body
+        ], $attachmentsPath, null, $embeddedImages);
+    }
+
     public function sendFactureSecu(OrderSecu $order)
     {
 

@@ -1,14 +1,18 @@
-<div ng-app="myChatApp" class="custom-chat wrapper d-none" ng-controller="chatWidget">
+<div ng-app="myChatApp" class="custom-chat d-none wrapper {{'{{expanded ? \'expanded\': \'\'}}'}}" ng-controller="chatWidget">
   <div class="chat-box" ng-show="visible">
         <div ng-show="currentView == 'LIST'" style="height: 100%;">
+        <i class="ti ti-arrows-maximize expand-btn" ng-if="!expanded" ng-click="toogleExpanded()"></i>
             {% include '/partials/chat/chat-user-list.html.twig' %}
         </div>
         <div ng-show="currentView == 'SEARCH'" style="height: 100%;">
+        <i class="ti ti-arrows-maximize expand-btn" ng-if="!expanded" ng-click="toogleExpanded()"></i>
             {% include '/partials/chat/chat-user-search-list.html.twig' %}
         </div>
-        <div ng-show="currentView == 'USER'" style="height: 100%;">
+        <div ng-show="currentView == 'USER' || expanded" style="height: 100%;">
+        <i class="ti ti-arrows-minimize expand-btn" ng-click="toogleExpanded()"></i>
             {% include '/partials/chat/chat-user.html.twig' %}
         </div>
+        
   </div>
   <button class="chat-button" ng-click="toggleChat()">
     <span ng-if="visible" >✕</span>
