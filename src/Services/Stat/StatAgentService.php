@@ -316,6 +316,7 @@ class StatAgentService
         $statDigital = null;
         $statFinance = null;
         $rankInfo = null;
+        $statSecurite = null;
         if ($secteur->getId() == $this->parameterBag->get('secteur_finance_id')) {
             $statFinance = $this->getStatFinance($agent->getEmail());
         } elseif ( $secteur->getId() == $this->parameterBag->get('secteur_digital_id')) {
@@ -324,7 +325,14 @@ class StatAgentService
             $lastDayOfLastMonth = (new DateTime('first day of last month'))->modify('last day of this month');
             $rankInfo = $this->getUserCurrentRank($agent,$lastDayOfLastMonth,$secteur);
             // }
-        }else{
+        } elseif ( $secteur->getId() == $this->parameterBag->get('secteur_securite_id')) { 
+            $statSecurite = [
+                'total_year' => 0,
+                'total_month' => 0,
+            ];
+            $lastDayOfLastMonth = (new DateTime('first day of last month'))->modify('last day of this month');
+            $rankInfo = $this->getUserCurrentRank($agent,$lastDayOfLastMonth,$secteur);
+        } else{
             $statDigital = $this->getStat($agent->getId(), $secteur->getId());
         }
 
@@ -338,6 +346,7 @@ class StatAgentService
         return [
             'statDigital' => $statDigital,
             'statFinance' => $statFinance,
+            'statSecurite' => $statSecurite,
             'nbrRdv' => $nbrRdv,
             'chiffreAffaireTotal' => $chiffreAffaireTotal,
             'soldeRemuneration' => $soldeRemuneration,

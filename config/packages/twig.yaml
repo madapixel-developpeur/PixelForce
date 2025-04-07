@@ -1,35 +1,36 @@
 twig:
-    default_path: '%kernel.project_dir%/templates'
-    form_themes: ['bootstrap_5_layout.html.twig']
-    globals:
-        directoryManagement: '@App\Services\DirectoryManagement'
-        dateHelper: '@App\Helpers\DateHelper'
-        GfilesDirectoryRelative: 'files/'
-        files_directory: '%kernel.project_dir%/public/files'
-        files_directory_relative: 'files/'
-        stripe_public_key: '%env(STRIPE_PUBLIC_KEY)%'
-        configSecteurService: '@util.config'
-        secteurRepository: '@App\Repository\SecteurRepository'
-        remunerationService: '@App\Services\RemunerationService'
-        video_information_vimeo_src: '%env(VIDEO_INFORMATION_VIMEO_SRC)%'
-        authService: '@util.auth'
-        secteurDigitalId: '%env(SECTEUR_DIGITAL_ID)%'
-        pbbAccesClient: '%env(PBB_ACCESCLIENT_WS_URL)%'
-        pbb_ws_url: '%env(PBB_WS_URL)%'
-        base_url_chat: '%env(BASE_URL_CHAT)%'
-        socket_url_chat: '%env(SOCKET_URL_CHAT)%'
-        secteur_finance_id: '%env(SECTEUR_FINANCE_ID)%'
-        inova_referral_link: '%env(INOVA_REFERRAL_LINK)%'
-        catalogues_base_url: '%env(CATALOGUES_BASE_URL)%'
-        platform_name: '%env(PLATFORM_NAME)%' 
-        formationThemeRepository: '@App\Repository\FormationThemeRepository'
-        asset_version: 'v=202503281525'
-        
-    paths:
-        # pour spécifier le namespace des image. Exemple d'utilisation : email.image('@images/logo.png')
-        '%kernel.project_dir%/assets/images': images
-        '%kernel.project_dir%/media/user': user_image
+  default_path: "%kernel.project_dir%/templates"
+  form_themes: ["bootstrap_5_layout.html.twig"]
+  globals:
+    directoryManagement: '@App\Services\DirectoryManagement'
+    dateHelper: '@App\Helpers\DateHelper'
+    GfilesDirectoryRelative: "files/"
+    files_directory: "%kernel.project_dir%/public/files"
+    files_directory_relative: "files/"
+    stripe_public_key: "%env(STRIPE_PUBLIC_KEY)%"
+    configSecteurService: "@util.config"
+    secteurRepository: '@App\Repository\SecteurRepository'
+    remunerationService: '@App\Services\RemunerationService'
+    video_information_vimeo_src: "%env(VIDEO_INFORMATION_VIMEO_SRC)%"
+    authService: "@util.auth"
+    secteurDigitalId: "%env(SECTEUR_DIGITAL_ID)%"
+    pbbAccesClient: "%env(PBB_ACCESCLIENT_WS_URL)%"
+    pbb_ws_url: "%env(PBB_WS_URL)%"
+    base_url_chat: "%env(BASE_URL_CHAT)%"
+    socket_url_chat: "%env(SOCKET_URL_CHAT)%"
+    secteur_finance_id: "%env(SECTEUR_FINANCE_ID)%"
+    inova_referral_link: "%env(INOVA_REFERRAL_LINK)%"
+    catalogues_base_url: "%env(CATALOGUES_BASE_URL)%"
+    platform_name: "%env(PLATFORM_NAME)%"
+    formationThemeRepository: '@App\Repository\FormationThemeRepository'
+    asset_version: "v=202503281525"
+    secteur_securite_id: "%env(SECTEUR_SECURITE_ID)%"
+
+  paths:
+    # pour spécifier le namespace des image. Exemple d'utilisation : email.image('@images/logo.png')
+    "%kernel.project_dir%/assets/images": images
+    "%kernel.project_dir%/media/user": user_image
 
 when@test:
-    twig:
-        strict_variables: true
+  twig:
+    strict_variables: true
