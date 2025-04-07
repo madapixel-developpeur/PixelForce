@@ -1,21 +1,16 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-	Annonce
+	Code promo
 {% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
-    <style>
-        .banniere-img{
-            max-width: 100%;  /* L'image ne dépasse pas la cellule */
-            height: auto;  /* Ajuste la hauteur en conservant le ratio */
-            display: block; 
-        }
-    </style>
+    
 {% endblock %}
 
 {% block body %} 
+<div class="mt-3">
 <div class="block block--bordered block--rounded">
     <h1 class="block__text block__text--center mt-2" >Options de filtre :</h1>
     <div class="filter-wrap">
@@ -23,19 +18,29 @@
         {{ form_start(form, {'attr': {'class': 'filter-form'}}) }}
             
             <div class="my-form-widget">
-                {{form_label(form.nom)}}
-                {{form_widget(form.nom)}}
-                {{form_errors(form.nom)}}
+                {{form_label(form.title)}}
+                {{form_widget(form.title)}}
+                {{form_errors(form.title)}}
             </div>
             <div class="my-form-widget">
-                {{form_label(form.description)}}
-                {{form_widget(form.description)}}
-                {{form_errors(form.description)}}
+                {{form_label(form.code)}}
+                {{form_widget(form.code)}}
+                {{form_errors(form.code)}}
             </div>
             <div class="my-form-widget">
-                {{form_label(form.type)}}
-                {{form_widget(form.type)}}
-                {{form_errors(form.type)}}
+                {{form_label(form.minDiscount)}}
+                {{form_widget(form.minDiscount)}}
+                {{form_errors(form.minDiscount)}}
+            </div>
+              <div class="my-form-widget">
+                {{form_label(form.maxDiscount)}}
+                {{form_widget(form.maxDiscount)}}
+                {{form_errors(form.maxDiscount)}}
+            </div>
+            <div class="my-form-widget">
+                {{form_label(form.country)}}
+                {{form_widget(form.country)}}
+                {{form_errors(form.country)}}
             </div>
             <div class="btn-wrap">
                 <button class="btn btn-primary" type="submit"><i data-feather="filter"></i>Filtrer</button>
@@ -52,9 +57,9 @@
             </div>
         {% endfor %}
         <div class="block__header mb-1" >
-            <h1 class="block__title">Liste des annonces :</h1>
+            <h1 class="block__title">Liste des codes promos :</h1>
             <div class="fab-btn-wrap">
-                <a  href="{{ path('app_announcement_add') }}" class="btn btn-primary btn--rounded fab-btn"><i data-feather="plus"></i>Ajouter</a>
+                <a  href="{{ path('code_promo_new') }}" class="btn btn-primary btn--rounded fab-btn"><i data-feather="plus"></i>Ajouter</a>
             </div>
         </div>
         {% if result|length ==0 %}
@@ -69,40 +74,35 @@
             <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <th class="col-2">Titre</th>
-                        <th class="col-3">Description</th>
-                        <th class="col-2" >Détails</th>
-                        <th></th>
+                        <th >Titre</th>
+                        <th class="text-center">Code</th>
+                        <th class="text-start">Validité</th>
+                        <th class="text-end">Promo</th>
+                        <th class="text-center">Pays</th>
                         <th></th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for item in result %}
                     <tr>
-                        <td>{{ item.nom }}</td>
-                        <td>{{ item.description }}</td>
-                        <td>
-                            <b>Début :</b> {{ item.startDate | date('Y-m-d H:m:s')  }} </br>
-                            <b>Fin :</b>{{ item.endDate | date('Y-m-d H:m:s')  }} </br>
-                            <b>Type :</b> {{ item.typeStr   }} 
-                            {% if item.link is not empty %}
-                                </br>
-                                <b>Lien :</b> <a href="{{ item.link   }}" target="_blank" >{{ item.link   }}</a>
-                            {% endif %}
-                            </td>
-                        {# <td>{{ item.endDate | date('Y-m-d H:m:s') }}</td> #}
-                        <td>
-                            <div class="d-flex align-items-center">
-                                <div class="img">
-                                    <img src="{{ asset('files/' ~ item.filePath ) }}" class="banniere-img" alt="{{ item.nom }}">
-                                </div>
-                            </div>
+                        <td>{{ item.title }}</td>
+                        <td class="text-center">{{ item.code }}</td>
+                        <td class="text-start">
+                            <b>Début :</b> {{ item.startDate | date('Y-m-d à H:m:s')  }} </br>
+                            <b>Fin :</b> {{ item.endDate ? item.endDate | date('Y-m-d à H:m:s') : '...'  }} </br>
+                           </br>
+                        </td>
+                        <td class="text-end">
+                            {{ item.discount}} %
+                        </td>
+                        <td class="text-center">
+                             {{ item.countryNameListString}} 
                         </td>
                         <td class="justify-content-center d-flex h-100">
-                            <a href="{{ path('app_announcement_edit', {'id': item.id}) }}" class="btn btn-success ms-1">
+                            <a href="{{ path('code_promo_edit', {'id': item.id}) }}" class="btn btn-success ms-1">
                                 <i class="fas fa-edit"></i>
                             </a>
-                            <form method="post" id="delete_announcement" class="ms-1" style="display: inline-block;" onsubmit="confirmationForm('delete_announcement','{{ path('app_announcement_delete', { id : item.id })  }}','Êtes-vous sûr(e) de vouloir supprimer cette annonce?')">
+                            <form method="post" id="code_promo_delete" class="ms-1" style="display: inline-block;" onsubmit="confirmationForm('code_promo_delete','{{ path('code_promo_delete', { id : item.id })  }}','Êtes-vous sûr(e) de vouloir supprimer ce code promo?')">
                                 <button class="btn btn-danger"><i class="fas fa-trash-alt"></i></button>
                             </form>  
                         </td>
@@ -120,5 +120,6 @@
         <div>
         {% endif %}
     </div>
+</div>
 
 {% endblock %}

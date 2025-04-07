@@ -4,9 +4,9 @@
 namespace App\Controller;
 
 
-use App\Repository\FormationThemeRepository;
 use Exception;
 use App\Entity\User;
+use App\Util\Status;
 use App\Entity\Media;
 use App\Entity\Formation;
 use App\Form\FormationType;
@@ -25,6 +25,7 @@ use App\Repository\FormationRepository;
 use App\Entity\FormationPageConfiguration;
 use Knp\Component\Pager\PaginatorInterface;
 use App\Repository\FormationAgentRepository;
+use App\Repository\FormationThemeRepository;
 use App\Repository\VideoFormationRepository;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
@@ -32,9 +33,9 @@ use App\Form\SecteurVideoFinFormationFormType;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Form\FormationPageConfigurationFormType;
 use App\Repository\CategorieFormationRepository;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Repository\SecteurVideoFormationRepository;
 use App\Repository\FormationPageConfigurationRepository;
-use App\Util\Status;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -200,14 +201,30 @@ class CoachFormationController extends AbstractController
         $secteur = $this->getUser()->getUniqueCoachSecteur();
         $form = $this->createForm(FormationType::class, $formation);
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($request->request->get('video_id') && !is_null($request->request->get('video_id')) && !empty($request->request->get('video_id'))) {
-                $formation->setVideoId($request->request->get('video_id'));
+            try {
+                $this->entityManager->beginTransaction();
+                if ($request->request->get('video_id') && !is_null($request->request->get('video_id')) && !empty($request->request->get('video_id'))) {
+                    $formation->setVideoId($request->request->get('video_id'));
+                }
+
+                $formation->testStatut();
+                $this->entityManager->save($formation);    
+                $this->uploadFormationFiles($request,$formation);
+
+
+                $this->entityManager->flush();
+                $this->entityManager->commit();
+                $this->addFlash('success', 'Formation ajouté avec succès');
+                return $this->redirectToRoute('coach_formation_fiche',['id' => $formation->getId()]);    
+            } catch (\Throwable $th) {
+                $error = $th->getMessage();
+                if ($this->entityManager->getConnection()->isTransactionActive()) {
+                    $this->entityManager->rollback();
+                }
+                $this->addFlash('danger', $_ENV['CUSTOM_ERROR_MESSAGE']);
             }
-            $formation->testStatut();
-            $this->entityManager->save($formation);
-            $this->addMedia($request, $formation);
-            $this->addFlash('success', 'Formation ajouté avec succès');
         }
 
         $medias = $formation->getMedias();
@@ -232,28 +249,36 @@ class CoachFormationController extends AbstractController
         $form->handleRequest($request);
         $secteur = $this->getUser()->getUniqueCoachSecteur();
         if ($form->isSubmitted() && $form->isValid()) {
-            $formation->setRoles([$role]);
-            $formation->testStatut();
-            $formation->setSecteur($this->getUser()->getSecteurByCoach());
-            $formation->setCoach($this->getUser());
+            try {
+                $this->entityManager->beginTransaction();
+                $formation->setRoles([$role]);
+                $formation->testStatut();
+                $formation->setSecteur($this->getUser()->getSecteurByCoach());
+                $formation->setCoach($this->getUser());
 
-            $video_id = $request->request->get('video_id');
-            if($video_id) $formation->setVideoId($video_id);
-            $this->entityManager->save($formation);
+                $video_id = $request->request->get('video_id');
+                if($video_id) $formation->setVideoId($video_id);
+                $this->entityManager->save($formation);
 
-            $relationFormationCategorie->setFormation($formation);
-            $idCatFormation = $_POST['formation']['categorieFormation'];
-            $catFormation = $this->repoCatFormation->find($idCatFormation);
-            $relationFormationCategorie->setCategorie($catFormation);
-            $this->entityManager->save($relationFormationCategorie);
+                $relationFormationCategorie->setFormation($formation);
+                $idCatFormation = $_POST['formation']['categorieFormation'];
+                $catFormation = $this->repoCatFormation->find($idCatFormation);
+                $relationFormationCategorie->setCategorie($catFormation);
+                $this->entityManager->save($relationFormationCategorie);
 
-            $this->addMedia($request, $formation);
-            /*$coachSecteurRelation = $this->getUser()->getCoachSecteurs();
-            if($coachSecteurRelation->count() > 0) {
-                $this->formationService->affecterToutAgent($formation, $coachSecteurRelation->toArray()[0]->getSecteur());
-            }*/
 
-            $this->addFlash('success', 'Formation ajouté avec succès');
+                $this->uploadFormationFiles($request,$formation);
+                $this->entityManager->flush();
+                $this->entityManager->commit();
+                $this->addFlash('success', 'Formation ajouté avec succès');
+                return $this->redirectToRoute('coach_formation_fiche',['id' => $formation->getId()]);    
+            } catch (\Throwable $th) {
+                $error = $th->getMessage();
+                if ($this->entityManager->getConnection()->isTransactionActive()) {
+                    $this->entityManager->rollback();
+                }
+                $this->addFlash('danger', $_ENV['CUSTOM_ERROR_MESSAGE']);
+            }
         }
 
         return $this->render('formation/video/coach_formation_add.html.twig', [
@@ -496,4 +521,61 @@ class CoachFormationController extends AbstractController
             'section' => $section
         ]);
     }
+
+    public function uploadFormationFiles(Request $request,Formation $formation)
+    {
+        $documentFiles = [];
+        $audioFiles = [];
+
+
+        if ($documents = $request->files->get('documents')) {
+            foreach ($documents as $document) {
+                $fileName = $this->fileUploader->upload($document, $this->directoryManagement->getMediaFolder_formation_document());
+                $documentFiles[] = $fileName;
+                $mediaObject = (new Media())
+                    ->setFormation($formation)
+                    ->setMimeType($document->getClientMimeType())
+                    ->setType("document")
+                    ->setTitre($document->getClientOriginalName())
+                    ->setSlug($fileName);
+                $this->entityManager->persist($mediaObject);
+            }
+        }
+
+        if ($audios = $request->files->get('audios')) {
+            foreach ($audios as $audio) {
+                $fileName = $this->fileUploader->upload($audio, $this->directoryManagement->getMediaFolder_formation_audio());
+                $audioFiles[] = $fileName;
+                $mediaObject = (new Media())
+                    ->setFormation($formation)
+                    ->setMimeType($audio->getClientMimeType())
+                    ->setType("audio")
+                    ->setTitre($audio->getClientOriginalName())
+                    ->setSlug($fileName);
+                $this->entityManager->persist($mediaObject);
+            }
+        }
+        if ($deletedFiles = $request->get('deleted_media')) {
+            foreach ($deletedFiles as $deletedFile) {
+                $media = $this->mediaRepository->findOneBy(['id' => $deletedFile]);
+                $directory = $media->getType() == 'document' ?
+                    $this->directoryManagement->getMediaFolder_formation_document() :
+                    $this->directoryManagement->getMediaFolder_formation_audio();
+                $file = $directory . DIRECTORY_SEPARATOR . $media->getSlug();
+                if (file_exists($file)) {
+                    $filesystem = new Filesystem();
+                    $filesystem->remove($file);
+                }
+                $this->entityManager->remove($media);
+            }
+        }
+
+
+        return [
+            'documents' => $documentFiles,
+            'audioFiles' => $audioFiles,
+        ];
+    }
+
 }
+

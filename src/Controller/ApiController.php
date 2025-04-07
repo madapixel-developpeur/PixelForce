@@ -6,15 +6,23 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use App\Services\MailerService;
+use App\Services\OrderService;
 use App\Services\RemunerationService;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/api')]
 class ApiController extends AbstractController
 {
+
+    public function __construct(
+        private OrderService $orderService
+    ) {
+        
+    }
+
 
     #[Route('/new-digital-order', name: 'api_new_digital_order', methods: ['POST'])]
     public function newDigitalOrder(Request $request, RemunerationService $remunerationService): Response
@@ -60,10 +68,22 @@ class ApiController extends AbstractController
                 $mailerService->sendNotifNewMessage($user, $coach);
             }
             return $this->json(['roles' => $coach->getRoles(), 'email' => $user->getEmail(), 'in_array' => in_array('ROLE_COACH', $coach->getRoles())]);
-        } catch (\Exception $e) {
+         } catch (\Exception $e) {
             return $this->json($e->getMessage(), 500);
         }
     }
 
+    #[Route('/code-promo/check', name: 'api_check_code_promo', methods: ['GET'])]
+    public function checkCodePromoValidity(Request $request): Response
+    {
+        try {
+            $code = $request->query->get('code');
+            $ip = $request->query->get('ip');
+            $discount = $this->orderService->checkCodePromoValidity($code,$ip,$_ENV['SECTEUR_DIGITAL_ID']);
+            return $this->json((float) $discount,200); 
+        } catch (\Exception $e) {
+            return $this->json($e->getMessage(), 500);
+        }
+    }
 
 }

@@ -15,7 +15,7 @@
         </ul>
     </div>
     <div class="main-menu-content">
-        <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
+        <ul class="navigation navigation-main mb-4" id="main-menu-navigation" data-menu="menu-navigation">
             {# On vérifie si l'user est dans la page d'accueil pour Agent  #}
             {% set currentPath = path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) %}
 

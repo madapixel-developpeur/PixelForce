@@ -39,6 +39,7 @@ Encore
     .addEntry('commentaire', './assets/js/commentaire.js')
     .addEntry('chatJS', './assets/js/chat/chat.js')
     .addEntry('formationForm', './assets/js/formationForm.js')
+    .addEntry('formationFormScript', './assets/js/formationFormScript.js')
     .addEntry('ckeditorForm', './assets/js/ckeditorForm.js')
     .addEntry('validationSecteur', './assets/js/validationSecteur.js')
     .addEntry('ImportExportContact', './assets/js/ImportExportContact.js')
