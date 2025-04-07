@@ -38,7 +38,8 @@ class SecteurListener
             $this->urlGenerator->generate('agent_home'),
             '/agent/secteur',
             '/myapi',
-            '/chatutil'
+            '/chatutil',
+            '/user'
         ];
 
         foreach($excludePaths as $path){
