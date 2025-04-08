@@ -28,9 +28,32 @@
 						</div> #}
 						<div class="col-md-12 mb-5 mt-4">
 							<p class="text-muted fs-5">
-								Découvrez toutes les ressources à votre disposition. Accédez à des contenus essentiels pour vous guider et vous accompagner dans vos démarches.
 							</p>
 						</div>
+                        {% set countRubriques = [null]|merge(rubriques) %}
+                        <div class="row mb-5 text-center">
+                            <div class="col-12 col-md-6 d-flex flex-column align-items-center">
+                                <div class="d-flex align-items-center mb-2">
+                                    <i class="fas fa-clock fa-2x me-2 custom-icon-color " ></i>
+                                </div>
+                                <span class="value-text">{{ countRubriques| length }} Rubrique(s)</span>
+                            </div>
+                            <div class="col-12 col-md-6 d-flex flex-column align-items-center">
+                                <div class="d-flex align-items-center mb-2">
+                                    <i class="fas fa-file fa-2x me-2 custom-icon-color " ></i>
+                                </div>
+                                <span class="value-text"><span id="file-nbr">{{ countRubriques| length }}</span> Fichier(s)
+                            </div>
+                            
+                        </div>
+
+                        <hr>
+
+                        <div class="course-overview mb-5">
+                            {# <h3 class="my-auto general-primary-text mb-3">Description</h3> #}
+                            <h4>Découvrez toutes les ressources à votre disposition. Accédez à des contenus essentiels pour vous guider et vous accompagner dans vos démarches.
+                            </h4>
+                        </div>
 
 						{% for label, message in app.flashes %}
 							<div class="alert alert-{{label}} p-3 text-center" role="alert">
@@ -86,6 +109,7 @@
                                                             <div class="col-md-9">
                                                                 <h5 class="text-primary fw-semibold mb-1">{{ item.name }}</h5>
                                                                 {% set fileCount = item.filesParsed|length %}
+                                                                <input type="number" class="fileNumber" value="{{ fileCount }}" hidden>
                                                                 <p class="mb-2 text-secondary fw-medium small">
                                                                     <i class="fa-regular fa-folder-open me-1"></i> 
                                                                     ({{ fileCount }} fichier{{ fileCount > 1 ? 's' : '' }} disponible{{ fileCount > 1 ? 's' : '' }})
@@ -120,11 +144,18 @@
 	{{ parent() }}
 	<script>
 		$(document).ready(function () {
-        $('.download-file').click(function () {
+            var totalFiles = 0;
+            $('.download-file').click(function () {
                 let downloadPath = "{{ path('app_agent_ressource_file_download', {'filename': 'custom-file-name'}) }}";
                 downloadPath = downloadPath.replace('custom-file-name', $(this).data('path'));
                 window.location.href = downloadPath;
             })
+
+             $('.fileNumber').each(function() {
+                totalFiles += parseInt($(this).val(), 10); // Make sure to convert the value to an integer
+            });
+
+             $('#file-nbr').text(totalFiles);
         });
 	</script>
 
