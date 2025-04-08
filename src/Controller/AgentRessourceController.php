@@ -23,12 +23,18 @@ use Knp\Component\Pager\PaginatorInterface;
 use App\Form\RessourceFilterType;
 use App\Repository\RessourceRubriqueRepository;
 use App\Entity\RessourceRubrique;
+use App\Repository\RessourceRepository;
+use Google\Service\Resource;
 
 #[Route('/agent/ressources')]
 class AgentRessourceController extends AbstractController
 {
 
-    public function __construct(private EntityManagerInterface $entityManager, private FileHandler $fileHandler, private SessionInterface $session, )
+    public function __construct(private EntityManagerInterface $entityManager,
+        private FileHandler $fileHandler, 
+        private SessionInterface $session,
+        private RessourceRepository $ressourceRepository
+    )
     {
     }
 
@@ -98,6 +104,7 @@ class AgentRessourceController extends AbstractController
 
         return $this->render('user_category/agent/ressource/list.html.twig', [
             'result' => $result,
+            'type' => $type,
             'rubriques' => $this->entityManager
                 ->createQueryBuilder()
                 ->select('rb')
@@ -112,5 +119,79 @@ class AgentRessourceController extends AbstractController
             // 'page' => $page
         ]);
 
+    }
+
+     /**
+     * @Route("/{type}/{id}/details", name="agent_ressource_details")
+     */
+    public function view(string $type,Ressource $ressource)
+    {
+        return $this->render('user_category/agent/ressource/detail.html.twig', [
+            'ressource' => $ressource,
+            'type' => $type
+         ]);
+    }
+
+    #[Route('/{id}/preview', name: 'app_ressource_file_preview')]
+    public function preview(Ressource $ressource,Request $request): Response
+    {
+        $customName = $request->get('customName');
+        $download = $request->get('download');
+        $path = $this->getDocumentInformation($ressource->getFilesParsed(),$customName)['path'];
+        $filePath = $this->getParameter('files_directory_relative') . "/" . $path;
+        if (!file_exists($filePath)) {
+            $this->addFlash('danger',$_ENV['CUSTOM_ERROR_MESSAGE']);
+            return $this->redirectToRoute('agent_ressource_details',['type' => $ressource->getType() , 'id' => $ressource->getId()]);
+        }
+
+        $ext = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
+        $disposition = ResponseHeaderBag::DISPOSITION_INLINE;
+
+        $response = new BinaryFileResponse($filePath);
+        $response->setContentDisposition($disposition, $customName);
+
+        if (in_array($ext, ['pdf'])) {
+            $response->headers->set('Content-Type', 'application/pdf');
+        } elseif (in_array($ext, ['mp4', 'webm', 'ogg'])) {
+            $response->headers->set('Content-Type', 'video/' . $ext);
+        } elseif (in_array($ext, ['jpg', 'jpeg', 'png', 'gif'])) {
+            $response->headers->set('Content-Type', 'image/' . $ext);
+        }
+
+        if($download == 1){
+            $disposition = ResponseHeaderBag::DISPOSITION_ATTACHMENT;
+            $response->setContentDisposition($disposition, $customName);
+        }
+        return $response;
+    }
+
+    public function getDocumentInformation(array $docs,string $customName){
+        foreach($docs as $doc){
+            if($doc['customName'] == $customName){
+                return $doc;
+            }
+        };
+        throw new \Exception('Fichier non trouvé');
+    }
+
+
+     /**
+     * @Route("/{type}/{id}/view-document", name="agent_ressource_visualize")
+     */
+    public function visualiser(string $type,Ressource $ressource,Request $request)
+    {
+        $fileName = $request->get('customName');
+        $ext = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+        if(!in_array($ext, ['pdf','mp4', 'mov', 'avi', 'webm'])){
+            return $this->redirectToRoute('agent_ressource_details',['type' => $type , 'id' => $ressource->getId()]);
+        }
+        $file = $this->getDocumentInformation($ressource->getFilesParsed(),$fileName);
+        return $this->render('user_category/agent/ressource/visualize_document.html.twig', [
+            'file' => [
+                'customName' => $file['customName'],
+                'ressourceID' => $ressource->getId(),
+            ],
+            'type' => $type
+         ]);
     }
 }

@@ -5,150 +5,127 @@
 {% endblock %}
 
 {% block stylesheets %}
-    {{ parent() }}
+	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('assets/css/formation/formation.css')}}">
+    <style>
+         .accordion-button::after {
+            display: none !important;
+        }
+    </style>
 {% endblock %}
 
-{% block body %} 
-    <div class="block block--bordered block--rounded">
-        {% for label, message in app.flashes %}
-            <div class="alert alert-{{label}} p-3 text-center" role="alert">
-                <div class="alert-body">
-                    {{message}}
-                </div>
-            </div>
-        {% endfor %}
-        <div class="block__header mb-3" >
-            <h1 class="block__title">Liste des ressources :</h1>
-            
-        </div>
-        
-        {% if result|length == 0 and rubriques|length==0 %}
-        <p class="text-center">Aucun résultat</p>
-        {% else %}
-        {% set rubriques = [null]|merge(rubriques) %}
-        {% for rb in rubriques %}
-        {% set countItem = 0 %}
-        <div class="row">
-        {% if rb %}
-        <div class="col-12">
-        {% if loop.index == 1 %}
-        {% else %}
-        
-            <hr class="mb-1" style="height: 2px;">
-            
-        
-        {% endif %}
-        {% if rb %}
-        <h4 class="text-center mb-3">{{rb.name}}</h4>
-        {% endif %}
-        </div>
-        {% endif %}
-        {% for item in result %}
-            {% if (not item.rubrique and not rb) or  (item.rubrique and rb and item.rubrique.id == rb.id) %}
-            {% set countItem = countItem + 1 %}
-                
-            
+{% block body %}
+	<div class="row px-3 content-formation">
+		<div class="card card-body-custom mt-2 ">
+			<div
+				class="row mt-3 justify-content-center">
+				{# <div class="col-md-2"></div> #}
+				<div class="col-md-10 mb-5">
+					<div class="row ">
+						{# <div class="col-md-12 mb-1 mt-4">
+							<h1 class="block__title">Liste des ressources
+							</h1>
+						</div> #}
+						<div class="col-md-12 mb-5 mt-4">
+							<p class="text-muted fs-5">
+								Découvrez toutes les ressources à votre disposition. Accédez à des contenus essentiels pour vous guider et vous accompagner dans vos démarches.
+							</p>
+						</div>
 
-            <div class="card col-md-4">
-            {% if item.imageCover %}
-                <img class="card-img-top" style="max-height: 100px; object-fit: cover;" src="{{ asset( files_directory_relative ~ item.imageCover) }}" alt="Card image cap">
-            {% endif %}
-                <div class="card-body">
-                    <h5 class="card-title">{{item.name}}</h5>
-                    {% if item.content and item.content != '' %}
-                    <p class="card-text">{{item.content}}</p>
-                    {% endif %}
-                    {% if item.files|length > 0 %}
-                    <div class="mt-3">
-                        <div class="d-flex flex-column" >
-                        <div class="d-flex align-items-start flex-wrap ms-2" style="gap: 5px;">
-                            {% for file in item.filesParsed %}
-                            <div class="file-block" >
-                                <span><i class="fa-regular fa-file fa-lg"></i></i>&nbsp;{{file.customName}}</span>
-                                <div class="file-close download-file" style="cursor: pointer" data-path="{{file.path}}"><i class="fa-solid fa-download fa-lg"></i></div>
-                            </div>
-                            {% endfor %}
-                        </div>
-                        </div >
-                    </div>
-                    {% endif %}
-                </div>
-            </div>
-            {% endif %}
-        {% endfor %}
-        {% if countItem == 0 and rb %}
-        <p class="text-center">Aucune ressource</p>
-        {% endif %}
-        </div>
-        {% endfor %}
-        
-        {# <div class="card">
-        <div class="card-body">
-        <div id="ressourceAccordion">
-  {% for item in result %}
-  <div class="card">
-    <div style="cursor: pointer;" class="card-header collapsed" id="ressourceHeading{{item.id}}" data-toggle="collapse" data-target="#ressourceCollapse{{item.id}}" aria-expanded="false" aria-controls="ressourceCollapse{{item.id}}">
-      <h5 class="mb-0">
-          {{item.name}}
-      </h5>
-    </div>
-    <div id="ressourceCollapse{{item.id}}" class="collapse" aria-labelledby="ressourceHeading{{item.id}}" data-parent="#ressourceAccordion">
-      <div class="card-body">
-        <div class="row">
-                <div class="col-md-3 col-0"></div>
-                <div class="col-md-6 col-12 py-3">
-                    {% if item.content %}<div class="mt-3">{{item.content | raw}}</div>{% endif %}
-                    {% if item.files|length > 0 %}
-                    <div class="mt-3">
-                        <div class="d-flex align-items-center" >
-                        <span><b>Fichiers :</b></span> 
-                        <div class="d-flex align-items-start flex-wrap ms-2" style="gap: 5px;">
-                            {% for file in item.filesParsed %}
-                            <div class="file-block" >
-                                <span><i class="fa-regular fa-file fa-lg"></i></i>&nbsp;{{file.customName}}</span>
-                                <div class="file-close download-file" style="cursor: pointer" data-path="{{file.path}}"><i class="fa-solid fa-download fa-lg"></i></div>
-                            </div>
-                            {% endfor %}
-                        </div>
-                        </div >
-                    </div>
-                    {% endif %}
-                    
-                    
-                    
-                </div>
-                <div class="col-md-3 col-0"></div>
-                
-            </div>
-      </div>
-    </div>
-  </div>
-  {% endfor %}
-  
-</div>
-        
-        <div class="d-flex justify-content-center scale-up-center">
-            {{ knp_pagination_render(result) }}
-        <div>
-        </div>
-  </div> #}
-        {% endif %}
-    </div>
+						{% for label, message in app.flashes %}
+							<div class="alert alert-{{label}} p-3 text-center" role="alert">
+								<div class="alert-body">
+									{{message}}
+								</div>
+							</div>
+						{% endfor %}
+
+
+						{% if result|length == 0 and rubriques|length==0 %}
+							<p class="text-center">Aucun résultat</p>
+						{% else %}
+							{% set rubriques = [null]|merge(rubriques) %}
+							{% for rb in rubriques %}
+								{% set countItem = 0 %}
+								<div class="row">
+                                    {% if rb %}
+                                        <div class="col-12">
+                                            {% if rb %}
+                                                    <h2 class="accordion-header" id="heading{{ loop.index }}">
+                                                    <button class="accordion-button" 
+                                                            type="button" 
+                                                            data-bs-toggle="collapse" 
+                                                            data-bs-target="#collapse{{ loop.index  }}" 
+                                                            aria-expanded="true" 
+                                                            aria-controls="collapse{{ loop.index }}">
+                                                        {{rb.name}}
+                                                    </button>
+                                                </h2>
+                                            {% endif %}
+                                        </div>
+                                    {% endif %}
+                                    {% if result |length != 0 %}
+                                        <div id="collapse{{loop.index}}" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+                                            <div class="accordion-body">
+                                                {% for item in result %}
+                                                    {% if (not item.rubrique and not rb) or  (item.rubrique and rb and item.rubrique.id == rb.id) %}
+                                                        {% set countItem = countItem + 1 %}
+                                                        <div class="row week-item">
+                                                            <div class="col-md-3">
+                                                                <div class="ratio ratio-16x9 mt-3">
+                                                                    {% if item.imageCover %}
+                                                                        <img src="{{ asset( files_directory_relative ~ item.imageCover) }}" alt="Image" width="100" height="100">
+                                                                        {# <img src="{{ asset('assets/vuexy/images/pages/login-images.png' )}}" alt="Image" width="100" height="100"> #}
+
+                                                                    {% else %}
+                                                                        <img src="{{ asset('assets/vuexy/images/pages/login-images.png' )}}" alt="Image" width="100" height="100">
+                                                                    {% endif %}
+
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-9">
+                                                                <h5 class="text-primary fw-semibold mb-1">{{ item.name }}</h5>
+                                                                {% set fileCount = item.filesParsed|length %}
+                                                                <p class="mb-2 text-secondary fw-medium small">
+                                                                    <i class="fa-regular fa-folder-open me-1"></i> 
+                                                                    ({{ fileCount }} fichier{{ fileCount > 1 ? 's' : '' }} disponible{{ fileCount > 1 ? 's' : '' }})
+                                                                </p>
+                                                                <p>{{ (item.content ?? '')|slice(0, 300) }}{% if (item.content ?? '')|length > 300 %}…{% endif %}</p>
+
+                                                                <a href="{{ path('agent_ressource_details',{ id : item.id , 'type' : type })}}" class="btn btn-primary btn-sm">
+                                                                    Accéder à la ressource
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    {% endif %}
+                                                {% endfor %}
+                                                {% if countItem == 0 and rb %}
+                                                    <p class="text-center">Aucune ressource</p>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    {% endif %}
+								</div>
+							{% endfor %}
+						{% endif %}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 
 {% endblock %}
 
 {% block javascripts %}
-    {{ parent() }}
-    <script>
-        $(document).ready(function (){
-            $('.download-file').click(function (){
-                let downloadPath = "{{path('app_agent_ressource_file_download', {'filename': 'custom-file-name'})}}";
+	{{ parent() }}
+	<script>
+		$(document).ready(function () {
+        $('.download-file').click(function () {
+                let downloadPath = "{{ path('app_agent_ressource_file_download', {'filename': 'custom-file-name'}) }}";
                 downloadPath = downloadPath.replace('custom-file-name', $(this).data('path'));
                 window.location.href = downloadPath;
             })
-        }); 
-    </script>
+        });
+	</script>
 
 {% endblock %}
-
-

@@ -1,0 +1,108 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	Ressource - Visualisation
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('assets/css/formation/formation.css')}}">
+	<style>
+		.accordion-button::after {
+			display: none !important;
+		}
+	</style>
+{% endblock %}
+
+{% block body %}
+    <a href="{{ path('agent_ressource_details',{ id : file.ressourceID , 'type' : type })}}" class="btn btn-secondary my-3">
+		<i class="fa-solid fa-circle-arrow-left"></i>
+		Retour
+	</a>
+	<div class="row px-3 content-formation">
+		<div class="card card-body-custom mt-1 px-5">
+            {% set ext = file.customName|split('.')|last|lower %}
+
+            <div class="file-preview my-5 mx-5">
+                <h3 class="text-center general-primary-text">{{ file.customName }}</h3>
+                {% if ext == 'pdf' %}
+                    {# <iframe src="{{ path('app_ressource_file_preview',{'customName' : file.customName ,'id': file.ressourceID}) }}" width="100%" height="500px" style="border: none;"></iframe> #}
+                         <div class="row mb-4 justify-content-center mx-4">
+                            <div class="col-md-12 text-center ">
+                    <div style="height: 850px;overflow: auto;">
+                        <div id="container-pdf"  style=" background-color: #f0f0f0; padding: 10px; border-radius: 5px;text-center">
+                            <div class="spinner" id="spinner-pdf">
+                            
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                    </div>
+                {% elseif ext in ['mp4', 'webm', 'ogg'] %}
+                    <video controls width="100%" height="auto">
+                        <source src="{{ path('app_ressource_file_preview',{'customName' : file.customName ,'id': file.ressourceID}) }}" type="video/{{ ext }}">
+                        Votre navigateur ne supporte pas la lecture de cette vidéo.
+                    </video>
+
+                {% elseif ext in ['jpg', 'jpeg', 'png', 'gif'] %}
+                    <img src="{{ path('app_ressource_file_preview',{'customName' : file.customName ,'id': file.ressourceID}) }}" alt="Preview" class="img-fluid rounded">
+
+                {% else %}
+                    <p class="text-muted fst-italic">Aucun aperçu disponible pour ce type de fichier.</p>
+                {% endif %}
+            </div>
+		</div>
+	</div>
+
+{% endblock %}
+{% block javascripts %}
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
+    <script>
+       pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js";
+    </script>
+   
+    <script>
+
+
+        $(document).ready(function () { 
+            generatePDF('container-pdf',"{{ path('app_ressource_file_preview',{'customName' : file.customName ,'id': file.ressourceID}) }}");	
+            
+        });
+       
+
+
+
+        function generatePDF(id,pdfUrl){
+        
+            if ($('#'+id).length) {
+                    
+                const loadingTask = pdfjsLib.getDocument(pdfUrl);
+                loadingTask.promise.then(pdf => {
+                    for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+                        pdf.getPage(pageNum).then(page => {
+                            const scale = 1.2;
+                            const viewport = page.getViewport({ scale });
+                            const canvas = document.createElement('canvas');
+                            const context = canvas.getContext('2d');
+                            canvas.height = viewport.height;
+                            canvas.width = viewport.width;
+                            const renderContext = {
+                                canvasContext: context,
+                                viewport: viewport
+                            };
+                            document.getElementById(id).appendChild(canvas);
+                            page.render(renderContext);
+                        });
+                    }
+                    $('#spinner-'+id).remove();
+                });
+            }
+
+
+        }
+        
+        
+    </script>
+{% endblock %}

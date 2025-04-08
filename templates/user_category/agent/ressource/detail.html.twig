@@ -1,0 +1,124 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	Ressource - Détail
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('assets/css/formation/formation.css')}}">
+	<style>
+		.accordion-button::after {
+			display: none !important;
+		}
+	</style>
+{% endblock %}
+
+{% block body %}
+	<a href="{{path('app_agent_ressource_list', {'type': type })}}" class="btn btn-secondary my-3">
+		<i class="fa-solid fa-circle-arrow-left"></i>
+		Retour
+	</a>
+	<div class="row px-3 content-formation">
+		<div class="card card-body-custom mt-2 px-5">
+			<div class="row mt-3 justify-content-center mb-3">
+				<div class="col-md-6 mb-5">
+					<div class="mb-lg-0 d-flex justify-content-center">
+						<div class="ratio ratio-16x9 mt-3 ">
+							<img class="img-fluid w-100" style="border-radius:20px" 
+                            {% if ressource.imageCover %} 
+                                src="{{ asset( files_directory_relative ~ ressource.imageCover) }}"
+                            {% else %} 
+                                src="{{ asset('assets/vuexy/images/pages/login-images.png' )}}"
+                            {% endif %}
+                            alt=""/>
+						</div>
+					</div>
+				</div>
+				<h3 class="text-center general-primary-text">{{ ressource.name }}</h3>
+			</div>
+			<hr>
+			<div class="row mt-3 justify-content-center">
+				{% if  ressource.content is not empty %}
+					<div class="col-md-12 mb-5">
+						<div class="course-overview mb-5">
+							<h4 class="my-auto  mb-3">Description</h4>
+							<p>{{ ressource.content | raw }}</p>
+						</div>
+					</div>
+				{% endif %}
+
+
+				<div class="col-md-12 mb-5">
+                    {% set fileCount = ressource.filesParsed|length %}
+					<div class="">
+						<h4 class="justify-content-around my-auto  mb-3">
+                            Fichier{{ fileCount > 1 ? 's' : '' }} ({{ fileCount }})
+						</h4>
+
+					</div>
+
+					<div class="row g-3">
+						{% for file in ressource.filesParsed %}
+							{% set ext = file.customName|split('.')|last|lower %}
+							<div class="col-6 col-md-3 col-lg-2">
+								<div class="card shadow-sm rounded-4 text-center h-100 d-flex flex-column justify-content-between p-3">
+									<div class="my-3">
+										{% if ext in ['jpg', 'jpeg', 'png', 'gif'] %}
+											<i class="fa-regular fa-file-image fa-4x text-primary"></i>
+										{% elseif ext in ['pdf'] %}
+											<i class="fa-regular fa-file-pdf fa-4x text-danger"></i>
+										{% elseif ext in ['doc', 'docx'] %}
+											<i class="fa-regular fa-file-word fa-4x text-info"></i>
+										{% elseif ext in ['xls', 'xlsx'] %}
+											<i class="fa-regular fa-file-excel fa-4x text-success"></i>
+										{% elseif ext in ['zip', 'rar'] %}
+											<i class="fa-regular fa-file-archive fa-4x text-warning"></i>
+                                        {% elseif ext in ['mp4', 'mov', 'avi', 'webm'] %}
+                                            <i class="fa-regular fa-file-video fa-4x text-purple" style="color:purple"></i>
+                                        {% else %}
+											<i class="fa-regular fa-file fa-4x text-secondary"></i>
+										{% endif %}
+									</div>
+									<div class="mb-2">
+										<small class="text-truncate d-block" title="{{ file.customName }}">
+											{{ file.customName|length > 20 ? file.customName|slice(0, 20) ~ '…' : file.customName }}
+										</small>
+									</div>
+									<div class="d-grid gap-1">
+                                        {% if ext in ['pdf','mp4', 'mov', 'avi', 'webm'] %}
+										    <a href="{{ path('agent_ressource_visualize',{'customName' : file.customName , 'id' : ressource.id , 'type' : type  }) }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                                <i class="fa-regular fa-eye me-1"></i>
+                                                Visualiser
+										    </a>
+                                        {% endif %}
+										<a class="btn btn-sm btn-primary download-file" href="{{ path('app_ressource_file_preview',{'customName' : file.customName , 'id' : ressource.id , 'type' : type,'download' : 1  }) }}">
+											<i class="fa-solid fa-download me-1"></i>
+											Télécharger
+										</a>
+									</div>
+								</div>
+							</div>
+						{% endfor %}
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+    <script>
+		$(document).ready(function () {
+        $('.download-file').click(function () {
+                let downloadPath = "{{ path('app_agent_ressource_file_download', {'filename': 'custom-file-name'}) }}";
+                downloadPath = downloadPath.replace('custom-file-name', $(this).data('path'));
+                window.location.href = downloadPath;
+            })
+        });
+	</script>
+
+{% endblock %}
