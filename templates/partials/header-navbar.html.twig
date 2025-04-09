@@ -317,7 +317,15 @@
                                 <li class="d-flex p-0">
                                     <span class="">
                                         <a class="header-user text-primary" href="#"  onclick="copyLink('{{ url('agent_inscription', {'ambassador_username':  app.user.username != "" ?  app.user.username : ' '}) }}') " >
-                                            Lien de parrainage
+                                            Lien réseau
+                                            <i class="fa-solid fa-copy"></i>
+                                        </a>
+                                    </span>
+                                </li>
+                                <li class="d-flex p-0">
+                                    <span class="">
+                                        <a class="header-user text-primary" href="#"  onclick="copyLink('{{ catalogues_base_url }}?ref={{ generateReference(app.user.id,app.user.id) }}','Votre lien produit a été copié avec succès') "  >
+                                            Lien produit
                                             <i class="fa-solid fa-copy"></i>
                                         </a>
                                     </span>
