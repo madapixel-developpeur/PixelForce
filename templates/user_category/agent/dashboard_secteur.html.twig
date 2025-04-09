@@ -176,8 +176,7 @@
                                                     </span> #}
                                                     
                                                     <div class=" px-2 mt-1">
-                                                        <p><span class="fw-bolder me-25">Nom:</span>{{ expert.fullName}}</p>
-                                                        <p>   <span class="fw-bolder me-25">Email:</span>{{ expert.email}}</p>
+                                                        <p><span class="fw-bolder me-25">Nom:</span>{{ expert.fullName}}<span class="fw-bolder me-25 ms-2">Email:</span>{{ expert.email}}</p>
                                                     
                                                     </div>
                                                     
@@ -196,6 +195,34 @@
                                 </div>
                             {% endif %}
                         {% endif %}
+                        <div class="col-md-12">
+                            <div class="card border-0 shadow rounded-4 p-3 text-white" style="background-color: #ffffff;">
+                                <div class="p-4 rounded-4" style="background: linear-gradient(135deg, #0030f6, #001bb5); color: white;border-radius:7px !important;"> 
+                                    <h4 class="text-center fw-bold mb-4 text-white">Lien d’affiliation</h4>
+                                    <div class="row">
+                                        <!-- Produit -->
+                                        <div class="col-md-6 text-center" style="border-right: 2px solid rgba(255,255,255,0.2);">
+                                            <h5 class="fw-semibold text-white">Produit</h5>
+                                            <div class="input-group my-3" style="border: 2px solid white; border-radius: 7px; overflow: hidden;">
+                                                <input type="text" class="form-control border-0 text-center text-dark" readonly value="{{ catalogues_base_url }}?ref={{ generateReference(app.user.id,app.user.id) }}">
+                                            </div>
+                                            <a href="#" class="vision-button  text-center rounded-3  px-3  py-2" onclick="copyLink('{{ catalogues_base_url }}?ref={{ generateReference(app.user.id,app.user.id) }}','Lien d\'affiliation produit copié avec succès') " >Copier</a>
+                                        </div>
+
+                                        <!-- Réseau -->
+                                        <div class="col-md-6 text-center mt-4 mt-md-0">
+                                            <h5 class="fw-semibold text-white">Réseau</h5>
+                                            <div class="input-group my-3" style="border: 2px solid white; border-radius: 7px; overflow: hidden;">
+                                                <input type="text" class="form-control border-0 text-center text-dark" readonly value="{{ url('agent_inscription', {'ambassador_username':  app.user.username != "" ?  app.user.username : ' '})}}">
+                                            </div>
+                                            <a href="#" class="vision-button  text-center rounded-3  px-3  py-2" onclick="copyLink('{{ url('agent_inscription', {'ambassador_username':  app.user.username != "" ?  app.user.username : ' '})}}','Lien d\'affiliation réseau copié avec succès') " >Copier</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
                     </div>
                 </div>
             </div>
