@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-#[Route('/professionnel')]
+#[Route('/agent/professionnel')]
 class AgentProfessionnelHomeController extends AbstractController
 {
 

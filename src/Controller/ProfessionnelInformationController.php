@@ -25,7 +25,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
- * @Route("/professionnel/information")
+ * @Route("/agent/professionnel/information")
  */
 class ProfessionnelInformationController extends AbstractController
 {
