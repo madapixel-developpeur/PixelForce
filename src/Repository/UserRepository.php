@@ -520,14 +520,16 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->setParameter('userId', $currentUser)
             ->setParameter('search', '%' . strtolower($search) . '%');
         if (!in_array(User::ROLE_COACH, $currentUser->getRoles()) && !in_array(User::ROLE_ADMINISTRATEUR, $currentUser->getRoles())) {
-            $andCond = "u.roles LIKE '%" . User::ROLE_COACH . "%' OR u.roles LIKE '%" . User::ROLE_ADMINISTRATEUR . "%'";
+            $andCond = "u.roles LIKE '%" . User::ROLE_COACH . "%'";
             $query->andWhere($andCond);
         }
+        $query->andWhere("u.roles NOT LIKE '%" . User::ROLE_ADMINISTRATEUR . "%'");
 
         return $query;
     }
 
-    public function findUserByRoleAndSecteur($role,$secteurId){
+    public function findUserByRoleAndSecteur($role, $secteurId)
+    {
         $queryBuilder = $this->createQueryBuilder('u')
             ->join('u.agentSecteurs', 'aSec')
             ->where('u.active IS NULL or u.active != :inactiveState')

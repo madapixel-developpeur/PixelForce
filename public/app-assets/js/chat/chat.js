@@ -369,6 +369,7 @@ myChatApp.controller('chatUserList', function ($scope, chat) {
         if (!myRoles.includes("ROLE_ADMINISTRATEUR") && !myRoles.includes("ROLE_COACH")) {
             if (!otherRoles.includes("ROLE_ADMINISTRATEUR") && !otherRoles.includes("ROLE_COACH")) return false;
         }
+        if(otherRoles.includes("ROLE_ADMINISTRATEUR")) return false;
         return true;
     }
     $scope.isNewMessage = function (conversation) {
