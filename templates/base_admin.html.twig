@@ -18,9 +18,9 @@
         <link rel="stylesheet" type="text/css" href="{{ asset('assets/vuexy/vendors/css/pickers/flatpickr/flatpickr.min.css') }}">
 
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/1.35.0/iconfont/tabler-icons.min.css" integrity="sha512-tpsEzNMLQS7w9imFSjbEOHdZav3/aObSESAL1y5jyJDoICFF2YwEdAHOPdOr1t+h8hTzar0flphxR76pd0V1zQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-        <link rel="stylesheet" href="{{ asset('app-assets/css/chat/chat.css?date=202503251105')}}">
+        <link rel="stylesheet" href="{{ asset('app-assets/css/chat/chat.css?date=202503251106')}}">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.8.3/angular.min.js" integrity="sha512-KZmyTq3PLx9EZl0RHShHQuXtrvdJ+m35tuOiwlcZfs/rE7NZv29ygNA8SFCkMXTnYZQK2OX0Gm2qKGfvWEtRXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
+        <link href="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@latest/dist/editorjs.min.css" rel="stylesheet">
         <!-- Calendly link widget begin -->
 		<link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
 		<script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript" async></script>
@@ -153,6 +153,8 @@
                 window.jwtToken = '{{configSecteurService.getUserJwtToken(app.user)}}';
                 window.userId = '{{app.user.id}}';
             </script>
+            <script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@latest"></script>
+            <script src="https://cdn.jsdelivr.net/npm/editorjs-html@4.0.0/.build/edjsHTML.js"></script>
             <script src="{{ asset('app-assets/js/chat/chat.js') }}"></script>
         {% endblock %}
     </body>
