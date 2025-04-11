@@ -1,4 +1,8 @@
-var myChatApp = angular.module("myChatApp", ['btford.socket-io']);
+var myChatApp = angular.module("myChatApp", ['btford.socket-io']).filter('to_trusted', ['$sce', function($sce){
+    return function(text) {
+        return $sce.trustAsHtml(text);
+    };
+}]);
 const applicationName = "pixelforce";
 const baseHeadersChatApi = {
     'authorization': 'Bearer ' + window.jwtToken,
@@ -480,8 +484,42 @@ myChatApp.controller('chatUser', function ($scope, $q, chat) {
     $scope.total = 0;
     $scope.isHeaderLoading = false;
     $scope.conversation = null;
-    vm.message = '';
+    // vm.message = '';
     $scope.isSending = false;
+
+    const edjsParser = edjsHTML();
+    let editorInstance = null;
+    
+
+    $scope.isEditorVisible = function () {
+        return !$scope.isHeaderLoading && !$scope.isLoading && ($scope.$parent.expanded || $scope.$parent.currentView === 'USER') && !!$scope.$parent.conversationId;
+    };
+      
+      // Watch the combined condition
+      $scope.$watch($scope.isEditorVisible, function (newVal, oldVal) {
+        if (newVal === true) {
+          // Wait for DOM to render after ng-if
+          setTimeout(() => {
+                editorInstance = new EditorJS({
+                    holder: 'editorjs',
+                    placeholder: 'Écrivez ici...',
+                    // data: {
+                    //     blocks: [{
+                    //         type: "paragraph",
+                    //         data: { text: "Écrivez ici..." }
+                    //     }]
+                    // },
+                    
+                    onChange: async () => {
+                        const output = await editorInstance.save();
+                        let html = edjsParser.parse(output);
+                        console.log(html);
+                    }
+                });
+            
+          }, 0);
+        } 
+      });
 
     $scope.$on('newMessage', function (event, data) {
         if ($scope.$parent.currentView == 'USER' && $scope.$parent.conversationId == data.message.conversationId) {
@@ -512,17 +550,20 @@ myChatApp.controller('chatUser', function ($scope, $q, chat) {
         $scope.scrollToBottom()
     }
 
-    $scope.onSubmit = function () {
-        console.log("message ===" + vm.message)
-        console.log('onsubmit', JSON.stringify(vm.message))
-        if (!vm.message?.trim()) {
+    $scope.onSubmit = async function () {
+        const output = await editorInstance.save();
+        let html = edjsParser.parse(output);
+        console.log(html);
+        console.log("message ===" + html)
+        console.log('onsubmit', JSON.stringify(html))
+        if (!html) {
             return
         }
         $scope.isSending = true;
-        chat.sendMessage($scope.$parent.conversationId, { content: vm.message })
+        chat.sendMessage($scope.$parent.conversationId, { content: html })
             .then(result => {
                 $scope.$apply(() => {
-                    vm.message = '';
+                    editorInstance.clear();
                     $scope.addMessage(result);
                 });
             }).catch(error => console.error(error))

@@ -47,8 +47,8 @@
             
             <img src="{{asset('assets/img/avatar.webp')}}"  class="chat-message-from-avatar chat-avatar" />
             
-            <div class="chat-message-text" style="position: relative;">
-              {{"{{message.content}}"}}
+            <div class="chat-message-text" style="position: relative;" ng-bind-html="message.content|to_trusted">
+              {# {{"{{message.content}}"}} #}
             </div>
           </div>
           <div class="chat-message-date">
@@ -70,7 +70,8 @@
   <div class="chat-box-footer" ng-if="conversationId">
     
       <div class="d-flex align-items-center px-3 py-2" style="height: 100%;" ng-if="!isLoading && !isHeaderLoading">
-    <textarea type="text" class="chat-input-text flex-grow-1 me-2" placeholder="Écrivez ici..." ng-model="ctrl.message"></textarea>
+    {# <textarea type="text" class="chat-input-text flex-grow-1 me-2" placeholder="Écrivez ici..." ng-model="ctrl.message"></textarea> #}
+    <div id="editorjs" class="chat-input-text flex-grow-1 me-2"></div>
     <button type="submit" class="chat-input-submit" ng-attr-disabled="isSending" ng-click="onSubmit()" >
         <i class="ti ti-loader fs-2 my-loader" ng-if="isSending"></i>
         <i class="ti ti-send fs-2" ng-if="!isSending"></i>

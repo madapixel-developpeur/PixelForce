@@ -519,4 +519,23 @@
     position: relative;
 } 
 
+.ce-toolbar {
+    display: none !important;
+}
 
+.codex-editor__redactor{
+    padding-bottom: 0 !important;
+    max-height: 80px !important;
+}
+
+.ce-paragraph[data-placeholder-active]:empty::before {
+    color: white !important;
+}
+
+.truncate-multiline {
+    display: -webkit-box;
+    -webkit-line-clamp: 1; /* number of lines */
+    line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
