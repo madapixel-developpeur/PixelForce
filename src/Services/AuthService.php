@@ -149,15 +149,15 @@ class AuthService
         $LPN_BACK_URL = $_ENV['LITTLE_PONAILS_BACK_URL'];
         try{
 
-            $response = $this->client->request(
-                'POST',
-                $LPN_BACK_URL . '/api/auth/register',
-                [
-                    'json' =>   ['email' => $identifier ]
-                ]
-            );
-            $content = json_decode($response->getContent(), true);
-            return $content;
+            // $response = $this->client->request(
+            //     'POST',
+            //     $LPN_BACK_URL . '/api/auth/register',
+            //     [
+            //         'json' =>   ['email' => $identifier ]
+            //     ]
+            // );
+            // $content = json_decode($response->getContent(), true);
+            // return $content;
         } catch (HttpExceptionInterface $e) {
             $statusCode = $e->getResponse()->getStatusCode();
             if ($statusCode === 422) {
@@ -166,11 +166,12 @@ class AuthService
             }
             throw $e; 
         } catch (\Throwable $th) {
+
             throw $th;
         }
     }
 
-    public function linkAccount(User $user,Secteur $secteur,string $identifier){
+    public function linkAccountInfo(User $user,Secteur $secteur,string $identifier){
         if($secteur->getId() != $_ENV['SECTEUR_LITTLE_PONAILS_ID']){
             throw new CustomException('Secteur non prise en charge');
         }
@@ -178,12 +179,13 @@ class AuthService
         if(empty($accountInfo)){
             throw new CustomException("Aucun compte avec l'identifiant \"$identifier\" n'a été identifié.");
         }
-        $agentSecteur = $user->getAgentSecteurById($secteur?->getId());
-        $agentSecteur->setSectorPlatformAccountId($accountInfo['id']);
-        $agentSecteur->setSectorPlatformUsername($accountInfo['identifier']);
-        $agentSecteur->setSectorPlatformAgentUsername($accountInfo['agentUsername']);
-        $this->entityManager->persist($agentSecteur);
-        $this->entityManager->flush();
+        return $accountInfo;
+        // $agentSecteur = $user->getAgentSecteurById($secteur?->getId());
+        // $agentSecteur->setSectorPlatformAccountId($accountInfo['id']);
+        // $agentSecteur->setSectorPlatformUsername($accountInfo['identifier']);
+        // $agentSecteur->setSectorPlatformAgentUsername($accountInfo['agentUsername']);
+        // $this->entityManager->persist($agentSecteur);
+        // $this->entityManager->flush();
     }
 
 

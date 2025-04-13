@@ -266,6 +266,27 @@ class StatAgentService
         }
     }
 
+    public function getCaStatLPN(string $identifier,DateTime $reference){
+        try {
+            $BO_URL = $_ENV['LITTLE_PONAILS_BACK_URL'];
+            if (!trim($BO_URL)){
+                throw new \Exception('API unavailable');
+            }
+            $response = $this->client->request(
+                'GET',
+                $BO_URL . '/api-pxl/agent-team-ca-stat',
+                [
+                   'json' => array_merge( ['identifier' => $identifier], ['date_ref' =>  $reference->format('Y-m-d H:i:s')])
+                ]
+            );
+            $content = json_decode($response->getContent(), true);
+            return $content;
+        } catch (\Exception $exception) {
+            dd($exception);
+           throw $exception;
+        }
+    }
+
 
     public function getAgentCaStatEquipe($agent,$secteurId)
     {
@@ -287,6 +308,12 @@ class StatAgentService
                 );
                 $content = json_decode($response->getContent(), true);
                 return $content;
+            }
+            
+            else if($secteurId == $_ENV['SECTEUR_LITTLE_PONAILS_ID']){
+                $agentSecteur = $agent->getAgentSecteurById($secteurId);
+                $identifier = $agentSecteur->getSectorPlatformAccountId();
+                return  $this->getCaStatLPN($identifier, new DateTime());
             }else{
                 throw new Exception();
             }

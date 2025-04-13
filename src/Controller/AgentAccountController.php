@@ -302,7 +302,19 @@ class AgentAccountController extends AbstractController
             }
             $countEquipe = count($filleul);
             $countDirect = count($filleul);
-        } else {
+        }
+        else if ($sessionSecteurId == $_ENV['SECTEUR_LITTLE_PONAILS_ID']) {
+            $result = $this->repoUser->findBy(['parrain' => $ambassadeur->getId()]);
+            $filleul = $paginator->paginate(
+                $result,
+                $request->query->getInt('page', 1),
+                5
+            );
+            $caStat = $statAgentService->getAgentCaStatEquipe($ambassadeur,$sessionSecteurId);
+            $countEquipe = $this->agentService->getNumberOfTeam($ambassadeur, 1);
+            $countDirect = count($result);
+        }  
+        else {
             $result = $this->repoUser->findBy(['parrain' => $ambassadeur->getId()]);
             $filleul = $paginator->paginate(
                 $result,
@@ -345,9 +357,15 @@ class AgentAccountController extends AbstractController
         if (in_array('ROLE_AGENT', $user->getRoles())) {
             $limit = ($user->getPosition() ?? 0) + 1;
         }
+
+
         if ($sessionSecteurId == $secteur_finance_id) {
             $unilevel = $this->statAgentService->getInovaUnilevelChildren($user, true);
-        } else {
+        } 
+        else   if ($sessionSecteurId == $_ENV['SECTEUR_LITTLE_PONAILS_ID']) {
+            $unilevel = $this->agentService->getUnilevelChildren($user, 1, true, $limit);
+        }
+        else {
             $unilevel = $this->agentService->getUnilevelChildren($user, 1, true, $limit);
             $unilevel = $this->statAgentService->addSummaryCaToUnilevel($unilevel);
         }
