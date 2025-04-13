@@ -2,20 +2,24 @@
 
 namespace App\Services;
 
-use App\Entity\AccountValidation;
-use App\Entity\ForgotPassword;
-use App\Entity\User;
-use App\Repository\AccountValidationRepository;
-use App\Repository\AgentSecteurRepository;
-use App\Repository\CategorieFormationRepository;
-use App\Repository\ForgotPasswordRepository;
-use App\Repository\UserRepository;
-use DateInterval;
 use DateTime;
-use Doctrine\ORM\EntityManagerInterface;
 use Exception;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use DateInterval;
+use App\Entity\User;
+use App\Entity\Secteur;
+use App\Entity\ForgotPassword;
+use App\Entity\AccountValidation;
+use App\Exception\CustomException;
+use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\AgentSecteurRepository;
+use App\Repository\ForgotPasswordRepository;
+use App\Repository\AccountValidationRepository;
+use App\Repository\CategorieFormationRepository;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Contracts\HttpClient\Exception\HttpExceptionInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class AuthService 
 {
@@ -35,7 +39,9 @@ class AuthService
         AccountValidationRepository $accountValidationRepository,
         MailerService $mailerService,
         private CategorieFormationRepository $categorieFormationRepository,
-        private AgentSecteurRepository $agentSecteurRepository)
+        private AgentSecteurRepository $agentSecteurRepository,
+        private HttpClientInterface $client,
+    )
     {
         $this->entityManager = $entityManager;
         $this->userRepository = $userRepository;
@@ -112,5 +118,85 @@ class AuthService
         }
         return $code;
     }
+
+    public function getLinkedAccountInfo(string $identifier){
+        $LPN_BACK_URL = $_ENV['LITTLE_PONAILS_BACK_URL'];
+        try{
+
+            $response = $this->client->request(
+                'GET',
+                $LPN_BACK_URL . '/api/auth/check-existing-account',
+                [
+                    'json' =>   ['email' => $identifier ]
+                ]
+            );
+            $content = json_decode($response->getContent(), true);
+            return $content;
+        } catch (HttpExceptionInterface $e) {
+            $statusCode = $e->getResponse()->getStatusCode();
+            if ($statusCode === 422) {
+                $content = json_decode($e->getResponse()->getContent(false), true);
+                throw new CustomException($content['message']);
+            }
+            throw $e; 
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+       
+    }
+
+    public function createLittlePonailsAccountFromApi(array $data, array $files){
+        $LPN_BACK_URL = $_ENV['LITTLE_PONAILS_BACK_URL'];
+        try{
+
+            $response = $this->client->request(
+                'POST',
+                $LPN_BACK_URL . '/api/auth/register',
+                [
+                    'json' =>   ['email' => $identifier ]
+                ]
+            );
+            $content = json_decode($response->getContent(), true);
+            return $content;
+        } catch (HttpExceptionInterface $e) {
+            $statusCode = $e->getResponse()->getStatusCode();
+            if ($statusCode === 422) {
+                $content = json_decode($e->getResponse()->getContent(false), true);
+                throw new CustomException($content['message']);
+            }
+            throw $e; 
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
+
+    public function linkAccount(User $user,Secteur $secteur,string $identifier){
+        if($secteur->getId() != $_ENV['SECTEUR_LITTLE_PONAILS_ID']){
+            throw new CustomException('Secteur non prise en charge');
+        }
+        $accountInfo = $this->getLinkedAccountInfo($identifier);
+        if(empty($accountInfo)){
+            throw new CustomException("Aucun compte avec l'identifiant \"$identifier\" n'a été identifié.");
+        }
+        $agentSecteur = $user->getAgentSecteurById($secteur?->getId());
+        $agentSecteur->setSectorPlatformAccountId($accountInfo['id']);
+        $agentSecteur->setSectorPlatformUsername($accountInfo['identifier']);
+        $this->entityManager->persist($agentSecteur);
+        $this->entityManager->flush();
+    }
+
+
+    public function createLittlePonailsAccount(User $user,Secteur $secteur,array $data, array $files){
+        if($secteur->getId() != $_ENV['SECTEUR_LITTLE_PONAILS_ID']){
+            throw new CustomException('Secteur non prise en charge');
+        }
+        $accountInfo = $this->createLittlePonailsAccountFromApi($data,$files);
+        $agentSecteur = $user->getAgentSecteurById($secteur?->getId());
+        $agentSecteur->setSectorPlatformAccountId($accountInfo['id']);
+        $agentSecteur->setSectorPlatformUsername($accountInfo['identifier']);
+        $this->entityManager->persist($agentSecteur);
+        $this->entityManager->flush();
+    }
+
 
 }

@@ -43,6 +43,17 @@ class AgentSecteur
      */
     private $currentFormationRank;
 
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $sectorPlatformUsername;
+
+     /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $sectorPlatformAccountId;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -109,6 +120,44 @@ class AgentSecteur
     public function setCurrentFormationRank(int $currentFormationRank): self
     {
         $this->currentFormationRank = $currentFormationRank;
+
+        return $this;
+    }
+
+   
+
+    /**
+     * Get the value of sectorPlatformUsername
+     */
+    public function getSectorPlatformUsername()
+    {
+        return $this->sectorPlatformUsername;
+    }
+
+    /**
+     * Set the value of sectorPlatformUsername
+     */
+    public function setSectorPlatformUsername($sectorPlatformUsername): self
+    {
+        $this->sectorPlatformUsername = $sectorPlatformUsername;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of sectorPlatformAccountId
+     */
+    public function getSectorPlatformAccountId()
+    {
+        return $this->sectorPlatformAccountId;
+    }
+
+    /**
+     * Set the value of sectorPlatformAccountId
+     */
+    public function setSectorPlatformAccountId($sectorPlatformAccountId): self
+    {
+        $this->sectorPlatformAccountId = $sectorPlatformAccountId;
 
         return $this;
     }

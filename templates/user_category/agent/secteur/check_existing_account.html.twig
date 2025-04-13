@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	Compte 
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	
+{% endblock %}
+
+{% block body %}
+	<div class="row px-3 content-formation">
+		<div class="card card-body-custom mt-2 px-5 py-5">
+			<h1>Bienvenue !</h1>
+            <p>Avez-vous déjà un compte sur la plateforme de Litte Ponails ?</p>
+
+            {{ form_start(form) }}
+                {{ form_row(form.identifier) }}
+                <div class="btn-wrap">
+                    <button class="btn btn-primary" type="submit">Vérifier</button>
+                </div>
+            {{ form_end(form) }}
+            <p>Vous n'avez pas encore de compte ? <a href="{{ bo_secteur_little_ponails ~ "auth/register"}}" target="_blank">Créez-en un ici</a></p>
+		</div>
+	</div>
+{% endblock %}
+
+

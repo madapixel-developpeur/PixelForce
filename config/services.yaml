@@ -71,3 +71,11 @@ services:
           event: "kernel.request",
           method: "onKernelRequest",
         }
+
+  App\EventListener\LinkedAccountFromSectorPlatformListener:
+    tags:
+      - {
+          name: "kernel.event_listener",
+          event: "kernel.request",
+          method: "onKernelRequest",
+        }
