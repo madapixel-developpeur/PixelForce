@@ -5,6 +5,8 @@ namespace App\Controller\Secteur\Account;
 
 use App\Entity\User;
 use App\Entity\Secteur;
+use App\Entity\UserOTP;
+use App\Services\OtpService;
 use App\Services\AuthService;
 use App\Exception\CustomException;
 use App\Repository\SecteurRepository;
@@ -14,6 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -24,7 +27,8 @@ class AgentLinkedAccountController extends AbstractController
     public function __construct(
         private SecteurRepository $secteurRepository,
         private SessionInterface $session,
-        private AuthService $authService
+        private AuthService $authService,
+        private OtpService $otpService
     ) {
 
     }
@@ -37,8 +41,8 @@ class AgentLinkedAccountController extends AbstractController
         $secteur = $this->secteurRepository->findOneBy(['id' => $secteur_id]);
 
         $form = $this->createFormBuilder()
-            ->add('identifier', TextType::class, [
-                'label' => 'Email, Username ou ID',
+            ->add('identifier', EmailType::class, [
+                'label' => 'Email',
                 'required' => true,
             ])
         ->getForm();
@@ -50,7 +54,12 @@ class AgentLinkedAccountController extends AbstractController
                 if (!$identifier) {
                     throw new CUstomException('Identifiant obligatoire.');
                 }
-                $this->authService->linkAccount($user,$secteur,$identifier);
+                // $this->authService->linkAccount($user,$secteur,$identifier);
+                $linkedAccountInfo = $this->authService->linkAccountInfo($user,$secteur,$identifier);
+                $this->otpService->setLinkedAccountInfo($linkedAccountInfo);
+                $this->otpService->sendOtp(null, $identifier, UserOTP::LINKED_ACCOUNT_CONFIRMATION);
+                return $this->redirectToRoute('app_otp_home', ['operationType' => UserOTP::LINKED_ACCOUNT_CONFIRMATION]);
+
                 $this->addFlash('success', 'Compte relié avec succès.'); 
                 return $this->redirectToRoute('agent_dashboard_secteur', ['id' =>  $secteur_id]);
             } catch (CustomException $e) {
@@ -59,6 +68,7 @@ class AgentLinkedAccountController extends AbstractController
                     $e->getMessage()
                 );
             } catch (\Exception $e) {
+                dd($e);
                 $this->addFlash(
                     'danger',
                     $_ENV['CUSTOM_ERROR_MESSAGE']

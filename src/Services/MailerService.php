@@ -3,22 +3,23 @@
 
 namespace App\Services;
 
-use App\Entity\DevisCompany;
-use Twig\Environment as Twig_Environment;
-use App\Entity\DocumentRecipient;
-use App\Entity\Formation;
-use App\Entity\Order;
-use App\Entity\OrderAroma;
-use App\Entity\OrderDigital;
-use App\Entity\OrderSecu;
 use App\Entity\User;
-use Nucleos\DompdfBundle\Wrapper\DompdfWrapperInterface;
-use Symfony\Bridge\Twig\Mime\TemplatedEmail;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
-use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
-use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Address;
+use App\Entity\Order;
+use App\Entity\UserOTP;
+use App\Entity\Formation;
+use App\Entity\OrderSecu;
+use App\Entity\OrderAroma;
+use App\Entity\DevisCompany;
+use App\Entity\OrderDigital;
+use App\Entity\DocumentRecipient;
 use Symfony\Component\Mime\Email;
+use Symfony\Component\Mime\Address;
+use Twig\Environment as Twig_Environment;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use Symfony\Component\Mailer\MailerInterface;
+use Nucleos\DompdfBundle\Wrapper\DompdfWrapperInterface;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class MailerService
 {
@@ -421,6 +422,24 @@ class MailerService
         ];
 
         $this->mySendMail($MailToAdmin, $attachmentsPath, null, $embeddedImages);
+
+    }
+
+
+    public function sendMailOtp(UserOTP $userOtp){
+        $user = null;
+
+        $body = $this->renderTwig('emails/otp/otp.html.twig', [
+            'userOtp' => $userOtp,
+        ]);
+
+        $attachmentsPath = [];
+        $embeddedImages = [];
+        $this->mySendMail([
+            'subject' => 'Vérification One Time Password (OTP)',
+            'to' => $userOtp->getEmail(),
+            'body' => $body
+        ], $attachmentsPath, null, $embeddedImages);
 
     }
 
