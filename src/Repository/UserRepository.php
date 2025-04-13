@@ -505,7 +505,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->orderBy('a.id', 'DESC');
 
         return $query->getQuery()
-            ->getSingleResult();
+            ->getOneOrNullResult();
     }
 
     public function searchChatUsersQueryBuilder($currentUser, $search = '')

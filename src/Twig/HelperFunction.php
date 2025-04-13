@@ -2,6 +2,7 @@
 
 namespace App\Twig;
 
+use App\Repository\AgentSecteurRepository;
 use DateTime;
 use Twig\TwigFilter;
 use DateTimeInterface;
@@ -31,7 +32,8 @@ class HelperFunction extends AbstractExtension
         private StatAgentService $statAgentService,
         Security $security,
         SessionInterface $session,
-        private SecteurRepository $secteurRepository
+        private SecteurRepository $secteurRepository,
+        private AgentSecteurRepository $agentSecteurRepository
     ) {
         $this->router = $router;
         $this->requestStack = $requestStack;
@@ -47,6 +49,7 @@ class HelperFunction extends AbstractExtension
             new TwigFunction('get_stat', [$this, 'getStat']),
             new TwigFunction('get_order_amount_HT', [$this, 'getOrderAmountHt']),
             new TwigFunction('obj_attribute', [$this, 'getAttribute']),
+            new TwigFunction('get_lpn_online_shop', [$this, 'getLPNOnlineShop']),
         ];
     }
 
@@ -128,5 +131,14 @@ class HelperFunction extends AbstractExtension
         $formatter->setPattern('MMMM'); // Full month name
         
         return ucfirst($formatter->format($date)); // Capitalize first letter
+    }
+
+    public function getLPNOnlineShop($id){
+        $agentSecteur = $this->agentSecteurRepository->findOneBy([
+            'agent' => $id,
+            'secteur' => $_ENV['SECTEUR_LITTLE_PONAILS_ID']
+        ]);
+        if(!$agentSecteur) return '';
+        return $_ENV['LITTLE_PONAILS_WORDPRESS_BASE_URL'].'?sponsor='.$agentSecteur->getSectorPlatformAgentUsername();
     }
 }

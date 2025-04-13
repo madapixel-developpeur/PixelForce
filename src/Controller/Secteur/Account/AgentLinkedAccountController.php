@@ -76,9 +76,6 @@ class AgentLinkedAccountController extends AbstractController
         $form = $this->createForm(SignUpLittlePonailsFormType::class, []);
         $secteur_id = $this->session->get('secteurId');
         $secteur = $this->secteurRepository->findOneBy(['id' => $secteur_id]);
- 
-    //     dump($request->files->all());
-    // dump($request->request->all());
 
 
         $form->handleRequest($request);

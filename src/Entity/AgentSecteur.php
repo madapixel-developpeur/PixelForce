@@ -54,6 +54,11 @@ class AgentSecteur
      */
     private $sectorPlatformAccountId;
 
+     /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $sectorPlatformAgentUsername;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -158,6 +163,24 @@ class AgentSecteur
     public function setSectorPlatformAccountId($sectorPlatformAccountId): self
     {
         $this->sectorPlatformAccountId = $sectorPlatformAccountId;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of sectorPlatformAgentUsername
+     */
+    public function getSectorPlatformAgentUsername()
+    {
+        return $this->sectorPlatformAgentUsername;
+    }
+
+    /**
+     * Set the value of sectorPlatformAgentUsername
+     */
+    public function setSectorPlatformAgentUsername($sectorPlatformAgentUsername): self
+    {
+        $this->sectorPlatformAgentUsername = $sectorPlatformAgentUsername;
 
         return $this;
     }

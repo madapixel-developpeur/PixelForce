@@ -217,6 +217,31 @@ class StatAgentService
         }
     }
 
+
+    public function getLPNAnnualAndMonthlyStat($identifier,DateTime $reference){
+        try {
+            $BO_URL = $_ENV['LITTLE_PONAILS_BACK_URL'];
+            if (!trim($BO_URL)){
+                throw new \Exception('API unavailable');
+            }
+            $response = $this->client->request(
+                'GET',
+                $BO_URL . '/api-pxl/agent-current-stat',
+                [
+                   'json' => array_merge( ['identifier' => $identifier], ['date_ref' =>  $reference->format('Y-m-d H:i:s')])
+                ]
+            );
+            $content = json_decode($response->getContent(), true);
+            return $content;
+        } catch (\Exception $exception) {
+            return [
+                'ca_total_year' => 0,
+                'remuneration_total_year' => 0,
+                'ca_total_month' => 0,
+                'remuneration_total_month' => 0,
+            ];
+        }
+    }
     
     public function getPbbAnnualAndMonthlyStat($pbb_id,DateTime $reference)
     {
@@ -285,6 +310,19 @@ class StatAgentService
         }
     }
 
+    public function getGlobalStatLittlePonails($agentId, $secteurId,DateTime  $dateRef){
+        if ($secteurId == $this->parameterBag->get('secteur_little_ponails_id')) {
+            return $this->getLPNAnnualAndMonthlyStat($agentId,$dateRef);
+        } else {
+            return [
+                'ca_total_year' => 0,
+                'remuneration_total_year' => 0,
+                'ca_total_month' => 0,
+                'remuneration_total_month' => 0,
+            ];
+        }
+    }
+
     public function getGlobalStat($agentId, $secteurId,DateTime  $dateRef)
     {
         if ($secteurId == $this->parameterBag->get('secteur_digital_id')) {
@@ -317,6 +355,7 @@ class StatAgentService
         $statFinance = null;
         $rankInfo = null;
         $statSecurite = null;
+        $statLPN = null;
         if ($secteur->getId() == $this->parameterBag->get('secteur_finance_id')) {
             $statFinance = $this->getStatFinance($agent->getEmail());
         } elseif ( $secteur->getId() == $this->parameterBag->get('secteur_digital_id')) {
@@ -332,7 +371,18 @@ class StatAgentService
             ];
             $lastDayOfLastMonth = (new DateTime('first day of last month'))->modify('last day of this month');
             $rankInfo = $this->getUserCurrentRank($agent,$lastDayOfLastMonth,$secteur);
-        } else{
+        } elseif ( $secteur->getId() == $this->parameterBag->get('secteur_little_ponails_id')) { 
+            $statLPN = [
+                'ca_total_year' => 0,
+                'remuneration_total_year' => 0,
+                'ca_total_month' => 0,
+                'remuneration_total_month' => 0,
+            ];
+            $agentSecteur = $agent->getAgentSecteurById($secteur?->getId());
+            $statLPN = $this->getGlobalStatLittlePonails($agentSecteur->getSectorPlatformAccountId(), $secteur->getId(),new DateTime());
+            $lastDayOfLastMonth = (new DateTime('first day of last month'))->modify('last day of this month');
+            $rankInfo = $this->getUserCurrentRank($agent,$lastDayOfLastMonth,$secteur);
+        }else{
             $statDigital = $this->getStat($agent->getId(), $secteur->getId());
         }
 
@@ -352,7 +402,8 @@ class StatAgentService
             'soldeRemuneration' => $soldeRemuneration,
             'nbVentesTotal' => $nbVentesTotal,
             'statRemuneration' => $statRemuneration ,
-            'rankInfo' => $rankInfo
+            'rankInfo' => $rankInfo,
+            'statLPN' => $statLPN,
         ];
     }
 
