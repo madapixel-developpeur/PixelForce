@@ -7,6 +7,7 @@ use Exception;
 use App\Entity\User;
 use App\Entity\Secteur;
 use App\Entity\TypeSecteur;
+use App\Exception\CustomException;
 use App\Repository\UserRepository;
 use App\Services\User\AgentService;
 use App\Services\RemunerationService;
@@ -221,6 +222,7 @@ class StatAgentService
     public function getLPNAnnualAndMonthlyStat($identifier,DateTime $reference){
         try {
             $BO_URL = $_ENV['LITTLE_PONAILS_BACK_URL'];
+
             if (!trim($BO_URL)){
                 throw new \Exception('API unavailable');
             }
@@ -282,7 +284,7 @@ class StatAgentService
             $content = json_decode($response->getContent(), true);
             return $content;
         } catch (\Exception $exception) {
-            dd($exception);
+
            throw $exception;
         }
     }
@@ -311,9 +313,13 @@ class StatAgentService
             }
             
             else if($secteurId == $_ENV['SECTEUR_LITTLE_PONAILS_ID']){
-                $agentSecteur = $agent->getAgentSecteurById($secteurId);
-                $identifier = $agentSecteur->getSectorPlatformAccountId();
-                return  $this->getCaStatLPN($identifier, new DateTime());
+                // $agentSecteur = $agent->getAgentSecteurById($secteurId);
+                // $identifier = $agentSecteur->getSectorPlatformAccountId();
+                // return  $this->getCaStatLPN($identifier, new DateTime());
+                return [
+                    "ca_perso" => 0,
+                    "ca_equipe" => 0
+                ];
             }else{
                 throw new Exception();
             }
@@ -321,6 +327,25 @@ class StatAgentService
             return [
                 "ca_perso" => 0,
                 "ca_equipe" => 0
+            ];
+        }
+    }
+
+    public function getAgentStatLittlePonailsNetwork($agent,$secteurId){
+        try {
+            
+            if ($secteurId != $_ENV['SECTEUR_LITTLE_PONAILS_ID']){
+                throw new CustomException('Secteur non prise en charge');
+            }
+            $agentSecteur = $agent->getAgentSecteurById($secteurId);
+            $identifier = $agentSecteur->getSectorPlatformAccountId();
+            return  $this->getCaStatLPN($identifier, new DateTime());
+        } catch (\Exception $exception) {
+            return [
+                "ca_perso" => 0,
+                "ca_equipe" => 0,
+                "countTeam" => 0,
+                'countDirectChildren' => 0
             ];
         }
     }
@@ -399,12 +424,6 @@ class StatAgentService
             $lastDayOfLastMonth = (new DateTime('first day of last month'))->modify('last day of this month');
             $rankInfo = $this->getUserCurrentRank($agent,$lastDayOfLastMonth,$secteur);
         } elseif ( $secteur->getId() == $this->parameterBag->get('secteur_little_ponails_id')) { 
-            $statLPN = [
-                'ca_total_year' => 0,
-                'remuneration_total_year' => 0,
-                'ca_total_month' => 0,
-                'remuneration_total_month' => 0,
-            ];
             $agentSecteur = $agent->getAgentSecteurById($secteur?->getId());
             $statLPN = $this->getGlobalStatLittlePonails($agentSecteur->getSectorPlatformAccountId(), $secteur->getId(),new DateTime());
             $lastDayOfLastMonth = (new DateTime('first day of last month'))->modify('last day of this month');
@@ -642,5 +661,75 @@ class StatAgentService
         } catch (\Exception $exception) {
             return [];
         }
+    }
+
+    public function getNetWorkFromLittlePonails(string $identifier,DateTime $reference){
+        try {
+            $BO_URL = $_ENV['LITTLE_PONAILS_BACK_URL'];
+            if (!trim($BO_URL)){
+                throw new \Exception('API unavailable');
+            }
+            $response = $this->client->request(
+                'GET',
+                $BO_URL . '/api-pxl/mlm/network',
+                [
+                   'json' => array_merge( ['identifier' => $identifier], ['date_ref' =>  $reference->format('Y-m-d H:i:s')])
+                ]
+            );
+            $content = json_decode($response->getContent(), true);
+            return $content;
+        } catch (\Exception $exception) {
+           throw $exception;
+        }
+    }
+
+    public function reArrangeDataFromLpn($data){
+
+
+        $reArrangedData['ID'] = $data['agent']['user']['id'];
+        $reArrangedData['name'] = $data['agent']['user']['lastname'].' ' .$data['agent']['user']['firstnames'];
+        $reArrangedData['imageUrl'] = '/assets/vuexy/images/portrait/small/avatar-s-11.jpg';
+        $reArrangedData['area'] = $data['agent']['user']['email'];
+        $reArrangedData['office'] =  "User";
+        $reArrangedData['isLoggedUser'] = false;
+        $reArrangedData['positionName'] = $data['agent']['username'];
+        $reArrangedData['CA'] = number_format( $data['metadatas']['total_sales'],2).'€' ;
+  
+        $reArrangedData['countChildren'] = count($data['children'] );
+        
+        foreach ($data['children'] as $child) {
+            $reArrangedData['children'][] = $this->reArrangeDataFromLpn($child);
+        }   
+        return $reArrangedData;
+    }
+
+    public function getLittlePonailsUnilevelChildren(User $user)
+    {
+        $agentSecteur = $user->getAgentSecteurById($_ENV['SECTEUR_LITTLE_PONAILS_ID']);
+        if(!$agentSecteur){
+            throw new CustomException('Secteur non prise en charge');
+        }
+        $identifier = $agentSecteur->getSectorPlatformAccountId();
+        
+        $networkFromLpn = $this->getNetWorkFromLittlePonails($identifier,new \DateTime);
+
+        $data['ID'] = $networkFromLpn['currentUser']['id'];
+        $data['name'] =  $networkFromLpn['currentUser']['name'];
+        $data['imageUrl'] = '/assets/vuexy/images/portrait/small/avatar-s-11.jpg';
+        $data['area'] =  $networkFromLpn['currentUser']['email'];
+        $data['office'] =  "User";
+        $data['isLoggedUser'] = false;
+        $data['positionName'] =  $networkFromLpn['currentUser']['username'];
+        $data['CA'] = number_format(  $networkFromLpn['currentUser']['CA'],2).'€' ;
+
+
+
+        $data['countChildren'] = count($networkFromLpn["children"]);
+        
+        foreach ($networkFromLpn["children"] as $child) {
+            $data['children'][] = $this->reArrangeDataFromLpn($child);
+        } 
+
+        return $data;
     }
 }
