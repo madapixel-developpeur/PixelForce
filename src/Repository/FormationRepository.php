@@ -91,7 +91,7 @@ class FormationRepository extends ServiceEntityRepository
             ->getQuery();
     }
 
-    public function findFormationsCoach(?array $criteres, Secteur $secteur,$role)
+    public function findFormationsCoach(?array $criteres, Secteur $secteur, $role)
     {
 
         $queryBuilder = ($this->createQueryBuilder('f'))
@@ -126,6 +126,8 @@ class FormationRepository extends ServiceEntityRepository
         $queryBuilder->addOrderBy('f.type', 'ASC');
         if (isset($criteres['trie']) && !empty($criteres['trie'])) {
             $queryBuilder->addOrderBy('f.' . $criteres['trie'], $criteres['ordre']);
+        } else {
+            $queryBuilder->addOrderBy('f.id', 'ASC');
         }
 
 
@@ -192,7 +194,7 @@ class FormationRepository extends ServiceEntityRepository
 
     }
 
-    public function searchForAgent(?array $criteres, $secteur,?array $roles = null)
+    public function searchForAgent(?array $criteres, $secteur, ?array $roles = null)
     {
         $queryBuilder = ($this->createQueryBuilder('f'))->where('f.secteur=:secteur')
             ->setParameter('secteur', $secteur->getId());
@@ -217,16 +219,16 @@ class FormationRepository extends ServiceEntityRepository
                 ->andWhere('u.nom LIKE :nom')
                 ->setParameter('nom', '%' . $criteres['auteur'] . '%');
         }
-        if($roles){
+        if ($roles) {
             $queryBuilder->andWhere('JSON_CONTAINS(f.roles, :role) = 1')
-            ->setParameter('role', json_encode($roles));
+                ->setParameter('role', json_encode($roles));
         }
 
         $queryBuilder->addOrderBy('f.type', 'ASC');
         if (!empty($criteres['trie'])) {
             $queryBuilder->orderBy('f.' . $criteres['trie'], $criteres['ordre']);
         }
-      
+
         if (isset($criteres['categorie'])) {
             $queryBuilder
                 ->join('f.CategorieFormation', 'cf')
@@ -481,7 +483,8 @@ class FormationRepository extends ServiceEntityRepository
         return $nextRank;
     }
 
-    public function countAvailableVideo(Secteur $secteur){
+    public function countAvailableVideo(Secteur $secteur)
+    {
         $queryBuilder = $this->createQueryBuilder('f');
 
         $queryBuilder
@@ -494,7 +497,7 @@ class FormationRepository extends ServiceEntityRepository
             ->andwhere('cf.statut = :statut')
             ->setParameter('statut', Status::VALID)
             ->setParameter('secteur', $secteur->getId())
-            ->setParameter('brouillon',0)
+            ->setParameter('brouillon', 0)
             ->setParameter('statusCreated', Formation::STATUS_CREATED)
         ;
 

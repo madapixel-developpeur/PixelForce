@@ -124,7 +124,7 @@ class CoachFormationController extends AbstractController
      *
      * @Security("is_granted('ROLE_COACH') or is_granted('ROLE_ADMINISTRATEUR')")
      */
-    public function coach_formation_list(Request $request,$section = Formation::REVENDEUR_SECTION)
+    public function coach_formation_list(Request $request, $section = Formation::REVENDEUR_SECTION)
     {
         $coach = $this->getUser();
         $role = $this->getRoleBySection($section);
@@ -134,13 +134,13 @@ class CoachFormationController extends AbstractController
             $secteur = $this->secteurRepository->findOneBy(['id' => $secteur_id]);
         }
         $criteres = $request->query->get('q') ? $request->query->get('q') : [];
-        $formations = $this->formationRepository->findFormationsCoach($criteres, $secteur,$role);
+        $formations = $this->formationRepository->findFormationsCoach($criteres, $secteur, $role)->getResult();
 
-        $formations = $this->paginator->paginate(
-            $formations,
-            $request->query->getInt('page', 1),
-            20
-        );
+        // $formations = $this->paginator->paginate(
+        //     $formations,
+        //     $request->query->getInt('page', 1),
+        //     20
+        // );
 
         //$agent = $this->userRepository->findOneBy(['id' => $request->query->get('agent')]);
         //$agent = $agent && in_array($secteur->getId(), $agent->getSecteursIdsByAgent()) ? $agent : null;
@@ -154,8 +154,9 @@ class CoachFormationController extends AbstractController
         ]);
     }
 
-    public function getRoleBySection(String $section){
-        $role = $section == 'revendeur' ? User::ROLE_REVENDEUR: User::ROLE_PROFESSIONNEL ;
+    public function getRoleBySection(string $section)
+    {
+        $role = $section == 'revendeur' ? User::ROLE_REVENDEUR : User::ROLE_PROFESSIONNEL;
         return $role;
     }
     //    public function coach_formation_list(Request $request)
@@ -210,14 +211,14 @@ class CoachFormationController extends AbstractController
                 }
 
                 $formation->testStatut();
-                $this->entityManager->save($formation);    
-                $this->uploadFormationFiles($request,$formation);
+                $this->entityManager->save($formation);
+                $this->uploadFormationFiles($request, $formation);
 
 
                 $this->entityManager->flush();
                 $this->entityManager->commit();
                 $this->addFlash('success', 'Formation ajouté avec succès');
-                return $this->redirectToRoute('coach_formation_fiche',['id' => $formation->getId()]);    
+                return $this->redirectToRoute('coach_formation_fiche', ['id' => $formation->getId()]);
             } catch (\Throwable $th) {
                 $error = $th->getMessage();
                 if ($this->entityManager->getConnection()->isTransactionActive()) {
@@ -257,7 +258,8 @@ class CoachFormationController extends AbstractController
                 $formation->setCoach($this->getUser());
 
                 $video_id = $request->request->get('video_id');
-                if($video_id) $formation->setVideoId($video_id);
+                if ($video_id)
+                    $formation->setVideoId($video_id);
                 $this->entityManager->save($formation);
 
                 $relationFormationCategorie->setFormation($formation);
@@ -267,11 +269,11 @@ class CoachFormationController extends AbstractController
                 $this->entityManager->save($relationFormationCategorie);
 
 
-                $this->uploadFormationFiles($request,$formation);
+                $this->uploadFormationFiles($request, $formation);
                 $this->entityManager->flush();
                 $this->entityManager->commit();
                 $this->addFlash('success', 'Formation ajouté avec succès');
-                return $this->redirectToRoute('coach_formation_fiche',['id' => $formation->getId()]);    
+                return $this->redirectToRoute('coach_formation_fiche', ['id' => $formation->getId()]);
             } catch (\Throwable $th) {
                 $error = $th->getMessage();
                 if ($this->entityManager->getConnection()->isTransactionActive()) {
@@ -443,7 +445,7 @@ class CoachFormationController extends AbstractController
     {
         $secteur = $this->getUser()->getSecteurByCoach();
         $roles = Formation::getRoleBasedOnSection($section);
-        $video = $this->secteurVideoFormationRepository->findBySectionAndSecteur( $secteur,$roles);
+        $video = $this->secteurVideoFormationRepository->findBySectionAndSecteur($secteur, $roles);
         if (is_null($video)) {
             $video = new SecteurVideoFormation();
             $video->setSecteur($secteur);
@@ -479,11 +481,11 @@ class CoachFormationController extends AbstractController
     /**
      * @Route("/coach/formation/configure-page/{section}", name="coach_configure_formation_page", options={"expose"=true})
      */
-    public function coach_formation_page_configuration(Request $request,$section = Formation::REVENDEUR_SECTION)
+    public function coach_formation_page_configuration(Request $request, $section = Formation::REVENDEUR_SECTION)
     {
         $secteur = $this->getUser()->getSecteurByCoach();
         $roles = Formation::getRoleBasedOnSection($section);
-        $configuration = $this->formationPageConfigurationRepository->findBySectionAndSecteur($secteur,$roles);
+        $configuration = $this->formationPageConfigurationRepository->findBySectionAndSecteur($secteur, $roles);
         if (is_null($configuration)) {
             $configuration = new FormationPageConfiguration();
             $configuration->setSecteur($secteur);
@@ -522,7 +524,7 @@ class CoachFormationController extends AbstractController
         ]);
     }
 
-    public function uploadFormationFiles(Request $request,Formation $formation)
+    public function uploadFormationFiles(Request $request, Formation $formation)
     {
         $documentFiles = [];
         $audioFiles = [];
