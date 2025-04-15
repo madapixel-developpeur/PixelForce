@@ -9,6 +9,10 @@ const baseHeadersChatApi = {
     'x-application': applicationName
 };
 
+function linkifyText(text) {
+    return text.replace(/(?<!<a[^>]*?>)(https?:\/\/[^\s<]+)(?![^<]*?<\/a>)/g, '<a href="$1">$1</a>');
+}
+
 myChatApp.factory('socket', function (socketFactory) {
     // Custom configuration with extra headers and query parameters
     var myIoSocket = io.connect(window.socketUrlChat, {
@@ -559,6 +563,7 @@ myChatApp.controller('chatUser', function ($scope, $q, chat) {
         if (!html) {
             return
         }
+        html = linkifyText(html);
         $scope.isSending = true;
         chat.sendMessage($scope.$parent.conversationId, { content: html })
             .then(result => {
