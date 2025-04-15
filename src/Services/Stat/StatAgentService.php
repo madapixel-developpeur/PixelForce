@@ -732,4 +732,82 @@ class StatAgentService
 
         return $data;
     }
+
+    public function getOrderInfoFromLittlePonailsApi($identifier,$ref){
+        try {
+            $BO_URL = $_ENV['LITTLE_PONAILS_BACK_URL'];
+            if (!trim($BO_URL)){
+                throw new \Exception('API unavailable');
+            }
+            $response = $this->client->request(
+                'GET',
+                $BO_URL . '/api-pxl/mlm/order/view',
+                [
+                   'json' => ['identifier' => $identifier , 'ref' => $ref]
+                ]
+            );
+            $content = json_decode($response->getContent(), true);
+            return $content;
+        } catch (\Exception $exception) {
+            throw new CustomException("Une erreur s'est produite lors de la requête de donnée");
+        }
+
+     
+    }
+
+
+    public function getOrderDetailFromLittlePonails($user,$ref){
+        $agentSecteur = $user->getAgentSecteurById($_ENV['SECTEUR_LITTLE_PONAILS_ID']);
+        $identifier = $agentSecteur->getSectorPlatformAccountId();
+        try {
+            $data = $this->getOrderInfoFromLittlePonailsApi($identifier,$ref);
+            return $data;
+        } catch (\Exception $exception) {
+            throw $exception;
+        }
+    }
+
+    public function getOrdersFromLittlePonails(User $user,int $limit){
+        $agentSecteur = $user->getAgentSecteurById($_ENV['SECTEUR_LITTLE_PONAILS_ID']);
+        $identifier = $agentSecteur->getSectorPlatformAccountId();
+        try {
+            $data = $this->getOrdersFromLittlePonailsFromApi($identifier);
+            return [
+                'items' => $data['orders'],
+                'itemNumberPerPage' => $data['count'],
+                'total' => $data['count'],
+                'currentPageNumber' => 1,
+            ];
+        } catch (\Exception $exception) {
+            throw $exception;
+            // return [
+            //     'items' => [],
+            //     'itemNumberPerPage' => 1,
+            //     'total' => 0,
+            //     'currentPageNumber' => 1,
+            // ];
+        }
+    }
+
+    public function getOrdersFromLittlePonailsFromApi($identifier){
+        try {
+            $BO_URL = $_ENV['LITTLE_PONAILS_BACK_URL'];
+            if (!trim($BO_URL)){
+                throw new \Exception('API unavailable');
+            }
+            $response = $this->client->request(
+                'GET',
+                $BO_URL . '/api-pxl/mlm/orders',
+                [
+                   'json' => ['identifier' => $identifier]
+                ]
+            );
+            $content = json_decode($response->getContent(), true);
+            return $content;
+        } catch (\Exception $exception) {
+            throw new CustomException("Une erreur s'est produite lors de la requête de donnée");
+        }
+
+     
+    }
 }

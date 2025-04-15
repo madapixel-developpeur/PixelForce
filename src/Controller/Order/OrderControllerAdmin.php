@@ -436,4 +436,49 @@ class OrderControllerAdmin extends AbstractController
 
     }
 
+    public function getLittlePonnailsOrder(Request $request,PaginatorInterface $paginator){
+        $user = (object)$this->getUser();
+        $page = $request->query->get('page', 1);
+        $result = $this->statAgentService->getOrdersFromLittlePonails($user,$page);
+     
+        $orderList = $paginator->paginate(
+            $result['items'],
+            1,
+            $result['itemNumberPerPage']
+        );
+        $orderList->setTotalItemCount($result['total']);
+        $orderList->setCurrentPageNumber($result['currentPageNumber']);
+
+        return $this->render('user_category/agent/order/little-ponails/order_list_little_ponails.html.twig', [
+            'orderList' => $orderList,
+        ]);
+    }
+
+     /**
+     * @Route("/secteur/list", name="app_common_order_list")
+     */
+    public function checkOrderSecteur(Request $request,PaginatorInterface $paginator){
+        $secteurId = $this->session->get('secteurId');
+
+        if($secteurId == $_ENV['SECTEUR_LITTLE_PONAILS_ID']){
+            return $this->getLittlePonnailsOrder($request,$paginator);
+        }
+        throw new Exception('Secteur non prise en charge');
+    }
+
+     /**
+     * @Route("/little-ponails/order/view/{ref}", name="app_view_order_lpn")
+     */
+    public function viewOrderLpn(string $ref,Request $request){
+        $secteurId = $this->session->get('secteurId');
+        if($secteurId != $_ENV['SECTEUR_LITTLE_PONAILS_ID']){
+            throw new Exception('Secteur non prise en charge');
+        }
+        $user = $this->getUser();
+        $orderInfo = $this->statAgentService->getOrderDetailFromLittlePonails($user,$ref);
+        return $this->render('user_category/agent/order/little-ponails/order_view_little_ponails.html.twig', [
+            'orderInfo' => $orderInfo,
+        ]);
+    }
+
 }

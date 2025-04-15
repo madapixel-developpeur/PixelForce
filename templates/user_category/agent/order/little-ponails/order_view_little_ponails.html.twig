@@ -1,0 +1,102 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	Commandes
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+{% endblock %}
+
+{% block body %}
+	<div class="row mb-3">
+		<div class="col-12  mt-2 mt-md-3">
+			<h4 class="my-auto general-primary-text">Détails de la commande</h4>
+		</div>
+	</div>
+	<div class="card card-company-table p-5 rounded-3" style="">
+		<div class="card-body p-0">
+            <div class="row">
+                <div class="col-md-12 mb-4">
+                    <h5 class="mb-3">Informations :</h5>
+                    <p><b>Date de la commande:</b> {{ orderInfo.date_created | date("d/m/Y H:i") }}</p>
+                    <p><b>Total:</b>
+                        {{ ((orderInfo.total ?? 0) - (orderInfo.shipping_total ?? 0))|round(2, 'common') }} {{ orderInfo.currency ?? '€' }}
+                    </p>
+                    <p><b>Statut:</b> {{  get_lpn_command_status_meaning(orderInfo.status,'emp') }}</p>
+                    <p><b>Adresse de livraison:</b>
+                        {{ [orderInfo.shipping.city, orderInfo.shipping.address_1, orderInfo.shipping.address_2, orderInfo.shipping.postcode]
+                            |map(v => v ?? '-') 
+                            |join(', ') 
+                        }}
+                    </p>
+                </div>  
+                <div class="col-md-12 mb-5">
+                    <h5>Liste des articles achetés :</h5>
+                    <div class="table-responsive">
+						<table class="table text-center">
+							<tbody class="align-items-center">
+								<tr>
+									<th class="text-start">Libellé</th>
+									<th class="text-end">Prix unitaire</th>
+									<th class="text-end">Quantité</th>
+									<th class="text-end">Total</th>
+								</tr>
+								{% for item in orderInfo.line_items %}
+									<tr>
+										<td class="text-start">{{ item.name}}</td>
+										<td class="text-end">{{ item.price  | number_format(2, ',', ' ')}} {{ orderInfo.currency ?? '€' }}</td>
+										<td class="text-end">{{ item.quantity}}</td>
+										<td class="text-end">{{ item.total  | number_format(2, ',', ' ')}}  {{ orderInfo.currency ?? '€' }}</td>
+									</tr>
+                                {% else %}
+                                    <tr>
+                                        <td class="text-center" colspan="99">Aucun article trouvé</td>
+                                    </tr>
+                                {% endfor %}
+
+
+							</tbody>
+						</table>
+					</div>
+                </div>
+                <hr>
+                <div class="col-md-12">
+                    <h5>Liste des coupons utilisés :</h5>
+                    <div class="table-responsive">
+						<table class="table text-center">
+							<tbody class="align-items-center">
+								<tr>
+                                    <th class="text-start">Code</th>
+                                    <th>Remise</th>
+                                    <th>Tax remisé</th>
+                                    <th>Type de la remise</th>
+                                    <th>Montant</th>
+                                    <th>Livraison gratuite</th>
+									
+								</tr>
+
+								{% for coupon in orderInfo.coupon_lines %}
+									<tr>
+                                        <td class="text-start">{{ coupon.code}}</td>
+                                        <td>{{ coupon.discount}}</td>
+                                        <td>{{ coupon.discount_tax}}</td>
+                                        <td>{{ coupon.discount_type}}</td>
+                                        <td>{{ coupon.nominal_amount}} {{order.currency ?? '€'}}</td>
+                                        <td>{{ coupon.free_shipping ? "OUI" : "NON"}}</td>
+									</tr>
+                                {% else %}
+                                    <tr>
+                                        <td class="text-center" colspan="99">Aucun coupon trouvé</td>
+                                    </tr>
+                                {% endfor %}
+
+							</tbody>
+						</table>
+					</div>
+                </div>
+            </div>
+		</div>
+	</div>
+
+{% endblock %}

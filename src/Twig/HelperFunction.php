@@ -50,6 +50,7 @@ class HelperFunction extends AbstractExtension
             new TwigFunction('get_order_amount_HT', [$this, 'getOrderAmountHt']),
             new TwigFunction('obj_attribute', [$this, 'getAttribute']),
             new TwigFunction('get_lpn_online_shop', [$this, 'getLPNOnlineShop']),
+            new TwigFunction('get_lpn_command_status_meaning', [$this, 'getLpnCommandStatusMeaningStr']),
         ];
     }
 
@@ -140,5 +141,26 @@ class HelperFunction extends AbstractExtension
         ]);
         if(!$agentSecteur) return '';
         return $_ENV['LITTLE_PONAILS_WORDPRESS_BASE_URL'].'?sponsor='.$agentSecteur->getSectorPlatformAgentUsername();
+    }
+
+    public function getLpnCommandStatusMeaningStr($status,$type = "wc-"){
+        $statusMData = [
+            'wc-' =>[
+                "wc-processing" => "En cours de préparation",
+                "wc-completed" => "Completée",
+                "wc-refunded" => "Remboursée",
+                "wc-failed" => "Archivée",
+                "wc-cancelled" => "Annulée",
+            ],
+            "emp" => [
+                "processing"=> "En cours de préparation",
+                "completed"=> "Completée",
+                "refunded"=> "Remboursée",
+                "trash"=> "Archivée",
+                "cancelled"=> "Annulée"
+            ]
+        ];
+        if(!isset($statusMData[$type])) return '';
+        return $statusMData[$type][$status] ?? '';
     }
 }
