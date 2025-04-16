@@ -250,7 +250,7 @@ class OrderControllerAdmin extends AbstractController
 
        
 
-        return $this->render('user_category/agent/chiffre_affaires/chiffre_affaire_historique.html.twig', [
+        return $this->render('user_category/agent/chiffre-affaires/chiffre_affaire_historique.html.twig', [
             'historiquesCa' => $historiquesCa,
             'totalCa' => $totalCa,
             'form' => $form->createView(),
@@ -291,7 +291,7 @@ class OrderControllerAdmin extends AbstractController
             //throw $th;
             return $this->redirectToRoute('agent_ca_list_digital');    
         }
-        return $this->render('user_category/agent/chiffre_affaires/chiffre_affaire_historique_detail.html.twig',[
+        return $this->render('user_category/agent/chiffre-affaires/chiffre_affaire_historique_detail.html.twig',[
             'orderList' => $orderList,
             'month'  => $month,
             'totalAmount' => $result['totalAmount'],
@@ -480,5 +480,72 @@ class OrderControllerAdmin extends AbstractController
             'orderInfo' => $orderInfo,
         ]);
     }
+
+    public function getLittlePonnailsCaHistory(Request $request,PaginatorInterface $paginator){
+        $user = (object)$this->getUser();
+        $page = $request->query->get('page', 1);
+        $result = $this->statAgentService->getCaHistoryFromLittlePonails($user,$page);
+        $caHistory = $paginator->paginate(
+            $result['items'],
+            1,
+            $result['itemNumberPerPage']
+        );
+        $caHistory->setTotalItemCount($result['total']);
+        $caHistory->setCurrentPageNumber($result['currentPageNumber']);
+
+        return $this->render('user_category/agent/chiffre-affaires/little-ponails/chiffre_affaire_historique.html.twig', [
+            'caHistory' => $caHistory,
+        ]);
+
+    }
+
+
+     /**
+     * @Route("/secteur/historique-chiffre-d-affaire", name="app_common_ca_list")
+     */
+    public function getCaHistoryBySecteur(Request $request, PaginatorInterface $paginator, SearchService $searchService): Response
+    {
+        $secteurId = $this->session->get('secteurId');
+
+        if($secteurId == $_ENV['SECTEUR_LITTLE_PONAILS_ID']){
+            return $this->getLittlePonnailsCaHistory($request,$paginator);
+        }
+        throw new Exception('Secteur non prise en charge');
+
+    }
+
+    public function getLittlePonnailsCaDetails(Request $request, PaginatorInterface $paginator,string $monthYear):Response
+    {
+        $user = $this->getUser();
+        $dateParameter = explode('-',$monthYear);
+        $month = $dateParameter[0] ?? date('m');
+        $year = $dateParameter[1] ?? date('Y');
+        try {
+           $caDetail = $this->statAgentService->getCaHistoryDetailFromLittlePonails($user,$month,$year);
+        } catch (\Throwable $th) {
+            $this->addFlash('danger',$_ENV['CUSTOM_ERROR_MESSAGE']);
+            return $this->redirectToRoute('app_common_ca_list');    
+        }
+        return $this->render('user_category/agent/chiffre-affaires/little-ponails/chiffre_affaire_historique_detail.html.twig',[
+           'caDetail' => $caDetail,
+           'month' => $monthYear
+        ]);
+
+    }
+
+     /**
+     * @Route("secteur/detail-chiffre-d-affaire/{month}", name="agent_common_ca_details")
+     */
+    public function secteurDetailsCa(Request $request, PaginatorInterface $paginator,string $month): Response
+    {
+
+        $secteurId = $this->session->get('secteurId');
+
+        if($secteurId == $_ENV['SECTEUR_LITTLE_PONAILS_ID']){
+            return $this->getLittlePonnailsCaDetails($request,$paginator,$month);
+        }
+        throw new Exception('Secteur non prise en charge');
+    }
+
 
 }

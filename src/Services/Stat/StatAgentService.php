@@ -810,4 +810,83 @@ class StatAgentService
 
      
     }
+
+    public function getCaHistoryFromLittlePonailsFromApi($identifier,array $option = []){
+        try {
+            $BO_URL = $_ENV['LITTLE_PONAILS_BACK_URL'];
+            if (!trim($BO_URL)){
+                throw new \Exception('API unavailable');
+            }
+            $response = $this->client->request(
+                'GET',
+                $BO_URL . '/api-pxl/mlm/agent/ca_by_month',
+                [
+                   'json' => [
+                        'identifier' => $identifier ,
+                        'page' => $option['page'] ??'',
+                        'limit' => $option['limit'] ?? ''  
+                    ]
+                ]
+            );
+            $content = json_decode($response->getContent(), true);
+            return $content;
+        } catch (\Exception $exception) {
+            throw new CustomException("Une erreur s'est produite lors de la requête de donnée");
+        }
+
+    }
+
+
+    public function getCaHistoryFromLittlePonails(User $user, int $page){
+        $agentSecteur = $user->getAgentSecteurById($_ENV['SECTEUR_LITTLE_PONAILS_ID']);
+        $identifier = $agentSecteur->getSectorPlatformAccountId();
+        try {
+            $data = $this->getCaHistoryFromLittlePonailsFromApi($identifier);
+            return [
+                'items' => $data['ca'],
+                'itemNumberPerPage' => $data['count'],
+                'total' => $data['count'],
+                'currentPageNumber' => 1,
+            ];
+        } catch (\Exception $exception) {
+            throw $exception;
+        }
+    }
+
+
+    public function getCaHistoryDetailFromLittlePonailsApi($identifier,$month,$year){
+        try {
+            $BO_URL = $_ENV['LITTLE_PONAILS_BACK_URL'];
+            if (!trim($BO_URL)){
+                throw new \Exception('API unavailable');
+            }
+            $response = $this->client->request(
+                'GET',
+                $BO_URL . '/api-pxl/mlm/agent/ca_summary_by_month',
+                [
+                   'json' => [
+                        'identifier' => $identifier ,
+                        'month' => $month,
+                        'year' => $year 
+                    ]
+                ]
+            );
+            $content = json_decode($response->getContent(), true);
+            return $content;
+        } catch (\Exception $exception) {
+            throw new CustomException("Une erreur s'est produite lors de la requête de donnée");
+        }
+    }
+
+
+    public function getCaHistoryDetailFromLittlePonails(User $user,$month,$year){
+        $agentSecteur = $user->getAgentSecteurById($_ENV['SECTEUR_LITTLE_PONAILS_ID']);
+        $identifier = $agentSecteur->getSectorPlatformAccountId();
+        try {
+            $data = $this->getCaHistoryDetailFromLittlePonailsApi($identifier,$month,$year);
+            return $data;
+        } catch (\Exception $exception) {
+            throw $exception;
+        }
+    }
 }

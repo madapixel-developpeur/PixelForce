@@ -1,0 +1,147 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	Chiffre d'affaires
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+{% endblock %}
+
+{% block body %}
+    <div class="row mb-3">
+		<div class="col-12  mt-2 mt-md-3">
+			<h4 class="my-auto general-primary-text">Historique du chiffre d'affaires</h4>
+		</div>
+	</div>
+	<div class="card card-company-table p-5 rounded-3" style="">
+				<div class="card-body p-0">
+					{# <div class="card-head mb-3">
+						<div class="row">
+							<div class="col-0 col-md-6">
+							</div>
+							<div class="col-12 col-md-6 d-flex justify-content-end">
+								<div class="">
+                                    <div class="input-group rounded-3 m-2">
+                                        <button class="input-group-text border-0 w-100" type="button" data-toggle="collapse" data-target="#filters" aria-expanded="false" aria-controls="filters">
+                                            <span class="input-group-text border-0 w-25 rounded-4 me-4" id="filter-toggle">
+                                                <i class="fa-solid fa-bars-staggered"></i>
+                                            </span>
+                                            Filtres
+                                        </button>
+                                    </div>
+                                </div>
+							</div>
+						</div>
+                    </div>
+                    {{ form_start(form, {'attr': {}}) }}
+                    <div class="collapse" id="filters">
+                        <div class="block block--bordered block--rounded">
+                             <h1 class="block__text block__text--center mt-2" >Options de filtre :</h1>
+                             <div class="filter-wrap">
+                                    <!-- Formulaire de recherche -->
+                                    <div class="search-form">
+                                        <div class="filter-form">
+
+                                            <div class="col-12 col-md-2">
+                                                {{form_label(form.dateMin)}}
+                                                {{form_widget(form.dateMin)}}
+                                                {{form_errors(form.dateMin)}}
+                                            </div>
+                                           
+                                            <div class="col-12 col-md-2">
+                                                {{form_label(form.dateMax)}}
+                                                {{form_widget(form.dateMax)}}
+                                                {{form_errors(form.dateMax)}}
+                                            </div>
+                                            <div class="btn-wrap">
+                                                <button class="btn btn-primary" type="submit" name="action_button" value="search_action"><i data-feather="filter"></i>Filtrer</button>
+                                            </div>
+                                       
+                                        </div>
+                                    </div>
+                             </div>
+                        </div>
+                    </div>
+                      <div class="row w-100">
+                        <div class="col-12 col-md-12 mt-3 d-flex align-items-center justify-content-start p-0 mb-3 ">
+                            <button name="action_button" value="excel"  class=" mt-2 btn btn-success btn-sm me-2 rounded-3"><i class="fa fa-print"></i> <span class="ms-1">Exporter excel</span></button>
+                            <button name="action_button" value="csv"  class=" mt-2 btn btn-success btn-sm me-2 rounded-3"><i class="fa fa-print"></i> <span class="ms-1">Exporter csv</span></button>
+                            <button name="action_button" value="pdf"  class=" mt-2  btn btn-danger btn-sm me-2 rounded-3"><i class="fa fa-file-text"></i> <span class="ms-1">Exporter pdf</span></button>
+                        </div>
+                    </div>
+                     {{ form_end(form) }} #}
+                    
+                    {% if caHistory|length ==0 %}
+                        <div class="alert alert-primary p-3 text-center" role="alert">
+                            <div class="alert-body">
+                                Aucun résultat trouvé.
+                            </div>
+                        </div>
+                    {% endif %}
+                    {% if caHistory|length !=0 %}
+                    {# <p class="ms-2"><span class="fw-bold">Total:</span> {{ totalCa  | number_format(2, ',', ' ') }} €</p> #}
+					<div class="table-responsive">
+						<table class="table">
+							<tbody class="align-items-center">
+								<tr>
+                                    <th >Mois</th>
+                                    <th class="text-end">Achats perso</th>
+                                    <th class="text-end">Achats clients</th>
+                                    <th class="text-end">Chiffre d'affaire personnel</th>
+                                    <th></th>
+                                </tr>
+
+								{% for ca in caHistory %}
+                                    <tr>
+                                        {% set month = ca.month_of_date_completed ~"-"~ ca.year_of_date_completed %}
+                                        <td>{{ month }}</td>
+                                        <td class="text-end">{{ ca.own_sales | number_format(2, ',', ' ') }} €</td>
+                                        <td class="text-end">{{ ca.sponsored_sales | number_format(2, ',', ' ') }} €</td>
+                                        <td class="text-end">{{ (ca.own_sales + ca.sponsored_sales) | number_format(2, ',', ' ')  }} €</td>
+                                        <td class="col-action ">
+                                            <a href="{{ path('agent_common_ca_details',{ month : month })}}">
+                                                <i data-feather="eye"></i>
+                                            </a>
+                                        </td>   
+                                    </tr>
+                                {% endfor %}
+
+							</tbody>
+						</table>
+					</div>
+					{# <div class="pagination d-flex justify-content-center">
+						{{ knp_pagination_render(caHistory)}}
+					</div> #}
+                     {% endif %}
+				</div>
+	</div>
+
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.9/dist/flatpickr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.9/dist/plugins/monthSelect/index.js"></script>
+    <script>
+        $(document).ready(function () {
+            let testInput = document.createElement("input");
+            testInput.setAttribute("type", "month");
+
+            $(".month-picker-input").each(function () {
+                if (testInput.type !== "month") {
+                    $(this).flatpickr({
+                        dateFormat: "Y-m",
+                        plugins: [new monthSelectPlugin({ shorthand: true, dateFormat: "Y-m" })]
+                    });
+                }
+                else{
+                     $(this).attr('type', 'month');
+                }
+            });
+        });
+    </script>
+
+{% endblock %}
+
+
