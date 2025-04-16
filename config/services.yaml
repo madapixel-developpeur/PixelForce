@@ -20,6 +20,7 @@ parameters:
   inova_referral_link: "%env(INOVA_REFERRAL_LINK)%"
   catalogues_base_url: "%env(CATALOGUES_BASE_URL)%"
   secteur_securite_id: "%env(SECTEUR_SECURITE_ID)%"
+  type_secteur_securite_id: "%env(TYPE_SECTEUR_SECURITE_ID)%"
 
 services:
   # default configuration for services in *this* file
