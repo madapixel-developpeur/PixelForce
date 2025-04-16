@@ -25,6 +25,7 @@ twig:
     formationThemeRepository: '@App\Repository\FormationThemeRepository'
     asset_version: "v=202503281525"
     secteur_securite_id: "%env(SECTEUR_SECURITE_ID)%"
+    type_secteur_securite_id: "%env(TYPE_SECTEUR_SECURITE_ID)%"
 
   paths:
     # pour spécifier le namespace des image. Exemple d'utilisation : email.image('@images/logo.png')

@@ -325,7 +325,7 @@ class StatAgentService
             $lastDayOfLastMonth = (new DateTime('first day of last month'))->modify('last day of this month');
             $rankInfo = $this->getUserCurrentRank($agent,$lastDayOfLastMonth,$secteur);
             // }
-        } elseif ( $secteur->getId() == $this->parameterBag->get('secteur_securite_id')) { 
+        } elseif ( $secteur->getType()?->getId() == $this->parameterBag->get('type_secteur_securite_id')) { 
             $statSecurite = [
                 'total_year' => 0,
                 'total_month' => 0,

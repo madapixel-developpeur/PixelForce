@@ -1,27 +1,80 @@
 # Read the documentation: https://symfony.com/doc/current/bundles/FOSCKEditorBundle/index.html
 
 twig:
-    form_themes:
-        - '@FOSCKEditor/Form/ckeditor_widget.html.twig'
+  form_themes:
+    - "@FOSCKEditor/Form/ckeditor_widget.html.twig"
 
 fos_ck_editor:
+  js_path: /assets/js/ckeditor.js
+  configs:
+    main_config:
+      toolbar:
+        - {
+            name: "styles",
+            items:
+              [
+                "Bold",
+                "Italic",
+                "Underline",
+                "Strike",
+                "Blockquote",
+                "-",
+                "Link",
+                "-",
+                "RemoveFormat",
+                "-",
+                "NumberedList",
+                "BulletedList",
+                "-",
+                "Outdent",
+                "Indent",
+                "-",
+                "-",
+                "JustifyLeft",
+                "JustifyCenter",
+                "JustifyRight",
+                "JustifyBlock",
+                "-",
+                "Table",
+                "-",
+                "Styles",
+                "Format",
+                "Font",
+                "FontSize",
+                "-",
+                "TextColor",
+                "BGColor",
+                "Source",
+                "Image",
+              ],
+          }
+      filebrowserBrowseRouteParameters: []
+  toolbars:
     configs:
-        main_config:
-            toolbar:
-                - { 
-                    name: "styles", 
-                    items: ['Bold', 'Italic', 'Underline', 'Strike', 'Blockquote', '-', 'Link', '-', 'RemoveFormat', '-', 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-', 'Table', '-', 'Styles', 'Format','Font','FontSize', '-', 'TextColor', 'BGColor', 'Source', 'Image'] 
-                }
-            filebrowserBrowseRouteParameters: []
-    toolbars:
-        configs:
-            custom_toolbar_1: [ "@document", "/", "@link" , "/", "@tool" ]
-            note_contact_toolbar:
-                - { 
-                    name: "styles", 
-                    items: ['Bold', 'Italic', 'Underline', 'Strike', '-', 'Link', 'NumberedList', 'BulletedList', '-', 'Styles', 'Format','Font','FontSize', '-', 'TextColor'] 
-                }
-        items:
-            document: [ "Source", "-", "Save" ]
-            link:     [ "Anchor" ]
-            tool:     [ "Maximize" ]
+      custom_toolbar_1: ["@document", "/", "@link", "/", "@tool"]
+      note_contact_toolbar:
+        - {
+            name: "styles",
+            items:
+              [
+                "Bold",
+                "Italic",
+                "Underline",
+                "Strike",
+                "-",
+                "Link",
+                "NumberedList",
+                "BulletedList",
+                "-",
+                "Styles",
+                "Format",
+                "Font",
+                "FontSize",
+                "-",
+                "TextColor",
+              ],
+          }
+    items:
+      document: ["Source", "-", "Save"]
+      link: ["Anchor"]
+      tool: ["Maximize"]

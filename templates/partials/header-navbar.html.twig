@@ -123,7 +123,7 @@
                     </div>
                 </div>
                 {% endif  %}
-                {% elseif app.session.get('secteurId') == secteur_securite_id %}
+                {% elseif app.session.get('typeSecteurId') == type_secteur_securite_id %}
                 {% set statSecurite = dataStat.statSecurite %}
                 <div class="col-auto">
                     <div class="d-flex flex-row align-items-center mx-2">

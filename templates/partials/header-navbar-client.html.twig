@@ -33,7 +33,7 @@
                         {% if is_granted('ROLE_CLIENT') %}
                         <li class="nav-item d-none d-lg-block"><a class="nav-link" href="{{path('client_aroma_order_list', {'token': agent.agentToken})}}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Mes commandes"><i class="fa-solid fa-list-check"></i></a></li>
                         {% endif %}
-                    {% else %}  
+                    {% elseif typeSecteurId == type_secteur_securite_id %}  
                     <li class="nav-item d-none d-lg-block"><a class="nav-link" href="{{path('boutique_secteursecu', {'token': agent.agentToken, 'id': secteurId})}}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Kits de base"><i class="fa-solid fa-bag-shopping"></i></a></li>  
                         {% if is_granted('ROLE_CLIENT') %}
                         {# <li class="nav-item d-none d-lg-block"><a class="nav-link" href="{{path('client_produitsecu_favoris', {'token': agent.agentToken})}}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Produits favoris"><i class="fa-regular fa-heart"></i></a></li> #}
