@@ -46,25 +46,29 @@ class LoginAuthenticator extends AbstractLoginFormAuthenticator
         $request->getSession()->set(Security::LAST_USERNAME, $email);
 
         return new Passport(
-            new UserBadge($email, function($value) use(&$request) {
-               $user = $this->userRepository->findOneBy(['email' => $value]);
-                if($user) {
-                    if($user->getActive() === -1){
+            new UserBadge($email, function ($value) use (&$request) {
+                $user = $this->userRepository->findOneBy(['email' => $value]);
+                if ($user) {
+                    if ($user->getAccessSatus() === User::STATUS_NOT_ACCESS) {
                         $request->getSession()->getFlashBag()->add('danger', 'Vous n’êtes pas autorisé sur la plateforme Pixelforce');
                         return null;
                     }
-                    if(in_array(User::ROLE_CLIENT,$user->getRoles())){
+                    if ($user->getActive() === -1) {
+                        $request->getSession()->getFlashBag()->add('danger', 'Vous n’êtes pas autorisé sur la plateforme Pixelforce');
+                        return null;
+                    }
+                    if (in_array(User::ROLE_CLIENT, $user->getRoles())) {
                         $agentToken = $request->get('agentToken');
                         $agent = $this->userRepository->findAgentByToken($agentToken);
-                        if($user->getClientAgent() && $agent && $user->getClientAgent()->getId() == $agent->getId()){}
-                        else{
+                        if ($user->getClientAgent() && $agent && $user->getClientAgent()->getId() == $agent->getId()) {
+                        } else {
                             $request->getSession()->getFlashBag()->add('danger', "Veuillez vous connectez avec le lien de votre agent");
                             return null;
                         }
                     }
-                    
+
                 }
-               return $user ? $user : $this->userRepository->findOneBy(['username' => $value]);
+                return $user ? $user : $this->userRepository->findOneBy(['username' => $value]);
             }),
             new PasswordCredentials($request->request->get('password', '')),
             [
@@ -75,23 +79,23 @@ class LoginAuthenticator extends AbstractLoginFormAuthenticator
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
-        $user = (object)$token->getUser();
-        if(in_array(User::ROLE_ADMINISTRATEUR, $token->getRoleNames())) {
+        $user = (object) $token->getUser();
+        if (in_array(User::ROLE_ADMINISTRATEUR, $token->getRoleNames())) {
             return new RedirectResponse('/admin/dashboard');
-        } else if(in_array(User::ROLE_COACH, $token->getRoleNames())) { 
-            return new RedirectResponse('/coach/dashboard'); 
-        } else if(in_array(User::ROLE_AGENT, $token->getRoleNames())) { 
-            return new RedirectResponse('/agent/accueil'); 
-        } else if(in_array(User::ROLE_CLIENT, $token->getRoleNames())) { 
-            return new RedirectResponse('/boutique/'.$user->getClientAgent()->getAgentToken().'/'); 
-        } else if(in_array(User::ROLE_DOCUMENT_OWNER, $token->getRoleNames())) { 
-            return new RedirectResponse('/do'); 
-        } 
+        } else if (in_array(User::ROLE_COACH, $token->getRoleNames())) {
+            return new RedirectResponse('/coach/dashboard');
+        } else if (in_array(User::ROLE_AGENT, $token->getRoleNames())) {
+            return new RedirectResponse('/agent/accueil');
+        } else if (in_array(User::ROLE_CLIENT, $token->getRoleNames())) {
+            return new RedirectResponse('/boutique/' . $user->getClientAgent()->getAgentToken() . '/');
+        } else if (in_array(User::ROLE_DOCUMENT_OWNER, $token->getRoleNames())) {
+            return new RedirectResponse('/do');
+        }
 
         return new RedirectResponse('/dashboard');
         // For example:
         //return new RedirectResponse($this->urlGenerator->generate('some_route'));
-        throw new \Exception('TODO: provide a valid redirect inside '.__FILE__);
+        throw new \Exception('TODO: provide a valid redirect inside ' . __FILE__);
     }
 
     protected function getLoginUrl(Request $request): string

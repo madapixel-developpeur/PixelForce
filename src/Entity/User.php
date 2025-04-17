@@ -56,9 +56,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
         "Professionnel" => self::ROLE_PROFESSIONNEL,
     ];
 
-    const INFORMATION_VALIDATED = 2 ;
-    const INFORMATION_REJECTED = -1 ;
-    const INFORMATION_PENDING = 1 ;
+    const INFORMATION_VALIDATED = 2;
+    const INFORMATION_REJECTED = -1;
+    const INFORMATION_PENDING = 1;
     const INFORMATION_EMPTY = 0;
 
     /**
@@ -94,6 +94,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
         'ONE_SECTOR' => self::ACCOUNT_PRICE_ONE_SECTOR,
         'MANY_SECTOR' => self::ACCOUNT_PRICE_MANY_SECTOR
     ];
+
+    const STATUS_NOT_ACCESS = 'no-access';
 
     const EXPIRY_DATE = 14;
 
@@ -395,8 +397,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
     /**
      * @ORM\OneToOne(targetEntity=UserInformation::class, inversedBy="user",cascade={"persist", "remove"})
      * @ORM\JoinColumn(name="information_id", referencedColumnName="id", nullable=true)
-    */
+     */
     private $information;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $accessSatus;
 
     public function __construct()
     {
@@ -1144,7 +1151,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
         /** @var AgentSecteur $secteur */
         foreach ($agentSecteurs as $agentSecteur) {
             $name = $agentSecteur->getSecteur()?->getNom();
-            if(!in_array($name,  $mySecteurs)){
+            if (!in_array($name, $mySecteurs)) {
                 $mySecteurs[] = $name;
             }
         }
@@ -1883,7 +1890,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
             case self::INFORMATION_PENDING:
                 return 'Informations en attente de validation';
                 break;
-           default:
+            default:
                 return 'Informations non fournies';
                 break;
         }
@@ -1894,15 +1901,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
         return $this->allSecteursOfUser($this->getCoachSecteurs()->toArray());
     }
 
-    public function getFullName(){
+    public function getFullName()
+    {
         return $this->fullName();
     }
 
-    public function getCreatedAtStr(){
+    public function getCreatedAtStr()
+    {
         return $this->getCreatedAt()->format('Y-m-d H:i:s');
     }
 
-    public function getFullContact(){
+    public function getFullContact()
+    {
         $email = $this->getEmail();
         $phone = $this->getTelephone() ?? "---";
         $text = "<b>Email:</b>{$email}<br><b>Téléphone:</b>{$phone}";
@@ -1912,5 +1922,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
     public function getAgentSecteursStr()
     {
         return $this->allSecteursOfUser($this->getAgentSecteurs()->toArray());
+    }
+
+    public function getAccessSatus(): ?string
+    {
+        return $this->accessSatus;
+    }
+
+    public function setAccessSatus(?string $accessSatus): self
+    {
+        $this->accessSatus = $accessSatus;
+
+        return $this;
     }
 }
