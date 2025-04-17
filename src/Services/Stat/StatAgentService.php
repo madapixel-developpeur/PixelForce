@@ -889,4 +889,42 @@ class StatAgentService
             throw $exception;
         }
     }
+
+    public function getRemunerationsLittlePonailsFromAPI(string $identifier, array $filter){
+        try {
+            $BO_URL = $_ENV['LITTLE_PONAILS_BACK_URL'];
+            if (!trim($BO_URL)){
+                throw new \Exception('API unavailable');
+            }
+            $response = $this->client->request(
+                'GET',
+                $BO_URL . '/api-pxl/mlm/agent/ca_summary_by_month',
+                [
+                   'json' => array_merge([
+                        'identifier' => $identifier 
+                   ],$filter)
+                ]
+            );
+            $content = json_decode($response->getContent(), true);
+            return $content;
+        } catch (\Exception $exception) {
+            throw new CustomException("Une erreur s'est produite lors de la requête de donnée");
+        }
+    }
+
+    public function getRemunerationsLittlePonails(User $user, array $filter){
+        $agentSecteur = $user->getAgentSecteurById($_ENV['SECTEUR_LITTLE_PONAILS_ID']);
+        $identifier = $agentSecteur->getSectorPlatformAccountId();
+        try {
+            $data = $this->getCaHistoryDetailFromLittlePonailsApi($identifier,$filter['month'],$filter['year']);
+            return [
+                'items' => $data['ca'],
+                'itemNumberPerPage' => $data['count'],
+                'total' => $data['count'],
+                'currentPageNumber' => 1,
+            ];
+        } catch (\Exception $exception) {
+            throw $exception;
+        }
+    }
 }
