@@ -81,7 +81,7 @@
                                 </li>
                                 
                                 
-                                {% if app.session.get('secteurId') == secteurDigitalId %}
+                                {% if  app.session.get('secteurId')  in [secteurDigitalId,secteur_little_ponails_id]  %}
                                 <li class="d-flex p-0">
                                     <span class="">
                                         <a class="header-user text-primary" href="#"  onclick="copyLink('{{ url('agent_inscription', {'ambassador_username':  app.user.username != "" ?  app.user.username : ' '}) }}') " >
@@ -91,8 +91,9 @@
                                     </span>
                                 </li>
                                 <li class="d-flex p-0">
+                                    {% set productLink = generate_product_link(app.session.get('secteurId'),app.user.id) %}
                                     <span class="">
-                                        <a class="header-user text-primary" href="#"  onclick="copyLink('{{ catalogues_base_url }}?ref={{ generateReference(app.user.id,app.user.id) }}','Votre lien produit a été copié avec succès') "  >
+                                    <a class="header-user text-primary" href="#"  onclick="copyLink('{{ productLink }}','Votre lien produit a été copié avec succès') "  >
                                             Lien produit
                                             <i class="fa-solid fa-copy"></i>
                                         </a>

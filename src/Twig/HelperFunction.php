@@ -51,6 +51,8 @@ class HelperFunction extends AbstractExtension
             new TwigFunction('obj_attribute', [$this, 'getAttribute']),
             new TwigFunction('get_lpn_online_shop', [$this, 'getLPNOnlineShop']),
             new TwigFunction('get_lpn_command_status_meaning', [$this, 'getLpnCommandStatusMeaningStr']),
+            new TwigFunction('generate_product_link', [$this, 'generateProductLink']),
+
         ];
     }
 
@@ -162,5 +164,18 @@ class HelperFunction extends AbstractExtension
         ];
         if(!isset($statusMData[$type])) return '';
         return $statusMData[$type][$status] ?? '';
+    }
+
+    public function generateProductLink($secteurId,$userId){
+        $link = "" ;
+        if($secteurId == $_ENV['SECTEUR_DIGITAL_ID']){
+            return  $_ENV['CATALOGUES_BASE_URL'].'?ref='.$this->generateReference($userId,$userId);
+        }
+        elseif($secteurId == $_ENV['SECTEUR_LITTLE_PONAILS_ID']){
+            return $this->getLPNOnlineShop($userId);
+        }
+        else{
+            return $link;
+        }
     }
 }
