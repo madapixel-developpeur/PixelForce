@@ -68,7 +68,6 @@ class AgentLinkedAccountController extends AbstractController
                     $e->getMessage()
                 );
             } catch (\Exception $e) {
-                dd($e);
                 $this->addFlash(
                     'danger',
                     $_ENV['CUSTOM_ERROR_MESSAGE']
@@ -123,7 +122,6 @@ class AgentLinkedAccountController extends AbstractController
                     $e->getMessage()
                 );
             } catch (\Exception $e) {
-                dd($e);
                 $this->addFlash(
                     'danger',
                     $_ENV['CUSTOM_ERROR_MESSAGE']
