@@ -73,8 +73,8 @@ class MakeOrderSecuControllerClient extends AbstractController
      */
     public function index($token, KitBaseSecu $kitbase, Request $request): Response
     {
-        
-        try{
+
+        try {
             $kitbase->checkValid();
             $order = new OrderSecu();
             $order->setKitbase($kitbase);
@@ -89,7 +89,7 @@ class MakeOrderSecuControllerClient extends AbstractController
             return $this->redirectToRoute('client_make_ordersecu_abonnement', [
                 'token' => $token
             ]);
-        } catch(Exception $ex){
+        } catch (Exception $ex) {
             $this->addFlash('danger', $ex->getMessage());
             return $this->redirectToRoute('boutique_secteursecu', [
                 'id' => $this->session->get('secteurId'),
@@ -108,7 +108,7 @@ class MakeOrderSecuControllerClient extends AbstractController
         $user = (object) $this->getUser();
         $sessionKey = BasketItem::getGroupKeyStatic($agent->getId(), $secteurId);
         $order = $this->orderSecuService->getOrderSecu($sessionKey);
-        if(!$order) {
+        if (!$order) {
             $this->addFlash('danger', 'Commander un produit');
             return $this->redirectToRoute('boutique_secteursecu', [
                 'id' => $this->session->get('secteurId'),
@@ -143,17 +143,17 @@ class MakeOrderSecuControllerClient extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
 
-            try{
+            try {
                 $this->orderSecuService->calculerPrixProduit($order, $secteurId);
                 $this->orderSecuService->setOrderSecu($order);
                 return $this->redirectToRoute('client_produitsecuaccomp_list', ['token' => $token]);
-            } catch(Exception $ex){
+            } catch (Exception $ex) {
                 $error = $ex->getMessage();
                 $this->addFlash('danger', $error);
             }
 
         }
-        
+
         return $this->render('user_category/client/secu/makeorder/makeorder_abonnement.html.twig', [
             'order' => $order,
             'filesDirectory' => $this->getParameter('files_directory_relative'),
@@ -196,10 +196,10 @@ class MakeOrderSecuControllerClient extends AbstractController
             ->select('p')
             ->from(ProduitSecuAccomp::class, 'p')
             ->join('p.secteur', 's')
-        ;  
+        ;
 
-        $where =  $searchService->getWhere($filter, new MyCriteriaParam($criteria, 'p'));   
-        $query->where($where["where"]." and p.statut != 0 and s.id = :secteurId ");
+        $where = $searchService->getWhere($filter, new MyCriteriaParam($criteria, 'p'));
+        $query->where($where["where"] . " and p.statut != 0 and s.id = :secteurId ");
         $where["params"]["secteurId"] = $secteurId;
         $searchService->setAllParameters($query, $where["params"]);
         $searchService->addOrderBy($query, $filter, ['sort' => 'p.id', 'direction' => 'asc']);
@@ -220,7 +220,7 @@ class MakeOrderSecuControllerClient extends AbstractController
         ]);
 
     }
-    
+
     /**
      * @Route("/accompAdd/{id}", name="client_make_ordersecu_add_accomp")
      */
@@ -231,7 +231,7 @@ class MakeOrderSecuControllerClient extends AbstractController
         $user = (object) $this->getUser();
         $sessionKey = BasketItem::getGroupKeyStatic($agent->getId(), $secteurId);
         $order = $this->orderSecuService->getOrderSecu($sessionKey);
-        if(!$order) {
+        if (!$order) {
             $this->addFlash('danger', 'Commander un produit');
             return $this->redirectToRoute('boutique_secteursecu', [
                 'id' => $this->session->get('secteurId'),
@@ -239,7 +239,7 @@ class MakeOrderSecuControllerClient extends AbstractController
             ]);
         }
 
-        try{
+        try {
 
             $accomp = new OrderSecuAccomp();
             $accomp->setProduit($product);
@@ -247,7 +247,7 @@ class MakeOrderSecuControllerClient extends AbstractController
             $order->add($accomp);
             $this->orderSecuService->setOrderSecu($order);
             return $this->redirectToRoute('client_make_ordersecu_accomplist', ['token' => $token]);
-        } catch(Exception $ex){
+        } catch (Exception $ex) {
             $this->addFlash('danger', $ex->getMessage());
             return $this->redirectToRoute('client_produitsecuaccomp_list', ['token' => $token]);
         }
@@ -265,7 +265,7 @@ class MakeOrderSecuControllerClient extends AbstractController
         $user = (object) $this->getUser();
         $sessionKey = BasketItem::getGroupKeyStatic($agent->getId(), $secteurId);
         $order = $this->orderSecuService->getOrderSecu($sessionKey);
-        if(!$order) {
+        if (!$order) {
             $this->addFlash('danger', 'Commander un produit');
             return $this->redirectToRoute('boutique_secteursecu', [
                 'id' => $this->session->get('secteurId'),
@@ -280,7 +280,7 @@ class MakeOrderSecuControllerClient extends AbstractController
             'token' => $token
         ]);
     }
-    
+
 
     /**
      * @Route("/accompUpdate/{id}", name="client_make_ordersecu_update_accomp")
@@ -292,7 +292,7 @@ class MakeOrderSecuControllerClient extends AbstractController
         $user = (object) $this->getUser();
         $sessionKey = BasketItem::getGroupKeyStatic($agent->getId(), $secteurId);
         $order = $this->orderSecuService->getOrderSecu($sessionKey);
-        if(!$order) {
+        if (!$order) {
             $this->addFlash('danger', 'Commander un produit');
             return $this->redirectToRoute('boutique_secteursecu', [
                 'id' => $this->session->get('secteurId'),
@@ -300,15 +300,15 @@ class MakeOrderSecuControllerClient extends AbstractController
             ]);
         }
 
-        try{
+        try {
 
             $accomp = new OrderSecuAccomp();
             $accomp->setProduit($product);
             $accomp->setQte(intval($request->get('qte')));
             $order->update($accomp);
             $this->orderSecuService->setOrderSecu($order);
-            
-        } catch(Exception $ex){
+
+        } catch (Exception $ex) {
             $this->addFlash('danger', $ex->getMessage());
         }
         return $this->redirectToRoute('client_make_ordersecu_accomplist', ['token' => $token]);
@@ -324,7 +324,7 @@ class MakeOrderSecuControllerClient extends AbstractController
         $user = (object) $this->getUser();
         $sessionKey = BasketItem::getGroupKeyStatic($agent->getId(), $secteurId);
         $order = $this->orderSecuService->getOrderSecu($sessionKey);
-        if(!$order) {
+        if (!$order) {
             $this->addFlash('danger', 'Commander un produit');
             return $this->redirectToRoute('boutique_secteursecu', [
                 'id' => $this->session->get('secteurId'),
@@ -332,11 +332,11 @@ class MakeOrderSecuControllerClient extends AbstractController
             ]);
         }
 
-        try{
+        try {
             $order->remove($id);
             $this->orderSecuService->setOrderSecu($order);
-            
-        } catch(Exception $ex){
+
+        } catch (Exception $ex) {
             $this->addFlash('danger', $ex->getMessage());
         }
         return $this->redirectToRoute('client_make_ordersecu_accomplist', ['token' => $token]);
@@ -353,7 +353,7 @@ class MakeOrderSecuControllerClient extends AbstractController
         $user = (object) $this->getUser();
         $sessionKey = BasketItem::getGroupKeyStatic($agent->getId(), $secteurId);
         $order = $this->orderSecuService->getOrderSecu($sessionKey);
-        if(!$order) {
+        if (!$order) {
             $this->addFlash('danger', 'Commander un produit');
             return $this->redirectToRoute('boutique_secteursecu', [
                 'id' => $this->session->get('secteurId'),
@@ -416,24 +416,24 @@ class MakeOrderSecuControllerClient extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
 
-            try{
+            try {
                 $type1 = $form->get('type1')->getData();
                 $type2 = $form->get('type2')->getData();
                 $typeTva = $type1 == 1 ? $type1 : $type2;
                 $tva = $tvaSecuRepository->findBySecteur($secteurId, $typeTva);
-                if(count($tva) == 0){
+                if (count($tva) == 0) {
                     throw new Exception("Tva invalide");
                 }
                 $order->setTva($tva[0]);
                 $this->orderSecuService->setOrderSecu($order);
                 return $this->redirectToRoute('client_make_ordersecu_download_contrat_instructions', ['token' => $token]);
-            } catch(Exception $ex){
+            } catch (Exception $ex) {
                 $error = $ex->getMessage();
                 $this->addFlash('danger', $error);
             }
 
         }
-        
+
         return $this->render('user_category/client/secu/makeorder/makeorder_installation.html.twig', [
             'order' => $order,
             'filesDirectory' => $this->getParameter('files_directory_relative'),
@@ -458,7 +458,7 @@ class MakeOrderSecuControllerClient extends AbstractController
 
         $sessionKey = BasketItem::getGroupKeyStatic($agent->getId(), $secteurId);
         $order = $this->orderSecuService->getOrderSecu($sessionKey);
-        if(!$order) {
+        if (!$order) {
             $this->addFlash('danger', 'Commander un produit');
             return $this->redirectToRoute('boutique_secteursecu', [
                 'id' => $this->session->get('secteurId'),
@@ -466,7 +466,7 @@ class MakeOrderSecuControllerClient extends AbstractController
             ]);
         }
 
-        
+
         return $this->render('user_category/client/secu/makeorder/makeorder_download_contrat.html.twig', [
             'order' => $order,
             'contratSecu' => $contratSecu,
@@ -486,7 +486,7 @@ class MakeOrderSecuControllerClient extends AbstractController
         $agent = $this->userRepository->findAgentByToken($token);
         $user = (object) $this->getUser();
         $sessionKey = BasketItem::getGroupKeyStatic($agent->getId(), $secteurId);
-        
+
 
         $form = $formFactory
             ->createNamedBuilder("payment-form")
@@ -498,18 +498,18 @@ class MakeOrderSecuControllerClient extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
 
-            try{
-                $stripeToken =  $form->get('token')->getData();
+            try {
+                $stripeToken = $form->get('token')->getData();
                 $this->orderSecuService->payOrder($order);
                 $this->addFlash('success', 'Commande payée');
                 return $this->redirectToRoute('client_ordersecu_details', ['id' => $order->getId(), 'token' => $token]);
-            } catch(Exception $ex){
+            } catch (Exception $ex) {
                 $error = $ex->getMessage();
                 $this->addFlash('danger', $error);
             }
 
         }
-        
+
         $stripeIntentSecret = $stripeService->intentSecretByPaymentIntentId($order->getChargeId());
         return $this->render('user_category/client/secu/makeorder/makeorder_payment.html.twig', [
             'stripe_public_key' => $this->getParameter('stripe_public_key'),
@@ -528,13 +528,13 @@ class MakeOrderSecuControllerClient extends AbstractController
      */
     public function mySignContrat($token, Request $request, FormFactoryInterface $formFactory, DocumentService $documentService): Response
     {
-        $filesDirectory = $this->getParameter('files_directory_relative');
+        $filesDirectory = $this->getParameter('files_directory');
         $secteurId = $this->session->get('secteurId');
         $agent = $this->userRepository->findAgentByToken($token);
         $user = (object) $this->getUser();
         $sessionKey = BasketItem::getGroupKeyStatic($agent->getId(), $secteurId);
         $order = $this->orderSecuService->getOrderSecu($sessionKey);
-        if(!$order) {
+        if (!$order) {
             $this->addFlash('danger', 'Commander un produit');
             return $this->redirectToRoute('boutique_secteursecu', [
                 'id' => $this->session->get('secteurId'),
@@ -554,24 +554,24 @@ class MakeOrderSecuControllerClient extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
 
-            try{
+            try {
                 $signature = $form->get('signature')->getData();
-                $photo = $this->fileHandler->saveBase64($signature, $filesDirectory."secu/signature/".$user->getId()."_".date('Y-m-d-H-i-s').'.png');
-                $filename = $documentService->signContrat($order->getContratRempli(), "secu/contrat/signed/".$user->getId()."_".date('Y-m-d-H-i-s').".pdf", $photo);
+                $photo = $this->fileHandler->saveBase64($signature, $filesDirectory . "/secu/signature/" . $user->getId() . "_" . date('Y-m-d-H-i-s') . '.png');
+                $filename = $documentService->signContrat($order->getContratRempli(), "secu/contrat/signed/" . $user->getId() . "_" . date('Y-m-d-H-i-s') . ".pdf", $photo);
                 $order->setContratSigned($filename);
                 $this->orderSecuService->setOrderSecu($order);
 
                 return $this->redirectToRoute('client_make_ordersecu_generate_order', ['token' => $token]);
-            } catch(Exception $ex){
+            } catch (Exception $ex) {
                 $error = $ex->getMessage();
                 $this->addFlash('danger', $error);
             }
 
         }
-        
+
         return $this->render('user_category/client/secu/makeorder/makeorder_sign_contrat.html.twig', [
             'order' => $order,
-            'filesDirectory' => $filesDirectory,
+            'filesDirectory' => $this->getParameter('files_directory_relative'),
             'form' => $form->createView(),
             'token' => $token,
             'agent' => $agent
@@ -589,7 +589,7 @@ class MakeOrderSecuControllerClient extends AbstractController
         $user = (object) $this->getUser();
         $sessionKey = BasketItem::getGroupKeyStatic($agent->getId(), $secteurId);
         $order = $this->orderSecuService->getOrderSecu($sessionKey);
-        if(!$order) {
+        if (!$order) {
             $this->addFlash('danger', 'Commander un produit');
             return $this->redirectToRoute('boutique_secteursecu', [
                 'id' => $this->session->get('secteurId'),
@@ -597,8 +597,8 @@ class MakeOrderSecuControllerClient extends AbstractController
             ]);
         }
 
-        
-        try{
+
+        try {
             $secteur = $secteurRepository->find($secteurId);
             $order->setClient($user);
             $order->setAgent($agent);
@@ -606,7 +606,7 @@ class MakeOrderSecuControllerClient extends AbstractController
             $order = $this->orderSecuService->saveOrder($order);
             $this->orderSecuService->removeOrderSecu($order->getSessionKey());
             return $this->redirectToRoute('client_make_ordersecu_payment', ['token' => $token, 'order' => $order->getId()]);
-        } catch(Exception $ex){
+        } catch (Exception $ex) {
             $error = $ex->getMessage();
             $this->addFlash('danger', $error);
             return $this->redirectToRoute('client_make_ordersecu_sign_contrat', ['token' => $token]);
@@ -623,7 +623,7 @@ class MakeOrderSecuControllerClient extends AbstractController
         $secteur = $secteurRepository->find($secteurId);
         $filename = $secteur->getContratSecu()->getFichier();
         $response = new BinaryFileResponse(
-            $this->getParameter('files_directory_relative')."/".$filename
+            $this->getParameter('files_directory_relative') . "/" . $filename
         );
         $response->headers->set('Content-Type', 'appication/pdf');
         $response->setContentDisposition(
@@ -645,7 +645,7 @@ class MakeOrderSecuControllerClient extends AbstractController
         $user = (object) $this->getUser();
         $sessionKey = BasketItem::getGroupKeyStatic($agent->getId(), $secteurId);
         $order = $this->orderSecuService->getOrderSecu($sessionKey);
-        if(!$order) {
+        if (!$order) {
             $this->addFlash('danger', 'Commander un produit');
             return $this->redirectToRoute('boutique_secteursecu', [
                 'id' => $this->session->get('secteurId'),
@@ -664,7 +664,7 @@ class MakeOrderSecuControllerClient extends AbstractController
                     new File([
                         // 'maxSize' => '1024k',
                         'mimeTypes' => [
-                            "application/pdf", 
+                            "application/pdf",
                             "application/x-pdf"
                         ],
                         'mimeTypesMessage' => 'Sélectionner un fichier PDF valide',
@@ -676,9 +676,9 @@ class MakeOrderSecuControllerClient extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
 
-            try{
+            try {
                 $file = $form->get('file')->getData();
-                $filename = $this->fileHandler->upload($file, "secu/contrat/rempli/".$user->getId()."/".date('Y-m-d-H-i-s'));
+                $filename = $this->fileHandler->upload($file, "secu/contrat/rempli/" . $user->getId() . "/" . date('Y-m-d-H-i-s'));
                 $order->setContratRempli($filename);
                 $this->orderSecuService->setOrderSecu($order);
                 $formData = $documentService->getData($filename);
@@ -686,13 +686,13 @@ class MakeOrderSecuControllerClient extends AbstractController
                 $order->setSepa($sepa);
                 $this->orderSecuService->setOrderSecu($order);
                 return $this->redirectToRoute('client_make_ordersecu_sign_contrat', ['token' => $token]);
-            } catch(Exception $ex){
+            } catch (Exception $ex) {
                 $error = $ex->getMessage();
                 $this->addFlash('danger', $error);
             }
 
         }
-        
+
         return $this->render('user_category/client/secu/makeorder/makeorder_upload_contrat.html.twig', [
             'order' => $order,
             'filesDirectory' => $filesDirectory,
@@ -703,6 +703,6 @@ class MakeOrderSecuControllerClient extends AbstractController
 
     }
 
-    
+
 
 }

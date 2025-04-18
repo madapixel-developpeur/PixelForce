@@ -34,7 +34,6 @@
                 <th class="text-center">Code</th>
                 <th class="text-center">Description</th>
                 <th class="text-center">Prix</th>
-                <th class="text-center">Statut</th>
                 <th class="text-center table-th-notSortable">actions</th>
             </tr>
         </thead>
@@ -45,7 +44,6 @@
                 <td>{{ code_promo_secu.code }}</td>
                 <td>{{ code_promo_secu.description }}</td>
                 <td>{{ code_promo_secu.prix }}</td>
-                <td>{{ code_promo_secu.statut }}</td>
                 <td >
                     <div class="d-flex justify-content-center">
                         <a href="{{ path('app_code_promo_secu_edit', {'id': code_promo_secu.id}) }}" class="btn btn-warning btn-sm me-2"><i class="fa fa-edit"></i></a>
