@@ -150,8 +150,8 @@ class DocumentService
 
         if ($result === false) {
             $error = $pdf->getError();
-            throw new \Exception($error);
-            // return [];
+            // throw new \Exception($error);
+            return [];
         }
 
         return $result->__toArray();

@@ -39,7 +39,7 @@ class OrderSecuRepository extends ServiceEntityRepository
         }
     }
 
-//    /**
+    //    /**
 //     * @return OrderSecu[] Returns an array of OrderSecu objects
 //     */
 //    public function findByExampleField($value): array
@@ -54,7 +54,7 @@ class OrderSecuRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?OrderSecu
+    //    public function findOneBySomeField($value): ?OrderSecu
 //    {
 //        return $this->createQueryBuilder('o')
 //            ->andWhere('o.exampleField = :val')
@@ -63,4 +63,27 @@ class OrderSecuRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+
+    public function getCAMensuel(array $agentIds, DateTime $start, DateTime $end)
+    {
+        $result = $this->createQueryBuilder('o')
+            ->select(
+                'COALESCE(
+                SUM(
+                    o.prixProduit + o.accompAmount
+                )
+            , 0) as totalAmount',
+            )
+            ->andWhere('o.statut = :orderStatusPaid')
+            ->andWhere('o.agent IN (:agentIds)')
+            ->andWhere('o.createdAt >= :start')
+            ->andWhere('o.createdAt <= :end')
+            ->setParameter('orderStatusPaid', OrderSecu::PAIED)
+            ->setParameter('agentIds', $agentIds)
+            ->setParameter('start', $start)
+            ->setParameter('end', $end)
+            ->getQuery()
+            ->getSingleScalarResult();
+        return round($result, 2);
+    }
 }
