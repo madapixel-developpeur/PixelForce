@@ -100,22 +100,25 @@ class SignUpLittlePonailsFormType extends AbstractType
             ->add('kbis', FileType::class, [
                 'label' => 'KBis',
                 'mapped' => false,
+                'multiple' => true,
                 'required' => false,
             ])
             ->add('carte_vitale', FileType::class, [
                 'label' => 'Carte Vitale',
                 'mapped' => false,
+                'multiple' => true,
                 'required' => false,
             ])
             ->add('siren_vdi', FileType::class, [
                 'label' => 'SIREN VDI',
                 'mapped' => false,
+                'multiple' => true,
                 'required' => false,
             ])
          
         ;
 
-       /* $builder->addEventListener(\Symfony\Component\Form\FormEvents::POST_SUBMIT, function ($event) {
+        $builder->addEventListener(\Symfony\Component\Form\FormEvents::POST_SUBMIT, function ($event) {
             $form = $event->getForm();
             $data = $form->getData();
 
@@ -133,7 +136,7 @@ class SignUpLittlePonailsFormType extends AbstractType
                     $form->get('siren_vdi')->addError(new \Symfony\Component\Form\FormError('Le SIREN VDI est requis pour les VDI.'));
                 }
             }
-        });*/
+        });
     }
 
     public function configureOptions(OptionsResolver $resolver): void

@@ -12,6 +12,7 @@ use App\Exception\CustomException;
 use App\Repository\SecteurRepository;
 use App\Form\SignUpLittlePonailsFormType;
 use App\Form\SingUpLittlePonailsFormType;
+use Symfony\Component\Mime\Part\DataPart;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -103,17 +104,8 @@ class AgentLinkedAccountController extends AbstractController
                     'carte_vitale',
                     'siren_vdi',
                 ]);
-                $multipart = array_merge($multipart,$files);
-                dd($multipart);
-
-
-                $files =  [
-                    'supporting_documents' => $supportingDocuments,
-                    'kbis' => $kbis,
-                    'carte_vitale' => $carteVitale,
-                    'siren_vdi' => $sirenVdi,
-                ];
-                $this->authService->createLittlePonailsAccount($this->getUser(),$secteur,$data,$files);
+                $multipart = array_merge($data,$files);
+                $this->authService->createLittlePonailsAccount($this->getUser(),$secteur,$multipart);
                 $this->addFlash('success', 'Compte relié avec succès.');
                 return $this->redirectToRoute('agent_dashboard_secteur', ['id' =>  $secteur_id]);
             } catch (CustomException $e) {
@@ -137,15 +129,21 @@ class AgentLinkedAccountController extends AbstractController
 
     public function getFilesDataToSendApi(Request $request , array $keys){
         $multipart = [];
+        $filesData = $request->files->all()['sign_up_little_ponails_form'];
         foreach ($keys as $key) {
-            $documents = $request->files->get($key);
-            foreach ($documents as $doc) {
-                $multipart[] = [
-                    'name' => $key.'[]',
-                    'contents' => fopen($doc->getPathname(), 'r'),
-                    'filename' => $doc->getClientOriginalName()
-                ];
+            $documents = $filesData[$key];
+            if(!$documents) continue;
+            
+            $temp = [];
+            foreach ($documents as $index => $doc) {
+                $temp[] =   
+                new DataPart(
+                    fopen($doc->getRealPath(), 'r'),
+                    $doc->getClientOriginalName(),
+                    $doc->getMimeType()
+                );
             }
+            $multipart[$key] = $temp;
         }
         return $multipart;
     }

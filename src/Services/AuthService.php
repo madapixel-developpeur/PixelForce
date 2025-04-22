@@ -17,6 +17,7 @@ use App\Repository\ForgotPasswordRepository;
 use App\Repository\AccountValidationRepository;
 use App\Repository\CategorieFormationRepository;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+use Symfony\Component\Mime\Part\Multipart\FormDataPart;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Contracts\HttpClient\Exception\HttpExceptionInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -148,27 +149,26 @@ class AuthService
     public function createLittlePonailsAccountFromApi(array $data){
         $LPN_BACK_URL = $_ENV['LITTLE_PONAILS_BACK_URL'];
         try{
-
+            $formData = new FormDataPart($data);
             $response = $this->client->request(
                 'POST',
                 $LPN_BACK_URL . '/api/auth/register-end-point',
                 [
-                    'multipart' =>   $data
+                    'headers' => $formData->getPreparedHeaders()->toArray(),
+                    'body' => $formData->bodyToIterable(),
                 ]
             );
+
             $content = json_decode($response->getContent(), true);
-            dd($content);
             return $content;
         } catch (HttpExceptionInterface $e) {
-            dd($e);
             $statusCode = $e->getResponse()->getStatusCode();
-            if ($statusCode === 422) {
+            if ($statusCode === 422 || $statusCode === 400) {
                 $content = json_decode($e->getResponse()->getContent(false), true);
                 throw new CustomException($content['message']);
             }
             throw $e; 
         } catch (\Throwable $th) {
-            dd($th);
             throw $th;
         }
     }
