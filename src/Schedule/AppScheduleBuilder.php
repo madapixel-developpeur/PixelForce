@@ -2,6 +2,7 @@
 
 namespace App\Schedule;
 
+use App\Services\RemunerationServiceSecu;
 use DateTime;
 use App\Services\RemunerationService;
 use Zenstruck\ScheduleBundle\Schedule;
@@ -11,7 +12,8 @@ class AppScheduleBuilder implements ScheduleBuilder
 {
 
     public function __construct(
-       private RemunerationService $remunerationService
+        private RemunerationService $remunerationService,
+        private RemunerationServiceSecu $remunerationServiceSecu
     ) {
     }
 
@@ -21,11 +23,12 @@ class AppScheduleBuilder implements ScheduleBuilder
             ->timezone($_ENV['APP_TIMEZONE'])
             ->environments('prod', 'dev');
 
-        $schedule->addCallback(function() {
+        $schedule->addCallback(function () {
             $dateOfThePreviousMonthToCheck = (new DateTime())->modify('-1 hour');
             $this->remunerationService->checkUserRemuneration($dateOfThePreviousMonthToCheck);
+            $this->remunerationServiceSecu->checkUserRemuneration($dateOfThePreviousMonthToCheck);
         })
-        ->description('Rémuneration')
-        ->monthly();
+            ->description('Rémuneration')
+            ->monthly();
     }
 }

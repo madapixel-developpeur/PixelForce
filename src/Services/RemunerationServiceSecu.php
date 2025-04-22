@@ -3,6 +3,9 @@
 namespace App\Services;
 
 use App\Entity\OrderSecu;
+use App\Entity\RemunerationHistorySecu;
+use App\Model\RemunerationRequirementSecu;
+use App\Repository\OrderSecuRepository;
 use DateTime;
 use App\Entity\User;
 use App\Entity\RankHistory;
@@ -30,7 +33,8 @@ class RemunerationServiceSecu
         HttpClientInterface $client,
         ParameterBagInterface $parameterBag,
         EntityManagerInterface $entityManager,
-        private SecteurRepository $secteurRepository
+        private SecteurRepository $secteurRepository,
+        private OrderSecuRepository $orderSecuRepository
     ) {
         $this->userTransactionRepository = $userTransactionRepository;
         $this->userRepository = $userRepository;
@@ -81,15 +85,7 @@ class RemunerationServiceSecu
 
     public function getRemunerationAndSaveData($data, DateTime $dateOfTheMonthToCheck)
     {
-        $pbb_ws_url = $this->parameterBag->get('pbb_ws_url');
-        $response = $this->client->request(
-            'POST',
-            $pbb_ws_url . '/api/execute-remuneration-process',
-            [
-                'json' => array_merge(['users_data' => $data], ['date' => $dateOfTheMonthToCheck->format('Y-m-d H:i:s')])
-            ]
-        );
-        $result = json_decode($response->getContent(), true);
+        $result = $this->getRemunerationData($data, $dateOfTheMonthToCheck);
         $secteurSecurite = $this->secteurRepository->find($_ENV['SECTEUR_SECURITE_ID']);
         $lastDayOfTheMonth = (clone $dateOfTheMonthToCheck)->modify('last day of this month');
         foreach ($result as $userData) {
@@ -143,5 +139,106 @@ class RemunerationServiceSecu
         } finally {
             $this->entityManager->clear();
         }
+    }
+
+    public function getEquipeCaByLevel($userData, DateTime $start, DateTime $end)
+    {
+        $CA = [];
+        foreach ($userData['filleul'] as $filleuls) {
+            if (count($filleuls) == 0) {
+                $CA[] = 0;
+            } else {
+                $CA[] = $this->orderSecuRepository->getCAMensuel($filleuls, $start, $end);
+            }
+        }
+        return $CA;
+    }
+
+    public static function getQualificationArray()
+    {
+        $data = [];
+        $data[] = new RemunerationRequirementSecu(1, "Apporteur d'affaire", 0, 0, [10, 5, 3], 0);
+        $data[] = new RemunerationRequirementSecu(2, "Bronze", 3, 5000, [10, 5, 3], 250);
+        $data[] = new RemunerationRequirementSecu(3, "Argent", 5, 15000, [12, 6, 4], 500);
+        $data[] = new RemunerationRequirementSecu(4, "Or", 10, 30000, [15, 8, 5], 1000);
+        $data[] = new RemunerationRequirementSecu(5, "Platine", 15, 50000, [18, 10, 6], 2500);
+        $data[] = new RemunerationRequirementSecu(6, "Élite", 20, 100000, [20, 12, 7], 5000);
+        return $data;
+    }
+
+    public function getStatutUser($userData, $equipeCA)
+    {
+        $directPartenaire = $userData['filleul'][0] ?? [];
+        $actifPartenaire = count($directPartenaire) == 0 ? 0 : $this->orderSecuRepository->getActifPartenaire($directPartenaire);
+        $totalEquipeCa = array_sum($equipeCA);
+        $remunerationRequirementArray = self::getQualificationArray();
+        $currentRequirement = $remunerationRequirementArray[0];
+        ;
+        foreach ($remunerationRequirementArray as $requirement) {
+            if ($actifPartenaire < $requirement->getPartenaireActif() || $totalEquipeCa < $requirement->getCaEquipeMensuel()) {
+                break;
+            }
+            $currentRequirement = $requirement;
+        }
+        return $currentRequirement;
+    }
+
+    public function getRemunerationData($usersDataArray, DateTime $dateReference)
+    {
+        $remunerationArray = [];
+        $start = (clone $dateReference)->modify('first day of this month')->setTime(0, 0, 0);
+        $end = (clone $dateReference)->modify('last day of this month')->setTime(23, 59, 59);
+        try {
+            $this->entityManager->getConnection()->beginTransaction();
+            foreach ($usersDataArray as $userData) {
+                $totalRemuneration = 0;
+                $equipeCA = $this->getEquipeCaByLevel($userData, $start, $end);
+                $remunerationRequirement = $this->getStatutUser($userData, $equipeCA);
+                $remunerationEquipe = $remunerationRequirement->getRemunerationEquipe();
+                foreach ($remunerationEquipe as $index => $item) {
+                    $remunerationEquipe = round($equipeCA[$index] * $item / 100, 2);
+                    if ($remunerationEquipe > 0) {
+                        $totalRemuneration += $remunerationEquipe;
+                        $history = new RemunerationHistorySecu();
+                        $history->setAmount($remunerationEquipe);
+                        $history->setDateReference($end);
+                        $history->setUpdatedAt(new DateTime());
+                        $history->setType(RemunerationHistorySecu::TYPE_REMUNERATION_EQUIPE);
+                        $history->setLabel("Rémunération d'équipe - niveau " . ($index + 1));
+                        $history->setIdAgent($userData['id']);
+                        $this->entityManager->persist($history);
+                    }
+                }
+
+
+                if ($remunerationRequirement->getBonusPalier() > 0) {
+                    $totalRemuneration += $remunerationRequirement->getBonusPalier();
+                    $history = new RemunerationHistorySecu();
+                    $history->setAmount($remunerationRequirement->getBonusPalier());
+                    $history->setDateReference($end);
+                    $history->setUpdatedAt(new DateTime());
+                    $history->setType(RemunerationHistorySecu::TYPE_BONUS_PALIER);
+                    $history->setLabel("Bonus palier " . $remunerationRequirement->getNomStatut());
+                    $history->setIdAgent($userData['id']);
+                    $this->entityManager->persist($history);
+                }
+                $remunerationArray[] = [
+                    'id' => $userData['id'],
+                    'amount' => $totalRemuneration,
+                    'rank' => $remunerationRequirement->getRang(),
+                    'rank_name' => $remunerationRequirement->getNomStatut()
+                ];
+            }
+            $this->entityManager->flush();
+            $this->entityManager->commit();
+        } catch (\Exception $ex) {
+            if ($this->entityManager->getConnection()->isTransactionActive()) {
+                $this->entityManager->rollback();
+            }
+            throw $ex;
+        } finally {
+            $this->entityManager->clear();
+        }
+        return $remunerationArray;
     }
 }

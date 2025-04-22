@@ -86,4 +86,18 @@ class OrderSecuRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
         return round($result, 2);
     }
+
+    public function getActifPartenaire(array $agentIds)
+    {
+        $result = $this->createQueryBuilder('o')
+            ->join('o.agent', 'a')
+            ->select('count(DISTINCT a.id)')
+            ->andWhere('o.statut = :orderStatusPaid')
+            ->andWhere('a.id IN (:agentIds)')
+            ->setParameter('orderStatusPaid', OrderSecu::PAIED)
+            ->setParameter('agentIds', $agentIds)
+            ->getQuery()
+            ->getSingleScalarResult();
+        return $result;
+    }
 }
