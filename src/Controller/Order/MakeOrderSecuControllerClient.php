@@ -557,8 +557,9 @@ class MakeOrderSecuControllerClient extends AbstractController
             try {
                 $signature = $form->get('signature')->getData();
                 $photo = $this->fileHandler->saveBase64($signature, $filesDirectory . "/secu/signature/" . $user->getId() . "_" . date('Y-m-d-H-i-s') . '.png');
-                // $filename = $documentService->signContrat($order->getContratRempli(), "secu/contrat/signed/" . $user->getId() . "_" . date('Y-m-d-H-i-s') . ".pdf", $photo);
-                // $order->setContratSigned($filename);
+                //to-comment
+                $filename = $documentService->signContrat($order->getContratRempli(), "secu/contrat/signed/" . $user->getId() . "_" . date('Y-m-d-H-i-s') . ".pdf", $photo);
+                $order->setContratSigned($filename);
                 $this->orderSecuService->setOrderSecu($order);
 
                 return $this->redirectToRoute('client_make_ordersecu_generate_order', ['token' => $token]);
@@ -681,6 +682,7 @@ class MakeOrderSecuControllerClient extends AbstractController
                 $filename = $this->fileHandler->upload($file, "secu/contrat/rempli/" . $user->getId() . "/" . date('Y-m-d-H-i-s'));
                 $order->setContratRempli($filename);
                 $this->orderSecuService->setOrderSecu($order);
+                //to-comment
                 $formData = $documentService->getData($filename);
                 $sepa = $documentService->getDataSepa($formData);
                 $order->setSepa($sepa);
