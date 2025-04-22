@@ -99,6 +99,9 @@ class OrderSecuService
 
             $paymentIntent = $this->stripeService->paymentIntent($orderSecu->getTotalTtc());
             $orderSecu->setChargeId($paymentIntent->id);
+            $orderSecu->setAmount($orderSecu->getTotalTtc());
+            $orderSecu->setAmountHt($orderSecu->getTotalTtc());
+            $orderSecu->setAmountTva($orderSecu->getTvaMontantBase());
 
             $this->entityManager->flush();
             $this->entityManager->commit();

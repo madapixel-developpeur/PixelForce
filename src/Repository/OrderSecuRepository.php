@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\OrderSecu;
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -70,7 +71,7 @@ class OrderSecuRepository extends ServiceEntityRepository
             ->select(
                 'COALESCE(
                 SUM(
-                    o.prixProduit + o.accompAmount
+                    o.amountHt
                 )
             , 0) as totalAmount',
             )
@@ -99,5 +100,21 @@ class OrderSecuRepository extends ServiceEntityRepository
             ->getQuery()
             ->getSingleScalarResult();
         return $result;
+    }
+
+    public function getCurrentStat($agentID, DateTime $dateRef)
+    {
+        $qb = $this->createQueryBuilder('o')
+            ->select(
+                'COALESCE(SUM(CASE WHEN YEAR(o.dateCommande) = YEAR(:now) THEN o.amount ELSE 0 END), 0) AS total_year',
+                'COALESCE(SUM(CASE WHEN YEAR(o.dateCommande) = YEAR(:now) AND MONTH(o.dateCommande) = MONTH(:now) THEN o.amount ELSE 0 END), 0) AS total_month',
+            )
+            ->andWhere('o.statut = :orderStatusPaid')
+            ->andWhere('a.agent = :agentId')
+            ->setParameter('orderStatusPaid', OrderSecu::PAIED)
+            ->setParameter('agentId', $agentID)
+            ->setParameter('now', $dateRef)
+        ;
+        return $qb->getQuery()->getSingleResult();
     }
 }

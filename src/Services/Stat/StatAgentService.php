@@ -2,6 +2,7 @@
 
 namespace App\Services\Stat;
 
+use App\Repository\OrderSecuRepository;
 use DateTime;
 use Exception;
 use App\Entity\User;
@@ -33,6 +34,7 @@ class StatAgentService
         private AgentService $agentService,
         private UserRepository $userRepository,
         private RankHistoryRepository $rankHistoryRepository,
+        private OrderSecuRepository $orderSecuRepository
     ) {
         $this->entityManager = $entityManager;
         $this->remunerationService = $remunerationService;
@@ -285,11 +287,13 @@ class StatAgentService
         }
     }
 
-    public function getGlobalStat($agentId, $secteurId,DateTime  $dateRef)
+    public function getGlobalStat($agentId, $secteurId,DateTime  $dateRef, $type_secteur_securite_id = null)
     {
         if ($secteurId == $this->parameterBag->get('secteur_digital_id')) {
             return $this->getPbbAnnualAndMonthlyStat($agentId,$dateRef);
-        } else {
+        } else if ($type_secteur_securite_id == $this->parameterBag->get('type_secteur_securite_id')) {
+            return $this->orderSecuRepository->getCurrentStat($agentId,$dateRef);
+        }else {
             return [
                 "total_year" => 0,
                 "total_month" => 0
