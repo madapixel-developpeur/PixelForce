@@ -71,7 +71,7 @@ class OrderSecuRepository extends ServiceEntityRepository
             ->select(
                 'COALESCE(
                 SUM(
-                    o.amountHt
+                    coalesce(o.amountHt, 0)
                 )
             , 0) as totalAmount',
             )
@@ -110,8 +110,8 @@ class OrderSecuRepository extends ServiceEntityRepository
     {
         $qb = $this->createQueryBuilder('o')
             ->select(
-                'COALESCE(SUM(CASE WHEN YEAR(o.dateCommande) = YEAR(:now) THEN o.amount ELSE 0 END), 0) AS total_year',
-                'COALESCE(SUM(CASE WHEN YEAR(o.dateCommande) = YEAR(:now) AND MONTH(o.dateCommande) = MONTH(:now) THEN o.amount ELSE 0 END), 0) AS total_month',
+                'COALESCE(SUM(CASE WHEN YEAR(o.dateCommande) = YEAR(:now) THEN coalesce(o.amount, 0) ELSE 0 END), 0) AS total_year',
+                'COALESCE(SUM(CASE WHEN YEAR(o.dateCommande) = YEAR(:now) AND MONTH(o.dateCommande) = MONTH(:now) THEN coalesce(o.amount, 0) ELSE 0 END), 0) AS total_month',
             )
             ->andWhere('o.statut = :orderStatusPaid')
             ->andWhere('a.agent = :agentId')
