@@ -26,7 +26,7 @@ class AppScheduleBuilder implements ScheduleBuilder
         $schedule->addCallback(function () {
             $dateOfThePreviousMonthToCheck = (new DateTime())->modify('-1 hour');
             $this->remunerationService->checkUserRemuneration($dateOfThePreviousMonthToCheck);
-            $this->remunerationServiceSecu->checkUserRemuneration($dateOfThePreviousMonthToCheck);
+            $this->remunerationServiceSecu->checkUserRemuneration($dateOfThePreviousMonthToCheck, $_ENV['SECTEUR_SECURITE_ID']);
         })
             ->description('Rémuneration')
             ->monthly();

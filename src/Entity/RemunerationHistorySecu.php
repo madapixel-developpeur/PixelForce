@@ -62,6 +62,11 @@ class RemunerationHistorySecu implements JsonSerializable
      */
     private $order;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Secteur::class)
+     */
+    private $secteur;
+
 
     public function getId(): ?int
     {
@@ -253,5 +258,17 @@ class RemunerationHistorySecu implements JsonSerializable
         unset($vars["stripePaymentIntentId"]);
         unset($vars["stripeSubscriptionId"]);
         return $vars;
+    }
+
+    public function getSecteur(): ?Secteur
+    {
+        return $this->secteur;
+    }
+
+    public function setSecteur(?Secteur $secteur): self
+    {
+        $this->secteur = $secteur;
+
+        return $this;
     }
 }

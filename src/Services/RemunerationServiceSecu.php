@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Entity\OrderSecu;
 use App\Entity\RemunerationHistorySecu;
+use App\Entity\Secteur;
 use App\Model\RemunerationRequirementSecu;
 use App\Repository\OrderSecuRepository;
 use DateTime;
@@ -83,10 +84,10 @@ class RemunerationServiceSecu
         }
     }
 
-    public function getRemunerationAndSaveData($data, DateTime $dateOfTheMonthToCheck)
+    public function getRemunerationAndSaveData($data, DateTime $dateOfTheMonthToCheck, $secteurId)
     {
-        $result = $this->getRemunerationData($data, $dateOfTheMonthToCheck);
-        $secteurSecurite = $this->secteurRepository->find($_ENV['SECTEUR_SECURITE_ID']);
+        $secteurSecurite = $this->secteurRepository->find($secteurId);
+        $result = $this->getRemunerationData($data, $dateOfTheMonthToCheck, $secteurSecurite);
         $lastDayOfTheMonth = (clone $dateOfTheMonthToCheck)->modify('last day of this month');
         foreach ($result as $userData) {
             $user = $this->userRepository->find($userData['id']);
@@ -112,9 +113,9 @@ class RemunerationServiceSecu
         return true;
     }
 
-    public function checkUserRemuneration(DateTime $dateOfTheMonthToCheck)
+    public function checkUserRemuneration(DateTime $dateOfTheMonthToCheck, $secteurId)
     {
-        $users = $this->userRepository->findUserByRoleAndSecteur(User::ROLE_REVENDEUR, $_ENV['SECTEUR_SECURITE_ID']);
+        $users = $this->userRepository->findUserByRoleAndSecteur(User::ROLE_REVENDEUR, $secteurId);
         $arrayWithFilleulData = [];
         $limitLevel = $_ENV['LIMIT_NIVEAU_EQUIPE_LINEAIRE'];
         foreach ($users as $user) {
@@ -127,7 +128,7 @@ class RemunerationServiceSecu
         try {
             $this->entityManager->beginTransaction();
             foreach ($chunks as $chunk) {
-                $this->getRemunerationAndSaveData($chunk, $dateOfTheMonthToCheck);
+                $this->getRemunerationAndSaveData($chunk, $dateOfTheMonthToCheck, $secteurId);
             }
             $this->entityManager->flush();
             $this->entityManager->commit();
@@ -141,14 +142,14 @@ class RemunerationServiceSecu
         }
     }
 
-    public function getEquipeCaByLevel($userData, DateTime $start, DateTime $end)
+    public function getEquipeCaByLevel($userData, DateTime $start, DateTime $end, $secteurId)
     {
         $CA = [];
         foreach ($userData['filleul'] as $filleuls) {
             if (count($filleuls) == 0) {
                 $CA[] = 0;
             } else {
-                $CA[] = $this->orderSecuRepository->getCAMensuel($filleuls, $start, $end);
+                $CA[] = $this->orderSecuRepository->getCAMensuel($filleuls, $start, $end, $secteurId);
             }
         }
         return $CA;
@@ -166,10 +167,10 @@ class RemunerationServiceSecu
         return $data;
     }
 
-    public function getStatutUser($userData, $equipeCA)
+    public function getStatutUser($userData, $equipeCA, $secteurId)
     {
         $directPartenaire = $userData['filleul'][0] ?? [];
-        $actifPartenaire = count($directPartenaire) == 0 ? 0 : $this->orderSecuRepository->getActifPartenaire($directPartenaire);
+        $actifPartenaire = count($directPartenaire) == 0 ? 0 : $this->orderSecuRepository->getActifPartenaire($directPartenaire, $secteurId);
         $totalEquipeCa = array_sum($equipeCA);
         $remunerationRequirementArray = self::getQualificationArray();
         $currentRequirement = $remunerationRequirementArray[0];
@@ -183,7 +184,7 @@ class RemunerationServiceSecu
         return $currentRequirement;
     }
 
-    public function getRemunerationData($usersDataArray, DateTime $dateReference)
+    public function getRemunerationData($usersDataArray, DateTime $dateReference, Secteur $secteur)
     {
         $remunerationArray = [];
         $start = (clone $dateReference)->modify('first day of this month')->setTime(0, 0, 0);
@@ -192,8 +193,8 @@ class RemunerationServiceSecu
             $this->entityManager->getConnection()->beginTransaction();
             foreach ($usersDataArray as $userData) {
                 $totalRemuneration = 0;
-                $equipeCA = $this->getEquipeCaByLevel($userData, $start, $end);
-                $remunerationRequirement = $this->getStatutUser($userData, $equipeCA);
+                $equipeCA = $this->getEquipeCaByLevel($userData, $start, $end, $secteur->getId());
+                $remunerationRequirement = $this->getStatutUser($userData, $equipeCA, $secteur->getId());
                 $remunerationEquipe = $remunerationRequirement->getRemunerationEquipe();
                 foreach ($remunerationEquipe as $index => $item) {
                     $remunerationEquipe = round($equipeCA[$index] * $item / 100, 2);
@@ -206,6 +207,7 @@ class RemunerationServiceSecu
                         $history->setType(RemunerationHistorySecu::TYPE_REMUNERATION_EQUIPE);
                         $history->setLabel("Rémunération d'équipe - niveau " . ($index + 1));
                         $history->setIdAgent($userData['id']);
+                        $history->setSecteur($secteur);
                         $this->entityManager->persist($history);
                     }
                 }
@@ -220,6 +222,7 @@ class RemunerationServiceSecu
                     $history->setType(RemunerationHistorySecu::TYPE_BONUS_PALIER);
                     $history->setLabel("Bonus palier " . $remunerationRequirement->getNomStatut());
                     $history->setIdAgent($userData['id']);
+                    $history->setSecteur($secteur);
                     $this->entityManager->persist($history);
                 }
                 $remunerationArray[] = [

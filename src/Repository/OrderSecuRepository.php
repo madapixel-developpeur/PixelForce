@@ -65,7 +65,7 @@ class OrderSecuRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-    public function getCAMensuel(array $agentIds, DateTime $start, DateTime $end)
+    public function getCAMensuel(array $agentIds, DateTime $start, DateTime $end, $secteurId)
     {
         $result = $this->createQueryBuilder('o')
             ->select(
@@ -76,10 +76,12 @@ class OrderSecuRepository extends ServiceEntityRepository
             , 0) as totalAmount',
             )
             ->andWhere('o.statut = :orderStatusPaid')
+            ->andWhere('o.secteur = :secteurId')
             ->andWhere('o.agent IN (:agentIds)')
             ->andWhere('o.createdAt >= :start')
             ->andWhere('o.createdAt <= :end')
             ->setParameter('orderStatusPaid', OrderSecu::PAIED)
+            ->setParameter('secteurId', $secteurId)
             ->setParameter('agentIds', $agentIds)
             ->setParameter('start', $start)
             ->setParameter('end', $end)
@@ -88,21 +90,23 @@ class OrderSecuRepository extends ServiceEntityRepository
         return round($result, 2);
     }
 
-    public function getActifPartenaire(array $agentIds)
+    public function getActifPartenaire(array $agentIds, $secteurId)
     {
         $result = $this->createQueryBuilder('o')
             ->join('o.agent', 'a')
             ->select('count(DISTINCT a.id)')
             ->andWhere('o.statut = :orderStatusPaid')
+            ->andWhere('o.secteur = :secteurId')
             ->andWhere('a.id IN (:agentIds)')
             ->setParameter('orderStatusPaid', OrderSecu::PAIED)
+            ->setParameter('secteurId', $secteurId)
             ->setParameter('agentIds', $agentIds)
             ->getQuery()
             ->getSingleScalarResult();
         return $result;
     }
 
-    public function getCurrentStat($agentID, DateTime $dateRef)
+    public function getCurrentStat($agentID, DateTime $dateRef, $secteurId)
     {
         $qb = $this->createQueryBuilder('o')
             ->select(
@@ -111,7 +115,9 @@ class OrderSecuRepository extends ServiceEntityRepository
             )
             ->andWhere('o.statut = :orderStatusPaid')
             ->andWhere('a.agent = :agentId')
+            ->andWhere('o.secteur = :secteurId')
             ->setParameter('orderStatusPaid', OrderSecu::PAIED)
+            ->setParameter('secteurId', $secteurId)
             ->setParameter('agentId', $agentID)
             ->setParameter('now', $dateRef)
         ;

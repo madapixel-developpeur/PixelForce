@@ -292,7 +292,7 @@ class StatAgentService
         if ($secteurId == $this->parameterBag->get('secteur_digital_id')) {
             return $this->getPbbAnnualAndMonthlyStat($agentId,$dateRef);
         } else if ($type_secteur_securite_id == $this->parameterBag->get('type_secteur_securite_id')) {
-            return $this->orderSecuRepository->getCurrentStat($agentId,$dateRef);
+            return $this->orderSecuRepository->getCurrentStat($agentId,$dateRef, $secteurId);
         }else {
             return [
                 "total_year" => 0,
@@ -330,10 +330,7 @@ class StatAgentService
             $rankInfo = $this->getUserCurrentRank($agent,$lastDayOfLastMonth,$secteur);
             // }
         } elseif ( $secteur->getType()?->getId() == $this->parameterBag->get('type_secteur_securite_id')) { 
-            $statSecurite = [
-                'total_year' => 0,
-                'total_month' => 0,
-            ];
+            $statSecurite = $this->getGlobalStat($agent->getId(), $secteur->getId(),new DateTime(), $secteur->getId());;
             $lastDayOfLastMonth = (new DateTime('first day of last month'))->modify('last day of this month');
             $rankInfo = $this->getUserCurrentRank($agent,$lastDayOfLastMonth,$secteur);
         } else{
