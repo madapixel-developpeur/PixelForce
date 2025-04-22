@@ -218,7 +218,7 @@ class StatAgentService
     }
 
     
-    public function getPbbAnnualAndMonthlyStat($pbb_id,DateTime $reference)
+    public function getPbbAnnualAndMonthlyStat($pbb_id,DateTime $reference,array $filleul = [])
     {
         try {
             $pbb_ws_url = $this->parameterBag->get('pbb_ws_url');
@@ -228,7 +228,13 @@ class StatAgentService
                 'GET',
                 $pbb_ws_url . '/api/pbb-stat-annual-monthly',
                 [
-                   'json' => array_merge( ['user_id' => $pbb_id], ['date_ref' =>  $reference->format('Y-m-d H:i:s')])
+                   'json' => array_merge( 
+                        [
+                            'user_id' => $pbb_id,
+                            'filleul' => $filleul
+                        ], 
+                        ['date_ref' =>  $reference->format('Y-m-d H:i:s')]
+                    )
                 ]
             );
             $content = json_decode($response->getContent(), true);
@@ -288,7 +294,10 @@ class StatAgentService
     public function getGlobalStat($agentId, $secteurId,DateTime  $dateRef)
     {
         if ($secteurId == $this->parameterBag->get('secteur_digital_id')) {
-            return $this->getPbbAnnualAndMonthlyStat($agentId,$dateRef);
+            $limitLevel = $_ENV['LIMIT_NIVEAU_EQUIPE_LINEAIRE'];
+            $filleul =  $this->userRepository->getFilsJusqueNiveau($agentId,$limitLevel,true);
+            $filleul  = array_merge(...$filleul);
+            return $this->getPbbAnnualAndMonthlyStat($agentId,$dateRef,$filleul);
         } else {
             return [
                 "total_year" => 0,
