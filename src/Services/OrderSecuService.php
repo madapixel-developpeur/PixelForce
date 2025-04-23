@@ -25,7 +25,7 @@ class OrderSecuService
     private $wrapper;
     private $fileHandler;
 
-    public function __construct(SessionInterface $session, CodePromoSecuRepository $codePromoSecuRepository, EntityManagerInterface $entityManager, StripeService $stripeService, OrderSecuRepository $orderSecuRepository, MailerService $mailerService, DompdfWrapperInterface $wrapper, FileHandler $fileHandler)
+    public function __construct(SessionInterface $session, CodePromoSecuRepository $codePromoSecuRepository, EntityManagerInterface $entityManager, StripeService $stripeService, OrderSecuRepository $orderSecuRepository, MailerService $mailerService, DompdfWrapperInterface $wrapper, FileHandler $fileHandler, private RemunerationServiceSecu $remunerationServiceSecu)
     {
         $this->session = $session;
         $this->codePromoSecuRepository = $codePromoSecuRepository;
@@ -124,6 +124,8 @@ class OrderSecuService
         $order->setStatut(OrderSecu::PAIED);
         $this->entityManager->persist($order);
         $this->entityManager->flush();
+
+        $this->remunerationServiceSecu->newOrder($order);
         try {
             $this->saveInvoice($order);
             $this->mailerService->sendFactureSecu($order);

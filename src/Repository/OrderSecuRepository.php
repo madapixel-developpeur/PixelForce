@@ -75,11 +75,11 @@ class OrderSecuRepository extends ServiceEntityRepository
                 )
             , 0) as totalAmount',
             )
-            ->andWhere('o.statut = :orderStatusPaid')
+            ->andWhere('o.statut >= :orderStatusPaid')
             ->andWhere('o.secteur = :secteurId')
             ->andWhere('o.agent IN (:agentIds)')
-            ->andWhere('o.createdAt >= :start')
-            ->andWhere('o.createdAt <= :end')
+            ->andWhere('o.dateCommande >= :start')
+            ->andWhere('o.dateCommande <= :end')
             ->setParameter('orderStatusPaid', OrderSecu::PAIED)
             ->setParameter('secteurId', $secteurId)
             ->setParameter('agentIds', $agentIds)
@@ -95,7 +95,7 @@ class OrderSecuRepository extends ServiceEntityRepository
         $result = $this->createQueryBuilder('o')
             ->join('o.agent', 'a')
             ->select('count(DISTINCT a.id)')
-            ->andWhere('o.statut = :orderStatusPaid')
+            ->andWhere('o.statut >= :orderStatusPaid')
             ->andWhere('o.secteur = :secteurId')
             ->andWhere('a.id IN (:agentIds)')
             ->setParameter('orderStatusPaid', OrderSecu::PAIED)
@@ -113,8 +113,8 @@ class OrderSecuRepository extends ServiceEntityRepository
                 'COALESCE(SUM(CASE WHEN YEAR(o.dateCommande) = YEAR(:now) THEN coalesce(o.amount, 0) ELSE 0 END), 0) AS total_year',
                 'COALESCE(SUM(CASE WHEN YEAR(o.dateCommande) = YEAR(:now) AND MONTH(o.dateCommande) = MONTH(:now) THEN coalesce(o.amount, 0) ELSE 0 END), 0) AS total_month',
             )
-            ->andWhere('o.statut = :orderStatusPaid')
-            ->andWhere('a.agent = :agentId')
+            ->andWhere('o.statut >= :orderStatusPaid')
+            ->andWhere('o.agent = :agentId')
             ->andWhere('o.secteur = :secteurId')
             ->setParameter('orderStatusPaid', OrderSecu::PAIED)
             ->setParameter('secteurId', $secteurId)
@@ -122,5 +122,34 @@ class OrderSecuRepository extends ServiceEntityRepository
             ->setParameter('now', $dateRef)
         ;
         return $qb->getQuery()->getSingleResult();
+    }
+
+    public function getStatBetween($agentId, $secteurId, $start = null, $end = null)
+    {
+        $query = $this->createQueryBuilder('o')
+            ->select('COUNT(o.id) as orderCount', '
+                SUM(
+                    coalesce(o.amountHt, 0)
+                ) as totalAmount')
+            ->andWhere('o.statut >= :orderStatusPaid')
+            ->andWhere('o.agent = :agentId')
+            ->andWhere('o.secteur = :secteurId')
+            ->setParameter('orderStatusPaid', OrderSecu::PAIED)
+            ->setParameter('agentId', $agentId)
+            ->setParameter('secteurId', $secteurId);
+
+        if ($start) {
+            $query->andWhere('o.dateCommande >= :start')
+                ->setParameter('start', $start);
+        }
+        if ($end) {
+            $query
+                ->andWhere('o.dateCommande <= :end')
+                ->setParameter('end', $end);
+        }
+
+        $result = $query->getQuery()
+            ->getScalarResult();
+        return count($result) > 0 ? $result[0] : null;
     }
 }

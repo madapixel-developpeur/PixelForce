@@ -11,6 +11,7 @@ use App\Entity\TypeSecteur;
 use App\Repository\UserRepository;
 use App\Services\User\AgentService;
 use App\Services\RemunerationService;
+use App\Services\RemunerationServiceSecu;
 use App\Services\ConfigSecteurService;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\ResultSetMapping;
@@ -34,7 +35,8 @@ class StatAgentService
         private AgentService $agentService,
         private UserRepository $userRepository,
         private RankHistoryRepository $rankHistoryRepository,
-        private OrderSecuRepository $orderSecuRepository
+        private OrderSecuRepository $orderSecuRepository,
+        private RemunerationServiceSecu $remunerationSecuService
     ) {
         $this->entityManager = $entityManager;
         $this->remunerationService = $remunerationService;
@@ -244,7 +246,7 @@ class StatAgentService
     }
 
 
-    public function getAgentCaStatEquipe($agent,$secteurId)
+    public function getAgentCaStatEquipe($agent,$secteurId,$typeSecteurId=null)
     {
         try {
             
@@ -264,7 +266,15 @@ class StatAgentService
                 );
                 $content = json_decode($response->getContent(), true);
                 return $content;
-            }else{
+            }
+            else if($typeSecteurId == $this->parameterBag->get('type_secteur_securite_id')){
+                $userData =  [
+                    'id' => $agent->getId(),
+                    'filleul' => $this->userRepository->getFilsJusqueNiveau($agent->getId(),$_ENV['LIMIT_NIVEAU_EQUIPE_LINEAIRE'],true)
+                ];
+                return $this->remunerationSecuService->getEquipeCaStat($userData, $secteurId, new DateTime());
+            }
+            else{
                 throw new Exception();
             }
         } catch (\Exception $exception) {
@@ -275,11 +285,18 @@ class StatAgentService
         }
     }
 
-    public function getStat($agentId, $secteurId)
+    public function getStat($agentId, $secteurId, $type_secteur_id=null)
     {
         if ($secteurId == $this->parameterBag->get('secteur_digital_id')) {
             return $this->getPbbStat($agentId);
-        } else {
+        } else if($type_secteur_id == $this->parameterBag->get('type_secteur_securite_id')) {
+            $totalAmount = $this->remunerationSecuService->getEquipeCaStat(['id' => $agentId], $secteurId, new DateTime(), false)['ca_perso'];
+            return [
+                "totalAmount" => $totalAmount,
+                "orderCount" => 0
+            ];
+        }
+        else {
             return [
                 "totalAmount" => 0,
                 "orderCount" => 0
@@ -330,7 +347,9 @@ class StatAgentService
             $rankInfo = $this->getUserCurrentRank($agent,$lastDayOfLastMonth,$secteur);
             // }
         } elseif ( $secteur->getType()?->getId() == $this->parameterBag->get('type_secteur_securite_id')) { 
-            $statSecurite = $this->getGlobalStat($agent->getId(), $secteur->getId(),new DateTime(), $secteur->getId());;
+            // $dateOfThePreviousMonthToCheck = (new DateTime())->modify('-1 hour');
+            // $this->remunerationSecuService->checkUserRemuneration($dateOfThePreviousMonthToCheck, $_ENV['SECTEUR_SECURITE_ID']);
+            $statSecurite = $this->getGlobalStat($agent->getId(), $secteur->getId(),new DateTime(), $secteur->getType()->getId());
             $lastDayOfLastMonth = (new DateTime('first day of last month'))->modify('last day of this month');
             $rankInfo = $this->getUserCurrentRank($agent,$lastDayOfLastMonth,$secteur);
         } else{
@@ -504,26 +523,34 @@ class StatAgentService
         return $data;
     }
 
-    public function getCaByIds($ids, DateTime $reference = new DateTime()){
-        $pbb_ws_url = $this->parameterBag->get('pbb_ws_url');
-        $response = $this->client->request(
-            'GET',
-            $pbb_ws_url . '/api/get-ca-array',
-            [
-                'json' => array_merge( ['ids' => $ids], ['date' =>  $reference->format('Y-m-d H:i:s')])
-            ]
-        );
-        $result = json_decode($response->getContent(), true);
+    public function getCaByIds($ids, DateTime $reference = new DateTime(), $secteurId=null, $type_secteur_id=null){
+        if($type_secteur_id == $this->parameterBag->get('type_secteur_securite_id')) {
+            $result = [];
+            foreach($ids as $id){
+                $result[] = ['id' => $id, 'amount' => $totalAmount = $this->remunerationSecuService->getEquipeCaStat(['id' => $id], $secteurId, $reference, false)['ca_perso']];
+            }
+        } else {
+            $pbb_ws_url = $this->parameterBag->get('pbb_ws_url');
+            $response = $this->client->request(
+                'GET',
+                $pbb_ws_url . '/api/get-ca-array',
+                [
+                    'json' => array_merge( ['ids' => $ids], ['date' =>  $reference->format('Y-m-d H:i:s')])
+                ]
+            );
+            $result = json_decode($response->getContent(), true);
+        }
+       
         return $result;
     }
 
-    public function addSummaryCaToUnilevel($unilevel){
+    public function addSummaryCaToUnilevel($unilevel, $secteurId = null, $typeSecteurId = null){
         if(!isset($unilevel['children']) && isset($unilevel['CA']) ) return $unilevel;
         $childrenIds = array_column($unilevel['children'] ?? [],'ID');
         if(!isset($unilevel['CA'])){
             $childrenIds[] = $unilevel['ID'];
         } 
-        $childrenCaArray = $this->getCaByIds($childrenIds);
+        $childrenCaArray = $this->getCaByIds($childrenIds, new DateTime(), $secteurId, $typeSecteurId);
 
 
 
@@ -536,7 +563,7 @@ class StatAgentService
                 else{
                     $children['CA'] = number_format(reset($item)['amount'],2).'€';
                 }
-                $children = $this->addSummaryCaToUnilevel($children);
+                $children = $this->addSummaryCaToUnilevel($children, $secteurId, $typeSecteurId);
 
             };
         }

@@ -182,15 +182,15 @@
                                             <ul class="list-unstyled">
                                                 <li class="price-detail">
                                                     <div class="detail-title detail-total">Montant HT :</div>
-                                                    <div class="detail-amt fw-bolder" >{{order.totalHt | number_format(2, ',', ' ')}} €</div>
+                                                    <div class="detail-amt fw-bolder" >{{order.amountHt | number_format(2, ',', ' ')}} €</div>
                                                 </li>
                                                 <li class="price-detail">
                                                     <div class="detail-title detail-total">TVA (<span id="tvaPercentage">{{order.tva.valeur | number_format(2, ',', ' ')}}</span> %) :</div>
-                                                    <div class="detail-amt fw-bolder" >{{order.tvaMontantBase | number_format(2, ',', ' ')}} €</div>
+                                                    <div class="detail-amt fw-bolder" >{{order.amountTva | number_format(2, ',', ' ')}} €</div>
                                                 </li>
                                                 <li class="price-detail">
                                                     <div class="detail-title detail-total">Montant TTC :</div>
-                                                    <div class="detail-amt fw-bolder" >{{order.totalTtc | number_format(2, ',', ' ')}} €</div>
+                                                    <div class="detail-amt fw-bolder" >{{order.amount | number_format(2, ',', ' ')}} €</div>
                                                 </li>
                                             </ul>
                                             {% if order.contratSigned %}

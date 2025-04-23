@@ -46,7 +46,7 @@ class RemunerationServiceSecu
 
     public function getRemunerationAmount(OrderSecu $orderSecu)
     {
-        return round((self::BASE_COMMISSION * $orderSecu->getMontantHt()), 2);
+        return round((self::BASE_COMMISSION * $orderSecu->getAmountHt()), 2);
     }
 
     public function newOrder(OrderSecu $orderSecu)
@@ -86,9 +86,9 @@ class RemunerationServiceSecu
 
     public function getRemunerationAndSaveData($data, DateTime $dateOfTheMonthToCheck, $secteurId)
     {
-        $secteurSecurite = $this->secteurRepository->find($secteurId);
-        $result = $this->getRemunerationData($data, $dateOfTheMonthToCheck, $secteurSecurite);
+        $result = $this->getRemunerationData($data, $dateOfTheMonthToCheck, $secteurId);
         $lastDayOfTheMonth = (clone $dateOfTheMonthToCheck)->modify('last day of this month');
+        $secteurSecurite = $this->secteurRepository->find($secteurId);
         foreach ($result as $userData) {
             $user = $this->userRepository->find($userData['id']);
             if ($userData['amount'] > 0) {
@@ -184,8 +184,9 @@ class RemunerationServiceSecu
         return $currentRequirement;
     }
 
-    public function getRemunerationData($usersDataArray, DateTime $dateReference, Secteur $secteur)
+    public function getRemunerationData($usersDataArray, DateTime $dateReference, $secteurId)
     {
+        $secteur = $this->secteurRepository->find($secteurId);
         $remunerationArray = [];
         $start = (clone $dateReference)->modify('first day of this month')->setTime(0, 0, 0);
         $end = (clone $dateReference)->modify('last day of this month')->setTime(23, 59, 59);
@@ -243,5 +244,29 @@ class RemunerationServiceSecu
             $this->entityManager->clear();
         }
         return $remunerationArray;
+    }
+
+    public function getAgentCaStat($agentData, $secteurId, $start, $end, $withCaEquipe = true)
+    {
+        $totalEquipeCa = 0;
+        if ($withCaEquipe) {
+            $equipeCA = $this->getEquipeCaByLevel($agentData, $start, $end, $secteurId);
+            $totalEquipeCa = array_sum($equipeCA);
+        }
+        $userCa = $this->orderSecuRepository->getStatBetween($agentData['id'], $secteurId, $start, $end)['totalAmount'];
+        return [
+            'ca_perso' => $userCa,
+            'ca_equipe' => $totalEquipeCa,
+        ];
+
+    }
+
+    public function getEquipeCaStat($userData, $secteurId, $dateReference, $withCaEquipe = true)
+    {
+        $dateReference = $dateReference ?? new DateTime();
+        $start = (clone $dateReference)->modify('first day of this month')->setTime(0, 0, 0);
+        $end = (clone $dateReference)->modify('last day of this month')->setTime(23, 59, 59);
+        $caStat = $this->getAgentCaStat($userData, $secteurId, $start, $end, $withCaEquipe);
+        return $caStat;
     }
 }
