@@ -35,21 +35,28 @@ Information: Information
 Retour: Retour
 S’inscrire: S’inscrire
 'Déjà un compte ? Connectez-vous': 'Déjà un compte ? Connectez-vous'
-Entrer votre nom: "Entrer votre nom"
-Champ obligatoire: "Champ obligatoire"
-Entrer votre prénom: "Entrer votre prénom"
-Votre adresse: "Votre adresse"
-Numéro téléphone: "Numéro téléphone"
-Code postal: "Code postal"
-Nom d'utilisateur: "Nom d'utilisateur"
-Adresse mail: "Adresse mail"
-Le mot de passe saisi doit être le même.: "Le mot de passe saisi doit être le même."
-Confirmation Mot de passe: "Confirmation Mot de passe"
-Numéro de rue: "Numéro de rue"
-Ville: "Ville"
-Pays: "Pays"
-Sélectionnez un pays: "Sélectionnez un pays"
-Veuillez choisir un pays: "Veuillez choisir un pays"
-Nom d'utilisateur du parrain: "Nom d'utilisateur du parrain"
-'À ce jour, la plateforme n''est pas ouverte aux professionnels basés en France.' : 'À ce jour, la plateforme n''est pas ouverte aux professionnels basés en France.' 
-
+'Entrer votre nom': 'Entrer votre nom'
+'Champ obligatoire': 'Champ obligatoire'
+'Entrer votre prénom': 'Entrer votre prénom'
+'Votre adresse': 'Votre adresse'
+'Numéro téléphone': 'Numéro téléphone'
+'Code postal': 'Code postal'
+'Nom d''utilisateur': 'Nom d''utilisateur'
+'Adresse mail': 'Adresse mail'
+'Le mot de passe saisi doit être le même.': 'Le mot de passe saisi doit être le même.'
+'Confirmation Mot de passe': 'Confirmation Mot de passe'
+'Numéro de rue': 'Numéro de rue'
+Ville: Ville
+Pays: Pays
+'Sélectionnez un pays': 'Sélectionnez un pays'
+'Veuillez choisir un pays': 'Veuillez choisir un pays'
+'Nom d''utilisateur du parrain': 'Nom d''utilisateur du parrain'
+'À ce jour, la plateforme n''est pas ouverte aux professionnels basés en France.': 'À ce jour, la plateforme n''est pas ouverte aux professionnels basés en France.'
+'Bonjour %prenom%! Bienvenue sur Pixelforce': 'Bonjour %prenom%! Bienvenue sur Pixelforce'
+'Paiement efféctué avec succès !': 'Paiement efféctué avec succès !'
+'Découvrez comment Pixelforce peut transformer votre activité. Regardez cette courte vidéo pour en savoir plus sur les opportunités qui vous attendent.': 'Découvrez comment Pixelforce peut transformer votre activité. Regardez cette courte vidéo pour en savoir plus sur les opportunités qui vous attendent.'
+Ajouter: Ajouter
+Accéder: Accéder
+'En attente de validation': 'En attente de validation'
+'Bientôt Disponible': 'Bientôt Disponible'
+'Choix du secteur': 'Choix du secteur'
