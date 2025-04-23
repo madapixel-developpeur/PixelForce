@@ -9,8 +9,10 @@ use Symfony\Component\Intl\Countries;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use App\Form\FormEvents\SecteurChoiceListListener;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\Form\Extension\Core\Type\TelType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -21,35 +23,44 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 class InscriptionAgentType extends AbstractType
 {
+    public function __construct(
+        private TranslatorInterface $translator,
+        private RequestStack $requestStack)
+    {
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $locale = $this->requestStack->getCurrentRequest()->getLocale()  ?? 'fr';
+        $countryNames = Countries::getNames($locale);
+
         $user = $options ["data"];
         $builder
             ->add('nom', TextType::class, [
                 'label' => false,
                 'attr' => [
-                    'placeholder' => 'Entrer votre nom',
+                    'placeholder' =>  $this->translator->trans('Entrer votre nom'),
                     'step' => 1
                 ],
                 'constraints' => [
-                    new NotNull([],'Champ obligatoire')
+                    new NotNull([],$this->translator->trans('Champ obligatoire'))
                 ]
             ])
             ->add('prenom', TextType::class, [
                 'label' => false,
                 'attr' => [
-                    'placeholder' => 'Entrer votre prénom',
+                    'placeholder' => $this->translator->trans('Entrer votre prénom') ,
                     'step' => 1
                 ],
                 'constraints' => [
-                    new NotNull([],'Champ obligatoire')
+                    new NotNull([],$this->translator->trans('Champ obligatoire'))
                 ]
             ])
 
             ->add('adresse', TextType::class, [
                 'label' => false,
                 'attr' => [
-                    'placeholder' => 'Votre adresse',
+                    'placeholder' => $this->translator->trans('Votre adresse'),
                     'step' => 1
                 ],
                 "required" => true
@@ -57,17 +68,17 @@ class InscriptionAgentType extends AbstractType
             ->add('telephone', TelType::class, [
                 'label' => false,
                 'attr' => [
-                    'placeholder' => 'Numéro téléphone',
+                    'placeholder' => $this->translator->trans('Numéro téléphone'),
                     'step' => 1
                 ],
                 'constraints' => [
-                    new NotNull([],'Champ obligatoire')
+                    new NotNull([],$this->translator->trans('Champ obligatoire'))
                 ]
             ])
             ->add('codePostal', TextType::class, [
                 'label' => false,
                 'attr' => [
-                    'placeholder' => 'Code postal',
+                    'placeholder' => $this->translator->trans('Code postal'),
                     'step' => 1
                 ],
                 "required" => true
@@ -75,22 +86,22 @@ class InscriptionAgentType extends AbstractType
             ->add('username', TextType::class, [
                 'label' => false,
                 'attr' => [
-                    'placeholder' => 'Nom d\'utilisateur',
+                    'placeholder' =>$this->translator->trans('Nom d\'utilisateur') ,
                     'step' => 2
                 ],
                 'constraints' => [
-                    new NotNull([],'Champ obligatoire')
+                    new NotNull([],$this->translator->trans('Champ obligatoire'))
                 ]
             ])
 
             ->add('email', EmailType::class, [
                 'label' => false,
                 'attr' => [
-                    'placeholder' => 'Adresse mail',
+                    'placeholder' =>$this->translator->trans('Adresse mail') ,
                     'step' => 1
                 ],
                 'constraints' => [
-                    new NotNull([],'Champ obligatoire'),
+                    new NotNull([],$this->translator->trans('Champ obligatoire')),
                 ]
             ])
 
@@ -102,7 +113,7 @@ class InscriptionAgentType extends AbstractType
             ->add('password', RepeatedType::class, [
                 'label' => false,
                 'type' => PasswordType::class,
-                'invalid_message' => 'Le mot de passe saisi doit être le même.',
+                'invalid_message' => $this->translator->trans('Le mot de passe saisi doit être le même.'),
                 'attr' =>
                     [
                         'step' => 2
@@ -118,26 +129,26 @@ class InscriptionAgentType extends AbstractType
                 'first_options'  => [
                     'label' => false,
                     'attr' => [
-                        'placeholder' => 'Mot de passe',
+                        'placeholder' => $this->translator->trans('Mot de passe'),
                         'step' => 2
                     ]
                 ],
                 'second_options' => [
                     'label' => false,
                     'attr' => [
-                        'placeholder' => 'Confirmation Mot de passe',
+                        'placeholder' => $this->translator->trans('Confirmation Mot de passe'),
                         'step' => 2
                     ]
                 ],
                 'constraints' => [
-                    new NotNull([],'Champ obligatoire'),
+                    new NotNull([],$this->translator->trans('Champ obligatoire')),
                 ],
                 'mapped' => false
             ])
             ->add('numero_rue', TextType::class, [
                 'label' => false,
                 'attr' => [
-                    'placeholder' => 'Numéro de rue',
+                    'placeholder' => $this->translator->trans('Numéro de rue'),
                     'step' => 1
                 ],
                 "required" => true
@@ -145,18 +156,18 @@ class InscriptionAgentType extends AbstractType
             ->add('ville', TextType::class, [
                 'label' => false,
                 'attr' => [
-                    'placeholder' => 'Ville',
+                    'placeholder' => $this->translator->trans('Ville'),
                     'step' => 1
                 ],
                 "required" => true
             ])
             ->add('pays', ChoiceType::class, [
-                'label' => 'Pays',
-                'placeholder' => 'Sélectionnez un pays',
-                'choices' => array_flip(Countries::getNames('fr')),
+                'label' => $this->translator->trans('Pays'),
+                'placeholder' => $this->translator->trans('Sélectionnez un pays'),
+                'choices' => array_flip($countryNames),
                 'required' => true,
                 'constraints' => [
-                    new NotBlank(["message" => "Veuillez choisir un pays"]),
+                    new NotBlank(["message" => $this->translator->trans("Veuillez choisir un pays")]),
                 ],
                 'attr' => ['class' => 'form-control', 'step' => 0],
             ])
@@ -172,7 +183,7 @@ class InscriptionAgentType extends AbstractType
         // Ajoutez le champ 'ambassador_username' si la valeur est différente de null
         if ($user->getAmbassadorUsername() !== null) {
             $builder->add('ambassador_username', TextType::class, [
-                'label' => "Nom d'utilisateur du parrain",
+                'label' => $this->translator->trans("Nom d'utilisateur du parrain"),
                 'required' => true,
                 'disabled' => true
             ]);

@@ -12,7 +12,44 @@ TVA: TVA
 'Prix net (sans TVA)': 'Prix net (sans TVA)'
 'Frais de livraison': 'Frais de livraison'
 'Prix total (TVA incluse)': 'Prix total (TVA incluse)'
-'Conditions générales de vente' : 'Conditions générales de vente'
-'Conditions générales d''utilisation' : 'Conditions générales d''utilisation'
-'Conditions générales d''utilisations (CGU)' : 'Conditions générales d''utilisations (CGU)'
-'Conditions générales de vente (CGV)' : 'Conditions générales de vente (CGV)'
+'Conditions générales de vente': 'Conditions générales de vente'
+'Conditions générales d''utilisation': 'Conditions générales d''utilisation'
+'Conditions générales d''utilisations (CGU)': 'Conditions générales d''utilisations (CGU)'
+'Conditions générales de vente (CGV)': 'Conditions générales de vente (CGV)'
+'Vous devez sélectionner au moins un type de compte !': 'Vous devez sélectionner au moins un type de compte !'
+Inscription: Inscription
+'Information du compte': 'Information du compte'
+Type: Type
+'Compte Revendeur': 'Compte Revendeur'
+"Vous souhaitez recommander des services sans les réaliser vous-même ?\nChoisissez le compte Revendeur pour accéder à une sélection de services proposés par nos partenaires (agences, professionnels…). Vous pourrez les recommander en toute autonomie et toucher des commissions à chaque vente.": "Vous souhaitez recommander des services sans les réaliser vous-même ?\nChoisissez le compte Revendeur pour accéder à une sélection de services proposés par nos partenaires (agences, professionnels…). Vous pourrez les recommander en toute autonomie et toucher des commissions à chaque vente."
+'🔹 Id&eacute;al si vous &ecirc;tes apporteur d&rsquo;affaires, influenceur, ou que vous d&eacute;veloppez une activit&eacute; de vente indirecte.<br />🔹 Vous n&rsquo;avez pas besoin de comp&eacute;tences techniques ni de g&eacute;rer la prestation.<br />🔹 Vous b&eacute;n&eacute;ficiez d&rsquo;outils de suivi, d&rsquo;un lien d&rsquo;affiliation personnel, et d&rsquo;un syst&egrave;me de commissions automatique.': '🔹 Id&eacute;al si vous &ecirc;tes apporteur d&rsquo;affaires, influenceur, ou que vous d&eacute;veloppez une activit&eacute; de vente indirecte.<br />🔹 Vous n&rsquo;avez pas besoin de comp&eacute;tences techniques ni de g&eacute;rer la prestation.<br />🔹 Vous b&eacute;n&eacute;ficiez d&rsquo;outils de suivi, d&rsquo;un lien d&rsquo;affiliation personnel, et d&rsquo;un syst&egrave;me de commissions automatique.'
+'Compte Professionnel (Pro)': 'Compte Professionnel (Pro)'
+'Vous avez des compétences techniques ou un savoir-faire métier ? Rejoignez l’équipe Pixelforce en tant que professionnel labellisé.': 'Vous avez des compétences techniques ou un savoir-faire métier ? Rejoignez l’équipe Pixelforce en tant que professionnel labellisé.'
+"Le compte Pro est destiné aux prestataires qualifiés qui souhaitent collaborer avec Pixelforce sur le terrain, dans leur domaine d’expertise.\nVous intervenez pour réaliser des prestations concrètes pour les clients de la plateforme, en lien avec notre équipe centrale.": "Le compte Pro est destiné aux prestataires qualifiés qui souhaitent collaborer avec Pixelforce sur le terrain, dans leur domaine d’expertise.\nVous intervenez pour réaliser des prestations concrètes pour les clients de la plateforme, en lien avec notre équipe centrale."
+'🔹 Qui est concern&eacute; ?<br />D&eacute;veloppeurs, community managers, experts SEO/SEA, installateurs de syst&egrave;mes d&rsquo;alarmes etc.': '🔹 Qui est concern&eacute; ?<br />D&eacute;veloppeurs, community managers, experts SEO/SEA, installateurs de syst&egrave;mes d&rsquo;alarmes etc.'
+'🔹 Pourquoi nous rejoindre ?<br />Vous travaillez en collaboration directe avec Pixelforce, b&eacute;n&eacute;ficiez d&rsquo;opportunit&eacute;s de missions r&eacute;guli&egrave;res, et &ecirc;tes form&eacute; &agrave; nos standards de qualit&eacute;.': '🔹 Pourquoi nous rejoindre ?<br />Vous travaillez en collaboration directe avec Pixelforce, b&eacute;n&eacute;ficiez d&rsquo;opportunit&eacute;s de missions r&eacute;guli&egrave;res, et &ecirc;tes form&eacute; &agrave; nos standards de qualit&eacute;.'
+'🔹 Ce que vous gagnez :<br />Un label Pixelforce, une visibilit&eacute; accrue, des missions qualifi&eacute;es, et un accompagnement personnalis&eacute; pour d&eacute;velopper votre activit&eacute;.': '🔹 Ce que vous gagnez :<br />Un label Pixelforce, une visibilit&eacute; accrue, des missions qualifi&eacute;es, et un accompagnement personnalis&eacute; pour d&eacute;velopper votre activit&eacute;.'
+Suivant: Suivant
+Information: Information
+'Information sur la connexion': 'Information sur la connexion'
+Retour: Retour
+S’inscrire: S’inscrire
+'Déjà un compte ? Connectez-vous': 'Déjà un compte ? Connectez-vous'
+Entrer votre nom: "Entrer votre nom"
+Champ obligatoire: "Champ obligatoire"
+Entrer votre prénom: "Entrer votre prénom"
+Votre adresse: "Votre adresse"
+Numéro téléphone: "Numéro téléphone"
+Code postal: "Code postal"
+Nom d'utilisateur: "Nom d'utilisateur"
+Adresse mail: "Adresse mail"
+Le mot de passe saisi doit être le même.: "Le mot de passe saisi doit être le même."
+Confirmation Mot de passe: "Confirmation Mot de passe"
+Numéro de rue: "Numéro de rue"
+Ville: "Ville"
+Pays: "Pays"
+Sélectionnez un pays: "Sélectionnez un pays"
+Veuillez choisir un pays: "Veuillez choisir un pays"
+Nom d'utilisateur du parrain: "Nom d'utilisateur du parrain"
+'À ce jour, la plateforme n''est pas ouverte aux professionnels basés en France.' : 'À ce jour, la plateforme n''est pas ouverte aux professionnels basés en France.' 
+
