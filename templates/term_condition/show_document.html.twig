@@ -41,9 +41,9 @@
                             <div class="col-md-12 text-center ">
                                 <h4 class="text-center mb-4">
                                 {% if type == "CGU"  %}
-                                    Conditions générales d'utilisations (CGU)
+                                   {% trans %}Conditions générales d'utilisations (CGU){% endtrans %} 
                                 {%  elseif type == "CGV" %}
-                                    Conditions générales de vente (CGV)
+                                    {% trans %}Conditions générales de vente (CGV){% endtrans %}
                                 {%  endif %}
                                 <a href="{{ path('app_document_preview',{ type : type , option :'download' })}}" class="" type="button" ><i class="fa fa-download"></i></a>
                                 </h4>
