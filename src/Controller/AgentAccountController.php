@@ -365,11 +365,7 @@ class AgentAccountController extends AbstractController
         } else {
             $user = (object) $this->getUser();
         }
-        if (in_array('ROLE_AGENT', $user->getRoles())) {
-            $limit = ($user->getPosition() ?? 0) + 1;
-        }
-
-
+        $limit =  $_ENV['LIMIT_NIVEAU_EQUIPE_LINEAIRE'];
         if ($sessionSecteurId == $secteur_finance_id) {
             $unilevel = $this->statAgentService->getInovaUnilevelChildren($user, true);
         } 
