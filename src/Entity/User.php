@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Exception\CustomException;
 use App\Repository\UserRepository;
 use App\Services\StripeService;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -1922,6 +1923,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
     public function getAgentSecteursStr()
     {
         return $this->allSecteursOfUser($this->getAgentSecteurs()->toArray());
+    }
+
+    public function getAgentSecteurById($idSecteur)
+    {
+        $agentSecteurs = $this->getAgentSecteurs();
+        foreach($agentSecteurs as $agentSecteur){
+            if($agentSecteur->getSecteur()->getId() == $idSecteur){
+                return $agentSecteur;
+            }
+        }
+        throw new CustomException('Secteur non trouvé pour l\'agent');
     }
 
     public function getAccessSatus(): ?string

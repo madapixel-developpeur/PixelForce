@@ -20,6 +20,9 @@ parameters:
   inova_referral_link: "%env(INOVA_REFERRAL_LINK)%"
   catalogues_base_url: "%env(CATALOGUES_BASE_URL)%"
   secteur_securite_id: "%env(SECTEUR_SECURITE_ID)%"
+  secteur_little_ponails_id: "%env(SECTEUR_LITTLE_PONAILS_ID)%"
+
+  
 
 services:
   # default configuration for services in *this* file
@@ -65,6 +68,14 @@ services:
       $projectDir: "%kernel.project_dir%"
 
   App\EventListener\SecteurListener:
+    tags:
+      - {
+          name: "kernel.event_listener",
+          event: "kernel.request",
+          method: "onKernelRequest",
+        }
+
+  App\EventListener\LinkedAccountFromSectorPlatformListener:
     tags:
       - {
           name: "kernel.event_listener",

@@ -7,6 +7,7 @@ use Exception;
 use App\Entity\User;
 use App\Entity\Secteur;
 use App\Entity\TypeSecteur;
+use App\Exception\CustomException;
 use App\Repository\UserRepository;
 use App\Services\User\AgentService;
 use App\Services\RemunerationService;
@@ -217,6 +218,32 @@ class StatAgentService
         }
     }
 
+
+    public function getLPNAnnualAndMonthlyStat($identifier,DateTime $reference){
+        try {
+            $BO_URL = $_ENV['LITTLE_PONAILS_BACK_URL'];
+
+            if (!trim($BO_URL)){
+                throw new \Exception('API unavailable');
+            }
+            $response = $this->client->request(
+                'GET',
+                $BO_URL . '/api-pxl/agent-current-stat',
+                [
+                   'json' => array_merge( ['identifier' => $identifier], ['date_ref' =>  $reference->format('Y-m-d H:i:s')])
+                ]
+            );
+            $content = json_decode($response->getContent(), true);
+            return $content;
+        } catch (\Exception $exception) {
+            return [
+                'ca_total_year' => 0,
+                'remuneration_total_year' => 0,
+                'ca_total_month' => 0,
+                'remuneration_total_month' => 0,
+            ];
+        }
+    }
     
     public function getPbbAnnualAndMonthlyStat($pbb_id,DateTime $reference,array $filleul = [])
     {
@@ -247,6 +274,27 @@ class StatAgentService
         }
     }
 
+    public function getCaStatLPN(string $identifier,DateTime $reference){
+        try {
+            $BO_URL = $_ENV['LITTLE_PONAILS_BACK_URL'];
+            if (!trim($BO_URL)){
+                throw new \Exception('API unavailable');
+            }
+            $response = $this->client->request(
+                'GET',
+                $BO_URL . '/api-pxl/agent-team-ca-stat',
+                [
+                   'json' => array_merge( ['identifier' => $identifier], ['date_ref' =>  $reference->format('Y-m-d H:i:s')])
+                ]
+            );
+            $content = json_decode($response->getContent(), true);
+            return $content;
+        } catch (\Exception $exception) {
+
+           throw $exception;
+        }
+    }
+
 
     public function getAgentCaStatEquipe($agent,$secteurId)
     {
@@ -268,6 +316,16 @@ class StatAgentService
                 );
                 $content = json_decode($response->getContent(), true);
                 return $content;
+            }
+            
+            else if($secteurId == $_ENV['SECTEUR_LITTLE_PONAILS_ID']){
+                // $agentSecteur = $agent->getAgentSecteurById($secteurId);
+                // $identifier = $agentSecteur->getSectorPlatformAccountId();
+                // return  $this->getCaStatLPN($identifier, new DateTime());
+                return [
+                    "ca_perso" => 0,
+                    "ca_equipe" => 0
+                ];
             }else{
                 throw new Exception();
             }
@@ -275,6 +333,25 @@ class StatAgentService
             return [
                 "ca_perso" => 0,
                 "ca_equipe" => 0
+            ];
+        }
+    }
+
+    public function getAgentStatLittlePonailsNetwork($agent,$secteurId){
+        try {
+            
+            if ($secteurId != $_ENV['SECTEUR_LITTLE_PONAILS_ID']){
+                throw new CustomException('Secteur non prise en charge');
+            }
+            $agentSecteur = $agent->getAgentSecteurById($secteurId);
+            $identifier = $agentSecteur->getSectorPlatformAccountId();
+            return  $this->getCaStatLPN($identifier, new DateTime());
+        } catch (\Exception $exception) {
+            return [
+                "ca_perso" => 0,
+                "ca_equipe" => 0,
+                "countTeam" => 0,
+                'countDirectChildren' => 0
             ];
         }
     }
@@ -287,6 +364,19 @@ class StatAgentService
             return [
                 "totalAmount" => 0,
                 "orderCount" => 0
+            ];
+        }
+    }
+
+    public function getGlobalStatLittlePonails($agentId, $secteurId,DateTime  $dateRef){
+        if ($secteurId == $this->parameterBag->get('secteur_little_ponails_id')) {
+            return $this->getLPNAnnualAndMonthlyStat($agentId,$dateRef);
+        } else {
+            return [
+                'ca_total_year' => 0,
+                'remuneration_total_year' => 0,
+                'ca_total_month' => 0,
+                'remuneration_total_month' => 0,
             ];
         }
     }
@@ -326,6 +416,7 @@ class StatAgentService
         $statFinance = null;
         $rankInfo = null;
         $statSecurite = null;
+        $statLPN = null;
         if ($secteur->getId() == $this->parameterBag->get('secteur_finance_id')) {
             $statFinance = $this->getStatFinance($agent->getEmail());
         } elseif ( $secteur->getId() == $this->parameterBag->get('secteur_digital_id')) {
@@ -341,7 +432,12 @@ class StatAgentService
             ];
             $lastDayOfLastMonth = (new DateTime('first day of last month'))->modify('last day of this month');
             $rankInfo = $this->getUserCurrentRank($agent,$lastDayOfLastMonth,$secteur);
-        } else{
+        } elseif ( $secteur->getId() == $this->parameterBag->get('secteur_little_ponails_id')) { 
+            $agentSecteur = $agent->getAgentSecteurById($secteur?->getId());
+            $statLPN = $this->getGlobalStatLittlePonails($agentSecteur->getSectorPlatformAccountId(), $secteur->getId(),new DateTime());
+            $lastDayOfLastMonth = (new DateTime('first day of last month'))->modify('last day of this month');
+            $rankInfo = $this->getUserCurrentRank($agent,$lastDayOfLastMonth,$secteur);
+        }else{
             $statDigital = $this->getStat($agent->getId(), $secteur->getId());
         }
 
@@ -361,7 +457,8 @@ class StatAgentService
             'soldeRemuneration' => $soldeRemuneration,
             'nbVentesTotal' => $nbVentesTotal,
             'statRemuneration' => $statRemuneration ,
-            'rankInfo' => $rankInfo
+            'rankInfo' => $rankInfo,
+            'statLPN' => $statLPN,
         ];
     }
 
@@ -572,6 +669,271 @@ class StatAgentService
             return $content;
         } catch (\Exception $exception) {
             return [];
+        }
+    }
+
+    public function getNetWorkFromLittlePonails(string $identifier,DateTime $reference){
+        try {
+            $BO_URL = $_ENV['LITTLE_PONAILS_BACK_URL'];
+            if (!trim($BO_URL)){
+                throw new \Exception('API unavailable');
+            }
+            $response = $this->client->request(
+                'GET',
+                $BO_URL . '/api-pxl/mlm/network',
+                [
+                   'json' => array_merge( ['identifier' => $identifier], ['date_ref' =>  $reference->format('Y-m-d H:i:s')])
+                ]
+            );
+            $content = json_decode($response->getContent(), true);
+            return $content;
+        } catch (\Exception $exception) {
+           throw $exception;
+        }
+    }
+
+    public function reArrangeDataFromLpn($data){
+
+
+        $reArrangedData['ID'] = $data['agent']['user']['id'];
+        $reArrangedData['name'] = $data['agent']['user']['lastname'].' ' .$data['agent']['user']['firstnames'];
+        $reArrangedData['imageUrl'] = '/assets/vuexy/images/portrait/small/avatar-s-11.jpg';
+        $reArrangedData['area'] = $data['agent']['user']['email'];
+        $reArrangedData['office'] =  "User";
+        $reArrangedData['isLoggedUser'] = false;
+        $reArrangedData['positionName'] = $data['agent']['username'];
+        $reArrangedData['CA'] = number_format( $data['metadatas']['total_sales'],2).'€' ;
+  
+        $reArrangedData['countChildren'] = count($data['children'] );
+        
+        foreach ($data['children'] as $child) {
+            $reArrangedData['children'][] = $this->reArrangeDataFromLpn($child);
+        }   
+        return $reArrangedData;
+    }
+
+    public function getLittlePonailsUnilevelChildren(User $user)
+    {
+        $agentSecteur = $user->getAgentSecteurById($_ENV['SECTEUR_LITTLE_PONAILS_ID']);
+        if(!$agentSecteur){
+            throw new CustomException('Secteur non prise en charge');
+        }
+        $identifier = $agentSecteur->getSectorPlatformAccountId();
+        
+        $networkFromLpn = $this->getNetWorkFromLittlePonails($identifier,new \DateTime);
+
+        $data['ID'] = $networkFromLpn['currentUser']['id'];
+        $data['name'] =  $networkFromLpn['currentUser']['name'];
+        $data['imageUrl'] = '/assets/vuexy/images/portrait/small/avatar-s-11.jpg';
+        $data['area'] =  $networkFromLpn['currentUser']['email'];
+        $data['office'] =  "User";
+        $data['isLoggedUser'] = false;
+        $data['positionName'] =  $networkFromLpn['currentUser']['username'];
+        $data['CA'] = number_format(  $networkFromLpn['currentUser']['CA'],2).'€' ;
+
+
+
+        $data['countChildren'] = count($networkFromLpn["children"]);
+        
+        foreach ($networkFromLpn["children"] as $child) {
+            $data['children'][] = $this->reArrangeDataFromLpn($child);
+        } 
+
+        return $data;
+    }
+
+    public function getOrderInfoFromLittlePonailsApi($identifier,$ref){
+        try {
+            $BO_URL = $_ENV['LITTLE_PONAILS_BACK_URL'];
+            if (!trim($BO_URL)){
+                throw new \Exception('API unavailable');
+            }
+            $response = $this->client->request(
+                'GET',
+                $BO_URL . '/api-pxl/mlm/order/view',
+                [
+                   'json' => ['identifier' => $identifier , 'ref' => $ref]
+                ]
+            );
+            $content = json_decode($response->getContent(), true);
+            return $content;
+        } catch (\Exception $exception) {
+            throw new CustomException("Une erreur s'est produite lors de la requête de donnée");
+        }
+
+     
+    }
+
+
+    public function getOrderDetailFromLittlePonails($user,$ref){
+        $agentSecteur = $user->getAgentSecteurById($_ENV['SECTEUR_LITTLE_PONAILS_ID']);
+        $identifier = $agentSecteur->getSectorPlatformAccountId();
+        try {
+            $data = $this->getOrderInfoFromLittlePonailsApi($identifier,$ref);
+            return $data;
+        } catch (\Exception $exception) {
+            throw $exception;
+        }
+    }
+
+    public function getOrdersFromLittlePonails(User $user,int $limit){
+        $agentSecteur = $user->getAgentSecteurById($_ENV['SECTEUR_LITTLE_PONAILS_ID']);
+        $identifier = $agentSecteur->getSectorPlatformAccountId();
+        try {
+            $data = $this->getOrdersFromLittlePonailsFromApi($identifier);
+            return [
+                'items' => $data['orders'],
+                'itemNumberPerPage' => $data['count'],
+                'total' => $data['count'],
+                'currentPageNumber' => 1,
+            ];
+        } catch (\Exception $exception) {
+            throw $exception;
+            // return [
+            //     'items' => [],
+            //     'itemNumberPerPage' => 1,
+            //     'total' => 0,
+            //     'currentPageNumber' => 1,
+            // ];
+        }
+    }
+
+    public function getOrdersFromLittlePonailsFromApi($identifier){
+        try {
+            $BO_URL = $_ENV['LITTLE_PONAILS_BACK_URL'];
+            if (!trim($BO_URL)){
+                throw new \Exception('API unavailable');
+            }
+            $response = $this->client->request(
+                'GET',
+                $BO_URL . '/api-pxl/mlm/orders',
+                [
+                   'json' => ['identifier' => $identifier]
+                ]
+            );
+            $content = json_decode($response->getContent(), true);
+            return $content;
+        } catch (\Exception $exception) {
+            throw new CustomException("Une erreur s'est produite lors de la requête de donnée");
+        }
+
+     
+    }
+
+    public function getCaHistoryFromLittlePonailsFromApi($identifier,array $option = []){
+        try {
+            $BO_URL = $_ENV['LITTLE_PONAILS_BACK_URL'];
+            if (!trim($BO_URL)){
+                throw new \Exception('API unavailable');
+            }
+            $response = $this->client->request(
+                'GET',
+                $BO_URL . '/api-pxl/mlm/agent/ca_by_month',
+                [
+                   'json' => [
+                        'identifier' => $identifier ,
+                        'page' => $option['page'] ??'',
+                        'limit' => $option['limit'] ?? ''  
+                    ]
+                ]
+            );
+            $content = json_decode($response->getContent(), true);
+            return $content;
+        } catch (\Exception $exception) {
+            throw new CustomException("Une erreur s'est produite lors de la requête de donnée");
+        }
+
+    }
+
+
+    public function getCaHistoryFromLittlePonails(User $user, int $page){
+        $agentSecteur = $user->getAgentSecteurById($_ENV['SECTEUR_LITTLE_PONAILS_ID']);
+        $identifier = $agentSecteur->getSectorPlatformAccountId();
+        try {
+            $data = $this->getCaHistoryFromLittlePonailsFromApi($identifier);
+            return [
+                'items' => $data['ca'],
+                'itemNumberPerPage' => $data['count'],
+                'total' => $data['count'],
+                'currentPageNumber' => 1,
+            ];
+        } catch (\Exception $exception) {
+            throw $exception;
+        }
+    }
+
+
+    public function getCaHistoryDetailFromLittlePonailsApi($identifier,$month,$year){
+        try {
+            $BO_URL = $_ENV['LITTLE_PONAILS_BACK_URL'];
+            if (!trim($BO_URL)){
+                throw new \Exception('API unavailable');
+            }
+            $response = $this->client->request(
+                'GET',
+                $BO_URL . '/api-pxl/mlm/agent/ca_summary_by_month',
+                [
+                   'json' => [
+                        'identifier' => $identifier ,
+                        'month' => $month,
+                        'year' => $year 
+                    ]
+                ]
+            );
+            $content = json_decode($response->getContent(), true);
+            return $content;
+        } catch (\Exception $exception) {
+            throw new CustomException("Une erreur s'est produite lors de la requête de donnée");
+        }
+    }
+
+
+    public function getCaHistoryDetailFromLittlePonails(User $user,$month,$year){
+        $agentSecteur = $user->getAgentSecteurById($_ENV['SECTEUR_LITTLE_PONAILS_ID']);
+        $identifier = $agentSecteur->getSectorPlatformAccountId();
+        try {
+            $data = $this->getCaHistoryDetailFromLittlePonailsApi($identifier,$month,$year);
+            return $data;
+        } catch (\Exception $exception) {
+            throw $exception;
+        }
+    }
+
+    public function getRemunerationsLittlePonailsFromAPI(string $identifier, array $filter){
+        try {
+            $BO_URL = $_ENV['LITTLE_PONAILS_BACK_URL'];
+            if (!trim($BO_URL)){
+                throw new \Exception('API unavailable');
+            }
+            $response = $this->client->request(
+                'GET',
+                $BO_URL . '/api-pxl/mlm/agent/ca_summary_by_month',
+                [
+                   'json' => array_merge([
+                        'identifier' => $identifier 
+                   ],$filter)
+                ]
+            );
+            $content = json_decode($response->getContent(), true);
+            return $content;
+        } catch (\Exception $exception) {
+            throw new CustomException("Une erreur s'est produite lors de la requête de donnée");
+        }
+    }
+
+    public function getRemunerationsLittlePonails(User $user, array $filter){
+        $agentSecteur = $user->getAgentSecteurById($_ENV['SECTEUR_LITTLE_PONAILS_ID']);
+        $identifier = $agentSecteur->getSectorPlatformAccountId();
+        try {
+            $data = $this->getCaHistoryDetailFromLittlePonailsApi($identifier,$filter['month'],$filter['year']);
+            return [
+                'items' => $data['ca'],
+                'itemNumberPerPage' => $data['count'],
+                'total' => $data['count'],
+                'currentPageNumber' => 1,
+            ];
+        } catch (\Exception $exception) {
+            throw $exception;
         }
     }
 }

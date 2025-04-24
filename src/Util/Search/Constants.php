@@ -12,4 +12,18 @@ class Constants {
 
     public const PORTFOLIO_FOLDER = "professionnel/portfolio";
     public const MIN_RANK_MEEETING = 1;
+    
+
+    public static function getExcludedPathsForSectorCheckUp(array $givenPath = []): array
+    {
+        $commonPaths =  [
+            '/agent/accueil',
+            '/agent/secteur',
+            '/myapi',
+            '/chatutil',
+            '/user',
+            '/otp'
+        ];
+        return array_merge($commonPaths,$givenPath);
+    }
 }

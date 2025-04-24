@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	Vérification
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+
+{% endblock %}
+
+{% block body %}
+	<div class="row px-3 content-formation">
+		<div class="card card-body-custom mt-2 px-5 py-5">
+			<div class="">
+				<div class="row justify-content-center">
+					<div class="mb-5 font-20  col-md-10 text-center">
+						<h3 class="text-center mb-3">{% trans %}Vérifiez votre identité{% endtrans %}</h3>
+						<p>{% trans %}Saisissez ci-dessous le code de sécurité que vous avez reçu par email.{% endtrans %}</p>
+					</div>
+				</div>
+				{% for label, messages in app.flashes %}
+					{% for message in messages %}
+						<div class="alert alert-{{label}}" role="alert">
+							<div class="alert-body">
+								{{message}}
+							</div>
+						</div>
+					{% endfor %}
+				{% endfor %}
+				{{ form_start(form, {'attr': {'class': 'form signup-form', 'id': 'signup'}}) }}
+				<!-- Form -->
+
+
+				<div class="form-group mb-4">
+					{{form_label(form.otpValue)}}
+					{{form_widget(form.otpValue)}}
+					{{form_errors(form.otpValue)}}
+				</div>
+
+
+				<div class="d-flex align-items-center justify-content-end mb-3">
+
+					<button type="button" id="resend-code-btn" class="btn long me-3 btn-primary">{% trans %}Renvoyer le code{% endtrans %}</button>
+
+					<button type="submit" class="btn long btn-success">{% trans %}Vérifier{% endtrans %}</button>
+				</div>
+
+				{{form_end(form)}}
+				<!-- End Base Control -->
+			</div>
+			<!-- End Card -->
+			<form action="{{path('app_otp_resend_code', {operationType: operationType})}}" method="POST" id="resend-code-form"></form>
+		</div>
+	</div>
+{% endblock %}
+{% block javascripts %}
+	{{ parent() }}
+    <script>
+        $(document).ready(function () { 	
+            $('#resend-code-btn').click(function (){
+                $('#resend-code-form').submit();
+            })
+        });
+	</script>
+{% endblock %}

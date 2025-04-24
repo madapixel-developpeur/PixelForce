@@ -1,0 +1,134 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	Commandes
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+{% endblock %}
+
+{% block body %}
+	<div class="row mb-3">
+		<div class="col-12  mt-2 mt-md-3">
+			<h4 class="my-auto general-primary-text">Liste des commandes</h4>
+		</div>
+	</div>
+	<div class="card card-company-table p-5 rounded-3" style="">
+		<div class="card-body p-0">
+			{# <div class="card-head mb-3">
+			                    <div class="row">
+			                        <div class="col-0 col-md-6">
+			                        </div>
+			                        <div class="col-12 col-md-6 d-flex justify-content-center">
+			                            <div class="col-6 col-md-4">
+			                                <div class="input-group rounded-3 m-2">
+			                                    <button class="input-group-text border-0 w-100" type="button" data-toggle="collapse" data-target="#filters" aria-expanded="false" aria-controls="filters">
+			                                        <span class="input-group-text border-0 w-25 rounded-4 me-4" id="filter-toggle">
+			                                            <i class="fa-solid fa-bars-staggered"></i>
+			                                        </span>
+			                                        Filtres
+			                                    </button>
+			                                </div>
+			                            </div>
+			                        </div>
+			                    </div>
+			                </div> #}
+			{# {{ form_start(form, {'attr': { 'id': 'product-filter-form'}}) }}
+			                    <div class="collapse" id="filters">
+			                        <div class="block block--bordered block--rounded">
+			                                <h1 class="block__text block__text--center mt-2" >Options de filtre :</h1>
+			                                <div class="filter-wrap">
+			                                    <!-- Formulaire de recherche -->
+			                                        <div class="search-form">
+			                                            <div class="filter-form">
+			                                                <div class="col-12 col-md-3">
+			                                                        {{form_label(form.status)}}
+			                                                        {{form_widget(form.status)}}
+			                                                        {{form_errors(form.status)}}
+			                                                </div>
+			                                                <div class="col-12 col-md-2">
+			                                                        {{form_label(form.dateMin)}}
+			                                                        {{form_widget(form.dateMin)}}
+			                                                        {{form_errors(form.dateMin)}}
+			                                                </div>
+			                                                <div class="col-12 col-md-2">
+			                                                        {{form_label(form.dateMax)}}
+			                                                        {{form_widget(form.dateMax)}}
+			                                                        {{form_errors(form.dateMax)}}
+			                                                </div>
+			                                                <div class="col-12 col-md-2">
+			                                                        {{form_label(form.clientName)}}
+			                                                        {{form_widget(form.clientName)}}
+			                                                        {{form_errors(form.clientName)}}
+			                                                </div>
+			                                                <div class="col-12  col-md-2">
+			                                                        {{form_label(form.referenceVente)}}
+			                                                        {{form_widget(form.referenceVente)}}
+			                                                        {{form_errors(form.referenceVente)}}
+			                                                </div>
+			
+			                                                <div class="btn-wrap">
+			                                                    <button class="btn btn-primary" type="submit" name="action_button" value="search_action"><i data-feather="filter"></i>Filtrer</button>
+			                                                </div>
+			                                            </div>
+			
+			                                        </div>
+			                                </div>
+			                        </div>
+			                    </div>
+			                        <div class="row w-100">
+			                        <div class="col-12 col-md-12 mt-3 d-flex align-items-center justify-content-start p-0 mb-3 ">
+			                            <button name="action_button" value="excel"  class=" mt-2 btn btn-success btn-sm me-2 rounded-3"><i class="fa fa-print"></i> <span class="ms-1">Exporter excel</span></button>
+			                            <button name="action_button" value="csv"  class=" mt-2 btn btn-success btn-sm me-2 rounded-3"><i class="fa fa-print"></i> <span class="ms-1">Exporter csv</span></button>
+			                            <button name="action_button" value="pdf"  class=" mt-2  btn btn-danger btn-sm me-2 rounded-3"><i class="fa fa-file-text"></i> <span class="ms-1">Exporter pdf</span></button>
+			                        </div>
+			                    </div>
+			                {{ form_end(form) }} #}
+
+
+				{% if orderList|length ==0 %}
+					<div class="alert alert-primary p-3 text-center" role="alert"> <div class="alert-body">
+						Aucune Commande
+					</div>
+
+				{% endif %}
+				{% if orderList|length !=0 %}
+					<div class="table-responsive">
+						<table class="table text-center">
+							<tbody class="align-items-center">
+								<tr>
+									<th>Créée le</th>
+									<th>Nom d'utilisateur</th>
+									<th>Total</th>
+									<th>Statut</th>
+									<th></th>
+								</tr>
+
+								{% for order in orderList %}
+									<tr>
+										<td>{{order.date_created | date("d/m/Y H:i")}}</td>
+										<td>{{order.username }}
+										</td>
+										<td>{{order.net_total | number_format(2, ',', ' ')}}
+											€</td>
+										<td>{{get_lpn_command_status_meaning(order.status) }}</td>
+										<td class="col-action ">
+											<a href="{{ path('app_view_order_lpn',{ 'ref' : order.order_id  })}}">
+												<i data-feather="eye"></i>
+											</a>
+										</td>
+									</tr>
+								{% endfor %}
+
+							</tbody>
+						</table>
+					</div>
+					<div class="pagination d-flex justify-content-center">
+						{{ knp_pagination_render(orderList)}}
+					</div>
+				{% endif %}
+			</div>
+		</div>
+
+	{% endblock %}

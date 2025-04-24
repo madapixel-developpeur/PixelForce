@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	Chiffre d'affaires - Détail
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+    <a href="{{ path('app_common_ca_list') }}" class="btn btn-secondary mb-2 mt-3"> <i class="fa-solid fa-circle-arrow-left"></i> Retour </a>
+    <div class="card card-company-table p-5 rounded-3" style="">
+		<div class="card-body p-0">
+            <div class="row">
+                <div class="col-md-12">
+                    <h1 class="block__title mb-4">Vente du mois de "{{ month  }}" :</h1>
+                    <p><b>Position de l'égerie du mois:</b>{{ caDetail.position ? caDetail.position.name : "Little égerie"}}</p>
+                    <p><b>Achats perso:</b> {{caDetail.own_sales | number_format(2, ',', ' ') }} € ({{ caDetail.own_num_items_sold }} articles)</p>
+                    <p><b>Achats clients:</b> {{caDetail.sponsored_sales | number_format(2, ',', ' ') }} € ({{caDetail.own_num_items_sold}} articles)</p>
+                    <p><b>Chiffre d'affaire personnel (Achats perso + achats clients):</b> {{caDetail.total_sales | number_format(2, ',', ' ') }} € ({{caDetail.num_items_sold}} articles)</p>
+                    <p><b>Chiffre d'affaire équipe:</b> {{ caDetail.ca_team | number_format(2, ',', ' ')  }} €</p>
+                    <p><b>Chiffre d'affaire global (CA Perso + CA Equipe):</b> {{ caDetail.ca_global | number_format(2, ',', ' ')   }} €</p>
+                    <p><b>Commissions sur achats clients:</b> {{ caDetail.commission_sponsored_sales  | number_format(2, ',', ' ')  }} €</p>
+                    <p><b>Commissions sur chiffre d'affaire équipe:</b> {{  caDetail.commission_ca_team | number_format(2, ',', ' ')  }} €</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+

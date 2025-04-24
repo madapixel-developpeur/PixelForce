@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Manager\UserManager;
 use App\Repository\UserRepository;
+use App\Services\OtpService;
 use App\Services\GenerateKey;
 use App\Services\MailerService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -30,7 +31,9 @@ class SecurityController extends AbstractController
      */
     private $userManager;
 
-    public function __construct(UserRepository $userRepository, MailerService $mailerService, UserManager $userManager)
+    public function __construct(UserRepository $userRepository, MailerService $mailerService, UserManager $userManager,
+        private OtpService $otpService
+    )
     {
         $this->userRepository = $userRepository;
         $this->mailerService = $mailerService;
@@ -61,6 +64,7 @@ class SecurityController extends AbstractController
      */
     public function logout(): void
     {
+        $this->otpService->removeEmailOtp();
         throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
     }
 

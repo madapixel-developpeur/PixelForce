@@ -1,0 +1,115 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	Rémunérations
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+    <div class="row mb-3">
+		<div class="col-12  mt-2 mt-md-3">
+			<h4 class="my-auto general-primary-text">Historique des rémunérations</h4>
+		</div>
+	</div>
+	<div class="card card-company-table p-5 rounded-3" style="">
+        <div class="card-body p-0">
+            {{ form_start(form, {'attr': {}}) }}
+            <div class="" id="filters">
+                <div class="">
+                        <h1 class="block__text block__text--center mt-2" >Options de filtre :</h1>
+                        <div class="filter-wrap">
+                            <!-- Formulaire de recherche -->
+                            <div class="search-form">
+                                <div class="filter-form">
+
+                                    <div class="col-12 col-md-2">
+                                        {{form_label(form.ref)}}
+                                        {{form_widget(form.ref)}}
+                                        {{form_errors(form.ref)}}
+                                    </div>
+                                    <div class="btn-wrap">
+                                        <button class="btn btn-primary" type="submit" name="action_button" value="search_action"><i data-feather="filter"></i>Filtrer</button>
+                                    </div>
+                                
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
+            {{ form_end(form) }}
+
+            {% if remunerations|length ==0 %}
+                <div class="alert alert-primary p-3 text-center" role="alert">
+                    <div class="alert-body">
+                        Aucun résultat trouvé.
+                    </div>
+                </div>
+            {% endif %}
+            {% if remunerations|length !=0 %}
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                            <div class="table-responsive">
+                            <table class="table">
+                                <tbody class="align-items-center">
+                                
+                                    <tr>
+                                        <td class="text-start"><b>Chiffre d'affaire équipe:</b> </td>
+                                        <td  class="text-end">{{ remunerations.ca_team | number_format(2, ',', ' ')  }} €</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-start"><b>Chiffre d'affaire global (CA Perso + CA Equipe):</b> </td>
+                                        <td  class="text-end">{{ remunerations.ca_global | number_format(2, ',', ' ')   }} €</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-start"><b>Commissions sur achats clients:</b> </td>
+                                        <td  class="text-end">{{ remunerations.commission_sponsored_sales  | number_format(2, ',', ' ')  }} €</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-start"><b>Commissions sur chiffre d'affaire équipe:</b> </td>
+                                        <td  class="text-end"> {{  remunerations.commission_ca_team | number_format(2, ',', ' ')  }} €</td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+                        {# <div class="pagination d-flex justify-content-center">
+                            {{ knp_pagination_render(remunerations)}}
+                        </div> #}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+	</div>
+
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.9/dist/flatpickr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.9/dist/plugins/monthSelect/index.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/fr.js"></script>
+    <script>
+        $(document).ready(function () {
+            let testInput = document.createElement("input");
+            testInput.setAttribute("type", "month");
+
+            $(".month-picker-input").each(function () {
+                if (testInput.type !== "month") {
+                    $(this).flatpickr({
+                        locale: 'fr', 
+                        dateFormat: "Y-m",
+                        plugins: [new monthSelectPlugin({ shorthand: true, dateFormat: "Y-m" })]
+                    });
+                }
+                else{
+                     $(this).attr('type', 'month');
+                }
+            });
+        });
+    </script>
+
+{% endblock %}
+
+
