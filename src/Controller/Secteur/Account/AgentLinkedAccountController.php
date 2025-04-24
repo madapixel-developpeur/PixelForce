@@ -92,10 +92,14 @@ class AgentLinkedAccountController extends AbstractController
         if ($form->isSubmitted()  && $form->isValid()) {
             try {
                 $data = $form->getData();
-                
+                $data = array_map(fn($v) => $v === null ? '' : $v, $data);
                 $multipart = [];
                 foreach ($data as $key => $value) {
-                    $multipart[] = ['name' => $key, 'contents' => $value];
+                    $multipart[] = 
+                    [
+                        'name' => $key,
+                        'contents' => $value ?? ''
+                    ];
                 }
 
                 $files = $this->getFilesDataToSendApi($request,[
