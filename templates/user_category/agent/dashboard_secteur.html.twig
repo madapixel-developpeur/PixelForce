@@ -6,7 +6,7 @@
 
 
 {% block title %}
-	Dashboard : {{ secteur.nom }}
+	{% trans %}Dashboard{% endtrans %} : {{ secteur.nom }}
 {% endblock %}
 
 {% block stylesheets %}
@@ -35,7 +35,7 @@
            <div class="row match-height">
                 {% if secteurAgent.isFonctionnaliteActive(constant('App\\Util\\FonctionnalitesTypeSecteur::FONCTIONNALITE_COMMON_FORMATION')) %}
                 <div class="col-lg-8 col-12">
-                    <h4 class=" mt-2 mb-3 choix-secteur-primary">Liste des formations</h4>
+                    <h4 class=" mt-2 mb-3 choix-secteur-primary">{% trans %}Liste des formations{% endtrans %}</h4>
                     <div class="card mb-3">
                         <div class="card-body p-0">
                             {% if firstFormation == null and videoFinFormation is not null %}
@@ -48,7 +48,7 @@
                                 </div>
                             {% elseif firstFormation == null %}    
                                 <div class="alert alert-primary text-center m-5">
-                                    Il n'y a plus de formation à terminer
+                                   {% trans %} Il n'y a plus de formation à terminer{% endtrans %}
                                 </div>
                             {% else %}
                                 {# {% if firstFormation.categorieFormation.ordreCatFormation == constant('App\\Entity\\CategorieFormation::ORDRE_LISTE_DE_CONTACT') and nbrAllMyContacts < constant('App\\Entity\\CategorieFormation::CONDITION_LISTE_DE_CONTACT') %}
@@ -70,14 +70,14 @@
                                         
                                         {% if formationAgentRelation %}
                                         <div class="d-flex align-items-center justify-content-around mb-2">
-                                        <p><b>Dernièr résultat:</b> {{formationAgentRelation.lastResultScore | number_format(2, ',', ' ')}} %</p>
-                                        <p><b>Résultat maximum:</b> {{formationAgentRelation.maxResultScore | number_format(2, ',', ' ')}} %</p>
+                                        <p><b>{% trans %}Dernièr résultat{% endtrans %}:</b> {{formationAgentRelation.lastResultScore | number_format(2, ',', ' ')}} %</p>
+                                        <p><b>{% trans %}Résultat maximum{% endtrans %}:</b> {{formationAgentRelation.maxResultScore | number_format(2, ',', ' ')}} %</p>
                                             
-                                            <p><b>Statut:</b>&nbsp;
+                                            <p><b>{% trans %}Statut{% endtrans %}:</b>&nbsp;
                                             {% if formationAgentRelation.statut == constant('App\\Entity\\Formation::STATUT_TERMINER') %}
-                                            <b class="text-success">RÉUSSI</b>
+                                            <b class="text-success">{% trans %}RÉUSSI{% endtrans %}</b>
                                             {% else %}
-                                            <b class="text-danger">ÉCHOUÉ</b>
+                                            <b class="text-danger">{% trans %}ÉCHOUÉ{% endtrans %}</b>
                                             {% endif %}
                                             </p>
                                         </div>                                  
@@ -89,21 +89,21 @@
                                         <div class="row">
                                              {% if statut == constant('App\\Entity\\Formation::STATUT_DISPONIBLE')%}
                                             <div class="col">
-                                                <a href="{{ path('agent_quiz_begin', {id:firstFormation.id}) }}" class="btn btn-primary fw-bolder mt-4">Commencer</a>
+                                                <a href="{{ path('agent_quiz_begin', {id:firstFormation.id}) }}" class="btn btn-primary fw-bolder mt-4">{% trans %}Commencer{% endtrans %}</a>
                                             </div>
                                             <div class="col">
                                                 
                                             </div>
                                             {% elseif statut == constant('App\\Entity\\Formation::STATUT_IN_PROGRESS') or statut == constant('App\\Entity\\Formation::STATUT_TERMINER') %}
                                             <div class="col">
-                                                <a href="{{ path('agent_quiz_begin', {id:firstFormation.id}) }}" class="btn btn-primary fw-bolder mt-4"><i class="fa fa-repeat"></i> Réessayer</a>
+                                                <a href="{{ path('agent_quiz_begin', {id:firstFormation.id}) }}" class="btn btn-primary fw-bolder mt-4"><i class="fa fa-repeat"></i> {% trans %}Réessayer{% endtrans %}</a>
                                             </div>
                                             <div class="col">
-                                                <a href="{{ path('agent_quiz_result', {id:formationAgentRelation.id}) }}" class="btn btn-success fw-bolder mt-4"><i class="fa fa-chevron-right"></i> Voir le dérnier résultat</a>
+                                                <a href="{{ path('agent_quiz_result', {id:formationAgentRelation.id}) }}" class="btn btn-success fw-bolder mt-4"><i class="fa fa-chevron-right"></i> {% trans %}Voir le dérnier résultat{% endtrans %}</a>
                                             </div>
                                             {% endif %}
                                             <div class="col">
-                                                <a href="{{ path('agent_formation_list') }}" class="btn btn-secondary fw-bolder mt-4"><i class="fa-solid fa-list me-2"></i> Liste des formations</a>
+                                                <a href="{{ path('agent_formation_list') }}" class="btn btn-secondary fw-bolder mt-4"><i class="fa-solid fa-list me-2"></i> {% trans %}Liste des formations{% endtrans %}</a>
                                             </div>
                                         </div>
                                     </div>
@@ -118,7 +118,7 @@
                                             <div class="text-center">
                                                 <div class="row">
                                                     <div class="col">
-                                                        <a href="{{ path('agent_formation_fiche', {id:firstFormation.id}) }}" class="regular-button w-50 mt-2 rounded-3"><i class="fa-solid fa-file me-2"></i> Fiche formation</a>
+                                                        <a href="{{ path('agent_formation_fiche', {id:firstFormation.id}) }}" class="regular-button w-50 mt-2 rounded-3"><i class="fa-solid fa-file me-2"></i> {% trans %}Fiche formation{% endtrans %}</a>
                                                     </div>
                                                     
                                                 </div>
@@ -146,14 +146,14 @@
                             <div class="col-md-12 col-12">
                                 <h4 class=" mt-2 mb-3 choix-secteur-primary only-on-large-screens" style="visibility: hidden;">&nbsp;</h4>
                                 {% if firstFormation != null %}    
-                                    <a class="regular-button w-100 text-center mb-3 action-button" href="{{ path('agent_formation_list') }}"  id="startFormation" >Accéder à mes formations </a>  
+                                    <a class="regular-button w-100 text-center mb-3 action-button" href="{{ path('agent_formation_list') }}"  id="startFormation" >{% trans %}Accéder à mes formations {% endtrans %}</a>  
                                 {% endif %}
                                 {# <a class="regular-button w-100 text-center mb-3 d-none" href="#" onclick='terminerFormation()' id="terminerFormationButton" >Terminer la formation</a>   #}
                                 {% if app.session.get('secteurId') == secteurDigitalId %}
-                                <a class="regular-button w-100 text-center mb-3 action-button" target="__blank" href="{{ catalogues_base_url }}?ref={{generateReference(app.user.id,app.user.id) }}">Je veux découvrir les services de Pixelsior</a>  
-                                <a class="regular-button w-100 text-center mb-3 action-button" href="#" onclick="copyLink('{{ catalogues_base_url }}?ref={{generateReference(app.user.id,app.user.id) }}','Lien de référence {{ catalogues_base_url }}?ref={{generateReference(app.user.id,app.user.id) }} copié avec succès') ">J’ai un client qui veut prendre un service</a>  
+                                <a class="regular-button w-100 text-center mb-3 action-button" target="__blank" href="{{ catalogues_base_url }}?ref={{generateReference(app.user.id,app.user.id) }}">{% trans %}Je veux découvrir les services de Pixelsior{% endtrans %}</a>  
+                                <a class="regular-button w-100 text-center mb-3 action-button" href="#" onclick="copyLink('{{ catalogues_base_url }}?ref={{generateReference(app.user.id,app.user.id) }}','Lien de référence {{ catalogues_base_url }}?ref={{generateReference(app.user.id,app.user.id) }} copié avec succès') ">{% trans %}J’ai un client qui veut prendre un service{% endtrans %}</a>  
                                 {% endif %}
-                                <a class="regular-button w-100 text-center mb-3 action-button" href="{{ path('agent_view') }}"  >J’ai un partenaire qui veut rejoindre mon équipe</a>  
+                                <a class="regular-button w-100 text-center mb-3 action-button" href="{{ path('agent_view') }}"  >{% trans %}J’ai un partenaire qui veut rejoindre mon équipe{% endtrans %}</a>  
                             </div>
                         {% endif %}
                         {% if secteurAgent.isFonctionnaliteActive(constant('App\\Util\\FonctionnalitesTypeSecteur::FONCTIONNALITE_COMMON_AGENDA')) %}
@@ -161,7 +161,7 @@
                                 <div class="col-md-12">
                                 {% if expert is defined and expert is not null %}
                                 
-                                    <h4 class=" mt-2 mb-3 choix-secteur-primary">Besoin d’un accompagnement ?</h4>
+                                    <h4 class=" mt-2 mb-3 choix-secteur-primary">{% trans %}Besoin d’un accompagnement ?{% endtrans %}</h4>
                                     <div class="card mb-3" style="max-height:310px;">
                                         <div class="card-body text-center">
                                                 <div class="text-center">
@@ -176,15 +176,15 @@
                                                     </span> #}
                                                     
                                                     <div class=" px-2 mt-1">
-                                                        <p><span class="fw-bolder me-25">Nom:</span>{{ expert.fullName}}</p>
-                                                        <p>   <span class="fw-bolder me-25">Email:</span>{{ expert.email}}</p>
+                                                        <p><span class="fw-bolder me-25">{% trans %}Nom{% endtrans %}:</span>{{ expert.fullName}}</p>
+                                                        <p>   <span class="fw-bolder me-25">{% trans %}Email{% endtrans %}:</span>{{ expert.email}}</p>
                                                     
                                                     </div>
                                                     
                                                 
                                                         <div class="px-2 buttons py-2">
                                                     {% if dataStat.rankInfo and dataStat.rankInfo.rank > constant('App\\Util\\Search\\Constants::MIN_RANK_MEEETING')  %}
-                                                        <a href="{{ expert.lienCalendly}}" target="_blank" class="btn btn-primary w-100" href>Réserver un rendez-vous</a>
+                                                        <a href="{{ expert.lienCalendly}}" target="_blank" class="btn btn-primary w-100" href>{% trans %}Réserver un rendez-vous{% endtrans %}</a>
                                                     {% endif %}
                                                         </div>
                                                     
@@ -307,21 +307,21 @@
                                         </p>
                                         {% if secteurAgent.id ==  secteurDigitalId %}
                                         <h6 class="mt-3">
-                                        <span class="text-white">Lien d'affiliation produit :</span> 
+                                        <span class="text-white">{% trans %}Lien d'affiliation produit{% endtrans %} :</span> 
                                         <a class="text-white fs-5" href="{{ path('agent_order_list_digital',{'referenceVente' : generateReference(app.user.id,app.user.id) }) }}" >  {{ generateReference(app.user.id,app.user.id) }} </a>
                                         <a class="p-2 text-white fs-5" href="#" onclick="copyLink('{{configSecteurService.getRefUrl(generateReference(app.user.id,app.user.id)) }}','Lien de référence {{ generateReference(app.user.id,app.user.id) }} copié avec succès') "><i class="fa-solid fa-copy"></i></a> 
                                         </h6>
                                         
-                                        <a target="_blank" class="vision-button w-100 text-center rounded-3 mt-4 mb-4 mb-md-0 p-3 " href="{{configSecteurService.getRefUrl(generateReference(app.user.id,app.user.id))}}">Explorez nos offres </a>    
+                                        <a target="_blank" class="vision-button w-100 text-center rounded-3 mt-4 mb-4 mb-md-0 p-3 " href="{{configSecteurService.getRefUrl(generateReference(app.user.id,app.user.id))}}">{% trans %}Explorez nos offres{% endtrans %} </a>    
                                         {% elseif secteurAgent.id == secteur_finance_id %}
                                         
                                         <h6 class="mt-3">
-                                        <span class="text-white">Lien d'invitation :</span>
+                                        <span class="text-white">{% trans %}Lien d'invitation{% endtrans %} :</span>
                                         {% if dataStat.statFinance and dataStat.statFinance.referral_code_text %}
-                                        <a class="text-dark-template fs-5" href="{{path('agent_inscription', {'ref': dataStat.statFinance.referral_code_text})}}" >  Cliquer ici </a>
+                                        <a class="text-dark-template fs-5" href="{{path('agent_inscription', {'ref': dataStat.statFinance.referral_code_text})}}" >  {% trans %}Cliquer ici{% endtrans %} </a>
                                         <a class="p-2 text-dark-template fs-5" href="#" onclick="copyLink('{{url('agent_inscription', {'ref': dataStat.statFinance.referral_code_text})}}','Lien d\'invitation {{url('agent_inscription', {'ref': dataStat.statFinance.referral_code_text})}} copié avec succès')"><i class="fa-solid fa-copy"></i></a> 
                                         {% else %}
-                                        <a class="text-dark-template fs-5" href="{{path('agent_inscription', {'ambassador_username':  app.user.username})}}" >  Cliquer ici </a>
+                                        <a class="text-dark-template fs-5" href="{{path('agent_inscription', {'ambassador_username':  app.user.username})}}" >  {% trans %}Cliquer ici{% endtrans %} </a>
                                         <a class="p-2 text-dark-template fs-5" href="#" onclick="copyLink('{{url('agent_inscription', {'ambassador_username':  app.user.username})}}','Lien d\'invitation {{url('agent_inscription', {'ambassador_username':  app.user.username})}} copié avec succès')"><i class="fa-solid fa-copy"></i></a> 
                                         {% endif %}
                                         </h6>
@@ -348,10 +348,10 @@
                       
                 {% endif %}
                 
-                    <h4 class=" mt-2 mb-3 choix-secteur-primary">Mon planning d’activités</h4>
+                    <h4 class=" mt-2 mb-3 choix-secteur-primary">{% trans %}Mon planning d’activités{% endtrans %}</h4>
                     <div class="card card-developer-meetup position-relative mb-4">
                         <div class="position-absolute right-0 top-0 m-3">
-                            <a href="{{ path('calendar_index') }}" class="btn btn-primary d-flex justify-content-center align-items-center">Gérer mes rendez-vous<i data-feather="calendar" class="ms-3"></i></a>
+                            <a href="{{ path('calendar_index') }}" class="btn btn-primary d-flex justify-content-center align-items-center">{% trans %}Gérer mes rendez-vous{% endtrans %}<i data-feather="calendar" class="ms-3"></i></a>
                         </div>
                         <div class="meetup-img-wrapper rounded-top text-center">
                             <img src="{{asset('assets/vuexy/images/illustration/email.svg')}}" alt="Meeting Pic" height="170" />
@@ -393,7 +393,7 @@
                             </div>
                             {% endfor %}
                             {% if upcomingEvents|length == 0 %}
-                                <div class="alert alert-secondary">Aucun évenement à venir.</div>
+                                <div class="alert alert-secondary">{% trans %}Aucun évenement à venir.{% endtrans %}</div>
                             {% endif %}
                             {# <div class="meetup-header d-flex align-items-center">
                                 <div class="meetup-day">
