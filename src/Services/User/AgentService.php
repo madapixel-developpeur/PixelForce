@@ -156,6 +156,32 @@ class AgentService
         return '/assets/vuexy/images/portrait/small/avatar-s-11.jpg';
     }
 
+    public function getUnilevelGlobalChildren($limit=null){
+        $data = [];
+        $data['ID'] = 0;
+        $data['name'] = "PixelForce Global Network Root";
+        $data['imageUrl'] = '/assets/vuexy/images/portrait/small/avatar-s-11.jpg';
+        $data['area'] = "";
+        $data['office'] =  "Admin" ;
+        $data['isLoggedUser'] = true;
+        $data['positionName'] = "PixelForce";
+        
+        $limitEnv = $_ENV['LIMIT_NIVEAU_EQUIPE_LINEAIRE'];
+        if(!($limit && $limit <= $limitEnv)) $limit = $limitEnv;
+        
+        $currentLevel = 1;
+        $children =  $this->repoUser->findRootUser(User::ROLE_AGENT,
+            [ 'position' => 'root_of_network']
+        );
+        // $children = $this->repoUser->findBy(['parrain'=>$user->getId()]);
+        if($currentLevel  <= $limit){
+            foreach ($children as $child) {
+                $data['countChildren'] = count($children);
+                $data['children'][] = $this->getUnilevelChildren($child,$currentLevel+1,false,$limit);
+            }   
+         }
+        return $data;
+    }
 
     public function getUnilevelChildren(User $user,int $currentLevel,bool $currentLoggedUser = false, $limit=null){
         $data = [];

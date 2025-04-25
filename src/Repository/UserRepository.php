@@ -541,4 +541,28 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
         return $queryBuilder->getQuery()->getResult();
     }
+
+    public function findRootUser($role = User::ROLE_AGENT,array $options = ['position' => 'isolated'])
+    {
+        $queryBuilder = 
+            $this->createQueryBuilder('u')
+            ->select(
+                'u',
+            )
+            ->leftjoin('u.fils', 'f')
+            ->where('u.active IS NULL or u.active != :inactiveState')
+            ->andWhere('u.roles LIKE :role')
+            ->andWhere('u.parrain IS NULL')
+            ->setParameter('inactiveState', User::INACTIVE_STATE)
+            ->setParameter('role', '%' . $role . '%')
+            ->groupBy('u');
+
+        if(isset($options['position'])  && $options['position'] == 'isolated'){
+            $queryBuilder->having('COUNT(f.id) = 0');
+        }elseif(isset($options['position']) && $options['position'] == 'root_of_network'){
+            $queryBuilder->having('COUNT(f.id) > 0');
+        }
+
+        return $queryBuilder->getQuery()->getResult();
+    }
 }

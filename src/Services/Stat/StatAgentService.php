@@ -936,4 +936,20 @@ class StatAgentService
             throw $exception;
         }
     }
+
+    public function addCaAmount(array $agents,Secteur $secteur){
+        if($secteur->getId() != $_ENV['SECTEUR_DIGITAL_ID']){
+            return [];
+        }
+        $ids  = array_map(function($obj) {
+            return $obj->getId();
+        }, $agents);
+        $caResults = $this->getCaByIds($ids);
+        $arrayWithIdAsKey = [];
+        foreach($caResults as $item){
+            $arrayWithIdAsKey[ $item['id'] ] = $item['amount'];
+        }
+        return $arrayWithIdAsKey;
+        
+    }
 }

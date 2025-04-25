@@ -16,6 +16,7 @@ use App\Form\MultipleSecteurType;
 use App\Form\InscriptionAgentType;
 use App\Repository\UserRepository;
 use App\Services\FormationService;
+use App\Services\User\AgentService;
 use App\Repository\SecteurRepository;
 use App\Services\AgentSecteurService;
 use App\Entity\SearchEntity\UserSearch;
@@ -29,6 +30,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\CategorieFormationRepository;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class CoachAgentController extends AbstractController
@@ -53,7 +55,10 @@ class CoachAgentController extends AbstractController
         EntityManager $entityManager,
         CoachSecteurRepository $repoCoachSecteur,
         AgentSecteurRepository $repoAgentSecteur,
-        private FormationRepository $repoFormation
+        private FormationRepository $repoFormation,
+        private StatAgentService $statAgentService,
+        private AgentService $agentService,
+         
     ) {
         $this->coachAgentRepository = $coachAgentRepository;
         $this->repoUser = $repoUser;
@@ -252,5 +257,78 @@ class CoachAgentController extends AbstractController
             'invalidation' => 'successfully'
         ], 200);
 
+    }
+
+
+      /**
+     * @Route("/coach/agent-isole/list", name="coach_isolated_agent")
+     */
+    public function coachIsolatedAgentInNetwork(Request $request, PaginatorInterface $paginator)
+    {
+
+        /** @var User $coach */
+        $coach = $this->getUser();
+        $mySector = $this->repoCoachSecteur->findOneBy(['coach' => $this->getUser()])->getSecteur();
+        $search = new UserSearch();
+        $searchForm = $this->createForm(UserSearchType::class, $search)
+            ->remove('secteur')
+            ->remove('tag')
+            ->remove('active');
+        $searchForm->handleRequest($request);
+
+        $agents = $paginator->paginate(
+            $this->repoUser->findRootUser(User::ROLE_AGENT),
+            $request->query->getInt('page', 1),
+            20
+        );
+        $agentsCaAmount = $this->statAgentService->addCaAmount($agents->getItems(),$mySector);
+        return $this->render('user_category/coach/agent/list_agent_isole.html.twig', [
+            'agents' => $agents,
+            'searchForm' => $searchForm->createView(),
+            'repoAgentSecteur' => $this->repoAgentSecteur,
+            'mySector' => $mySector,
+            'agentsCaAmount' => $agentsCaAmount
+
+        ]);
+    }
+
+
+    /**     * @Route("/coach/view-global-network", name="coach_view_gloabl_network")
+     */
+    public function coach_global_network_view(Request $request)
+    {
+        $mySector = $this->repoCoachSecteur->findOneBy(['coach' => $this->getUser()])->getSecteur();
+        $secteur_network =  $mySector?->getNom() ?? '';
+        return $this->render('user_category/coach/agent/global_network_view.html.twig', [
+            'secteurNetwork' => $secteur_network
+        ]);
+    }
+
+
+     /**
+     * @Route("/coach/global-tree/{secteur_network}", name="coach_global_data_lineaire")
+     */
+    public function getDataUnilevel(Request $request,$secteur_network = '')
+    {
+        $mySector = $this->repoCoachSecteur->findOneBy(['coach' => $this->getUser()])->getSecteur();
+        $secteur_finance_id = $this->getParameter('secteur_finance_id');
+        $limit =  $_ENV['LIMIT_NIVEAU_EQUIPE_LINEAIRE'] + 1;
+
+        
+        if($mySector->getId() == $_ENV['SECTEUR_DIGITAL_ID']){
+            $unilevel = $this->agentService->getUnilevelGlobalChildren($limit);
+            $unilevel = $this->statAgentService->addSummaryCaToUnilevel($unilevel);
+
+        }elseif($mySector->getId() == $_ENV['SECTEUR_LITTLE_PONAILS_ID']){
+            $unilevel = $this->agentService->getUnilevelGlobalChildren($limit);
+            // $unilevel = $this->statAgentService->getLittlePonailsUnilevelChildren( $limit);
+        }else{
+            $data = ['equipe' => []];
+
+            return new JsonResponse($data);
+        }
+        $data = ['equipe' => $unilevel];
+
+        return new JsonResponse($data);
     }
 }
