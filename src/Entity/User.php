@@ -1929,7 +1929,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
     {
         $agentSecteurs = $this->getAgentSecteurs();
         foreach($agentSecteurs as $agentSecteur){
-            if($agentSecteur->getSecteur()->getId() == $idSecteur){
+            if($agentSecteur->getSecteur()?->getId() == $idSecteur){
                 return $agentSecteur;
             }
         }
