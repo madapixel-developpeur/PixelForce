@@ -39,7 +39,6 @@
         {% set chiffreAffaireTotalGlobalVariable = dataStat.chiffreAffaireTotal %}
         {% set soldeRemunerationGlobalVariable = dataStat.soldeRemuneration %}
         {% set typeSecteurId = app.session.get('typeSecteurId') %}
-        {% set isSecurite = typeSecteurId == constant('App\\Entity\\TypeSecteur::SECURITE') %}
         {% set isDemandeDevis = typeSecteurId == constant('App\\Entity\\TypeSecteur::DEMANDE_DEVIS') %}
         {% set isEcommerce = typeSecteurId == constant('App\\Entity\\TypeSecteur::ECOMMERCE') %}
         {% set statRemuneration = dataStat.statRemuneration %}
@@ -54,6 +53,8 @@
                     {{ include ('partials/secteur/finance.html.twig') }}
                 {% elseif app.session.get('secteurId') == secteur_little_ponails_id %}
                     {{ include ('partials/secteur/little_ponails.html.twig') }}
+                {% elseif app.session.get('typeSecteurId') == type_secteur_securite_id %}
+                    {{ include ('partials/secteur/securite.html.twig') }}
                 {% else %}
                     {{ include ('partials/secteur/digital.html.twig') }}
                 {% endif %}
