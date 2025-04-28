@@ -54,7 +54,7 @@
                 {% elseif app.session.get('secteurId') == secteur_little_ponails_id %}
                     {{ include ('partials/secteur/little_ponails.html.twig') }}
                 {% elseif app.session.get('typeSecteurId') == type_secteur_securite_id %}
-                    {{ include ('partials/secteur/securite.html.twig') }}
+                    {{ include ('partials/secteur/security.html.twig') }}
                 {% else %}
                     {{ include ('partials/secteur/digital.html.twig') }}
                 {% endif %}
