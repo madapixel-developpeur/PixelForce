@@ -86,7 +86,7 @@ class FileHandler
         return $file;
     }
 
-    public function saveBase64($data, $filename, $mode = 'wb')
+    public function saveBase64($data, $filename, $mode = 'w')
     {
         // open the output file for writing
         $ifp = fopen($filename, $mode);
