@@ -944,7 +944,7 @@ class StatAgentService
         $ids  = array_map(function($obj) {
             return $obj->getId();
         }, $agents);
-        $caResults = $this->getCaByIds($ids);
+        $caResults = $this->getCaByIds($ids) ?? [];
         $arrayWithIdAsKey = [];
         foreach($caResults as $item){
             $arrayWithIdAsKey[ $item['id'] ] = $item['amount'];

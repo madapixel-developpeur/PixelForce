@@ -22,9 +22,21 @@
             {% endfor %}
         </div>
 
-        <!-- Formulaire de recherche -->
         <div class="search-form">
-         
+            {{form_start(searchForm)}}
+            <div class="row text-center d-flex align-items-center justify-content-center">
+                <h4 class="mb-3">Filtres</h4>
+                <div class="col-12 col-sm-6 col-md-3">
+                    {{form_row(searchForm.name)}}
+                </div>
+                <div class="col-12 col-sm-6 col-md-3">
+                    {{form_row(searchForm.username)}}
+                </div>
+                <div class="col-12 col-sm-12 col-md-3 mt-3">
+                    <button class="btn btn-primary "><i class="fa-solid fa-magnifying-glass"></i> Rechercher</button>
+                </div>
+            </div>
+            {{form_end(searchForm)}}
         </div>
 
         <!-- Liste agent -->

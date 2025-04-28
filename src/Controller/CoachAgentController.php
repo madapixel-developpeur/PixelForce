@@ -31,6 +31,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\CategorieFormationRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class CoachAgentController extends AbstractController
@@ -269,15 +270,24 @@ class CoachAgentController extends AbstractController
         /** @var User $coach */
         $coach = $this->getUser();
         $mySector = $this->repoCoachSecteur->findOneBy(['coach' => $this->getUser()])->getSecteur();
-        $search = new UserSearch();
-        $searchForm = $this->createForm(UserSearchType::class, $search)
-            ->remove('secteur')
-            ->remove('tag')
-            ->remove('active');
+        $searchForm =  $this->createFormBuilder()
+            ->add('name', TextType::class, [
+                'label' => 'Nom ou prénom',
+                'attr' => ['class' => 'form-control'], 
+                'required' =>  false
+            ])
+            ->add('username', TextType::class, [
+                'label' => 'Nom d\'utilisateur',
+                'attr' => ['class' => 'form-control'], 
+                'required' =>  false
+            ])
+        ->getForm();
+
         $searchForm->handleRequest($request);
+        $filter = $searchForm->getData() ?? [];
 
         $agents = $paginator->paginate(
-            $this->repoUser->findRootUser(User::ROLE_AGENT),
+            $this->repoUser->findRootUser(User::ROLE_AGENT,[],$filter),
             $request->query->getInt('page', 1),
             20
         );
