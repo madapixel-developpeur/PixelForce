@@ -26,6 +26,7 @@ use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\ContactInformationRepository;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Nucleos\DompdfBundle\Wrapper\DompdfWrapperInterface;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -49,7 +50,8 @@ class AgentContactController extends AbstractController
 
     public function __construct(TagRepository $tagRepository, UserRepository $repoUser, ContactRepository $repoContact, ContactInformationRepository $repoContactInfo, SessionInterface $session, SecteurRepository $repoSecteur, EntityManager $entityManager,
         private ExcelService $excelService,
-        private PdfExport $pdfExport
+        private PdfExport $pdfExport,
+        private TranslatorInterface $translator,
     )
     {
         $this->repoUser = $repoUser;
@@ -77,11 +79,11 @@ class AgentContactController extends AbstractController
                 'required' => false,
                 'label' => false,
                 'attr' => [
-                    'placeholder' => 'Adresse'
+                    'placeholder' => $this->translator->trans('Adresse')
                 ]
             ])
             ->add('type', ChoiceType::class, [
-                "label" => "Type du contact",
+                "label" => $this->translator->trans("Type du contact"),
                 'choices' => array_flip(ContactInformation::TYPE_ARRAY_FORM),
                 'required' => false,
                 'attr' => [
@@ -336,7 +338,7 @@ class AgentContactController extends AbstractController
         if ($formContact->isSubmitted() && $formContact->isValid()) {
             $secteurId = $this->session->get('secteurId');
             if ($secteurId === null) {
-                $this->addFlash('danger', "Désolé, une erreur s'est survenue !");
+                $this->addFlash('danger', $this->translator->trans("Désolé, une erreur s'est survenue !"));
                 return $this->redirectToRoute('agent_home');
             }
 
@@ -357,7 +359,7 @@ class AgentContactController extends AbstractController
             $this->entityManager->save($contact);
 
 
-            $this->addFlash('success', "Ajout du client avec succès");
+            $this->addFlash('success', $this->translator->trans("Ajout du client avec succès"));
             return $this->redirectToRoute('agent_contact_view', ['id' => $contact->getId()]);
         }
 

@@ -1,11 +1,13 @@
 {% extends 'base.html.twig' %}
-{% block title %}Agent - Formation fiche{% endblock %}
+{% block title %}
+    {% trans %}Agent - Formation fiche{% endtrans %}
+{% endblock %}
 {% set formationAgentRelation = formationAgentRepository.findOneBy({formation:formation, agent:app.user}) %}
         {% set statut = formationAgentRelation ? formationAgentRelation.statut : constant('App\\Entity\\Formation::STATUT_DISPONIBLE') %}
 {% block body %}
 <div class="p-5 pb-5 mb-5 bg-white border position-relative" id="form-formation">
-    <h3 class="mb-3"><i class="fa fa-book-open"></i> Fiche formation</h3>
-    <h5 class="mb-4"><span class="text-decoration-underline">Titre</span> : <span>{{ formation.titre }}</span></h5>
+    <h3 class="mb-3"><i class="fa fa-book-open"></i> {% trans %}Fiche formation{% endtrans %}</h3>
+    <h5 class="mb-4"><span class="text-decoration-underline">{% trans %}Titre{% endtrans %}</span> : <span>{{ formation.titre }}</span></h5>
     <div class="row">
         <div class="col-md-8">
             <div class="border p-2 d-flex bg-white">
@@ -14,8 +16,8 @@
         </div>
         <div class="col-md-4 ps-0">
             <div class="border h-100 p-3">
-                <h5>Fichiers joints:</h5>
-                <h6 class="text-decoration-underline">Documents</h6>
+                <h5>{% trans %}Fichiers joints{% endtrans %}:</h5>
+                <h6 class="text-decoration-underline">{% trans %}Documents{% endtrans %}</h6>
                 <ul>
                     {% for media in formation.medias.toArray %}
                         {% if media.type == 'document' %}
@@ -23,7 +25,7 @@
                         {% endif %}
                     {% endfor %}
                 </ul>
-                <h6 class="text-decoration-underline">Audios</h6>
+                <h6 class="text-decoration-underline">{% trans %}Audios{% endtrans %}</h6>
                 <ul>
                     {% for media in formation.medias.toArray %}
                         {% if media.type == 'audio' %}
@@ -43,11 +45,11 @@
         </div>
     </div>
 
-    <h5 class="mt-4">Contenu</h5>
+    <h5 class="mt-4">{% trans %}Contenu{% endtrans %}</h5>
     <p>{{ formation.contenu|raw }}</p>
     <div class="text-center mt-5">
         {% if statut == constant('App\\Entity\\Formation::STATUT_TERMINER') %}
-            <a href="#" class="btn btn-success"><i class="fa fa-check"></i> Vous avez déjà terminé cette formation</a>
+            <a href="#" class="btn btn-success"><i class="fa fa-check"></i>{% trans %} Vous avez déjà terminé cette formation{% endtrans %}</a>
         {% else %}
             {# <a href="{{ path('agent_formation_terminer', {id:formation.id}) }}" class="btn btn-success"><i class="fa fa-check"></i> J'ai terminé cette formation</a>     #}
         {% endif %}

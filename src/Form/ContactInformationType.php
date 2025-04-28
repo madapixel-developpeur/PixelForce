@@ -10,6 +10,7 @@ use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
@@ -19,7 +20,10 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 class ContactInformationType extends AbstractType
 {
     private $typeLogementRepository;
-    public function __construct(TypeLogementRepository $typeLogementRepository)
+    public function __construct(
+        TypeLogementRepository $typeLogementRepository,
+        private TranslatorInterface $translator,
+    )
     {
         $this->typeLogementRepository = $typeLogementRepository;
     }
@@ -29,59 +33,64 @@ class ContactInformationType extends AbstractType
         $contactInformation = $builder->getData();
         $contact = $contactInformation->getContact();
         $typeLogementList = $this->typeLogementRepository->findAll();
+        $translatedContactLabel = [];
+        foreach( ContactInformation::TYPE_CONTACT_LABELS as $key => $value){
+            $translatedContactLabel[$this->translator->trans($key)] = $value ; 
+        }
+
         $builder
             ->add('firstname', TextType::class, [
-                'label' => 'Prénom',
+                'label' => $this->translator->trans('Prénom'),
                 'attr' => [
-                    'placeholder' => 'Entrer le prénom'
+                    'placeholder' => $this->translator->trans('Entrer le prénom')
                 ]
             ])
             ->add('lastname', TextType::class, [
-                'label' => 'Nom',
+                'label' =>$this->translator->trans('Nom') ,
                 'attr' => [
-                    'placeholder' => 'Entrer le nom'
+                    'placeholder' =>$this->translator->trans('Entrer le nom') 
                 ]
             ])
             ->add('email', TextType::class, [
-                'label' => 'E-mail',
+                'label' =>$this->translator->trans('E-mail') ,
                 'attr' => [
-                    'placeholder' => 'Entrer l\'adresse mail'
+                    'placeholder' => $this->translator->trans('Entrer l\'adresse mail')
                 ]
             ])
             ->add('phone', TextType::class, [
-                'label' => 'Téléphone',
+                'label' =>$this->translator->trans('Téléphone') ,
                 'attr' => [
-                    'placeholder' => 'Entrer le numéro téléphone'
+                    'placeholder' =>$this->translator->trans('Entrer le numéro téléphone') 
                 ]
             ])
             ->add('address', TextType::class, [
-                'label' => 'Adresse',
+                'label' =>$this->translator->trans('Adresse') ,
                 'attr' => [
-                    'placeholder' => 'Entrer l\'adresse'
+                    'placeholder' =>$this->translator->trans('Entrer l\'adresse') 
                 ]
             ])
             ->add('rue', TextType::class, [
-                'label' => 'Rue',
+                'label' =>$this->translator->trans('Rue') ,
                 'trim' => true,
                 'required' => false
             ])
             ->add('numero', TextType::class, [
-                'label' => 'Numéro',
+                'label' => $this->translator->trans('Numéro'),
                 'trim' => true,
                 'required' => false
             ])
             ->add('codePostal', TextType::class, [
-                'label' => 'Code postal',
+                'label' =>$this->translator->trans('Code postal') ,
                 'trim' => true,
                 'required' => false
             ])
             ->add('ville', TextType::class, [
-                'label' => 'Ville',
+                'label' => $this->translator->trans('Ville'),
                 'trim' => true,
                 'required' => false
             ])
             ->add('typeLogement', EntityType::class, [
-                "label" => "Type du Logement",
+                "label" =>$this->translator->trans( "Type du Logement"),
                 'class' => TypeLogement::class,
                 'choices' => $typeLogementList,
                 'choice_label' => function (?TypeLogement $typeLogement) {
@@ -96,12 +105,12 @@ class ContactInformationType extends AbstractType
                 ],
             ])
             ->add('nbrPersonne', IntegerType::class, [
-                'label' => 'Nombre de personnes du foyer',
+                'label' => $this->translator->trans('Nombre de personnes du foyer'),
                 'required' => false
             ])
             ->add('note', TextareaType::class, [
                 'required' => false,
-                'label' => 'Note',
+                'label' =>$this->translator->trans( 'Note'),
                 'mapped' => false,
                 'data' => $contact ? $contact->getNote() : '',
                 'attr' => [
@@ -109,7 +118,7 @@ class ContactInformationType extends AbstractType
                 ]
             ])
             ->add('type', ChoiceType::class, [
-                "label" => "Type du contact",
+                "label" => $this->translator->trans("Type du contact"),
                 'choices' => array_flip(ContactInformation::TYPE_ARRAY_FORM),
                 'required' => true,
                 'attr' => [
@@ -117,7 +126,7 @@ class ContactInformationType extends AbstractType
                 ]
             ])
             ->add('typeContact', ChoiceType::class, [
-                "label" => "Type",
+                "label" => $this->translator->trans("Type"),
                 'choices' => ContactInformation::TYPE_CONTACT_LABELS,
                 'expanded' => true,
                 'multiple' => false,
@@ -128,21 +137,21 @@ class ContactInformationType extends AbstractType
                 ],
             ])
             ->add('anneeConstructionMaison', IntegerType::class, [
-                'label' => ' Année de construction de la maison',
+                'label' => $this->translator->trans('Année de construction de la maison'),
                 'required' => false
             ])
             ->add('nomEntreprise', TextType::class, [
-                'label' => 'Nom de l\'entreprise',
+                'label' => $this->translator->trans('Nom de l\'entreprise'),
                 'trim' => true,
                 'required' => false
             ])
             ->add('siretEntreprise', TextType::class, [
-                'label' => 'Siret',
+                'label' => $this->translator->trans('Siret'),
                 'trim' => true,
                 'required' => false
             ])
             ->add('adresseEntreprise', TextType::class, [
-                'label' => 'Adresse postale (rue, ville, code postal, pays)',
+                'label' => $this->translator->trans('Adresse postale (rue, ville, code postal, pays)'),
                 'trim' => true,
                 'required' => false
             ]);

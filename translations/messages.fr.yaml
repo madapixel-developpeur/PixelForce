@@ -159,3 +159,120 @@ Graphique: Graphique
 'Maximisez votre ROI avec une campagne AdWords ciblée, optimisée pour attirer des prospects de qualité.': 'Maximisez votre ROI avec une campagne AdWords ciblée, optimisée pour attirer des prospects de qualité.'
 'Développement d''App Mobiles': 'Développement d''App Mobiles'
 'Rapprochez-vous de vos clients avec une application mobile intuitive et fonctionnelle, pour une expérience utilisateur parfaite.': 'Rapprochez-vous de vos clients avec une application mobile intuitive et fonctionnelle, pour une expérience utilisateur parfaite.'
+'Ajouter un évènement': 'Ajouter un évènement'
+Filtrer: Filtrer
+'Tout voir': 'Tout voir'
+Evènement: Evènement
+Titre: Titre
+Etiquette: Etiquette
+'Date de début': 'Date de début'
+'Date de fin': 'Date de fin'
+'Toute la journée': 'Toute la journée'
+'URL de l''évènement': 'URL de l''évènement'
+Annuler: Annuler
+Modifier: Modifier
+Supprimer: Supprimer
+'Votre agenda n''est rattaché à aucun compte': 'Votre agenda n''est rattaché à aucun compte'
+'Votre agenda est rattaché à': 'Votre agenda est rattaché à'
+'Configurer votre agenda': 'Configurer votre agenda'
+'Mon calendrier': 'Mon calendrier'
+'Agent - Formation fiche': 'Agent - Formation fiche'
+'Fichiers joints': 'Fichiers joints'
+Documents: Documents
+Audios: Audios
+Contenu: Contenu
+'Vous avez déjà terminé cette formation': 'Vous avez déjà terminé cette formation'
+Description: Description
+brouillon: brouillon
+'Quiz bloqué': 'Quiz bloqué'
+'Formation bloquée': 'Formation bloquée'
+'Formation terminée': 'Formation terminée'
+'Aucune formation pour cet thème': 'Aucune formation pour cet thème'
+'Aucune formation': 'Aucune formation'
+client: client
+'Information sur le contact': 'Information sur le contact'
+'Information sur le gérant': 'Information sur le gérant'
+'Information sur l''entreprise': 'Information sur l''entreprise'
+'Choisir le ou les tags': 'Choisir le ou les tags'
+'Pas de tags diponibles': 'Pas de tags diponibles'
+'Une erreur s''est survenue, veuillez retourner dans la page de selection de secteur.': 'Une erreur s''est survenue, veuillez retourner dans la page de selection de secteur.'
+'Merci !': 'Merci !'
+'Liste  contacts agent': 'Liste  contacts agent'
+'Contact ajouté avec succès': 'Contact ajouté avec succès'
+'Liste de mes contacts': 'Liste de mes contacts'
+Ajout: Ajout
+Filtres: Filtres
+'Options de filtre': 'Options de filtre'
+Ordre: Ordre
+ASC: ASC
+DESC: DESC
+'Type du contact': 'Type du contact'
+'Date d''enregistrement à partir de': 'Date d''enregistrement à partir de'
+'Date d''enregistrement jusqu''à': 'Date d''enregistrement jusqu''à'
+'Importer/Exportation mobile': 'Importer/Exportation mobile'
+Rechercher: Rechercher
+'Exporter excel': 'Exporter excel'
+'Exporter csv': 'Exporter csv'
+'Exporter pdf': 'Exporter pdf'
+'Aucun contact.': 'Aucun contact.'
+Id: Id
+nom: nom
+Téléphone: Téléphone
+Adresse: Adresse
+'Nom de l''entreprise': 'Nom de l''entreprise'
+'Liste des coachs': 'Liste des coachs'
+'Aucun Coach trouvé': 'Aucun Coach trouvé'
+Photo: Photo
+'Nom et prénoms': 'Nom et prénoms'
+Secteur: Secteur
+ACTION: ACTION
+'Prendre RDV': 'Prendre RDV'
+'Visualisation utilisateur agent': 'Visualisation utilisateur agent'
+'Votre réseau et vos performances': 'Votre réseau et vos performances'
+'Développez votre réseau': 'Développez votre réseau'
+'Partagez votre lien unique et invitez d’autres personnes à rejoindre l’aventure (Plus votre réseau grandit, plus vous augmentez vos opportunités de gains)': 'Partagez votre lien unique et invitez d’autres personnes à rejoindre l’aventure (Plus votre réseau grandit, plus vous augmentez vos opportunités de gains)'
+'Copier votre lien': 'Copier votre lien'
+'CA personnel': 'CA personnel'
+'CA equipe': 'CA equipe'
+'Nombre de filleuls directs': 'Nombre de filleuls directs'
+'Taille de votre équipe': 'Taille de votre équipe'
+'Votre organisation en un coup d’oeil': 'Votre organisation en un coup d’oeil'
+'Chaque niveau représente un nouvelle génération de votre réseau.': 'Chaque niveau représente un nouvelle génération de votre réseau.'
+Retrait: Retrait
+'Demande de retrait': 'Demande de retrait'
+Enregistrer: Enregistrer
+'Votre solde actuel': 'Votre solde actuel'
+Historique: Historique
+Date: Date
+Montant: Montant
+RIB: RIB
+Contact: Contact
+'Pas de numero': 'Pas de numero'
+'Désolé, une erreur s''est survenue !': 'Désolé, une erreur s''est survenue !'
+'Ajout du client avec succès': 'Ajout du client avec succès'
+'Nom ou prénom': 'Nom ou prénom'
+'Tous les secteurs': 'Tous les secteurs'
+'Date d''inscription à partir de': 'Date d''inscription à partir de'
+'Date d''inscription jusqu''à': 'Date d''inscription jusqu''à'
+libelle: libelle
+Prénom: Prénom
+'Entrer le prénom': 'Entrer le prénom'
+'Entrer le nom': 'Entrer le nom'
+E-mail: E-mail
+'Entrer l''adresse mail': 'Entrer l''adresse mail'
+'Entrer le numéro téléphone': 'Entrer le numéro téléphone'
+'Entrer l''adresse': 'Entrer l''adresse'
+Rue: Rue
+Numéro: Numéro
+'Type du Logement': 'Type du Logement'
+'Nombre de personnes du foyer': 'Nombre de personnes du foyer'
+Note: Note
+'Année de construction de la maison': 'Année de construction de la maison'
+Siret: Siret
+'Adresse postale (rue, ville, code postal, pays)': 'Adresse postale (rue, ville, code postal, pays)'
+'Liens de la référence %linkRef% copié avec succès': 'Liens de la référence %linkRef% copié avec succès'
+'Êtes vous vraiment sûr de supprimer ce contact ?': 'Êtes vous vraiment sûr de supprimer ce contact ?'
+'Exemple de contact': 'Exemple de contact'
+'Vrai contact': 'Vrai contact'
+'Particulier': 'Particulier'
+'Entreprise': 'Entreprise'

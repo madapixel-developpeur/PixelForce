@@ -1,6 +1,8 @@
 {% extends 'base.html.twig' %}
 
-{% block title %} Retrait {% endblock %}
+{% block title %} 
+	{% trans %}Retrait{% endtrans %}
+{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -14,7 +16,7 @@
 		<div class="content-body-form">
 			<div class="row align-items-center justify-content-center">
 				<div class="col-12 col-md-8">
-						<h1 class="fw-bolder mb-2 general-primary-text">Demande de retrait </h1>
+						<h1 class="fw-bolder mb-2 general-primary-text">{% trans %}Demande de retrait{% endtrans %} </h1>
 						{{ form_start(form) }}
 						<div class="row">
 							<div class="col-12 retrait-form">
@@ -33,7 +35,7 @@
 							</div>
 						</div>
 						<div class="row">
-							<div class="col-md-12 text-center"><button class="btn btn-primary w-100" type="submit">Enregistrer</button></div>
+							<div class="col-md-12 text-center"><button class="btn btn-primary w-100" type="submit">{% trans %}Enregistrer{% endtrans %}</button></div>
 						</div>					
 						{{ form_end(form) }}
 					</div>
@@ -46,7 +48,7 @@
                                 </a>
                             </div>
 							<div class="m-2">
-                                <h4 class="fs-5 fw-bolder general-primary-text">Votre solde actuel</h4>
+                                <h4 class="fs-5 fw-bolder general-primary-text">{% trans %}Votre solde actuel{% endtrans %}</h4>
 								<h4 class="mb-3 fs-1 general-primary-text"> <span>  {{ solde }} €  </span></h4>
                             </div>
 						</div>
@@ -57,7 +59,7 @@
 
 			<div class="row mb-3 mt-4">
 				<div class="col-12  mt-2 mt-md-3">
-					<h4 class="my-auto general-primary-text">Historique</h4>
+					<h4 class="my-auto general-primary-text">{% trans %}Historique{% endtrans %}</h4>
 					
 				</div>
 			</div>
@@ -71,9 +73,9 @@
 										<i class="fas fa-search"></i>
 									</button>
 									<input type="search"name="search" class="form-control  input-group-text border-0 mr-2" value='{{  app.request.get('search')}}' placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
-									<button name="action_button" value="excel"  class=" mt-2 btn btn-success btn-sm mx-2 rounded-3"><i class="fa fa-print"></i> <span class="ms-1">Exporter excel</span></button>
-									<button name="action_button" value="csv"  class=" mt-2 btn btn-success btn-sm mx-2 rounded-3"><i class="fa fa-print"></i> <span class="ms-1">Exporter csv</span></button>
-									<button name="action_button" value="pdf"  class=" mt-2  btn btn-danger btn-sm mx-2 rounded-3"><i class="fa fa-file-text"></i> <span class="ms-1">Exporter pdf</span></button>
+									<button name="action_button" value="excel"  class=" mt-2 btn btn-success btn-sm mx-2 rounded-3"><i class="fa fa-print"></i> <span class="ms-1">{% trans %}Exporter excel{% endtrans %}</span></button>
+									<button name="action_button" value="csv"  class=" mt-2 btn btn-success btn-sm mx-2 rounded-3"><i class="fa fa-print"></i> <span class="ms-1">{% trans %}Exporter csv{% endtrans %}</span></button>
+									<button name="action_button" value="pdf"  class=" mt-2  btn btn-danger btn-sm mx-2 rounded-3"><i class="fa fa-file-text"></i> <span class="ms-1">{% trans %}Exporter pdf{% endtrans %}</span></button>
 
                                 </form>
 							</div>
@@ -84,10 +86,10 @@
 							<tbody class="align-items-center">
 								<tr style="table-header-custom" >
 									<th scope="col" class="text-center">#</th>
-									<th scope="col" class="text-center">Date</th>
-									<th scope="col" class="text-center">Montant</th>
-									<th scope="col" class="text-center">RIB</th>
-									<th scope="col" class="text-center table-th-notSortable">Statut</th>
+									<th scope="col" class="text-center">{% trans %}Date{% endtrans %}</th>
+									<th scope="col" class="text-center">{% trans %}Montant{% endtrans %}</th>
+									<th scope="col" class="text-center">{% trans %}RIB{% endtrans %}</th>
+									<th scope="col" class="text-center table-th-notSortable">{% trans %}Statut{% endtrans %}</th>
 								</tr>
 
 								{% for item in history %}
