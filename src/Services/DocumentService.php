@@ -145,7 +145,7 @@ class DocumentService
     public function getData($filepath)
     {
         $pdf = new Pdf();
-        $pdf->addFile($this->filesDirectory . '/' . $filepath, '', 'A');
+        $pdf->addFile($this->filesDirectory . '/' . $filepath);
         $result = $pdf->getDataFields();
 
         if ($result === false) {
