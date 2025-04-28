@@ -23,7 +23,7 @@
         "knplabs/knp-paginator-bundle": "^5.8",
         "knplabs/knp-snappy-bundle": "^1.9",
         "lexik/jwt-authentication-bundle": "2.21.0",
-        "mikehaertl/php-pdftk": "^0.12.1",
+        "mikehaertl/php-pdftk": "0.13.1",
         "monolog/monolog": "2.7.0",
         "nucleos/dompdf-bundle": "^3.2",
         "paragonie/halite": "^5.0",
@@ -130,7 +130,7 @@
     "require-dev": {
         "doctrine/doctrine-fixtures-bundle": "^3.4",
         "symfony/debug-bundle": "5.4.*",
-        "symfony/maker-bundle": "^1.0",
+        "symfony/maker-bundle": "1.43.0",
         "symfony/stopwatch": "5.4.*",
         "symfony/web-profiler-bundle": "5.4.*"
     }

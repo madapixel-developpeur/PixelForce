@@ -21,10 +21,12 @@ use App\Repository\SecteurRepository;
 use App\Services\AgentSecteurService;
 use App\Entity\SearchEntity\UserSearch;
 use App\Repository\FormationRepository;
+use App\Services\RemunerationServiceSecu;
 use App\Services\Stat\StatAgentService;
 use App\Repository\CoachAgentRepository;
 use App\Repository\AgentSecteurRepository;
 use App\Repository\CoachSecteurRepository;
+use DateTime;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -175,7 +177,7 @@ class CoachAgentController extends AbstractController
     /**
      * @Route("/coach/agent/{id}/secteur/view", name="coach_agent_view")
      */
-    public function coach_agent_view(User $agent, AgentSecteurService $agentSecteurService, CategorieFormationRepository $categorieFormationRepository, StatAgentService $statAgentService)
+    public function coach_agent_view(User $agent, AgentSecteurService $agentSecteurService, CategorieFormationRepository $categorieFormationRepository, StatAgentService $statAgentService, RemunerationServiceSecu $remunerationServiceSecu)
     {
         $mySector = $this->repoCoachSecteur->findOneBy(['coach' => $this->getUser()])->getSecteur();
         $agentSecteur = $this->repoAgentSecteur->findOneBy(['secteur' => $mySector, 'agent' => $agent]);
@@ -194,9 +196,9 @@ class CoachAgentController extends AbstractController
 
         $chiffreAffaireTotal = 0;
         // if($mySector->getId() == $this->getParameter('secteur_digital_id')){
-        $chiffreAffaireTotal = $statAgentService->getStat($agent->getId(), $mySector->getId())['totalAmount'];
+        $chiffreAffaireTotal = $statAgentService->getStat($agent->getId(), $mySector->getId(), $mySector->getType()->getId())['totalAmount'];
         // }
-        if ($mySector->getId() != $this->getParameter('secteur_digital_id')) {
+        if ($mySector->getId() != $this->getParameter('secteur_digital_id') && $mySector->getType()->getId() != $this->getParameter('type_secteur_securite_id')) {
             $statVente = $statAgentService->getStatVente($agent->getId(), $mySector->getId(), $mySector->getType()->getId());
             $pbb_summary = $statAgentService->getSummary($agent->getId(), $mySector->getId());
             $chiffreAffaireTotal = $pbb_summary['chiffreAffaire'] + ($statVente != null ? $statVente['ca'] : 0);

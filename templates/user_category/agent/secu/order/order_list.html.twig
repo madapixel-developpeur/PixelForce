@@ -82,7 +82,7 @@
                         <td>{{order.dateCommande | date("d/m/Y H:i")}}</td>
                         <td>{{order.kitbase.nom}}</td>
                         <td>{{order.client.prenom}} {{order.client.nom}}</td>
-                        <td class="text-right">{{order.totalTtc | number_format(2, ',', ' ') }}</td>
+                        <td class="text-right">{{order.amount | number_format(2, ',', ' ') }}</td>
                         <td>{{order.statusStr}}</td>
                         <td class="col-action ">
                             <a href="{{path('admin_ordersecu_details', {'id': order.id})}}">

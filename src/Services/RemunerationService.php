@@ -94,7 +94,7 @@ class RemunerationService
             $userVenteId = intval($orderData['order']["userVenteId"]);
             $userMeetingMakerId = intval($orderData['order']["userMeetingMaker"]);
             $amount = floatval($orderData['order']["amount"]);
-            $remunerationAmount =  floatval($orderData['order']["remuneration"]);
+            $remunerationAmount = floatval($orderData['order']["remuneration"]);
 
             $secteur = $this->secteurRepository->find($secteurId);
             $auditAgent = $this->userRepository->find($auditAgentId);
@@ -104,7 +104,7 @@ class RemunerationService
             $auditAgentIn = false;
             $venteUserIn = false;
             $userMeetingMakerIn = false;
-            $usersCheck =  [];
+            $usersCheck = [];
 
 
             if ($remunerationAmount > 0) {
@@ -120,7 +120,7 @@ class RemunerationService
                 $this->entityManager->persist($remuneration);
             }
 
-            
+
             // foreach ($orderData['filsParrainNiveau'] as $item) {
             //     $item['user'] = $this->userRepository->find(intval($item['userId']));
             //     $item['niveau'] = intval($item['niveau']);
@@ -205,11 +205,15 @@ class RemunerationService
         $response = $this->client->request(
             'GET',
             $pbb_ws_url . '/api/sum-amount',
-            ['query' => ['agentIds' => join(';', array_map(function ($item) {
-                return join(',', array_map(function ($subItem) {
-                    return join(',', $subItem->getId());
-                }, $item));
-            }, $agentsTab))]]
+            [
+                'query' => [
+                    'agentIds' => join(';', array_map(function ($item) {
+                        return join(',', array_map(function ($subItem) {
+                            return join(',', $subItem->getId());
+                        }, $item));
+                    }, $agentsTab))
+                ]
+            ]
         );
         $content = json_decode($response->getContent(), true);
         return $content;
@@ -224,22 +228,25 @@ class RemunerationService
         return self::POSTION_STEPS;
     }
 
-    function saveProgress($filename,array $processedIds) {
+    function saveProgress($filename, array $processedIds)
+    {
         file_put_contents($filename, json_encode($processedIds));
         return $this->loadProgress($filename);
     }
-    
-    function loadProgress($filename): array {
+
+    function loadProgress($filename): array
+    {
         return file_exists($filename) ? json_decode(file_get_contents($filename), true) : [];
     }
 
-    public function getRemunerationAndSaveData($data, DateTime $dateOfTheMonthToCheck){
+    public function getRemunerationAndSaveData($data, DateTime $dateOfTheMonthToCheck)
+    {
         $pbb_ws_url = $this->parameterBag->get('pbb_ws_url');
         $response = $this->client->request(
             'POST',
             $pbb_ws_url . '/api/execute-remuneration-process',
             [
-                'json' => array_merge( ['users_data' => $data], ['date' =>  $dateOfTheMonthToCheck->format('Y-m-d H:i:s')])
+                'json' => array_merge(['users_data' => $data], ['date' => $dateOfTheMonthToCheck->format('Y-m-d H:i:s')])
             ]
         );
         $result = json_decode($response->getContent(), true);
@@ -247,7 +254,7 @@ class RemunerationService
         $lastDayOfTheMonth = (clone $dateOfTheMonthToCheck)->modify('last day of this month');
         foreach ($result as $userData) {
             $user = $this->userRepository->find($userData['id']);
-            if($userData['amount'] > 0){
+            if ($userData['amount'] > 0) {
                 $remuneration = new UserTransaction();
                 $remuneration->setAmount($userData['amount']);
                 $remuneration->setUser($user);
@@ -269,21 +276,22 @@ class RemunerationService
         return true;
     }
 
-    public function checkUserRemuneration(DateTime $dateOfTheMonthToCheck){
-        $users = $this->userRepository->findUserByRoleAndSecteur(User::ROLE_REVENDEUR,$_ENV['SECTEUR_DIGITAL_ID']);
+    public function checkUserRemuneration(DateTime $dateOfTheMonthToCheck)
+    {
+        $users = $this->userRepository->findUserByRoleAndSecteur(User::ROLE_REVENDEUR, $_ENV['SECTEUR_DIGITAL_ID']);
         $arrayWithFilleulData = [];
         $limitLevel = $_ENV['LIMIT_NIVEAU_EQUIPE_LINEAIRE'];
         foreach ($users as $user) {
             $arrayWithFilleulData[] = [
                 'id' => $user->getId(),
-                'filleul' => $this->userRepository->getFilsJusqueNiveau($user->getId(),$limitLevel,true)
+                'filleul' => $this->userRepository->getFilsJusqueNiveau($user->getId(), $limitLevel, true)
             ];
         }
         $chunks = array_chunk($arrayWithFilleulData, 200);
         try {
             $this->entityManager->beginTransaction();
             foreach ($chunks as $chunk) {
-                $this->getRemunerationAndSaveData($chunk,$dateOfTheMonthToCheck);
+                $this->getRemunerationAndSaveData($chunk, $dateOfTheMonthToCheck);
             }
             $this->entityManager->flush();
             $this->entityManager->commit();

@@ -20,11 +20,7 @@ class CodePromoSecuType extends AbstractType
             ->add('code')
             ->add('description')
             ->add('prix', IntegerType::class)
-            ->add('statut')
-            ->add('secteur', EntityType::class, [
-                'class' => Secteur::class,
-                'choice_label' => 'nom'
-            ])
+
         ;
     }
 

@@ -50,7 +50,7 @@
 </ul>
 </li>
 
-{% else %}
+{% elseif app.user.uniqueCoachSecteur.type.id == type_secteur_securite_id %}
 <li class=" nav-item"><a class="d-flex align-items-center" href="{{ path('coach_contratsecu_form') }}"><i data-feather="file"></i><span class="menu-title text-truncate" data-i18n="User">Contrat</span></a>
 <li class=" nav-item"><a class="d-flex align-items-center" href="#"><i data-feather="briefcase"></i><span class="menu-title text-truncate" data-i18n="Components">Catalogue</span></a>
 <ul class="menu-content">
@@ -72,6 +72,11 @@
 </ul>
 </li>
 {% endif %}
+
 <li class=" nav-item"><a class="d-flex align-items-center" href="{{ path('app_coach_announcement_list') }}"><i data-feather="tag"></i><span class="menu-title text-truncate" data-i18n="Annonces">Annonces</span></a></li>
 <li class=" nav-item"><a class="d-flex align-items-center" href="{{ path('app_coach_social_media_list') }}"><i data-feather="globe"></i><span class="menu-title text-truncate" data-i18n="Réseaux sociaux">Réseaux sociaux</span></a></li>
+{% if app.user.uniqueCoachSecteur.type.id == type_secteur_securite_id %}
+{# <li class=" nav-item"><a class="d-flex align-items-center" href="{{ path('app_code_promo_secu_index') }}"><i data-feather="gift"></i><span class="menu-title text-truncate" data-i18n="Promo">Code promo</span></a></li> #}
+{% else %}
 <li class=" nav-item"><a class="d-flex align-items-center" href="{{ path('code_promo_list') }}"><i data-feather="gift"></i><span class="menu-title text-truncate" data-i18n="Promo">Code promo</span></a></li>
+{% endif %}

@@ -65,7 +65,7 @@
         <div class="checkout-options" >
             <div class="card">
                 <div class="card-body">
-                    <label class="section-label form-label mb-3">Code Promo</label>
+                    {# <label class="section-label form-label mb-3">Code Promo</label> #}
                     <div class="price-details">
                         {{ form_start(form, {'attr': {}}) }}
                             {# <div class="row">
@@ -78,7 +78,7 @@
                                 </div>
                             </div> #}
 
-                            <div class="row" id="codePromo">
+                            <div class="row d-none" id="codePromo">
                                 <div class="col-md-6 col-sm-12" >
                                     <div class="mb-2">
                                         {{form_label(form.codePromo)}}
@@ -103,7 +103,7 @@
                                 <div class="detail-amt discount-amt">15 à 20 minute(s)</div>
                             </li>
                         </ul> #}
-                        <hr />
+                        {# <hr /> #}
                         <ul class="list-unstyled">
                             <li class="price-detail">
                                 <div class="detail-title detail-total">Prix :</div>

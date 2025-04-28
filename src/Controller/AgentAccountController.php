@@ -163,7 +163,7 @@ class AgentAccountController extends AbstractController
 
         $user = $this->getUser();
         if ($secteur->getId() == $_ENV['SECTEUR_DIGITAL_ID'] && !in_array(User::ROLE_REVENDEUR, $user->getRoles())) {
-            return $this->redirectToRoute('agent_pro_dashboard',['id' => $secteur->getId()]);
+            return $this->redirectToRoute('agent_pro_dashboard', ['id' => $secteur->getId()]);
         }
         return $this->redirectToRoute('agent_dashboard_secteur', ['id' => $secteur->getId()]);
     }
@@ -247,7 +247,7 @@ class AgentAccountController extends AbstractController
 
 
         $videoFinFormation = $this->secteurVideoFormationRepository->findOneBy(['secteur' => $sessionSecteurId]);
-        $announcements = $this->announcementRepository->getActiveAnnoncement($secteur,new \DateTime(),['type' => User::ROLE_REVENDEUR]);
+        $announcements = $this->announcementRepository->getActiveAnnoncement($secteur, new \DateTime(), ['type' => User::ROLE_REVENDEUR]);
         return $this->render('user_category/agent/dashboard_secteur.html.twig', [
             'secteur' => $secteur,
             'firstFormation' => $firstFormation,
@@ -287,10 +287,12 @@ class AgentAccountController extends AbstractController
     public function admin_agent_view(Request $request, AgentSecteurService $agentSecteurService, UserRepository $repoUser, PaginatorInterface $paginator, StatAgentService $statAgentService,$secteur_network = '')
     {
         $secteur_finance_id = $this->getParameter('secteur_finance_id');
+
         $sessionSecteurId = $this->session->get('secteurId');
+        $secteur = $this->repoSecteur->find($sessionSecteurId);
         $ambassadeur = $this->getUser();
         $type = '';
-        $caStat = ['ca_perso' => 0 , 'ca_equipe' => 0 ];
+        $caStat = ['ca_perso' => 0, 'ca_equipe' => 0];
         if ($sessionSecteurId == $secteur_finance_id) {
             $type = 'finance';
             $userFinance = $statAgentService->getStatFinance($this->getUser()->getEmail());
@@ -331,7 +333,7 @@ class AgentAccountController extends AbstractController
                 $request->query->getInt('page', 1),
                 5
             );
-            $caStat = $statAgentService->getAgentCaStatEquipe($ambassadeur,$sessionSecteurId);
+            $caStat = $statAgentService->getAgentCaStatEquipe($ambassadeur, $sessionSecteurId, $secteur->getType()->getId());
             $countEquipe = $this->agentService->getNumberOfTeam($ambassadeur, 1);
             $countDirect = count($result);
         }
@@ -358,7 +360,7 @@ class AgentAccountController extends AbstractController
             $sessionSecteurId = $this->session->get('secteurId');
         }
         $secteur_finance_id = $this->getParameter('secteur_finance_id');
-
+        $secteur = $this->repoSecteur->find($sessionSecteurId);
         $idAgent = $request->get('agentId');
         if ($idAgent) {
             $user = $this->repoUser->findOneBy(['id' => $idAgent]);
@@ -377,7 +379,7 @@ class AgentAccountController extends AbstractController
         }
         else {
             $unilevel = $this->agentService->getUnilevelChildren($user, 1, true, $limit);
-            $unilevel = $this->statAgentService->addSummaryCaToUnilevel($unilevel);
+            $unilevel = $this->statAgentService->addSummaryCaToUnilevel($unilevel, $secteur->getId(), $secteur->getType()->getId());
         }
 
         $data = ['equipe' => $unilevel];
@@ -466,9 +468,9 @@ class AgentAccountController extends AbstractController
     }
 
 
-    
-    #[Route('/agent/bientôt-disponible',name : 'app_coming_soon')]
-    public function comingSoonPage( Request $request)
+
+    #[Route('/agent/bientôt-disponible', name: 'app_coming_soon')]
+    public function comingSoonPage(Request $request)
     {
         return $this->render('user_category/agent/utility/coming_soon.html.twig');
     }

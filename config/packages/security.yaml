@@ -76,6 +76,8 @@ security:
     - { path: ^/myapi/authenticated, roles: IS_AUTHENTICATED_FULLY }
     - { path: ^/myapi, roles: IS_AUTHENTICATED_ANONYMOUSLY }
     - { path: ^/chatutil, roles: IS_AUTHENTICATED_FULLY }
+    - { path: ^/chatutil, roles: IS_AUTHENTICATED_FULLY }
+    - { path: ^/checkAccount, roles: IS_AUTHENTICATED_ANONYMOUSLY }
     - { path: ^/*, roles: IS_AUTHENTICATED_REMEMBERED }
     # - { path: ^/profile, roles: ROLE_USER }
 

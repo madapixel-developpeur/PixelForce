@@ -31,7 +31,7 @@ class OrderSecuControllerAdmin extends AbstractController
 {
     private $entityManager;
     private $orderSecuService;
-    private $session; 
+    private $session;
 
     public function __construct(EntityManagerInterface $entityManager, OrderSecuService $orderSecuService, SessionInterface $session)
     {
@@ -46,7 +46,7 @@ class OrderSecuControllerAdmin extends AbstractController
     public function index(Request $request, PaginatorInterface $paginator, SearchService $searchService): Response
     {
 
-        $user = (object)$this->getUser();
+        $user = (object) $this->getUser();
         $secteurId = $this->session->get('secteurId');
         $page = $request->query->get('page', 1);
         $limit = 5;
@@ -76,10 +76,10 @@ class OrderSecuControllerAdmin extends AbstractController
             ->join('o.client', 'c')
             ->join('o.agent', 'a')
             ->join('o.secteur', 's')
-        ;  
+        ;
 
-        $where =  $searchService->getWhere($filter, new MyCriteriaParam($criteria, 'o'));   
-        $query->where($where["where"]." and a.id = :agentId and s.id = :secteurId ");
+        $where = $searchService->getWhere($filter, new MyCriteriaParam($criteria, 'o'));
+        $query->where($where["where"] . " and a.id = :agentId and s.id = :secteurId ");
         $where["params"]["agentId"] = $user->getId();
         $where["params"]["secteurId"] = $secteurId;
         $searchService->setAllParameters($query, $where["params"]);
@@ -104,7 +104,7 @@ class OrderSecuControllerAdmin extends AbstractController
     public function details(Request $request, OrderSecu $order): Response
     {
         $error = null;
-        return $this->render('user_category/agent/secu/order/order_details.html.twig',[
+        return $this->render('user_category/agent/secu/order/order_details.html.twig', [
             'error' => $error,
             'order' => $order,
             'filesDirectory' => $this->getParameter('files_directory_relative')
@@ -117,18 +117,18 @@ class OrderSecuControllerAdmin extends AbstractController
      */
     public function changeStatus(Request $request, int $id, int $status): Response
     {
-        try{
+        try {
             $this->orderSecuService->changeStatus($id, $status);
             $this->addFlash(
                 'success',
-                'Commande '.OrderSecu::STATUS[$status]
-            ); 
-        } catch(Exception $ex){
-            $this->addFlash(
-               'error',
-               $ex->getMessage()
+                'Commande ' . OrderSecu::STATUS[$status]
             );
-        } 
+        } catch (Exception $ex) {
+            $this->addFlash(
+                'error',
+                $ex->getMessage()
+            );
+        }
         return $this->redirectToRoute('admin_ordersecu_details', ['id' => $id]);
     }
 
@@ -138,12 +138,12 @@ class OrderSecuControllerAdmin extends AbstractController
     public function downloadContrat(OrderSecu $order): Response
     {
         $response = new BinaryFileResponse(
-            $this->getParameter('files_directory_relative')."/".$order->getContratSigned()
+            $this->getParameter('files_directory_relative') . "/" . $order->getContratSigned()
         );
         $response->headers->set('Content-Type', 'appication/pdf');
         $response->setContentDisposition(
             ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-            'contrat-'.$order->getId().'.pdf'
+            'contrat-' . $order->getId() . '.pdf'
         );
         return $response;
     }

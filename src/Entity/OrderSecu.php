@@ -22,14 +22,14 @@ class OrderSecu implements JsonSerializable
     public const REJECTED = -1;
 
     public const STATUS = [
-        self::CREATED => "Créée", 
+        self::CREATED => "Créée",
         self::PAIED => "Payée",
         self::VALIDATED => "Livrée",
         self::REJECTED => "Rejetée"
     ];
 
     public const STATUS_DATA_FORM = [
-        "Créée" => self::CREATED, 
+        "Créée" => self::CREATED,
         "Payée" => self::PAIED,
         "Livrée" => self::VALIDATED,
         "Rejetée" => self::REJECTED
@@ -158,7 +158,22 @@ class OrderSecu implements JsonSerializable
      */
     private $invoicePath;
 
-    
+    /**
+     * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
+     */
+    private $amount;
+
+    /**
+     * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
+     */
+    private $amountHt;
+
+    /**
+     * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
+     */
+    private $amountTva;
+
+
 
     public function __construct()
     {
@@ -257,7 +272,7 @@ class OrderSecu implements JsonSerializable
 
     /**
      * Get the value of sessionKey
-     */ 
+     */
     public function getSessionKey()
     {
         return $this->sessionKey;
@@ -267,7 +282,7 @@ class OrderSecu implements JsonSerializable
      * Set the value of sessionKey
      *
      * @return  self
-     */ 
+     */
     public function setSessionKey($sessionKey)
     {
         $this->sessionKey = $sessionKey;
@@ -308,69 +323,79 @@ class OrderSecu implements JsonSerializable
 
 
     //session
-    public function add(OrderSecuAccomp $accomp){
+    public function add(OrderSecuAccomp $accomp)
+    {
         $accompsSession = $this->getAccompsSession();
         $index = $this->indexOf($accomp->getProduit()->getId());
-        if($index!=-1){
+        if ($index != -1) {
             $qty = $accompsSession[$index]->getQte() + $accomp->getQte();
             $accomp->setQte($qty);
             array_splice($accompsSession, $index, 1);
-        } 
+        }
         $accompsSession[] = $accomp;
         $this->setAccompsSession($accompsSession);
     }
 
-    public function indexOf($productId){
+    public function indexOf($productId)
+    {
         $index = -1;
         $accompsSession = $this->getAccompsSession();
-        for($i=0; $i<count($accompsSession) ; $i++){
+        for ($i = 0; $i < count($accompsSession); $i++) {
             $accomp = $accompsSession[$i];
-            
-            if($accomp->getProduit()->getId()==$productId) {
+
+            if ($accomp->getProduit()->getId() == $productId) {
                 $index = $i;
                 break;
             }
         }
         return $index;
     }
-    
+
     // public function checkBasketItem(BasketItem $basketItem){
     //     $basketItem->getProduit()->checkQty($basketItem->getQuantity());
     // }
 
-    public function update(OrderSecuAccomp $accomp){
+    public function update(OrderSecuAccomp $accomp)
+    {
         //$this->checkBasketItem($basketItem);
         $accompsSession = $this->getAccompsSession();
         $index = $this->indexOf($accomp->getProduit()->getId());
-        if($index!=-1) array_splice($accompsSession, $index, 1);
+        if ($index != -1)
+            array_splice($accompsSession, $index, 1);
         $accompsSession[] = $accomp;
         $this->setAccompsSession($accompsSession);
     }
 
-    public function remove($productId){
+    public function remove($productId)
+    {
         $accompsSession = $this->getAccompsSession();
         $index = $this->indexOf($productId);
-        if($index!=-1)  array_splice($accompsSession, $index, 1);
+        if ($index != -1)
+            array_splice($accompsSession, $index, 1);
         $this->setAccompsSession($accompsSession);
     }
 
-    public function getMontantAccomp(){
+    public function getMontantAccomp()
+    {
         $montant = 0;
-        for($i=0; $i<count($this->getAccompsSession()) ; $i++){
+        for ($i = 0; $i < count($this->getAccompsSession()); $i++) {
             $montant += $this->getAccompsSession()[$i]->getMontant();
-        }  
+        }
         return $montant;
     }
 
-    public function getMontantHt(){
+    public function getMontantHt()
+    {
         return $this->getPrixProduit() + $this->getMontantAccomp();
     }
 
-    public function getMontantTva(){
-        return $this->getMontantHt() * $this->getTva()->getValeur()/100;
+    public function getMontantTva()
+    {
+        return $this->getMontantHt() * $this->getTva()->getValeur() / 100;
     }
 
-    public function getMontantTtc(){
+    public function getMontantTtc()
+    {
         return $this->getMontantHt() + $this->getMontantTva();
     }
 
@@ -382,7 +407,7 @@ class OrderSecu implements JsonSerializable
 
     /**
      * Get the value of accompsSession
-     */ 
+     */
     public function getAccompsSession()
     {
         return $this->accompsSession;
@@ -392,7 +417,7 @@ class OrderSecu implements JsonSerializable
      * Set the value of accompsSession
      *
      * @return  self
-     */ 
+     */
     public function setAccompsSession($accompsSession)
     {
         $this->accompsSession = $accompsSession;
@@ -414,7 +439,8 @@ class OrderSecu implements JsonSerializable
 
 
 
-    public function getFraisInstallation(){
+    public function getFraisInstallation()
+    {
         return $this->getTypeInstallation() ? $this->getTypeInstallation()->getPrix() : 0;
     }
 
@@ -442,9 +468,10 @@ class OrderSecu implements JsonSerializable
         return $this;
     }
 
-    
 
-    public function refresh(EntityManagerInterface $em){
+
+    public function refresh(EntityManagerInterface $em)
+    {
         /* if($this->getProduit()){
             $this->setProduit($em->getRepository(ProduitSecu::class)->find($this->getProduit()->getId()));
         }
@@ -454,10 +481,10 @@ class OrderSecu implements JsonSerializable
         if($this->getTypeInstallation()){
             $this->setTypeInstallation($em->getRepository(TypeInstallationSecu::class)->find($this->getTypeInstallation()->getId()));
         } */
-        if($this->getKitbase()){
+        if ($this->getKitbase()) {
             $this->setKitbase($em->getRepository(KitBaseSecu::class)->find($this->getKitbase()->getId()));
         }
-        if($this->getTva()){
+        if ($this->getTva()) {
             $this->setTva($em->getRepository(TvaSecu::class)->find($this->getTva()->getId()));
         }
     }
@@ -498,22 +525,25 @@ class OrderSecu implements JsonSerializable
         return $this;
     }
 
-    public function getStatusStr(): ?string 
+    public function getStatusStr(): ?string
     {
         return OrderSecu::STATUS[$this->getStatut()];
     }
 
 
-    public function getTotalHt(){
+    public function getTotalHt()
+    {
         return $this->getPrixProduit() + $this->getAccompMontant();
     }
 
-    public function getTvaMontantBase(){
-        return $this->getTotalHt() * $this->getTvaPourcentage()/100; 
+    public function getTvaMontantBase()
+    {
+        return $this->getTotalHt() * $this->getTvaPourcentage() / 100;
     }
 
-    public function getTotalTtc(){
-       return  $this->getTotalHt() + $this->getTvaMontantBase();
+    public function getTotalTtc()
+    {
+        return $this->getTotalHt() + $this->getTvaMontantBase();
     }
 
     public function getContratRempli(): ?string
@@ -596,6 +626,42 @@ class OrderSecu implements JsonSerializable
     public function setInvoicePath(?string $invoicePath): self
     {
         $this->invoicePath = $invoicePath;
+
+        return $this;
+    }
+
+    public function getAmount(): ?string
+    {
+        return $this->amount;
+    }
+
+    public function setAmount(?string $amount): self
+    {
+        $this->amount = $amount;
+
+        return $this;
+    }
+
+    public function getAmountHt(): ?string
+    {
+        return $this->amountHt;
+    }
+
+    public function setAmountHt(?string $amountHt): self
+    {
+        $this->amountHt = $amountHt;
+
+        return $this;
+    }
+
+    public function getAmountTva(): ?string
+    {
+        return $this->amountTva;
+    }
+
+    public function setAmountTva(?string $amountTva): self
+    {
+        $this->amountTva = $amountTva;
 
         return $this;
     }

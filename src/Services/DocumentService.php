@@ -21,7 +21,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-class DocumentService 
+class DocumentService
 {
     private $entityManager;
     private $documentRepository;
@@ -43,20 +43,19 @@ class DocumentService
         ['field' => 'code_bic', 'debut' => 137, 'fin' => 147],
         ['field' => 'paiement', 'debut' => 148, 'fin' => 148],
     ];
-    
+
     private $mailerService;
 
     public function __construct(
         $filesDirectory,
         $baseUrl,
-        EntityManagerInterface $entityManager, 
-        DocumentRepository $documentRepository, 
+        EntityManagerInterface $entityManager,
+        DocumentRepository $documentRepository,
         StripeService $stripeService,
-        Twig_Environment $twig ,
+        Twig_Environment $twig,
         MailerService $mailerService,
         private KernelInterface $kernel
-    )
-    {
+    ) {
         $this->entityManager = $entityManager;
         $this->documentRepository = $documentRepository;
         $this->filesDirectory = $filesDirectory;
@@ -68,51 +67,54 @@ class DocumentService
 
     public function sendDocument(DocumentRecipient $rec)
     {
-        
+
         $rec->setPaid(false);
         $rec->setStatut(1);
         $rec->setDateSend(new DateTime());
-        
+
         $this->entityManager->persist($rec);
         $this->entityManager->flush();
 
-        $link = $this->baseUrl.'/dc/'.sha1($rec->getId());
+        $link = $this->baseUrl . '/dc/' . sha1($rec->getId());
 
         $this->mailerService->sendDocument($rec, $link, $rec);
     }
 
-    public function signDocument(DocumentRecipient $rec, $signature){
-        try{
-            if($rec->getSignedFile() == null) throw new \Exception("Vous devez importer le document déjà rempli avant de signer le document.");
-            $source = $this->filesDirectory.'/'.$rec->getSignedFile();
-            
+    public function signDocument(DocumentRecipient $rec, $signature)
+    {
+        try {
+            if ($rec->getSignedFile() == null)
+                throw new \Exception("Vous devez importer le document déjà rempli avant de signer le document.");
+            $source = $this->filesDirectory . '/' . $rec->getSignedFile();
+
             // Flatten form datas of pdf :
             $this->flattenDocument($source, $source, null);
 
             $pdf = new Fpdi();
             $pageCount = $pdf->setSourceFile($source);
 
-            for($i=1; $i<=$pageCount; $i++){
+            for ($i = 1; $i <= $pageCount; $i++) {
                 $pdf->AddPage();
                 $tplId = $pdf->importPage($i);
                 $pdf->useTemplate($tplId);
-                if($i == 4){
+                if ($i == 4) {
                     $pdf->Image($signature, 0, 180, 120);
                 }
             }
-            
+
             $pdf->Output($source, 'F');
             $rec->setDateSigned(new DateTime());
-            $this->entityManager->flush(); 
-        } finally{
+            $this->entityManager->flush();
+        } finally {
             $this->entityManager->clear();
         }
     }
 
-    public function flattenDocument($inputFilepath, $outputFilepath, $datas = null){
+    public function flattenDocument($inputFilepath, $outputFilepath, $datas = null)
+    {
         // if inputFilepath = outputFilepath , the file will be replaced by the new one
         $pdf = new Pdf($inputFilepath);
-        if($datas != null){
+        if ($datas != null) {
             $pdf->fillForm($datas);
         }
         $result = $pdf->allow('AllFeatures')      // Change permissions
@@ -126,11 +128,13 @@ class DocumentService
         }
     }
 
-    public function pay(DocumentRecipient $rec){
-        try{
+    public function pay(DocumentRecipient $rec)
+    {
+        try {
             $paymentIntent = $this->stripeService->getPaymentIntent($rec->getPaymentIntentId());
-            if($paymentIntent->status != "succeeded") throw new Exception("Erreur rencontrée lors du paiement");
-            $rec->setPaid(true);        
+            if ($paymentIntent->status != "succeeded")
+                throw new Exception("Erreur rencontrée lors du paiement");
+            $rec->setPaid(true);
             $this->entityManager->flush();
         } finally {
             $this->entityManager->clear();
@@ -138,12 +142,16 @@ class DocumentService
     }
 
 
-    public function getData($filepath){
-        $pdf = new Pdf( $this->filesDirectory.'/'.$filepath);
+    public function getData($filepath)
+    {
+        $pdf = new Pdf();
+        $pdf->addFile($this->filesDirectory . '/' . $filepath, '');
         $result = $pdf->getDataFields();
+
         if ($result === false) {
             $error = $pdf->getError();
             throw new \Exception($error);
+            // return [];
         }
 
         return $result->__toArray();
@@ -153,13 +161,14 @@ class DocumentService
         return $metaData; */
     }
 
-    public function getDataSepa($tab){
+    public function getDataSepa($tab)
+    {
         $result = [];
-        for($i=0; $i<count(DocumentService::FIELDS_SEPA); $i++){
+        for ($i = 0; $i < count(DocumentService::FIELDS_SEPA); $i++) {
             $field = DocumentService::FIELDS_SEPA[$i];
             $val = '';
-            for($j=$field['debut']; $j<=$field['fin']; $j++){
-                if(isset($tab[$j]['FieldValue'])){
+            for ($j = $field['debut']; $j <= $field['fin']; $j++) {
+                if (isset($tab[$j]['FieldValue'])) {
                     $val .= $tab[$j]['FieldValue'];
                 }
             }
@@ -168,10 +177,11 @@ class DocumentService
         return $result;
     }
 
-    public function signContrat($contrat, $output, $signature){
-        try{
-            $source = $this->filesDirectory.'/'.$contrat;
-            $outputPath = $this->filesDirectory.'/'.$output;
+    public function signContrat($contrat, $output, $signature)
+    {
+        try {
+            $source = $this->filesDirectory . '/' . $contrat;
+            $outputPath = $this->filesDirectory . '/' . $output;
 
             // Flatten form datas of pdf :
             $this->flattenDocument($source, $outputPath, null);
@@ -179,18 +189,18 @@ class DocumentService
             $pdf = new Fpdi();
             $pageCount = $pdf->setSourceFile($outputPath);
 
-            for($i=1; $i<=$pageCount; $i++){
+            for ($i = 1; $i <= $pageCount; $i++) {
                 $pdf->AddPage();
                 $tplId = $pdf->importPage($i);
                 $pdf->useTemplate($tplId);
-                if($i == 4){
+                if ($i == 4) {
                     $pdf->Image($signature, 0, 180, 120);
                 }
             }
-            
+
             $pdf->Output($outputPath, 'F');
             return $output;
-        } finally{
+        } finally {
             $this->entityManager->clear();
         }
     }
@@ -198,14 +208,14 @@ class DocumentService
     public function getFileDocument($type)
     {
         $document_array = [
-           "CGU" =>  "/contrat-template/CGU_Pixelforce.pdf",
-           "CGV" =>  "/contrat-template/CGV_Pixelforce.pdf",
+            "CGU" => "/contrat-template/CGU_Pixelforce.pdf",
+            "CGV" => "/contrat-template/CGV_Pixelforce.pdf",
         ];
-       
+
 
         $filePath = $document_array[$type];
 
-        $filePath = $this->kernel->getProjectDir(). $filePath;
+        $filePath = $this->kernel->getProjectDir() . $filePath;
 
 
         if (!file_exists($filePath)) {

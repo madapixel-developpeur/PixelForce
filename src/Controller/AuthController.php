@@ -31,16 +31,17 @@ class AuthController extends AbstractController
     private $userRepository;
     private $authService;
 
-    public function __construct(EntityManagerInterface $entityManager, 
+    public function __construct(
+        EntityManagerInterface $entityManager,
         UserRepository $userRepository,
-        AuthService $authService)
-    {
+        AuthService $authService
+    ) {
         $this->entityManager = $entityManager;
         $this->userRepository = $userRepository;
         $this->authService = $authService;
     }
 
-    
+
     /**
      * @Route("/inscription/client/{token}", name="signup_client")
      */
@@ -54,22 +55,22 @@ class AuthController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
 
-            try{
+            try {
                 $user = $this->authService->checkNewAccount($user);
                 $request->getSession()->set('new_user', $user);
                 return $this->redirectToRoute('check_account', ['token' => $token]);
-                
-            } catch(Exception $ex){
+
+            } catch (Exception $ex) {
                 $error = $ex->getMessage();
             }
 
         }
 
-        return $this->render('user_category/client/auth/signup.html.twig',[
+        return $this->render('user_category/client/auth/signup.html.twig', [
             'form' => $form->createView(),
             'error' => $error
         ]);
-    
+
     }
 
     /**
@@ -77,53 +78,53 @@ class AuthController extends AbstractController
      */
     public function checkAccount($token, Request $request): Response
     {
-        
+
         $user = $request->getSession()->get('new_user', null);
-        if($user == null){
-            return $this->redirectToRoute('signup');
+        if ($user == null) {
+            return $this->redirectToRoute('signup_client', ['token' => $token]);
         }
 
         $agent = $this->userRepository->findAgentByToken($token);
         $error = null;
-        
+
         $form = $this->createFormBuilder()
-            ->add('verifCode', TextType::class, ["label"=>"Code de vérification", "trim" => true, "required" => true])
+            ->add('verifCode', TextType::class, ["label" => "Code de vérification", "trim" => true, "required" => true])
             ->getForm();
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
 
-            try{
+            try {
                 $data = $form->getData();
                 $user->setClientAgent($agent);
                 $this->authService->validateAccount($user, $data['verifCode']);
                 $request->getSession()->remove('new_user');
-                
+
                 return $this->redirect($this->generateUrl('app_login', ['agentToken' => $token]));
-            } catch(Exception $ex){
+            } catch (Exception $ex) {
                 $error = $ex->getMessage();
             }
 
         }
 
-        return $this->render('user_category/client/auth/validate_account.html.twig',[
+        return $this->render('user_category/client/auth/validate_account.html.twig', [
             'form' => $form->createView(),
             'error' => $error,
             'token' => $token
         ]);
-    
+
     }
 
     #[Route('auth/condition-generale/{type}', name: 'app_show_document')]
     public function showDocument($type): Response
     {
-        return $this->render('term_condition/show_document.html.twig',[
-            'type' => $type 
+        return $this->render('term_condition/show_document.html.twig', [
+            'type' => $type
         ]);
     }
 
     #[Route('auth/condition-generale/pdf/{type}/{option}', name: 'app_document_preview')]
-    public function getDocument($type,Request $request,DocumentService $documentService,$option = '') : Response
+    public function getDocument($type, Request $request, DocumentService $documentService, $option = ''): Response
     {
 
 
@@ -133,17 +134,17 @@ class AuthController extends AbstractController
         $response = new BinaryFileResponse($file['filePath']);
 
         // Set response headers
-        if($option == "download"){
+        if ($option == "download") {
             $response->setContentDisposition(
                 'attachment',
                 $file['filename']
             );
-        }else{
+        } else {
             $response->headers->set('Content-Type', 'application/pdf');
         }
 
         return $response;
     }
 
-    
+
 }
