@@ -11,7 +11,7 @@
 
 {% block body %}
 <!-- BEGIN: Content-->
-    <div class="app-content content client ecommerce-application">
+    <div class="app-content content client ecommerce-application px-0 py-0">
         <div class="content-overlay"></div>
         <div class="header-navbar-shadow"></div>
         <div class="content-wrapper container-xxl p-0">
@@ -19,14 +19,14 @@
                 <div class="content-header-left col-md-9 col-12 mb-2">
                     <div class="row breadcrumbs-top">
                         <div class="col-12">
-                            <h2 class="content-header-title float-start mb-0">Commande</h2>
+                            <h2 class="content-header-title float-start mb-0">{% trans %}Commande{% endtrans %}</h2>
                             <div class="breadcrumb-wrapper">
                                 <ol class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="index.html">Home</a>
+                                    <li class="breadcrumb-item"><a href="index.html">{% trans %}Home{% endtrans %}</a>
                                     </li>
-                                    <li class="breadcrumb-item"><a href="#">eCommerce</a>
+                                    <li class="breadcrumb-item"><a href="#">{% trans %}eCommerce{% endtrans %}</a>
                                     </li>
-                                    <li class="breadcrumb-item active">Commande
+                                    <li class="breadcrumb-item active">{% trans %}Commande{% endtrans %}
                                     </li>
                                 </ol>
                             </div>
@@ -68,7 +68,7 @@
                                             <img src="{{ asset( filesDirectory ~ op.product.photo) }}" alt="Image pour {{op.product.nom}}" />
                                         </a>
                                     </div> #}
-                                    <div class="card-body">
+                                    <div class="card-body px-4">
                                         {# <div class="item-name"> #}
                                             <h6 class="mb-0"><a href="#" class="text-body">{{order.package.name}} - ({{order.package.service}})</a></h6>
                                         
@@ -107,38 +107,38 @@
                             <!-- Checkout Place Order Right starts -->
                             <div class="checkout-options">
                                 <div class="card">
-                                    <div class="card-body">
-                                        <label class="section-label form-label mb-1">Informations sur le client</label>
+                                    <div class="card-body px-4 py-5">
+                                        <label class="section-label form-label mb-1">{% trans %}Informations sur le client{% endtrans %}</label>
                                         <hr />
                                         <div class="price-details" style="margin-bottom: 30px;">
                                             <ul class="list-unstyled">
                                                 <li class="price-detail">
-                                                    <div class="detail-title">Nom et prénom(s)</div>
+                                                    <div class="detail-title">{% trans %}Nom et prénom(s){% endtrans %}</div>
                                                     <div class="detail-amt">{{order.infoClient.lastName}} {{order.infoClient.firstName}}</div>
                                                 </li>
                                                 <li class="price-detail">
-                                                    <div class="detail-title">Téléphone</div>
+                                                    <div class="detail-title">{% trans %}Téléphone{% endtrans %}</div>
                                                     <div class="detail-amt discount-amt">{{order.infoClient.phone}}</div>
                                                 </li>
                                                 <li class="price-detail">
-                                                    <div class="detail-title">Email</div>
+                                                    <div class="detail-title">{% trans %}Email{% endtrans %}</div>
                                                     <div class="detail-amt discount-amt">{{order.infoClient.email}}</div>
                                                 </li>
                                                 
                                             </ul>
                                             
                                         </div>
-                                        <label class="section-label form-label mb-1">Informations sur la livraison</label>
+                                        <label class="section-label form-label mb-1">{% trans %}Informations sur la livraison{% endtrans %}</label>
                                         <hr />
                                         <div class="price-details" style="margin-bottom: 30px;">
                                             <ul class="list-unstyled">
                                                 <li class="price-detail">
-                                                    <div class="detail-title">Pays/région</div>
+                                                    <div class="detail-title">{% trans %}Pays/région{% endtrans %}</div>
                                                     <div class="detail-amt">{{order.infoClient.country}}</div>
                                                 </li>
                                                 
                                                 <li class="price-detail">
-                                                    <div class="detail-title">Adresse</div>
+                                                    <div class="detail-title">{% trans %}Adresse{% endtrans %}</div>
                                                     <div class="detail-amt discount-amt">{{order.infoClient.address}}</div>
                                                 </li>
                                                 
@@ -147,17 +147,17 @@
                         
                                             </ul>
                                         </div>
-                                        <label class="section-label form-label mb-1">Détails de la commande</label>
+                                        <label class="section-label form-label mb-1">{% trans %}Détails de la commande{% endtrans %}</label>
                                         <hr />
                                         <div class="price-details">
                                             <ul class="list-unstyled">
                                                 <li class="price-detail">
-                                                    <div class="detail-title">Date</div>
+                                                    <div class="detail-title">{% trans %}Date{% endtrans %}</div>
                                                     <div class="detail-amt">{{order.createdAt | date("d/m/Y H:i")}}</div>
                                                 </li>
                                                 <li class="price-detail">
-                                                    <div class="detail-title">Statut</div>
-                                                    <div class="detail-amt discount-amt text-primary">{{order.statusStr}}</div>
+                                                    <div class="detail-title">{% trans %}Statut{% endtrans %}</div>
+                                                    <div class="detail-amt discount-amt text-primary">{{order.statusStr | trans }}</div>
                                                 </li>
                                                 
                                             </ul>
@@ -165,7 +165,7 @@
                                             <ul class="list-unstyled">
                                                 
                                                 <li class="price-detail">
-                                                    <div class="detail-title detail-total">Montant total (TVA incluse) :</div>
+                                                    <div class="detail-title detail-total">{% trans %}Montant total{% endtrans %}:</div>
                                                     <div class="detail-amt fw-bolder" id="total-cost" >{{order.amount | number_format(2, ',', ' ')}} €</div>
                                                 </li>
                                             </ul>

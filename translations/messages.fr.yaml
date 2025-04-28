@@ -274,5 +274,24 @@ Siret: Siret
 'Êtes vous vraiment sûr de supprimer ce contact ?': 'Êtes vous vraiment sûr de supprimer ce contact ?'
 'Exemple de contact': 'Exemple de contact'
 'Vrai contact': 'Vrai contact'
-'Particulier': 'Particulier'
-'Entreprise': 'Entreprise'
+Particulier: Particulier
+Entreprise: Entreprise
+Commande: Commande
+Home: Home
+eCommerce: eCommerce
+'Informations sur le client': 'Informations sur le client'
+'Nom et prénom(s)': 'Nom et prénom(s)'
+'Informations sur la livraison': 'Informations sur la livraison'
+Pays/région: Pays/région
+'Détails de la commande': 'Détails de la commande'
+'Montant total': 'Montant total'
+'Liste des commandes': 'Liste des commandes'
+Chercher: Chercher
+'Aucune Commande': 'Aucune Commande'
+'Pack - (service)': 'Pack - (service)'
+"Créée": "Créée"
+"Payée" : "Payée" 
+"Livrée": "Livrée"
+"Créé": "Créé"
+"Payé" : "Payé" 
+"Livré": "Livré"

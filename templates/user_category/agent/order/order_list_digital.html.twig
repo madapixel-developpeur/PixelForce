@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-	Commandes
+	{% trans %}Commandes{% endtrans %}
 {% endblock %}
 
 {% block stylesheets %}
@@ -11,7 +11,7 @@
 {% block body %}
     <div class="row mb-3">
 		<div class="col-12  mt-2 mt-md-3">
-			<h4 class="my-auto general-primary-text">Liste des commandes</h4>
+			<h4 class="my-auto general-primary-text">{% trans %}Liste des commandes{% endtrans %}</h4>
 		</div>
 	</div>
 	<div class="card card-company-table p-5 rounded-3" style="">
@@ -25,7 +25,7 @@
                                     <button class="input-group-text border-0" id="search-addon" type="submit">
 										<i class="fas fa-search"></i>
 									</button>
-                                    <input type="search"name="search" class="form-control  input-group-text border-0" placeholder="Chercher" aria-label="Search" aria-describedby="search-addon" />
+                                    <input type="search"name="search" class="form-control  input-group-text border-0" placeholder="{{ 'Chercher' | trans }}" aria-label="Search" aria-describedby="search-addon" />
                                 </form>
 								<div class="col-6 col-md-4">
                                     <div class="input-group rounded-3 m-2">
@@ -33,7 +33,7 @@
                                             <span class="input-group-text border-0 w-25 rounded-4 me-4" id="filter-toggle">
                                                 <i class="fa-solid fa-bars-staggered"></i>
                                             </span>
-                                            Filtres
+                                            {% trans %}Filtres{% endtrans %}
                                         </button>
                                     </div>
                                 </div>
@@ -43,7 +43,7 @@
                     {{ form_start(form, {'attr': { 'id': 'product-filter-form'}}) }}
                     <div class="collapse" id="filters">
                         <div class="block block--bordered block--rounded">
-                             <h1 class="block__text block__text--center mt-2" >Options de filtre :</h1>
+                             <h1 class="block__text block__text--center mt-2" >{% trans %}Options de filtre{% endtrans %} :</h1>
                              <div class="filter-wrap">
                                     <!-- Formulaire de recherche -->
                                         <div class="search-form">
@@ -75,7 +75,7 @@
                                                 </div>
 
                                                 <div class="btn-wrap">
-                                                    <button class="btn btn-primary" type="submit" name="action_button" value="search_action"><i data-feather="filter"></i>Filtrer</button>
+                                                    <button class="btn btn-primary" type="submit" name="action_button" value="search_action"><i data-feather="filter"></i>{% trans %}Filtrer{% endtrans %}</button>
                                                 </div>
                                             </div>
 
@@ -85,9 +85,9 @@
                     </div>
                      <div class="row w-100">
                         <div class="col-12 col-md-12 mt-3 d-flex align-items-center justify-content-start p-0 mb-3 ">
-                            <button name="action_button" value="excel"  class=" mt-2 btn btn-success btn-sm me-2 rounded-3"><i class="fa fa-print"></i> <span class="ms-1">Exporter excel</span></button>
-                            <button name="action_button" value="csv"  class=" mt-2 btn btn-success btn-sm me-2 rounded-3"><i class="fa fa-print"></i> <span class="ms-1">Exporter csv</span></button>
-                            <button name="action_button" value="pdf"  class=" mt-2  btn btn-danger btn-sm me-2 rounded-3"><i class="fa fa-file-text"></i> <span class="ms-1">Exporter pdf</span></button>
+                            <button name="action_button" value="excel"  class=" mt-2 btn btn-success btn-sm me-2 rounded-3"><i class="fa fa-print"></i> <span class="ms-1">{% trans %}Exporter excel{% endtrans %}</span></button>
+                            <button name="action_button" value="csv"  class=" mt-2 btn btn-success btn-sm me-2 rounded-3"><i class="fa fa-print"></i> <span class="ms-1">{% trans %}Exporter csv{% endtrans %}</span></button>
+                            <button name="action_button" value="pdf"  class=" mt-2  btn btn-danger btn-sm me-2 rounded-3"><i class="fa fa-file-text"></i> <span class="ms-1">{% trans %}Exporter pdf{% endtrans %}</span></button>
                         </div>
                     </div>
                     {{ form_end(form) }}
@@ -96,7 +96,7 @@
                     {% if orderList|length ==0 %}
                         <div class="alert alert-primary p-3 text-center" role="alert">
                             <div class="alert-body">
-                                Aucune Commande
+                                {% trans %}Aucune Commande{% endtrans %}
                             </div>
                         </div>
                     {% endif %}
@@ -105,12 +105,12 @@
 						<table class="table text-center">
 							<tbody class="align-items-center">
 								<tr>
-                                    <th>Date</th>
-                                    <th>Client</th>
-                                    <th>Pack - (service)</th>
-                                    <th>Montant</th>
-                                    <th>Référence</th>
-                                    <th>Statut</th>
+                                    <th>{% trans %}Date{% endtrans %}</th>
+                                    <th>{% trans %}Client{% endtrans %}</th>
+                                    <th>{% trans %}Pack - (service){% endtrans %}</th>
+                                    <th>{% trans %}Montant{% endtrans %}</th>
+                                    <th>{% trans %}Référence{% endtrans %}</th>
+                                    <th>{% trans %}Statut{% endtrans %}</th>
                                     <th></th>
                                 </tr>
 
@@ -124,7 +124,7 @@
                                             <a href="{{ path('agent_order_list_digital',{'referenceVente' : order.infoClient.referenceVente }) }}">{{order.infoClient.referenceVente}}</a>
                                             {# <a class="p-2" href="#" onclick="copyLink('{{ url('agent_order_list_digital',{'referenceVente' : order.infoClient.referenceVente }) }}','Liens de la référence {{  order.infoClient.referenceVente }} copié avec succès') "><i class="fa-solid fa-copy"></i></a>  #}
                                         </td>
-                                        <td>{{order.statusStr}}</td>
+                                        <td>{{order.statusStr | trans }}</td>
                                         <td class="col-action ">
                                             <a href="{{path('agent_order_details_digital', {'id': order.id})}}">
                                                 <i data-feather="eye"></i>

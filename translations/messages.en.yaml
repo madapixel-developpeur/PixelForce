@@ -277,7 +277,25 @@ Siret: 'Siret'
 'Vrai contact': 'Real contact'
 'Particulier': 'Individual'
 'Entreprise': 'Company'
-
+'Commande': 'Order'
+'Home': 'Home'
+'eCommerce': 'eCommerce'
+'Informations sur le client': 'Customer information'
+'Nom et prénom(s)': 'Full name'
+'Informations sur la livraison': 'Delivery information'
+'Pays/région': 'Country/region'
+'Détails de la commande': 'Order details'
+'Montant total': 'Total amount'
+'Liste des commandes': 'Order list'
+'Chercher': 'Search'
+'Aucune Commande': 'No orders'
+'Pack - (service)': 'Pack - (service)'
+"Créée": "Created"
+"Payée" : "Paid" 
+"Livrée": "Delivered"
+"Créé": "Created"
+"Payé" : "Paid" 
+"Livré": "Delivered"
 
 
 
