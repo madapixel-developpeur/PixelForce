@@ -15,7 +15,13 @@
 	<div class="mt-2">
 		<div class="content-card-user-information mt-3">
 			<section class="app-user-view-account">
-				<h4 class=" mt-2 mb-3 choix-secteur-primary">Votre réseau et vos performances</h4>
+				<h4 class=" mt-2 mb-3 choix-secteur-primary">
+					{% if secteurNetwork %}
+						Votre réseau {{secteurNetwork}}
+					{% else %}
+						Votre réseau et vos performances
+					{% endif %}
+				</h4>
 				<div class="row">
 					<!-- User Sidebar -->
 					<div class="col-12  col-md-7 order-1 order-md-0 d-flex">
@@ -28,7 +34,14 @@
 										<h5 class="general-primary-text">Développez votre réseau</h5>
 										{# {% if app.user.canAccessFonct('RDV', app.session.get('secteurId')) %} #}
 										<p >Partagez votre lien unique et invitez d’autres personnes à rejoindre l’aventure (Plus votre réseau grandit, plus vous augmentez vos opportunités de gains)</p>
-										<a class="regular-button w-100 text-center" href="#" onclick="copyLink('{{ url('agent_inscription', {'ambassador_username':  app.user.username != "" ?  app.user.username : ' '}) }}') " >Copier votre lien</a>    
+										<a class="regular-button w-100 text-center" href="#"
+												{% if secteurNetwork %} 
+													style="pointer-events: none;"
+												{% else %}
+												 	onclick="copyLink('{{ url('agent_inscription', {'ambassador_username':  app.user.username != "" ?  app.user.username : ' '}) }}') "
+												{% endif %} >
+											Copier votre lien
+										</a>    
 										{# {% endif %} #}
 									</div>
 								</div>
@@ -246,13 +259,15 @@
 	<script src='https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js'></script>
 	<script src="{{asset('app-assets/js/arbre/arbol.js')}}"></script>
 	<script>
+
+		{# var secteur_network = '{{ secteurNetwork }}'; #}
 		$(document).ready(function() {
 			getDataLineaire();
 		});
 
 		function getDataLineaire(){
 			$.ajax({
-				url: '{{ path('app_agent_data_lineaire') }}',
+				url: '{{ path('app_agent_data_lineaire',{ 'secteur_network' : secteurNetwork }) }}',
 				method: 'GET',
 				success: function(response) {
 					let data = response.equipe;

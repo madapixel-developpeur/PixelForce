@@ -2,6 +2,7 @@
 
 namespace App\Twig;
 
+use App\Repository\AgentSecteurRepository;
 use DateTime;
 use Twig\TwigFilter;
 use DateTimeInterface;
@@ -31,7 +32,8 @@ class HelperFunction extends AbstractExtension
         private StatAgentService $statAgentService,
         Security $security,
         SessionInterface $session,
-        private SecteurRepository $secteurRepository
+        private SecteurRepository $secteurRepository,
+        private AgentSecteurRepository $agentSecteurRepository
     ) {
         $this->router = $router;
         $this->requestStack = $requestStack;
@@ -47,6 +49,10 @@ class HelperFunction extends AbstractExtension
             new TwigFunction('get_stat', [$this, 'getStat']),
             new TwigFunction('get_order_amount_HT', [$this, 'getOrderAmountHt']),
             new TwigFunction('obj_attribute', [$this, 'getAttribute']),
+            new TwigFunction('get_lpn_online_shop', [$this, 'getLPNOnlineShop']),
+            new TwigFunction('get_lpn_command_status_meaning', [$this, 'getLpnCommandStatusMeaningStr']),
+            new TwigFunction('generate_product_link', [$this, 'generateProductLink']),
+
         ];
     }
 
@@ -128,5 +134,48 @@ class HelperFunction extends AbstractExtension
         $formatter->setPattern('MMMM'); // Full month name
         
         return ucfirst($formatter->format($date)); // Capitalize first letter
+    }
+
+    public function getLPNOnlineShop($id){
+        $agentSecteur = $this->agentSecteurRepository->findOneBy([
+            'agent' => $id,
+            'secteur' => $_ENV['SECTEUR_LITTLE_PONAILS_ID']
+        ]);
+        if(!$agentSecteur) return '';
+        return $_ENV['LITTLE_PONAILS_WORDPRESS_BASE_URL'].'?sponsor='.$agentSecteur->getSectorPlatformAgentUsername();
+    }
+
+    public function getLpnCommandStatusMeaningStr($status,$type = "wc-"){
+        $statusMData = [
+            'wc-' =>[
+                "wc-processing" => "En cours de préparation",
+                "wc-completed" => "Completée",
+                "wc-refunded" => "Remboursée",
+                "wc-failed" => "Archivée",
+                "wc-cancelled" => "Annulée",
+            ],
+            "emp" => [
+                "processing"=> "En cours de préparation",
+                "completed"=> "Completée",
+                "refunded"=> "Remboursée",
+                "trash"=> "Archivée",
+                "cancelled"=> "Annulée"
+            ]
+        ];
+        if(!isset($statusMData[$type])) return '';
+        return $statusMData[$type][$status] ?? '';
+    }
+
+    public function generateProductLink($secteurId,$userId){
+        $link = "" ;
+        if($secteurId == $_ENV['SECTEUR_DIGITAL_ID']){
+            return  $_ENV['CATALOGUES_BASE_URL'].'?ref='.$this->generateReference($userId,$userId);
+        }
+        elseif($secteurId == $_ENV['SECTEUR_LITTLE_PONAILS_ID']){
+            return $this->getLPNOnlineShop($userId);
+        }
+        else{
+            return $link;
+        }
     }
 }

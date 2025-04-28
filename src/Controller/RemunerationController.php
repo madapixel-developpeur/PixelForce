@@ -15,7 +15,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
@@ -28,7 +30,8 @@ class RemunerationController extends AbstractController
         private EntityManagerInterface $entityManager,
         private StatAgentService $statAgentService,
         private ExcelService $excelService,
-        private PdfExport $pdfExport
+        private PdfExport $pdfExport,
+        private  SessionInterface $session,
     )
     {
        
@@ -78,6 +81,58 @@ class RemunerationController extends AbstractController
 
     }
 
+
+      /**
+     * @Route("/secteur/", name="agent_common_remuneration_list")
+     */
+    public function indexRemuneration(Request $request, PaginatorInterface $paginator, SearchService $searchService): Response
+    {
+        $secteurId = $this->session->get('secteurId');
+
+        if($secteurId == $_ENV['SECTEUR_LITTLE_PONAILS_ID']){
+            return $this->getRemunerationLittlePonails($request);
+        }
+        throw new Exception('Secteur non prise en charge');
+
+    }
+
+    public function getRemunerationLittlePonails(Request $request): Response
+    {
+
+        $user = (object)$this->getUser();
+
+        $form = $this->createFormBuilder(
+            [
+                'ref' => (new \DateTime())->format('Y-m'),
+            ]
+        )
+        ->add('ref', TextType::class, [
+            'label' => 'Mois',
+            'attr' => [
+                'type' => 'month', 
+                'class' => 'form-control month-picker-input',
+                'placeholder' => 'YYYY-MM', 
+            ],
+            'required' => true,
+            'empty_data' => (new \DateTime())->format('Y-m'),
+        ])
+        ->getForm();
+
+        $form->handleRequest($request);
+        $filter = $form->getData();
+        $dateParameter = isset($filter['ref']) ? explode('-',$filter['ref']) : [];
+        $month = $dateParameter[1] ?? date('m');
+        $year = $dateParameter[0] ?? date('Y');;
+
+        $remunerations = $this->statAgentService->getCaHistoryDetailFromLittlePonails($user,$month,$year);
+        return $this->render('user_category/agent/remuneration/little-ponails/remuneration_list.html.twig', [
+            'remunerations' => $remunerations,
+            'form' => $form->createView(),
+        ]);
+
+    }
+
+    
 
     public function export($data,$action): Response
     {

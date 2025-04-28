@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-class SecteurListener
+class LinkedAccountFromSectorPlatformListener
 {
     private $urlGenerator;
     private $authorizationChecker;
@@ -35,7 +35,9 @@ class SecteurListener
     {
         $request = $event->getRequest();
         
-        $excludePaths = Constants::getExcludedPathsForSectorCheckUp();
+        $excludePaths = Constants::getExcludedPathsForSectorCheckUp([
+            '/agent/compte-associe',
+        ]);
 
         foreach($excludePaths as $path){
             if(strncmp($request->getPathInfo(), $path, strlen($path)) == 0){
@@ -46,9 +48,13 @@ class SecteurListener
         $user = $this->security->getUser();
         $secteur_id = $this->session->get('secteurId');
         $secteur = $this->secteurRepository->findOneBy(['id' => $secteur_id]);
-        if($user && $this->authorizationChecker->isGranted(User::ROLE_AGENT) && !$secteur){
-            $event->setResponse(new RedirectResponse($this->urlGenerator->generate('agent_home')));
+        if($user && $this->authorizationChecker->isGranted(User::ROLE_AGENT) && $secteur?->getId() == $_ENV['SECTEUR_LITTLE_PONAILS_ID']){
+            $agentSecteur = $user->getAgentSecteurById($secteur?->getId());
+            if(!$agentSecteur->getSectorPlatformAccountId()){
+                $event->setResponse(new RedirectResponse($this->urlGenerator->generate('agent_check_platform_secteur_account')));
+            }
         }
+
         return;
         
     }

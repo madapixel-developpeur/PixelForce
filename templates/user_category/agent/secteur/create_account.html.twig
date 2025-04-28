@@ -1,0 +1,138 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	Compte
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+
+{% endblock %}
+
+{% block body %}
+	<div class="row px-3 content-formation">
+		<div class="card card-body-custom mt-2 px-5 py-5">
+			<div class="row  justify-content-center">
+				<div class="col-md-8">
+					<h1 class='text-center'>Inscription !</h1>
+					{{ form_start(form, { attr: { id: 'registration-form', enctype: 'multipart/form-data' } }) }}
+
+					<!-- First Name Field -->
+					<div class="form-group mb-3">
+						{{ form_label(form.firstnames) }}
+						{{ form_widget(form.firstnames, {'attr': {'class': 'form-control'}}) }}
+						{{ form_errors(form.firstnames) }}
+					</div>
+
+					<!-- Last Name Field -->
+					<div class="form-group mb-3">
+						{{ form_label(form.lastname) }}
+						{{ form_widget(form.lastname, {'attr': {'class': 'form-control'}}) }}
+						{{ form_errors(form.lastname) }}
+					</div>
+
+					<!-- Username Field -->
+					<div class="form-group mb-3">
+						{{ form_label(form.username) }}
+						{{ form_widget(form.username, {'attr': {'class': 'form-control'}}) }}
+						{{ form_errors(form.username) }}
+					</div>
+
+					<!-- Sponsor Field -->
+					<div class="form-group mb-3">
+						{{ form_label(form.sponsor) }}
+						{{ form_widget(form.sponsor, {'attr': {'class': 'form-control'}}) }}
+						{{ form_errors(form.sponsor) }}
+					</div>
+
+					<!-- Legal Status Field -->
+					<div class="form-group mb-3">
+						{{ form_label(form.legal_status) }}
+						{{ form_widget(form.legal_status, {'attr': {'class': 'form-control'}}) }}
+						{{ form_errors(form.legal_status) }}
+					</div>
+
+					<!-- Supporting Documents Field -->
+					<div class="form-group mb-3">
+						{{ form_row(form.supporting_documents) }}
+					</div>
+
+				
+					<div id="revendeur-fields" style="display: none;">
+						<div class="form-group mb-3">
+							{{ form_label(form.kbis) }}
+							{{ form_widget(form.kbis, {'attr': {'class': 'form-control'}}) }}
+							{{ form_errors(form.kbis) }}
+						</div>
+					</div>
+
+					<div id="vdi-fields" style="display: none;">
+						<div class="form-group mb-3">
+							{{ form_label(form.carte_vitale) }}
+							{{ form_widget(form.carte_vitale, {'attr': {'class': 'form-control'}}) }}
+							{{ form_errors(form.carte_vitale) }}
+						</div>
+						<div class="form-group mb-3">
+							{{ form_label(form.siren_vdi) }}
+							{{ form_widget(form.siren_vdi, {'attr': {'class': 'form-control'}}) }}
+							{{ form_errors(form.siren_vdi) }}
+						</div>
+					</div>
+
+					<!-- Email Field -->
+					<div class="form-group mb-3">
+						{{ form_label(form.email) }}
+						{{ form_widget(form.email, {'attr': {'class': 'form-control'}}) }}
+						{{ form_errors(form.email) }}
+					</div>
+
+					<!-- Password Fields -->
+					<div class="form-group mb-3">
+						{{ form_row(form.password.first) }}
+					</div>
+					<div class="form-group mb-3">
+						{{ form_row(form.password.second) }}
+					</div>
+
+					<!-- Terms and Conditions Checkbox -->
+					<div class="form-group mb-4">
+						<input type="checkbox" id="accept_terms" name="accept_terms" class="" value="1" required>
+						<label for="accept_terms">J'accepte les Termes & Conditions.</label>
+					</div>
+
+					<!-- Submit Button -->
+					<button type="submit" class="btn btn-primary">S'inscrire</button>
+
+					{{ form_end(form) }}
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+{% block javascripts %}
+	{{ parent() }}
+	<script>
+       $(document).ready(function() {
+        // Function to handle field visibility based on legal status selection
+        function toggleFields() {
+
+            var legalStatus = $('#sign_up_little_ponails_form_legal_status').val();
+            if (legalStatus === "REVENDEUR") {
+                $('#revendeur-fields').show();
+                $('#vdi-fields').hide();
+            } else if (legalStatus === "VDI") {
+                $('#revendeur-fields').hide();
+                $('#vdi-fields').show();
+            }
+        }
+
+        // Initial call to set visibility based on the default selection
+        toggleFields();
+
+        // Listen for changes on legal status and update field visibility
+        $('#sign_up_little_ponails_form_legal_status').change(function() {
+            toggleFields();
+        });
+    });
+	</script>
+{% endblock %}

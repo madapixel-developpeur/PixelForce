@@ -282,10 +282,9 @@ class AgentAccountController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/agent/view", name="agent_view")
+    /**     * @Route("/agent/view/{secteur_network}", name="agent_view")
      */
-    public function admin_agent_view(Request $request, AgentSecteurService $agentSecteurService, UserRepository $repoUser, PaginatorInterface $paginator, StatAgentService $statAgentService)
+    public function admin_agent_view(Request $request, AgentSecteurService $agentSecteurService, UserRepository $repoUser, PaginatorInterface $paginator, StatAgentService $statAgentService,$secteur_network = '')
     {
         $secteur_finance_id = $this->getParameter('secteur_finance_id');
 
@@ -304,7 +303,30 @@ class AgentAccountController extends AbstractController
             }
             $countEquipe = count($filleul);
             $countDirect = count($filleul);
-        } else {
+        }
+        else if ($sessionSecteurId == $_ENV['SECTEUR_LITTLE_PONAILS_ID'] && $secteur_network) {
+            $data = $statAgentService->getAgentStatLittlePonailsNetwork($ambassadeur,$sessionSecteurId);
+            $caStat = [
+                "ca_perso" =>  $data['ca_perso'],
+                "ca_equipe" => $data['ca_equipe']
+            ];
+            $countEquipe =  $data['countTeam'];
+            $countDirect =  $data['countDirectChildren'];
+            $filleul = [];
+        }
+        else if ($sessionSecteurId == $_ENV['SECTEUR_LITTLE_PONAILS_ID']) {
+            $result = $this->repoUser->findBy(['parrain' => $ambassadeur->getId()]);
+            $filleul = $paginator->paginate(
+                $result,
+                $request->query->getInt('page', 1),
+                5
+            );
+            $caStat = $statAgentService->getAgentCaStatEquipe($ambassadeur,$sessionSecteurId);
+            $countEquipe = $this->agentService->getNumberOfTeam($ambassadeur, 1);
+            $countDirect = count($result);
+        } 
+          
+        else {
             $result = $this->repoUser->findBy(['parrain' => $ambassadeur->getId()]);
             $filleul = $paginator->paginate(
                 $result,
@@ -323,14 +345,15 @@ class AgentAccountController extends AbstractController
             'countEquipe' => $countEquipe,
             'countDirect' => $countDirect,
             'type' => $type,
-            'caStat' => $caStat
+            'caStat' => $caStat,
+            'secteurNetwork' => $secteur_network
         ]);
     }
 
     /**
-     * @Route("/agent/filleul-tree", name="app_agent_data_lineaire")
+     * @Route("/agent/filleul-tree/{secteur_network}", name="app_agent_data_lineaire")
      */
-    public function getDataUnilevel(Request $request)
+    public function getDataUnilevel(Request $request,$secteur_network = '')
     {
         $sessionSecteurId = $request->get('secteurId');
         if (!$sessionSecteurId) {
@@ -344,12 +367,17 @@ class AgentAccountController extends AbstractController
         } else {
             $user = (object) $this->getUser();
         }
-        if (in_array('ROLE_AGENT', $user->getRoles())) {
-            $limit = ($user->getPosition() ?? 0) + 1;
-        }
+        $limit =  $_ENV['LIMIT_NIVEAU_EQUIPE_LINEAIRE'];
         if ($sessionSecteurId == $secteur_finance_id) {
             $unilevel = $this->statAgentService->getInovaUnilevelChildren($user, true);
-        } else {
+        } 
+        else if ($sessionSecteurId == $_ENV['SECTEUR_LITTLE_PONAILS_ID'] && $secteur_network) {
+            $unilevel = $this->statAgentService->getLittlePonailsUnilevelChildren($user, 1, true, $limit);
+        }
+        else if ($sessionSecteurId == $_ENV['SECTEUR_LITTLE_PONAILS_ID'] ) {
+            $unilevel = $this->agentService->getUnilevelChildren($user, 1, true, $limit);
+        }
+        else {
             $unilevel = $this->agentService->getUnilevelChildren($user, 1, true, $limit);
             $unilevel = $this->statAgentService->addSummaryCaToUnilevel($unilevel, $secteur->getId(), $secteur->getType()->getId());
         }

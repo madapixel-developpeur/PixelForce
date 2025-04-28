@@ -505,7 +505,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->orderBy('a.id', 'DESC');
 
         return $query->getQuery()
-            ->getSingleResult();
+            ->getOneOrNullResult();
     }
 
     public function searchChatUsersQueryBuilder($currentUser, $search = '')
@@ -538,6 +538,41 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->setParameter('inactiveState', User::INACTIVE_STATE)
             ->setParameter('secteur', $secteurId)
             ->setParameter('role', '%' . $role . '%');
+
+        return $queryBuilder->getQuery()->getResult();
+    }
+
+    public function findRootUser($role = User::ROLE_AGENT,array $options = ['position' => 'isolated'],array $filter = [])
+    {
+        $queryBuilder = 
+            $this->createQueryBuilder('u')
+            ->select(
+                'u',
+            )
+            ->leftjoin('u.fils', 'f')
+            ->where('u.active IS NULL or u.active != :inactiveState')
+            ->andWhere('u.roles LIKE :role')
+            ->andWhere('u.parrain IS NULL')
+            ->setParameter('inactiveState', User::INACTIVE_STATE)
+            ->setParameter('role', '%' . $role . '%');
+
+        if(isset($filter['username']) && !empty($filter['username'])){
+            $queryBuilder->andWhere('LOWER(u.username) LIKE :username')
+            ->setParameter('username', '%' . $filter['username'] . '%');
+        }
+        if(isset($filter['name']) && !empty($filter['name'])){
+            $queryBuilder->andWhere('LOWER(u.nom) LIKE :name or LOWER(u.prenom) LIKE :name')
+            ->setParameter('name', '%' . $filter['name'] . '%');
+        }
+
+
+        $queryBuilder->groupBy('u');
+
+        if(isset($options['position'])  && $options['position'] == 'isolated'){
+            $queryBuilder->having('COUNT(f.id) = 0');
+        }elseif(isset($options['position']) && $options['position'] == 'root_of_network'){
+            $queryBuilder->having('COUNT(f.id) > 0');
+        }
 
         return $queryBuilder->getQuery()->getResult();
     }

@@ -1,0 +1,67 @@
+<div class="col-auto">
+	<div class="d-flex flex-row align-items-center mx-2">
+		<img src="{{ asset('assets/img/icon/icon-CA.svg')}}" class="me-2" alt="Rémunération" style="width:40px;height:40px">
+		<div class="my-auto">
+			<h4 class="card-text font-small-1 mb-0 d-none d-xl-block">CA[{{"now" | date('Y')}}]</h4>
+			<h6 class="fw-bolder mb-0 ">
+				{{ (statDigitalGlobalVariable ? statDigitalGlobalVariable.total_year : chiffreAffaireTotalGlobalVariable ) | number_format(2, ',', ' ')}}
+				€
+			</h6>
+		</div>
+	</div>
+</div>
+<div class="col-auto">
+	<div class="d-flex flex-row  align-items-center mx-2">
+		<img src="{{ asset('assets/img/icon/icon-mes-gains.svg')}}" class="me-2" alt="Rémunération" style="width:40px;height:40px">
+		<div class="my-auto">
+			<h4 class="card-text font-small-1 mb-0 text-dark-template d-none d-xl-block">Mes ⁠Gains[{{"now" | date('Y')}}]</h4>
+			<h6 class="fw-bolder mb-0 ">
+				{{ statRemuneration.total_year | number_format(2, ',', ' ')}}
+				€
+			</h6>
+
+		</div>
+	</div>
+</div>
+<div class="col-auto">
+	<div class="d-flex flex-row align-items-center mx-2">
+		<img src="{{ asset('assets/img/icon/icon-CA-2.svg')}}" class="me-2" alt="Rémunération" style="width:40px;height:40px">
+		<div class="my-auto">
+			<h4 class="card-text font-small-1 mb-0 d-none d-xl-block">⁠CA [{{ "now"|localized_month }}]</h4>
+			<h6 class="fw-bolder mb-0 ">
+				{{ (statDigitalGlobalVariable ? statDigitalGlobalVariable.total_month : chiffreAffaireTotalGlobalVariable ) | number_format(2, ',', ' ')}}
+				€
+			</h6>
+		</div>
+	</div>
+</div>
+<div class="col-auto">
+	<div class="d-flex flex-row  align-items-center mx-2">
+		<img src="{{ asset('assets/img/icon/icon_remuneration.svg')}}" class="me-2" alt="Rémunération" style="width:40px;height:40px">
+		<div class="my-auto">
+			<h4 class="card-text font-small-1 mb-0 text-dark-template d-none d-xl-block">Rémunération [{{ "now"|localized_month }}]</h4>
+			<h6 class="fw-bolder mb-0 ">
+				{{ statRemuneration.total_month | number_format(2, ',', ' ')}}
+				€
+			</h6>
+
+		</div>
+	</div>
+</div>
+
+{% if is_granted('ROLE_AGENT') and app.session.get('secteurId')  %}
+	{% if dataStat.rankInfo and dataStat.rankInfo.rankName %}
+		<div class="col-auto">
+			<div class="d-flex flex-row  align-items-center mx-2">
+				<i class="fas fa-medal fa-2x new-pixelforce-color"></i>
+				<div class="my-auto ms-2">
+					<h4 class="card-text font-small-1 mb-0 text-dark-template d-none d-xl-block">Statut</h4>
+					<h6 class="fw-bolder mb-0 ">
+						{{ dataStat.rankInfo.rankName }}
+					</h6>
+
+				</div>
+			</div>
+		</div>
+	{% endif %}
+{% endif %}
