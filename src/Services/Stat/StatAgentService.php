@@ -980,4 +980,49 @@ class StatAgentService
         return $arrayWithIdAsKey;
         
     }
+
+
+    public function getAnnualStatUserAndTeamDigital(User $agent){
+        try {
+            $pbb_ws_url = $this->parameterBag->get('pbb_ws_url');
+
+            $userData =  [
+                'id' => $agent->getId(),
+                'filleul' => $this->userRepository->getFilsJusqueNiveau($agent->getId(),$_ENV['LIMIT_NIVEAU_EQUIPE_LINEAIRE'],true)
+            ];
+            $response = $this->client->request(
+                'GET',
+                $pbb_ws_url . '/api/get-agent-ca-equipe-stat',
+                [
+                    'json' => ['user_data' => $userData , 'global'=> true]
+                ]
+            );
+            $content = json_decode($response->getContent(), true);
+            return $content;
+        } catch (\Exception $exception) {
+            return [
+                "ca_perso" => 0,
+                "ca_equipe" => 0
+            ];
+        }
+    }
+
+    public function getStatCaAndRemuneration(User $agent,$secteurId){
+        if($secteurId == $_ENV['SECTEUR_DIGITAL_ID']){
+            $result = $this->getAnnualStatUserAndTeamDigital($agent);
+            $remuneration = $this->userTransactionRepository->getTotalRemuneration($agent, [$secteurId]);
+            return [
+                'ca_perso' => $result['ca_perso'],
+                'ca_equipe' => $result['ca_equipe'],
+                'gain' => $remuneration,
+                'ca_global' => $result['ca_perso'] + $result['ca_equipe']
+            ];
+        }
+        return [
+            'ca_perso' => 0,
+            'ca_equipe' => 0,
+            'gain' => 0,
+            'ca_global' => 0
+        ];
+    }
 }

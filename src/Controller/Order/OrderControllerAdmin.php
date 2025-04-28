@@ -176,10 +176,12 @@ class OrderControllerAdmin extends AbstractController
         
         $orderList->setTotalItemCount($result['total']);
         $orderList->setCurrentPageNumber($result['currentPageNumber']);
+        $statCa = $this->statAgentService->getStatCaAndRemuneration($user,$secteurId);
 
         return $this->render('user_category/agent/order/order_list_digital.html.twig', [
             'orderList' => $orderList,
             'form' => $form->createView(),
+            'statCa' => $statCa
         ]);
 
     }

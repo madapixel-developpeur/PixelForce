@@ -132,6 +132,26 @@ class UserTransactionRepository extends ServiceEntityRepository
         return $qb->getQuery()->getSingleResult();
     }
 
+    public function getTotalRemuneration($agentID,$secteurIds){
+        $qb = $this->createQueryBuilder('u')
+            ->select(
+            'COALESCE(SUM(u.amount), 0) AS total',
+        )
+        ->leftJoin('u.secteur', 's')
+        ->andWhere('u.type = :type')
+        ->setParameter('type', UserTransaction::TYPE_REMUNERATION)
+        ->andWhere('u.user = :user')
+        ->setParameter('user', $agentID);
+
+        
+        if ($secteurIds) {
+            $qb->andWhere('s.id in (:secteurIds)')
+            ->setParameter('secteurIds', $secteurIds);
+        }
+
+        return $qb->getQuery()->getSingleScalarResult();
+    }
+
 
 
     //    /**
