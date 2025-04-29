@@ -3,17 +3,25 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use Symfony\Bundle\FrameworkBundle\Console\Application;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Console\Input\ArrayInput;
-use Symfony\Component\Console\Output\BufferedOutput;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Process\Process;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\Console\Output\BufferedOutput;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class IndexController extends AbstractController
 {
+    public function __construct(
+        private SessionInterface $session,
+    )
+    {
+        
+    }
+
     /**
      * @Route("/", name="app_index")
      */
@@ -28,7 +36,8 @@ class IndexController extends AbstractController
     public function dashboard()
     {
         if(in_array(User::ROLE_AGENT, $this->getUser()->getRoles())) {
-            return $this->redirectToRoute('agent_home');
+            // return $this->redirectToRoute('agent_home');
+            return $this->redirectToRoute('agent_dashboard_secteur', ['id' => $_ENV['SECTEUR_DIGITAL_ID']]);
         }
         elseif(in_array(User::ROLE_COACH, $this->getUser()->getRoles())) {
             return $this->redirectToRoute('coach_dashboard_index');

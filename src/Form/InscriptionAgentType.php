@@ -160,13 +160,13 @@ class InscriptionAgentType extends AbstractType
                 ],
                 'attr' => ['class' => 'form-control', 'step' => 0],
             ])
-            ->add('roles', ChoiceType::class, [
-                'choices' => User::SIGNING_UP_ROLES,
-                'expanded' => true,  
-                'multiple' => true,  
-                'required' => true,  
-                'data' => [ User::ROLE_REVENDEUR], 
-            ])
+            // ->add('roles', ChoiceType::class, [
+            //     'choices' => User::SIGNING_UP_ROLES,
+            //     'expanded' => true,  
+            //     'multiple' => true,  
+            //     'required' => true,  
+            //     'data' => [ User::ROLE_REVENDEUR], 
+            // ])
             ->addEventSubscriber(new SecteurChoiceListListener())
         ;
         // Ajoutez le champ 'ambassador_username' si la valeur est différente de null

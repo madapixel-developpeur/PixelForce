@@ -74,7 +74,7 @@
                                     <h2 class="card-title   text-center  pixelforce-logo">
                                             <a href="{{ path('app_dashboard') }}" class="text-center text-muted  d-flex align-items-center justify-content-center ">
                                                 <img src="/assets/img/logo/pixelforce/logo-pixelforce-00.png" class="img-fluid  m-2" alt="logo-pixelforce">
-                                                <h2 class="ml-0 fw-bold">PIXELFORCE</h2>
+                                                <h2 class="ml-0 fw-bold">{{ platform_name }}</h2>
                                             </a> 
                                              
                                     </h2>
@@ -100,7 +100,7 @@
                                                         {{ form_row(form.pays) }}
                                                     </div>
                                                 </div>
-                                                <label class=" mb-3">Type</label>
+                                                {#<label class=" mb-3">Type</label>
                                                 <div class="toggle-buttons mb-3">
                                                     {{ form_errors(form.roles) }}
                                                     {% for choice in form.roles.vars.choices %}
@@ -145,6 +145,7 @@ Vous intervenez pour réaliser des prestations concrètes pour les clients de la
 <p class="highlight" style="font-size: 0.9em;">🔹 Pourquoi nous rejoindre ?<br />Vous travaillez en collaboration directe avec Pixelforce, b&eacute;n&eacute;ficiez d&rsquo;opportunit&eacute;s de missions r&eacute;guli&egrave;res, et &ecirc;tes form&eacute; &agrave; nos standards de qualit&eacute;.</p>
 <p class="highlight" style="font-size: 0.9em;">🔹 Ce que vous gagnez :<br />Un label Pixelforce, une visibilit&eacute; accrue, des missions qualifi&eacute;es, et un accompagnement personnalis&eacute; pour d&eacute;velopper votre activit&eacute;.</p>
                                                 </div>
+                                                {% do form.roles.setRendered %}#}
 
                                                 <div class="w-100 text-end">
                                                     <button   type="button" name="currentStep" value="0" class="next-step btn-primary font-weight-bold rounded-3 p-2">Suivant</button>
@@ -222,7 +223,6 @@ Vous intervenez pour réaliser des prestations concrètes pour les clients de la
                                                     {{ form_errors(form.password.second) }}
 
                                                 </div>
-                                                {% do form.roles.setRendered %}
                                             
                                                 <div class="d-flex justify-content-between">  
                                                     {#            <button class="btn btn-primary" type="submit" id="btn-next">Procéder au paiement <i class="fa-solid fa-angles-right"></i></button>#}
@@ -331,14 +331,14 @@ Vous intervenez pour réaliser des prestations concrètes pour les clients de la
                     e.preventDefault();  // Prevent form submission
                     
                     if (validateCurrentStep()) {
-                        if(currentStep == 0) {
+                        /* if(currentStep == 0) {
                            const selectedRoles = $('input[name^="inscription_agent[roles][]"]:checked');
                            console.log(selectedRoles);
                             if (selectedRoles.length === 0) {
                                 Swal.fire({ title: "Attention!", text: "Vous devez sélectionner au moins un type de compte !", type: "warning", confirmButtonClass: "btn long", buttonsStyling: !1 });
                                 return;
                             }
-                        }
+                        }*/
 
 
                         if (currentStep < steps.length - 1) {

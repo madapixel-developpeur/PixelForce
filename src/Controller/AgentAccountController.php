@@ -104,6 +104,11 @@ class AgentAccountController extends AbstractController
         /** @var User $agent */
         $agent = $this->getUser();
 
+        $this->agentService->setSesssionEnabledContent($agent);
+        return $this->redirectToRoute('agent_dashboard_secteur', ['id' => $_ENV['SECTEUR_DIGITAL_ID']]);
+ 
+
+
         $this->session->remove('secteurId');
         $this->agentService->setSesssionEnabledContent($agent);
 

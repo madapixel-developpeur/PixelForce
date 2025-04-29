@@ -125,12 +125,13 @@ class AgentInscriptionController extends AbstractController
             if ($form->isSubmitted() ) {
                 if($form->isValid()){
                     $roles = $form->get('roles')->getData();
-                    if (empty($roles)) {
-                        throw new CustomException('Vous devez sélectionner au moins un type de compte.');
-                    }
-                    if(in_array(User::ROLE_PROFESSIONNEL, $roles) && $user->getPays() == 'FR'){
-                        throw new CustomException("À ce jour, la plateforme ".$_ENV['PLATFORM_NAME']." n'est pas ouverte aux professionnels basés en France.");
-                    }
+                    $roles = [user::ROLE_REVENDEUR];
+                    // if (empty($roles)) {
+                    //     throw new CustomException('Vous devez sélectionner au moins un type de compte.');
+                    // }
+                    // if(in_array(User::ROLE_PROFESSIONNEL, $roles) && $user->getPays() == 'FR'){
+                    //     throw new CustomException("À ce jour, la plateforme ".$_ENV['PLATFORM_NAME']." n'est pas ouverte aux professionnels basés en France.");
+                    // }
                     $this->userManager->setUserPasword($user, $request->request->get('inscription_agent')['password']['first'], '', false);
                     array_unshift($roles, User::ROLE_AGENT);
                     $user->setRoles($roles);
@@ -148,7 +149,7 @@ class AgentInscriptionController extends AbstractController
 
                     $this->addFlash(
                         'success',
-                        'Votre inscription sur Pixelforce a été effectuée avec succès'
+                        'Votre inscription sur '.$_ENV['PLATFORM_NAME'].' a été effectuée avec succès'
                     );
                     return $this->redirectToRoute('agent_home');
                 }else{

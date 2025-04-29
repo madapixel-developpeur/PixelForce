@@ -157,7 +157,7 @@
                                     {% set onlineShopURL = get_lpn_online_shop(app.user.id) %}
                                     <a class="regular-button w-100 text-center mb-3 action-button" href="#" onclick="copyLink('{{ onlineShopURL }}','Lien copié avec succès') ">Ma boutique en ligne</a>  
                                 {% endif %}
-                                <a class="regular-button w-100 text-center mb-3 action-button" href="{{ path('agent_view') }}"  >J’ai un partenaire qui veut rejoindre mon équipe</a>  
+                                {# <a class="regular-button w-100 text-center mb-3 action-button" href="{{ path('agent_view') }}"  >J’ai un partenaire qui veut rejoindre mon équipe</a>   #}
                             </div>
                         {% endif %}
                         {% if secteurAgent.isFonctionnaliteActive(constant('App\\Util\\FonctionnalitesTypeSecteur::FONCTIONNALITE_COMMON_AGENDA')) %}

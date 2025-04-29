@@ -67,7 +67,7 @@ class HelperFunction extends AbstractExtension
     public function generateReference($agentId, $rendezVousUserId, $contactId = null, $meetingId = null)
     {
         // Your custom logic here
-        $ref = "PBB-" . $agentId . "-" . $rendezVousUserId;
+        $ref = "PRV-" . $agentId . "-" . $rendezVousUserId;
         if (!is_null($contactId)) {
             $ref .= "-" . $contactId;
         }

@@ -3,6 +3,8 @@
 namespace App\Services\User;
 
 use App\Entity\User;
+use App\Entity\Secteur;
+use App\Entity\AgentSecteur;
 use App\Manager\EntityManager;
 use App\Manager\StripeManager;
 use App\Services\StripeService;
@@ -215,6 +217,18 @@ class AgentService
         }  
         return $equipe;
 
+    }
+
+
+    public function agentAddSector(User $user,Secteur $secteur)
+    {
+        $agentSecteur = new AgentSecteur();
+        $agentSecteur->setAgent($user);
+        $agentSecteur->setSecteur($secteur);
+        $agentSecteur->setStatut(1);
+        $agentSecteur->setDateValidation(new \DateTime());
+        $this->em->save($agentSecteur);
+        return true;
     }
 
 }

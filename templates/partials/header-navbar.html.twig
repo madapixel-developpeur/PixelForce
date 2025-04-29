@@ -80,14 +80,14 @@
                                 
                                 
                                 {% if  app.session.get('secteurId')  in [secteurDigitalId,secteur_little_ponails_id]  %}
-                                <li class="d-flex p-0">
+                                {# <li class="d-flex p-0">
                                     <span class="">
                                         <a class="header-user text-primary" href="#"  onclick="copyLink('{{ url('agent_inscription', {'ambassador_username':  app.user.username != "" ?  app.user.username : ' '}) }}') " >
                                             Lien réseau
                                             <i class="fa-solid fa-copy"></i>
                                         </a>
                                     </span>
-                                </li>
+                                </li> #}
                                 <li class="d-flex p-0">
                                     {% set productLink = generate_product_link(app.session.get('secteurId'),app.user.id) %}
                                     <span class="">

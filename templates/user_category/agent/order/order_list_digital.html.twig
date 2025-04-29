@@ -30,31 +30,12 @@
 								</div>
 								<div class="my-auto">
 									<a href="#">
-										<p class="card-text font-small-3 mb-0 text-black">MES VENTES PERSONNELLES</p>
+										<p class="card-text font-small-3 mb-0 text-black">Mon CA</p>
 									</a>
-									<h4 class="fw-bolder mb-0">{{ statCa.ca_perso | number_format(2, ',', ' ')  }} €</h4>
+									<h4 class="fw-bolder mb-0">{{ statCa.ca_global | number_format(2, ',', ' ')  }} €</h4>
 								</div>
 							</div>
 						</div>
-						<div class="col-xl-6 col-sm-12 col-12 mb-2 mb-xl-0 border-start border-3">
-							<div class="d-flex justify-content-start align-items-center m-2">
-								<div class="rounded-circle bg-light-secondary me-2 detail-agent-equipe">
-									<div class="text-center">
-										<a href="#">
-											<i class="fa fa-users fs-4 pt-3"></i>
-										</a>
-									</div>
-								</div>
-								<div class="my-auto">
-									<a href="#">
-										<p class="card-text font-small-3 mb-0 text-black">MES VENTES EQUIPES</p>
-									</a>
-									<h4 class="fw-bolder mb-0">{{ statCa.ca_equipe | number_format(2, ',', ' ')  }} €</h4>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="row">
 						<div class="col-xl-6 col-sm-12 col-12 m-2 m-xl-0">
 							<div class="d-flex flex-row m-2">
 								<div class="rounded-circle bg-light-secondary me-2 detail-agent-equipe">
@@ -72,25 +53,6 @@
 								</div>
 							</div>
 						</div>
-						<div class="col-xl-6 col-sm-12 col-12 mb-2 mb-xl-0 border-start border-3">
-							<div class="d-flex justify-content-start align-items-center m-2">
-								<div class="rounded-circle bg-light-secondary me-2 detail-agent-equipe">
-									<div class="text-center">
-										<a href="#">
-											<i class="fa fa-chart-pie fs-4 pt-3" aria-hidden="true"></i>
-										</a>
-									</div>
-								</div>
-								<div class="my-auto">
-									<a href="#">
-										<p class="card-text font-small-3 mb-0 text-black">Mon CA</p>
-									</a>
-									<h4 class="fw-bolder mb-0">{{ statCa.ca_global | number_format(2, ',', ' ')  }}  €</h4>
-								</div>
-							</div>
-						</div>
-
-
 					</div>
 				</div>
 			</div>

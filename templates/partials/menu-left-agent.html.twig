@@ -12,9 +12,9 @@
         {% if  is_granted(constant('App\\Entity\\User::ROLE_REVENDEUR')) or app.session.get('secteurId') != secteurDigitalId %}
             <li class=" navigation-header mt-3 text-white"><span data-i18n="User Interface">Espace revendeur</span><i data-feather="more-horizontal"></i></li>
             <li class=" nav-item" data-bs-toggle="tooltip" title="Vue d’ensemble de votre activité"><a class="d-flex align-items-center" href="{{ path('agent_dashboard_secteur', {id:app.session.get('secteurId')}) }}"><i class="fa fa-dashboard"></i><span class="menu-title text-truncate" data-i18n="Dashboards">Tableau de bord</span></a></li>
-            <li class=" nav-item" data-bs-toggle="tooltip" title="Choisissez votre domaine d’expertise"><a class="d-flex align-items-center" href="{{ path('agent_home') }}"><i data-feather="home"></i><span class="menu-title text-truncate" data-i18n="Dashboards">Choix secteur</span></a></li>
+            {# <li class=" nav-item" data-bs-toggle="tooltip" title="Choisissez votre domaine d’expertise"><a class="d-flex align-items-center" href="{{ path('agent_home') }}"><i data-feather="home"></i><span class="menu-title text-truncate" data-i18n="Dashboards">Choix secteur</span></a></li> #}
             {% if secteurAgent.isFonctionnaliteActive(constant('App\\Util\\FonctionnalitesTypeSecteur::FONCTIONNALITE_COMMON_FORMATION')) %}<li class=" nav-item {% if not app.user.canAccessFonct('FORMATION', app.session.get('secteurId')) %}{% endif %}" data-bs-toggle="tooltip" title="Développez vos compétences et maîtrisez nos services"><a class="d-flex align-items-center" href="{{ path('agent_formation_list') }}"><i data-feather="eye"></i><span class="menu-title text-truncate" data-i18n="Feather">Formations</span></a></li>{% endif %}
-            <li class=" nav-item " data-bs-toggle="tooltip" title="Gérez vos filleuls et développez votre équipe"><a class="d-flex align-items-center" href="{{path('agent_view')}}"><i class="fa-solid fa-child"></i><span class="menu-title text-truncate" data-i18n="Calendar">Mon réseau</span></a></li>
+            {# <li class=" nav-item " data-bs-toggle="tooltip" title="Gérez vos filleuls et développez votre équipe"><a class="d-flex align-items-center" href="{{path('agent_view')}}"><i class="fa-solid fa-child"></i><span class="menu-title text-truncate" data-i18n="Calendar">Mon réseau</span></a></li> #}
             {% if app.session.get('secteurId') == secteur_little_ponails_id %} <li class=" nav-item " data-bs-toggle="tooltip" title="Gérez vos filleuls et développez votre équipe"><a class="d-flex align-items-center" href="{{path('agent_view',{ 'secteur_network' : 'Little Ponails' })}}"><i class="fa-solid fa-child"></i><span class="menu-title text-truncate" data-i18n="Network">Réseau Little Ponails</span></a></li> {% endif %}
             
             
@@ -61,7 +61,7 @@
             {% if secteurAgent.isFonctionnaliteActive(constant('App\\Util\\FonctionnalitesTypeSecteur::FONCTIONNALITE_STANDARD_VENTE')) %} <li class=" nav-item {% if not app.user.canAccessFonct('VENTE', app.session.get('secteurId')) %}disabled{% endif %}" data-bs-toggle="tooltip" title="Analyse et suivi de votre performance financière"><a class="d-flex align-items-center"   {% if app.session.get('secteurId') == secteur_little_ponails_id %} href="{{ path('app_common_ca_list') }}" {% else %} href="{{path('agent_ca_list_digital')}}" {% endif %} ><i data-feather="dollar-sign"></i><span class="menu-title text-truncate" data-i18n="Calendar">Chiffre d'affaires</span></a></li>{% endif %}
             {% if secteurAgent.isFonctionnaliteActive(constant('App\\Util\\FonctionnalitesTypeSecteur::FONCTIONNALITE_COMMON_RESSOURCE')) %}<li class=" nav-item" data-bs-toggle="tooltip" title="Guides, outils et supports pour booster vos ventes" ><a class="d-flex align-items-center" href="{{path('app_agent_ressource_list', {'type': constant('App\\Entity\\Ressource::TYPE_REVENDEUR')})}}"><i data-feather="file"></i><span class="menu-title text-truncate" data-i18n="Feather">Centre de ressources</span></a></li>{% endif %}
         {% endif %}
-        {% if  is_granted(constant('App\\Entity\\User::ROLE_PROFESSIONNEL')) and app.session.get('secteurId') == secteurDigitalId  %}
+        {% if  false and is_granted(constant('App\\Entity\\User::ROLE_PROFESSIONNEL')) and app.session.get('secteurId') == secteurDigitalId  %}
             <li class=" navigation-header mt-3 text-white"><span data-i18n="User Interface">Espace professionnel</span><i data-feather="more-horizontal"></i></li>
             {% if app.user.profesionnalInformationState ==  constant('App\\Entity\\User::INFORMATION_VALIDATED') %}
                 <li class=" nav-item"><a class="d-flex align-items-center" href="{{ path('agent_pro_dashboard', {id:app.session.get('secteurId')}) }}"  data-bs-toggle="tooltip" title="Vue globale de vos commandes et services activés"><i class="fa fa-dashboard"></i><span class="menu-title text-truncate" data-i18n="Dashboards">Tableau de bord</span></a></li>
@@ -78,7 +78,7 @@
         
         {# <li class=" nav-item"><a class="d-flex align-items-center" href="{{ path('live_video_list') }}"><i data-feather="calendar"></i><span class="menu-title text-truncate" data-i18n="Calendar">Réunions</span></a></li> #}
     {% else %}
-        <li class=" nav-item"><a class="d-flex align-items-center" href="{{ path('agent_home') }}"><i data-feather="home"></i><span class="menu-title text-truncate" data-i18n="Dashboards">Choix secteur</span></a></li>
+        {# <li class=" nav-item"><a class="d-flex align-items-center" href="{{ path('agent_home') }}"><i data-feather="home"></i><span class="menu-title text-truncate" data-i18n="Dashboards">Choix secteur</span></a></li> #}
     {% endif %}
     
     
