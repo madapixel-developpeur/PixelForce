@@ -1,7 +1,7 @@
 <nav class="header-navbar navbar navbar-expand-lg align-items-center floating-nav navbar-light navbar-shadow ">
     <div class="navbar-container d-flex justify-content-center align-items-center">
         <ul class="nav navbar-nav d-block d-xl-none d-flex align-items-center">
-            <li class="nav-item pt-2">
+            {# <li class="nav-item pt-2">
                 <a class="navbar-brand" href="{{
                 is_granted('ROLE_ADMINISTRATEUR') ? path('admin_dashboard') : (
                     is_granted('ROLE_AGENT') ? (
@@ -9,11 +9,10 @@
                             path('agent_dashboard_secteur', {id:app.request.session.get('secteurId')}) : path('agent_home')
                     )  : ( is_granted('ROLE_COACH') ? path('app_dashboard') : '#' ))
                 }}">
-                    <span><img src="/assets/img/logo/pixelforce/logo-pixelforce-00.png" class="img-fluid" alt="logo-pixelforce" width="35"></span>
-                    <h2 class="brand-text text-black fw-bolder" style="font-size: 3vw">PIXELFORCE</h2>
+                    <span><img src="/assets/img/logo/pixelsior/logo_pixelsior_bleu.webp" class="img-fluid" alt="logo-{{ platform_name}}" width="40%"></span>
                 </a>
             </li>
-           
+            #}
           
             
             <li class="nav-item {% if hideMenu is defined and hideMenu  %}d-none{% endif %} pt-2">
@@ -24,10 +23,10 @@
         </ul>
         {% if not app.session.has('secteurId') %}
         <ul class="nav navbar-nav d-none d-xl-block">
-            <li class="nav-item  pixelforce-logo ms-3">
+            <li class="nav-item ms-3">
                <div  class="text-center text-muted  d-flex align-items-center justify-content-center ">
-                     <span><img src="/assets/img/logo/pixelforce/logo-pixelforce-00.png" class="img-fluid" alt="logo-pixelforce" width="35"></span>
-                    <span class="brand-text text-black fw-bolder" style="">PIXELFORCE</span>
+                     <span><img src="/assets/img/logo/pixelsior/logo_pixelsior_bleu.webp" class="img-fluid w-50" alt="logo-{{ platform_name}}" width="40%"></span>
+                    {# <span class="brand-text text-black fw-bolder" style="">qsdqsd</span> #}
                 </div> 
             </li>
         </ul>

@@ -1,5 +1,5 @@
 <div class="left-sidebar main-menu menu-fixed  menu-accordion menu-shadow" data-scroll-to-active="true">
-    <div class="navbar-header mb-4 ps-0">
+    <div class="navbar-header mb-4">
         <ul class="nav navbar-nav flex-row">
             <li class="nav-item me-auto my-2">
                 <a class="navbar-brand" href="{{
@@ -9,7 +9,7 @@
                             path('agent_dashboard_secteur', {id:app.request.session.get('secteurId')}) : path('agent_home')
                     )  : ( is_granted('ROLE_COACH') ? path('app_dashboard') : '#' ))
                 }}">
-                    <span><img src="/assets/img/logo/pixelforce/logo-blanc.png" class="img-fluid" alt="logo-pixelforce" style="width: 85%; height: auto;"></span>
+                    <span clas="text-center"><img src="/assets/img/logo/pixelsior/logo_pixelsior_blanc.webp" class="img-fluid" alt="logo-pixelforce" width="55%"></span>
                 </a>
             </li>
         </ul>

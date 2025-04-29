@@ -20,7 +20,7 @@ class PdfExport{
     
     public function generateGenericPDF($title,$data,$headers,$fields)
     {
-        $imagePath = $this->projectDir . '/public/assets/img/logo/pixelforce/logo-pixelforce-00.png';
+        $imagePath = $this->projectDir . '/public/assets/img/logo/pixelsior/favicon_pixelsior_bleu.webp';
         $file = new File($imagePath);
 
         // Vérifier si le fichier existe
