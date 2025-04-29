@@ -69,6 +69,19 @@
                         <!-- /Left Text-->
                         <!-- Login-->
                         <div class=" col-md-5 auth-bg px-1 d-flex flex-column justify-content-center align-items-center">
+                            <div class="row w-100">
+                                <div class="col-md-12 justify-content-end">
+                                    {% set route = app.request.attributes.get('_route') %}
+                                    {% set route_params = app.request.attributes.get('_route_params') %}
+                                    {% set params = route_params|merge(app.request.query.all) %}
+                                    <ul class="d-flex align-items-center flex-end " style="padding:5px; list-style-type:none; justify-content:flex-end;">
+                                        <li><a href="{{ path(route, params|merge({ lang: 'fr' })) }}"><img src="{{asset( "assets/flags/fr.png" ) }}" style="height: 15px;" alt="FR" /></a></li>
+                                        <li style="margin-left:10px; margin-right:10px"> | </li>
+                                        <li><a href="{{ path(route, params|merge({ lang: 'en' })) }}"><img src="{{asset( "assets/flags/en.png" ) }}"  style="height: 15px;" alt="EN" /></a></li>
+
+                                    </ul>
+                                </div>
+                            </div>
                             <div class="col-12 col-sm-8 col-md-8 col-lg-12 p-lg-3 mx-auto flex-grow-1">
                                 <div class="p-lg-4 p-3">
                                     <h2 class="card-title   text-center  pixelforce-logo">

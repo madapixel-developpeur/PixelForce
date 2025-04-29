@@ -405,6 +405,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
      */
     private $accessSatus;
 
+    /**
+     * @ORM\Column(type="string", length=5, options={"default": "fr"})
+     */
+    private $lang = 'fr';
+
     public function __construct()
     {
         $this->coachAgents = new ArrayCollection();
@@ -1932,6 +1937,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
     public function setAccessSatus(?string $accessSatus): self
     {
         $this->accessSatus = $accessSatus;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of lang
+     */
+    public function getLang()
+    {
+        return $this->lang;
+    }
+
+    /**
+     * Set the value of lang
+     */
+    public function setLang($lang): self
+    {
+        $this->lang = $lang;
 
         return $this;
     }

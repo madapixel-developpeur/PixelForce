@@ -541,4 +541,13 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
         return $queryBuilder->getQuery()->getResult();
     }
+
+    public function changeLang(User $user,$locale){
+        $query = "UPDATE App\Entity\User u SET u.lang = :lang  WHERE u.id = :id";
+        $params = ['lang' => $locale ,'id' => $user];
+
+        $this->getEntityManager()
+            ->createQuery($query)
+            ->execute($params);
+    }
 }
