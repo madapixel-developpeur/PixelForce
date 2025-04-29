@@ -24,7 +24,11 @@
   </div>
 </div>
     <div class="p-5 pb-5 mb-5 bg-white border position-relative" id="form-formation">
-        <h3 class="mb-3"><i class="fa fa-book-open"></i> Fiche formation</h3>
+        <div class="d-flex align-items-center justify-content-between mb-3">
+        <h3 class=""><i class="fa fa-book-open"></i> Fiche formation</h3>
+                    <a class="text-dark-template fs-5" href="#" onclick="copyLink('{{url('app_agent_view_share', { 'shareKey': 'secteur' ~ '-' ~ app.user.uniqueCoachSecteur.id ~ '-' ~ 'formation' ~ '-' ~ formation.id})}}','Lien {{url('app_agent_view_share', { 'shareKey': 'secteur' ~ '-' ~ app.user.uniqueCoachSecteur.id ~ '-' ~ 'formation' ~ '-' ~ formation.id})}} copié avec succès')"><i class="fa-solid fa-share"></i></a>
+                    </div>
+        
         {{ form_start(form, {
             'attr': {
                 'id': 'formation-fiche',

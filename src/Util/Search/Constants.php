@@ -22,7 +22,8 @@ class Constants {
             '/myapi',
             '/chatutil',
             '/user',
-            '/otp'
+            '/otp',
+            '/agent/view-share'
         ];
         return array_merge($commonPaths,$givenPath);
     }

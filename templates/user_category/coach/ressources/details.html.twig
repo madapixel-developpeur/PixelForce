@@ -25,9 +25,13 @@
                 {% endfor %}
             <div class="card invoice-preview-card">
                 <div class="card-body invoice-padding pb-0">
+                <div class="d-flex align-items-center justify-content-end">
+                    <a class="text-dark-template fs-5" href="#" onclick="copyLink('{{url('app_agent_view_share', { 'shareKey': 'secteur' ~ '-' ~ app.user.uniqueCoachSecteur.id ~ '-' ~ 'ressource' ~ '-' ~ res.id})}}','Lien {{url('app_agent_view_share', { 'shareKey': 'secteur' ~ '-' ~ app.user.uniqueCoachSecteur.id ~ '-' ~ 'ressource' ~ '-' ~ res.id})}} copié avec succès')"><i class="fa-solid fa-share"></i></a>
+                    </div>
                 <div class="row">
                 <div class="col-md-3 col-0"></div>
                 <div class="col-md-6 col-12 py-3">
+                    
                     <h3 class="text-primary invoice-logo text-center">{{res.name}}</h3>
                     <div >
                      <img class="my-form-img-preview {% if not res.imageCover %}d-none{% endif %}" id="my-form-img-preview" src="{% if res.imageCover %}{{ asset( files_directory_relative ~ res.imageCover) }}{% endif %}" style="width: 300px; height: auto;" />

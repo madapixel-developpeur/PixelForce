@@ -85,6 +85,11 @@ class LoginAuthenticator extends AbstractLoginFormAuthenticator
         } else if (in_array(User::ROLE_COACH, $token->getRoleNames())) {
             return new RedirectResponse('/coach/dashboard');
         } else if (in_array(User::ROLE_AGENT, $token->getRoleNames())) {
+            $redirectTo = $request->get('redirect_to');
+        
+            if ($redirectTo) {
+                return new RedirectResponse($redirectTo);
+            }
             return new RedirectResponse('/agent/accueil');
         } else if (in_array(User::ROLE_CLIENT, $token->getRoleNames())) {
             return new RedirectResponse('/boutique/' . $user->getClientAgent()->getAgentToken() . '/');
@@ -100,6 +105,8 @@ class LoginAuthenticator extends AbstractLoginFormAuthenticator
 
     protected function getLoginUrl(Request $request): string
     {
-        return $this->urlGenerator->generate(self::LOGIN_ROUTE);
+        $shareKey = $request->get('shareKey', null);
+        
+        return $this->urlGenerator->generate(self::LOGIN_ROUTE, $shareKey ? ['redirect_to' => $request->getRequestUri()]: []);
     }
 }

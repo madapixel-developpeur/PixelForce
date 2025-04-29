@@ -14,7 +14,11 @@
 		<div class="content-body-form">
 			<div class="row">
 
-						<h1 class="fw-bolder text-center mb-5">Quiz </h1>
+<div class="d-flex align-items-center justify-content-between mb-5">
+        <h1 class="fw-bolder text-center ">Quiz </h1>
+                    <a class="text-dark-template fs-5" href="#" onclick="copyLink('{{url('app_agent_view_share', { 'shareKey': 'secteur' ~ '-' ~ app.user.uniqueCoachSecteur.id ~ '-' ~ 'quiz' ~ '-' ~ quiz.id})}}','Lien {{url('app_agent_view_share', { 'shareKey': 'secteur' ~ '-' ~ app.user.uniqueCoachSecteur.id ~ '-' ~ 'quiz' ~ '-' ~ quiz.id})}} copié avec succès')"><i class="fa-solid fa-share"></i></a>
+                    </div>
+						
 							
 							<div class="col-12">
 								<div class="mb-3">

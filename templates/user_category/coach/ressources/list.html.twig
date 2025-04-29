@@ -81,10 +81,11 @@
                         <td>{{item.content}}</td>
                         <td>{{item.typeLabel}}</td>
                         
-                        <td class="col-action col-action--edit">
+                        <td class="col-action col-action--edit d-flex align-items-center justify-content-center">
                             <a href="{{path('app_ressource_details', {'id': item.id})}}">
                                  <i data-feather="eye"></i>
                             </a>
+                            <a class="ms-1" href="#" onclick="copyLink('{{url('app_agent_view_share', { 'shareKey': 'secteur' ~ '-' ~ app.user.uniqueCoachSecteur.id ~ '-' ~ 'ressource' ~ '-' ~ item.id})}}','Lien {{url('app_agent_view_share', { 'shareKey': 'secteur' ~ '-' ~ app.user.uniqueCoachSecteur.id ~ '-' ~ 'ressource' ~ '-' ~ item.id})}} copié avec succès')"><i class="fa-solid fa-share"></i></a>
                         </td>
                         
                     </tr>
