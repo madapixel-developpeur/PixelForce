@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-	Ajout Audit
+	{% trans %}Ajout Audit{% endtrans %}
 {% endblock %}
 
 {% block stylesheets %}
@@ -22,8 +22,8 @@
 {% block body %}
 	<div class="my-5">
 		<div class="content-body-form">
-			<a href="{{ path('audit_list') }}" class="btn btn-secondary"> <i class="fa-solid fa-circle-arrow-left"></i> Retour </a>
-			<h1 class="text-center fw-bold">Ajouter un audit</h1>
+			<a href="{{ path('audit_list') }}" class="btn btn-secondary"> <i class="fa-solid fa-circle-arrow-left"></i> {% trans %}Retour{% endtrans %} </a>
+			<h1 class="text-center fw-bold">{% trans %}Ajouter un audit{% endtrans %}</h1>
 			<div class="form-add-coach">
 				<div class="mt-3">
 					{{ form_start(formUser) }}

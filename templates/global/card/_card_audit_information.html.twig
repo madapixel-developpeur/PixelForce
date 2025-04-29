@@ -17,42 +17,42 @@
                     
                         </div>
                     </div>
-                    <h4 class="fw-bolder border-bottom pb-50 mb-1 text-center">Détails de l'audit</h4>
+                    <h4 class="fw-bolder border-bottom pb-50 mb-1 text-center">{% trans %}Détails de l'audit{% endtrans %}</h4>
                     <div class="info-container">
                         <ul class="list-unstyled ">
                             <li class="mb-75">
-                                <span class="fw-bolder me-25">Nom du projet:</span>
+                                <span class="fw-bolder me-25">{% trans %}Nom du projet{% endtrans %}:</span>
                                 <span>{{ audit.nomProjet }}</span>
                             </li>
                             <li class="mb-75">
-                                <span class="fw-bolder me-25">Url du site:</span>
+                                <span class="fw-bolder me-25">{% trans %}Url du site{% endtrans %}:</span>
                                 <span>{{ audit.urlSite }}</span>
                             </li>
                             <li class="mb-75">
-                                <span class="fw-bolder me-25">Description:</span>
+                                <span class="fw-bolder me-25">{% trans %}Description{% endtrans %}:</span>
                                 <span>{{ audit.description }}</span>
                             </li>
                             <li class="mb-75">
-                                <span class="fw-bolder me-25">Date d'ajout:</span>
+                                <span class="fw-bolder me-25">{% trans %}Date d'ajout{% endtrans %}:</span>
                                 <span class="badge bg-light-success">{{ audit.DateAjout!=null?audit.DateAjout.format('Y-m-d'):"" }}</span>
                             </li>
                             <li class="mb-75">
-                                <span class="fw-bolder me-25">Proprietaire:</span>
+                                <span class="fw-bolder me-25">{% trans %}Proprietaire{% endtrans %}:</span>
                                  <span>{{ audit.propriétaire != null?audit.propriétaire.fullName:"Néant" }}</span> 
                             </li>
                             {% if audit.secteur != null  %} 
                             <li class="mb-75">
-                                <span class="fw-bolder me-25">Secteur:</span>
+                                <span class="fw-bolder me-25">{% trans %}Secteur{% endtrans %}:</span>
                                  <span>{{audit.secteur.nom}}</span> 
                             </li>
                             <li class="mb-75">
-                                <span class="fw-bolder me-25">Google Formulaire:</span>
-                                 <span><a class="bg-light-warning" href="{{audit.secteur.googleForms}}" target="_blank" >Accéder aux formulaires </a></span> 
+                                <span class="fw-bolder me-25">{% trans %}Google Formulaire{% endtrans %}:</span>
+                                 <span><a class="bg-light-warning" href="{{audit.secteur.googleForms}}" target="_blank" >{% trans %}Accéder aux formulaires{% endtrans %} </a></span> 
                             </li>
 
                             <li class="mb-75">
-                                <span class="fw-bolder me-25">Réponse du Google Formulaire:</span>
-                                 <span><a class="bg-light-warning" href="{{audit.secteur.googleFormsResponse}}" target="_blank" >Accéder aux réponses du formulaire </a></span> 
+                                <span class="fw-bolder me-25">{% trans %}Réponse du Google Formulaire{% endtrans %}:</span>
+                                 <span><a class="bg-light-warning" href="{{audit.secteur.googleFormsResponse}}" target="_blank" >{% trans %}Accéder aux réponses du formulaire{% endtrans %} </a></span> 
                             </li>
                               {% endif %}
                             

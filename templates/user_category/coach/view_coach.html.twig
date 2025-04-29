@@ -1,7 +1,7 @@
 {% extends 'base_admin.html.twig' %}
 
 {% block title %}
-	Visualisation utilisateur coach
+	{% trans %}Visualisation utilisateur coach{% endtrans %}
 {% endblock %}
 
 {% block stylesheets %}
@@ -11,7 +11,7 @@
 
 {% block body %}
 	<div class="mt-2">
-		<a href="{{ path('admin_coach_list') }}" class="btn btn-secondary"> <i class="fa-solid fa-circle-arrow-left"></i> Retour </a>
+		<a href="{{ path('admin_coach_list') }}" class="btn btn-secondary"> <i class="fa-solid fa-circle-arrow-left"></i> {% trans %}Retour{% endtrans %} </a>
 
 		<div class="content-card-user-information mt-3">
 			<section class="app-user-view-account">
@@ -26,9 +26,9 @@
 							<div class="card text-center col-lg-12 col-12 align-items-center mb-3">
 								
 								<div class="card-body m-12">
-									<h5 class="card-title">Copier le lien d'affiliation</h5>
-									<p class="card-text">Pour inviter d'autres personnes à se joindre à vous, veuillez cliquer ici.</p>
-									<a class="btn btn-primary w-100 font-weight-bold" href="#" onclick="copyLink('{{ url('agent_inscription', {'ambassador_username':  app.user.username != "" ?  app.user.username : ' '}) }}') " >Copier</a>
+									<h5 class="card-title">{% trans %}Copier le lien d'affiliation{% endtrans %}</h5>
+									<p class="card-text">{% trans %}Pour inviter d'autres personnes à se joindre à vous, veuillez cliquer ici.{% endtrans %}</p>
+									<a class="btn btn-primary w-100 font-weight-bold" href="#" onclick="copyLink('{{ url('agent_inscription', {'ambassador_username':  app.user.username != "" ?  app.user.username : ' '}) }}') " >{% trans %}Copier{% endtrans %}</a>
 								</div>
 								
 							</div>
@@ -36,7 +36,7 @@
 						<div class="row">
 								<div class="card card-statistics">
 									<div class="card-header">
-										<h4 class="card-title">Equipe</h4>
+										<h4 class="card-title">{% trans %}Equipe{% endtrans %}</h4>
 										{# <div class="d-flex align-items-center">
 											<p class="card-text font-small-2 me-25 mb-0">Mis à jour il y a 1 mois</p>
 										</div> #}
@@ -53,7 +53,7 @@
 													</div>
 													<div class="my-auto">
 														<h4 class="fw-bolder mb-0">{{ countDirect  }}</h4>
-														<a href="#"><p class="card-text font-small-3 mb-0 text-black">Filleul direct</p></a>
+														<a href="#"><p class="card-text font-small-3 mb-0 text-black">{% trans %}Filleul direct{% endtrans %}</p></a>
 													</div>
 												</div>
 											</div>
@@ -66,7 +66,7 @@
 													</div>
 													<div class="my-auto">
 														<h4 class="fw-bolder mb-0">{{ countEquipe  }}</h4>
-														<a href="#"><p class="card-text font-small-3 mb-0 text-black">Equipe</p></a>
+														<a href="#"><p class="card-text font-small-3 mb-0 text-black">{% trans %}Equipe{% endtrans %}</p></a>
 													</div>
 												</div>
 											</div>                

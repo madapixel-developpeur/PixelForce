@@ -32,13 +32,13 @@
 							<li class="nav-item  me-2">
 								<a class="nav-link active" href="#">
 									<i class="fa-solid fa-cube"></i>
-									<span class="fw-bold">Secteur</span>
+									<span class="fw-bold">{% trans %}Secteur{% endtrans %}</span>
 								</a>
 							</li>
 							<li class="nav-item  me-2">							
 								<a class="nav-link" href="{{ path('coach_agent_contact_list', {agent: agent.id}) }}">
 									<i class="fa-solid fa-users"></i>
-									<span class="fw-bold">Liste de contact</span>
+									<span class="fw-bold">{% trans %}Liste de contact{% endtrans %}</span>
 								</a>
 							</li>
 						</ul>
@@ -46,16 +46,16 @@
 
 						<!-- Project table -->
 						<div class="card">
-							<h4 class="card-header">Liste des secteurs de l'agent</h4>
+							<h4 class="card-header">{% trans %}Liste des secteurs de l'agent{% endtrans %}</h4>
 							<div class="table-responsive">
 								<table class="table datatable-project">
 									<thead>
 										<tr>
 											<th></th>
-											<th>Secteur</th>
-											<th>Date de validation</th>
-											<th>Statut</th>
-											<th>Action</th>
+											<th>{% trans %}Secteur{% endtrans %}</th>
+											<th>{% trans %}Date de validation{% endtrans %}</th>
+											<th>{% trans %}Statut{% endtrans %}</th>
+											<th>{% trans %}Action{% endtrans %}</th>
 										</tr>
 									</thead>
 									<tbody class="body-sector-list">
@@ -66,16 +66,16 @@
 											<td>{{ agentSecteur.dateValidation|date('d/m/Y') }}</td>
 											<td>
 												{% if agentSecteur.statut == false %}
-													<button class="btn btn-warning btn-sm">Bloqué</button>
+													<button class="btn btn-warning btn-sm">{% trans %}Bloqué{% endtrans %}</button>
 												{% else %}
-													<button class="btn  btn-success btn-sm"> Validé</button>
+													<button class="btn  btn-success btn-sm"> {% trans %}Validé{% endtrans %}</button>
 												{% endif %}
 											</td>
 											<td>
 												{% if agentSecteur.statut == false or agentSecteur.statut == null or agentSecteur.dateValidation == null %}
-													<button data-agentSecteur-id="{{ agentSecteur.id }}" class="btn btn-sm  btn-outline-primary js-validate-secteur-agent btn-validate-sector">Valider</button>
+													<button data-agentSecteur-id="{{ agentSecteur.id }}" class="btn btn-sm  btn-outline-primary js-validate-secteur-agent btn-validate-sector">{% trans %}Valider{% endtrans %}</button>
 												{% else %}
-													<button data-agentSecteur-id="{{ agentSecteur.id }}" type="button" class="btn btn-sm  btn-outline-primary js-invalidate-secteur-agent">Bloquer</button>
+													<button data-agentSecteur-id="{{ agentSecteur.id }}" type="button" class="btn btn-sm  btn-outline-primary js-invalidate-secteur-agent">{% trans %}Bloquer{% endtrans %}</button>
 												{% endif %}
 											</td>
 										</tr>

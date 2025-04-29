@@ -323,3 +323,135 @@ Informations: Informations
 'Nom & Prénom': 'Nom & Prénom'
 'Date d''inscription': 'Date d''inscription'
 Télécharger: Télécharger
+Catégorie: Catégorie
+'Nom du projet': 'Nom du projet'
+'Le nom du projet est obligatoire': 'Le nom du projet est obligatoire'
+'Url du site': 'Url du site'
+'L''url du site est obligatoire': 'L''url du site est obligatoire'
+'La description est obligatoire': 'La description est obligatoire'
+'Coach - Liste Formations Video': 'Coach - Liste Formations Video'
+'Formation revendeur': 'Formation revendeur'
+'Formation professionnel': 'Formation professionnel'
+'Video fin de formation': 'Video fin de formation'
+'Ajouter une formation': 'Ajouter une formation'
+'Ajouter un quiz': 'Ajouter un quiz'
+'Configurer page de formation': 'Configurer page de formation'
+Etat: Etat
+Tous: Tous
+Brouillon: Brouillon
+'Trier par': 'Trier par'
+Auteur: Auteur
+'Ajouter un thème': 'Ajouter un thème'
+'Fiche quiz': 'Fiche quiz'
+Thème: Thème
+'Ajout Audit': 'Ajout Audit'
+'Ajouter un audit': 'Ajouter un audit'
+'Visualisation Audit': 'Visualisation Audit'
+'Liste des réponses potentiels': 'Liste des réponses potentiels'
+Déscription: Déscription
+'Fichier jointe': 'Fichier jointe'
+Action: Action
+'Êtes-vous sûr(e) de vouloir supprimer cette réponse?': 'Êtes-vous sûr(e) de vouloir supprimer cette réponse?'
+'Êtes-vous sûr(e) de vouloir réstorer cette réponse?': 'Êtes-vous sûr(e) de vouloir réstorer cette réponse?'
+'Liste des Audits': 'Liste des Audits'
+'Nom du Projet': 'Nom du Projet'
+'url du site': 'url du site'
+'Date d''ajout': 'Date d''ajout'
+'Êtes-vous sûr(e) de vouloir supprimer cet Audit?': 'Êtes-vous sûr(e) de vouloir supprimer cet Audit?'
+'Êtes-vous sûr(e) de vouloir restorer cet Audit?': 'Êtes-vous sûr(e) de vouloir restorer cet Audit?'
+'Liste des agents': 'Liste des agents'
+'Ajouter des Agents': 'Ajouter des Agents'
+'Date inscription': 'Date inscription'
+Valider: Valider
+Bloquer: Bloquer
+'Liste de contact': 'Liste de contact'
+'Liste des secteurs de l''agent': 'Liste des secteurs de l''agent'
+'Date de validation': 'Date de validation'
+Bloqué: Bloqué
+Validé: Validé
+'Thème de formation': 'Thème de formation'
+'Modifier le thème de formation': 'Modifier le thème de formation'
+'Ajouter un thème de formation': 'Ajouter un thème de formation'
+'Pour débloquer cette formation, assurez-vous d’avoir enregistré plus de 100 contacts dans votre liste de prospection.': 'Pour débloquer cette formation, assurez-vous d’avoir enregistré plus de 100 contacts dans votre liste de prospection.'
+'J''ai terminé cette formation': 'J''ai terminé cette formation'
+'Copier le lien d''affiliation': 'Copier le lien d''affiliation'
+'Pour inviter d''autres personnes à se joindre à vous, veuillez cliquer ici.': 'Pour inviter d''autres personnes à se joindre à vous, veuillez cliquer ici.'
+Copier: Copier
+'Espace coach': 'Espace coach'
+'Mes Agents': 'Mes Agents'
+Filleul: Filleul
+Audit: Audit
+Catalogue: Catalogue
+Catégories: Catégories
+Produits: Produits
+Stock: Stock
+Inventaire: Inventaire
+Implantations: Implantations
+Contrat: Contrat
+Kits: Kits
+Ressources: Ressources
+Rubriques: Rubriques
+Liste: Liste
+Annonces: Annonces
+'Réseaux sociaux': 'Réseaux sociaux'
+'Code promo': 'Code promo'
+Détails: Détails
+'Nom et prénom': 'Nom et prénom'
+'Détails de l''audit': 'Détails de l''audit'
+Proprietaire: Proprietaire
+'Google Formulaire': 'Google Formulaire'
+'Accéder aux formulaires': 'Accéder aux formulaires'
+'Réponse du Google Formulaire': 'Réponse du Google Formulaire'
+'Accéder aux réponses du formulaire': 'Accéder aux réponses du formulaire'
+'Titre de la réponse': 'Titre de la réponse'
+'Le titre de problème  est obligatoire': 'Le titre de problème  est obligatoire'
+'La description  est obligatoire': 'La description  est obligatoire'
+'Image invalide. Le format doit être: .jpeg ou .png': 'Image invalide. Le format doit être: .jpeg ou .png'
+'Coach - Fiche formation': 'Coach - Fiche formation'
+Confirmation: Confirmation
+'Voulez-vous vraiment supprimer la formation ?': 'Voulez-vous vraiment supprimer la formation ?'
+Fermer: Fermer
+Videos: Videos
+'Modifier le lien de la video': 'Modifier le lien de la video'
+Loading: Loading
+Document: Document
+'Pas de document': 'Pas de document'
+'Ajouter un document': 'Ajouter un document'
+Audio: Audio
+'Pas d''audio': 'Pas d''audio'
+'Ajouter un audio': 'Ajouter un audio'
+'Ajout Réponse': 'Ajout Réponse'
+'Ajouter une réponse sur l''audit': 'Ajouter une réponse sur l''audit'
+'Liste de contacts': 'Liste de contacts'
+Prénoms: Prénoms
+'Visualisation utilisateur coach': 'Visualisation utilisateur coach'
+Equipe: Equipe
+'Filleul direct': 'Filleul direct'
+'Liste des catégories': 'Liste des catégories'
+'Aucune catégorie disponible pour le moment.': 'Aucune catégorie disponible pour le moment.'
+'Titre de la réponse': 'Answer title'
+'Le titre de problème  est obligatoire': 'The problem title is required'
+'La description  est obligatoire': 'The description is required'
+'Image invalide. Le format doit être: .jpeg ou .png': 'Invalid image. The format must be: .jpeg or .png'
+'Coach - Fiche formation': 'Coach - Training record'
+Confirmation: 'Confirmation'
+'Voulez-vous vraiment supprimer la formation ?': 'Are you sure you want to delete the training?'
+Fermer: 'Close'
+Videos: 'Videos'
+'Modifier le lien de la video': 'Edit video link'
+Loading: 'Loading'
+Document: 'Document'
+'Pas de document': 'No document'
+'Ajouter un document': 'Add a document'
+Audio: 'Audio'
+'Pas d''audio': 'No audio'
+'Ajouter un audio': 'Add an audio'
+'Ajout Réponse': 'Add Answer'
+'Ajouter une réponse sur l''audit': 'Add an answer to the audit'
+'Liste de contacts': 'Contact list'
+Prénoms: 'First names'
+'Visualisation utilisateur coach': 'Coach user view'
+Equipe: 'Team'
+'Filleul direct': 'Direct referral'
+'Liste des catégories': 'Category list'
+'Aucune catégorie disponible pour le moment.': 'No categories available at the moment.'

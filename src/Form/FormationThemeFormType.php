@@ -2,20 +2,27 @@
 
 namespace App\Form;
 
-use App\Entity\CategorieFormation;
 use App\Entity\Formation;
 use App\Entity\FormationTheme;
+use App\Entity\CategorieFormation;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 use FOS\CKEditorBundle\Form\Type\CKEditorType;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 class FormationThemeFormType extends AbstractType
 {
+    public function __construct(
+        private TranslatorInterface $translator,
+    )
+    {
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -23,7 +30,7 @@ class FormationThemeFormType extends AbstractType
                 'required' => true,
             ])
             ->add('categorieFormation', EntityType::class, [
-                'placeholder' => 'Catégorie',
+                'placeholder' =>  $this->translator->trans('Catégorie'),
                 'required' => true,
                 'label' => false,
                 'class' => CategorieFormation::class,

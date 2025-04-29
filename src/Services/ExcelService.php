@@ -82,7 +82,9 @@ class ExcelService
             $col = 'A'; 
             foreach ($fields as $field) {
                 $value = GenericUtil::getPropertyValue($item, $field);
-                $value = $this->translator->trans($value);
+                if (is_string($value) && trim($value) !== '') {
+                    $value = $this->translator->trans($value);
+                }
                 $sheet->setCellValue($col . $row,$value ?? ''); 
                 $col = $this->incrementColumn($col); 
             }
