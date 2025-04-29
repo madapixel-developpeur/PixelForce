@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-	Chiffre d'affaires - Détail
+	{% trans %}Chiffre d'affaires - Détail{% endtrans %}
 {% endblock %}
 
 {% block stylesheets %}
@@ -12,28 +12,28 @@
     <a href="{{ path('agent_ca_list_digital') }}" class="btn btn-secondary mb-2 mt-3"> <i class="fa-solid fa-circle-arrow-left"></i> Retour </a>
     <div class="block block--bordered block--rounded">
         <div class="block__header mb-3" >
-            <h1 class="block__title">Vente du mois de "{{ month | date('m-Y')}}" :</h1>
+            <h1 class="block__title">{% trans %}Vente du mois de{% endtrans %} "{{ month | date('m-Y')}}" :</h1>
             
         </div>
         {% if orderList|length ==0 %}
                 <div class="alert alert-primary p-3 text-center" role="alert">
                     <div class="alert-body">
-                        Aucune commande.
+                        {% trans %}Aucune commande.{% endtrans %}
                     </div>
                 </div>
         {% endif %}
         {% if orderList|length !=0 %}
-        <p class=""><span class="fw-bold">Chiffre d'affaires total du mois:</span> {{ totalAmount  | number_format(2, ',', ' ') }} €</p>
+        <p class=""><span class="fw-bold">{% trans %}Chiffre d'affaires total du mois{% endtrans %}:</span> {{ totalAmount  | number_format(2, ',', ' ') }} €</p>
         <div class="table-responsive mb-1">
             <table class="table table-bordered table-hover">
                 <thead>
                     <tr>
-                        <th>Date</th>
-                        <th>Client</th>
-                        <th>Pack - (service)</th>
-                        <th class="text-center">Montant</th>
-                        <th>Référence</th>
-                        <th>Statut</th>
+                        <th>{% trans %}Date{% endtrans %}</th>
+                        <th>{% trans %}Client{% endtrans %}</th>
+                        <th>{% trans %}Pack - (service){% endtrans %}</th>
+                        <th class="text-center">{% trans %}Montant{% endtrans %}</th>
+                        <th>{% trans %}Référence{% endtrans %}</th>
+                        <th>{% trans %}Statut{% endtrans %}</th>
                     </tr>
                 </thead>
                 <tbody>

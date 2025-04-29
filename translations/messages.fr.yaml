@@ -289,9 +289,37 @@ Pays/région: Pays/région
 Chercher: Chercher
 'Aucune Commande': 'Aucune Commande'
 'Pack - (service)': 'Pack - (service)'
-"Créée": "Créée"
-"Payée" : "Payée" 
-"Livrée": "Livrée"
-"Créé": "Créé"
-"Payé" : "Payé" 
-"Livré": "Livré"
+Créée: Créée
+Payée: Payée
+Livrée: Livrée
+Créé: Créé
+Payé: Payé
+Livré: Livré
+Rémunérations: Rémunérations
+'Historique des rémunérations': 'Historique des rémunérations'
+'Aucun résultat trouvé.': 'Aucun résultat trouvé.'
+Ressource: Ressource
+Rubrique(s): Rubrique(s)
+Fichier(s): Fichier(s)
+'Découvrez toutes les ressources à votre disposition. Accédez à des contenus essentiels pour vous guider et vous accompagner dans vos démarches.': 'Découvrez toutes les ressources à votre disposition. Accédez à des contenus essentiels pour vous guider et vous accompagner dans vos démarches.'
+'Aucun résultat': 'Aucun résultat'
+ressource_file_count: ressource_file_count
+'Accéder à la ressource': 'Accéder à la ressource'
+'Aucune ressource': 'Aucune ressource'
+'Chiffre d''affaires - Détail': 'Chiffre d''affaires - Détail'
+'Vente du mois de': 'Vente du mois de'
+'Aucune commande.': 'Aucune commande.'
+'Chiffre d''affaires total du mois': 'Chiffre d''affaires total du mois'
+Portfolio(lien): Portfolio(lien)
+Portfolio(fichier): Portfolio(fichier)
+Compétence: Compétence
+Langues: Langues
+'Compétence technique': 'Compétence technique'
+'Bientôt disponible': 'Bientôt disponible'
+'Cette fonctionnalité sera bientôt disponible. Restez à l''écoute !': 'Cette fonctionnalité sera bientôt disponible. Restez à l''écoute !'
+'Professionnel - Information': 'Professionnel - Information'
+Informations: Informations
+'Soumettre à nouveau': 'Soumettre à nouveau'
+'Nom & Prénom': 'Nom & Prénom'
+'Date d''inscription': 'Date d''inscription'
+Télécharger: Télécharger

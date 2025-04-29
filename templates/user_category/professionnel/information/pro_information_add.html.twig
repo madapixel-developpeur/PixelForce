@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-    Professionnel - Information
+    {% trans %}Professionnel - Information{% endtrans %}
 {% endblock %}
 
 {% block body %}
@@ -10,7 +10,7 @@
             <!-- profile -->
             <div class="card mt-2">
                 <div class="card-header border-bottom">
-                    <h4 class="card-title">Informations</h4>
+                    <h4 class="card-title">{% trans %}Informations{% endtrans %}</h4>
                 </div>
                 <div class="card-body py-2 my-25">
                     {{ form_start(form, {attr:{
@@ -18,7 +18,7 @@
                     }}) }}
                     {{ form_rest(form) }}
                     <div>
-                        <button class="btn btn-primary" type="submit">Enregistrer</button>
+                        <button class="btn btn-primary" type="submit">{% trans %}Enregistrer{% endtrans %}</button>
                     </div>
                     {{ form_end(form) }}
                     <!--/ form -->

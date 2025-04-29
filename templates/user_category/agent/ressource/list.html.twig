@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-	Ressource
+	{% trans %}Ressource{% endtrans %}
 {% endblock %}
 
 {% block stylesheets %}
@@ -36,13 +36,13 @@
                                 <div class="d-flex align-items-center mb-2">
                                     <i class="fas fa-tag fa-2x me-2 custom-icon-color " ></i>
                                 </div>
-                                <span class="value-text">{{ countRubriques| length }} Rubrique(s)</span>
+                                <span class="value-text">{{ countRubriques| length }} {% trans %}Rubrique(s){% endtrans %}</span>
                             </div>
                             <div class="col-12 col-md-6 d-flex flex-column align-items-center">
                                 <div class="d-flex align-items-center mb-2">
                                     <i class="fas fa-file fa-2x me-2 custom-icon-color " ></i>
                                 </div>
-                                <span class="value-text"><span id="file-nbr">{{ countRubriques| length }}</span> Fichier(s)
+                                <span class="value-text"><span id="file-nbr">{{ countRubriques| length }}</span> {% trans %}Fichier(s){% endtrans %}
                             </div>
                             
                         </div>
@@ -51,7 +51,7 @@
 
                         <div class="course-overview mb-5">
                             {# <h3 class="my-auto general-primary-text mb-3">Description</h3> #}
-                            <h4>Découvrez toutes les ressources à votre disposition. Accédez à des contenus essentiels pour vous guider et vous accompagner dans vos démarches.
+                            <h4>{% trans %}Découvrez toutes les ressources à votre disposition. Accédez à des contenus essentiels pour vous guider et vous accompagner dans vos démarches.{% endtrans %}
                             </h4>
                         </div>
 
@@ -65,7 +65,7 @@
 
 
 						{% if result|length == 0 and rubriques|length==0 %}
-							<p class="text-center">Aucun résultat</p>
+							<p class="text-center">{% trans %}Aucun résultat{% endtrans %}</p>
 						{% else %}
 							{% set rubriques = [null]|merge(rubriques) %}
 							{% for rb in rubriques %}
@@ -112,19 +112,20 @@
                                                                 <input type="number" class="fileNumber" value="{{ fileCount }}" hidden>
                                                                 <p class="mb-2 text-secondary fw-medium small">
                                                                     <i class="fa-regular fa-folder-open me-1"></i> 
-                                                                    ({{ fileCount }} fichier{{ fileCount > 1 ? 's' : '' }} disponible{{ fileCount > 1 ? 's' : '' }})
+                                                                    {{ 'ressource_file_count'|trans({'count': fileCount}) }}
+                                                                    {# ({{ fileCount }} fichier{{ fileCount > 1 ? 's' : '' }} disponible{{ fileCount > 1 ? 's' : '' }}) #}
                                                                 </p>
                                                                 <p>{{ (item.content ?? '')|slice(0, 300) }}{% if (item.content ?? '')|length > 300 %}…{% endif %}</p>
 
                                                                 <a href="{{ path('agent_ressource_details',{ id : item.id , 'type' : type })}}" class="btn btn-primary btn-sm">
-                                                                    Accéder à la ressource
+                                                                    {% trans %}Accéder à la ressource{% endtrans %}
                                                                 </a>
                                                             </div>
                                                         </div>
                                                     {% endif %}
                                                 {% endfor %}
                                                 {% if countItem == 0 and rb %}
-                                                    <p class="text-center">Aucune ressource</p>
+                                                    <p class="text-center">{% trans %}Aucune ressource{% endtrans %}</p>
                                                 {% endif %}
                                             </div>
                                         </div>
