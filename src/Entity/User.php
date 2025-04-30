@@ -1933,7 +1933,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
                 return $agentSecteur;
             }
         }
-        throw new CustomException('Secteur non trouvé pour l\'agent');
+        return null;
+        // throw new CustomException('Secteur non trouvé pour l\'agent');
     }
 
     public function getAccessSatus(): ?string
