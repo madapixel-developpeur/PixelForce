@@ -68,6 +68,17 @@ class RemunerationServiceSecu
                 $remuneration->setSourceId($orderSecu->getId());
                 $remuneration->setSecteur($orderSecu->getSecteur());
                 $this->entityManager->persist($remuneration);
+
+                $history = new RemunerationHistorySecu();
+                $history->setAmount($remunerationAmount);
+                $history->setDateReference(new DateTime());
+                $history->setUpdatedAt(new DateTime());
+                $history->setType(RemunerationHistorySecu::TYPE_COMMISION_BASE);
+                $history->setLabel("Commission sur un achat ");
+                $history->setIdAgent($orderSecu->getAgent()->getId());
+                $history->setSecteur($orderSecu->getSecteur());
+                $history->setOrder($orderSecu);
+                $this->entityManager->persist($history);
             }
 
 

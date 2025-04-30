@@ -57,7 +57,7 @@ class RemunerationHistorySecu implements JsonSerializable
     private string $label;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Order::class)
+     * @ORM\ManyToOne(targetEntity=OrderSecu::class)
      * @ORM\JoinColumn(name="order_id", referencedColumnName="id", nullable=true)
      */
     private $order;
