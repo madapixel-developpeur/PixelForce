@@ -2,21 +2,22 @@
 
 namespace App\Services\Stat;
 
-use App\Repository\OrderSecuRepository;
 use DateTime;
 use Exception;
 use App\Entity\User;
 use App\Entity\Secteur;
 use App\Entity\TypeSecteur;
+use App\Util\Search\Constants;
 use App\Exception\CustomException;
 use App\Repository\UserRepository;
 use App\Services\User\AgentService;
 use App\Services\RemunerationService;
-use App\Services\RemunerationServiceSecu;
 use App\Services\ConfigSecteurService;
+use App\Repository\OrderSecuRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\ResultSetMapping;
 use App\Repository\RankHistoryRepository;
+use App\Services\RemunerationServiceSecu;
 use App\Repository\UserTransactionRepository;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
@@ -210,9 +211,13 @@ class StatAgentService
                 throw new \Exception('API unavailable');
             $response = $this->client->request(
                 'GET',
-                $pbb_ws_url . '/api/pbb_stat/' . $pbb_id
+                $pbb_ws_url . '/api/pbb_stat/' . $pbb_id,
+                [
+                    'query' => [ 'reference'=> Constants::REFERENCE_PREFIX ]
+                ]
             );
             $content = json_decode($response->getContent(), true);
+            dd($content);
             return $content;
         } catch (\Exception $exception) {
             return [
@@ -262,7 +267,8 @@ class StatAgentService
                    'json' => array_merge( 
                         [
                             'user_id' => $pbb_id,
-                            'filleul' => $filleul
+                            'filleul' => $filleul,
+                            'reference'=> Constants::REFERENCE_PREFIX
                         ], 
                         ['date_ref' =>  $reference->format('Y-m-d H:i:s')]
                     )
@@ -309,7 +315,8 @@ class StatAgentService
 
                 $userData =  [
                     'id' => $agent->getId(),
-                    'filleul' => $this->userRepository->getFilsJusqueNiveau($agent->getId(),$_ENV['LIMIT_NIVEAU_EQUIPE_LINEAIRE'],true)
+                    'reference'=> Constants::REFERENCE_PREFIX,
+                    'filleul' => []
                 ];
                 $response = $this->client->request(
                     'GET',
@@ -988,13 +995,17 @@ class StatAgentService
 
             $userData =  [
                 'id' => $agent->getId(),
-                'filleul' => $this->userRepository->getFilsJusqueNiveau($agent->getId(),$_ENV['LIMIT_NIVEAU_EQUIPE_LINEAIRE'],true)
+                'reference'=> Constants::REFERENCE_PREFIX,
+                'filleul' => []
             ];
             $response = $this->client->request(
                 'GET',
                 $pbb_ws_url . '/api/get-agent-ca-equipe-stat',
                 [
-                    'json' => ['user_data' => $userData , 'global'=> true]
+                    'json' => [ 
+                        'user_data' => $userData,
+                        'global'=> true
+                    ]
                 ]
             );
             $content = json_decode($response->getContent(), true);

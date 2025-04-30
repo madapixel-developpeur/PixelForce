@@ -23,12 +23,12 @@ class AppScheduleBuilder implements ScheduleBuilder
             ->timezone($_ENV['APP_TIMEZONE'])
             ->environments('prod', 'dev');
 
-        $schedule->addCallback(function () {
-            $dateOfThePreviousMonthToCheck = (new DateTime())->modify('-1 hour');
-            $this->remunerationService->checkUserRemuneration($dateOfThePreviousMonthToCheck);
-            $this->remunerationServiceSecu->checkUserRemuneration($dateOfThePreviousMonthToCheck, $_ENV['SECTEUR_SECURITE_ID']);
-        })
-            ->description('Rémuneration')
-            ->monthly();
+        // $schedule->addCallback(function () {
+        //     $dateOfThePreviousMonthToCheck = (new DateTime())->modify('-1 hour');
+        //     $this->remunerationService->checkUserRemuneration($dateOfThePreviousMonthToCheck);
+        //     $this->remunerationServiceSecu->checkUserRemuneration($dateOfThePreviousMonthToCheck, $_ENV['SECTEUR_SECURITE_ID']);
+        // })
+        //     ->description('Rémuneration')
+        //     ->monthly();
     }
 }

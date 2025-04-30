@@ -2,16 +2,17 @@
 
 namespace App\Twig;
 
-use App\Repository\AgentSecteurRepository;
 use DateTime;
 use Twig\TwigFilter;
 use DateTimeInterface;
 use IntlDateFormatter;
 use Twig\TwigFunction;
 use App\Util\GenericUtil;
+use App\Util\Search\Constants;
 use App\Repository\SecteurRepository;
 use Twig\Extension\AbstractExtension;
 use App\Services\Stat\StatAgentService;
+use App\Repository\AgentSecteurRepository;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Bundle\SecurityBundle\SecurityBundle;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -67,7 +68,7 @@ class HelperFunction extends AbstractExtension
     public function generateReference($agentId, $rendezVousUserId, $contactId = null, $meetingId = null)
     {
         // Your custom logic here
-        $ref = "PRV-" . $agentId . "-" . $rendezVousUserId;
+        $ref = Constants::REFERENCE_PREFIX."-" . $agentId . "-" . $rendezVousUserId;
         if (!is_null($contactId)) {
             $ref .= "-" . $contactId;
         }
