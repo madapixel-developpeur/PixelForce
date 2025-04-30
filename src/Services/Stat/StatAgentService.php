@@ -219,7 +219,6 @@ class StatAgentService
                 ]
             );
             $content = json_decode($response->getContent(), true);
-            dd($content);
             return $content;
         } catch (\Exception $exception) {
             return [
