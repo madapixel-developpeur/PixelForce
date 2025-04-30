@@ -124,7 +124,6 @@ class AgentInscriptionController extends AbstractController
             }
             if ($form->isSubmitted() ) {
                 if($form->isValid()){
-                    $roles = $form->get('roles')->getData();
                     $roles = [user::ROLE_REVENDEUR];
                     // if (empty($roles)) {
                     //     throw new CustomException('Vous devez sélectionner au moins un type de compte.');
@@ -163,6 +162,7 @@ class AgentInscriptionController extends AbstractController
                 $e->getMessage()
             );
         } catch (\Exception $e) {
+            dd($e);
             $this->addFlash(
                 'danger',
                 $_ENV['CUSTOM_ERROR_MESSAGE']
