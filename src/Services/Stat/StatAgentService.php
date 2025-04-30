@@ -188,7 +188,7 @@ class StatAgentService
         $response = $this->client->request(
             'GET',
             $pbb_ws_url . '/api/remuneration/search',
-            ['query' => $params]
+            ['query' => array_merge($params,['reference'=>Constants::REFERENCE_PREFIX]) ]
         );
         $content = json_decode($response->getContent(), true);
         return $content;
