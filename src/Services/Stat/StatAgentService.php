@@ -174,7 +174,9 @@ class StatAgentService
         $response = $this->client->request(
             'GET',
             $pbb_ws_url . '/api/order/search',
-            ['query' => $params]
+            [
+                'query' => array_merge($params,['reference'=>Constants::REFERENCE_PREFIX])
+            ]
         );
         $content = json_decode($response->getContent(), true);
         return $content;
@@ -697,7 +699,7 @@ class StatAgentService
                 'GET',
                 $url.'/api/get-ca-history',
                 [
-                    'query' => $parameters
+                    'query' => array_merge($parameters,[ 'reference'=> Constants::REFERENCE_PREFIX])
                 ]
             );
             $content = json_decode($response->getContent(), true);
