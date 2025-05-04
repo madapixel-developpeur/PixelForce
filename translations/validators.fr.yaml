@@ -144,3 +144,5 @@ Error: Erreur
 'Please select a valid range.': 'Veuillez sélectionner une plage valide.'
 'Please enter a valid week.': 'Veuillez entrer une semaine valide.'
 'Bad code value': 'Mauvaise valeur pour le code visuel'
+validator.unique_username: Nom d'utilisateur déjà utilisé.
+validator.unique_email: Adresse email déjà utilisée.

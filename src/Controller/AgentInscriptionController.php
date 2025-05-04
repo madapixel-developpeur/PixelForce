@@ -121,6 +121,7 @@ class AgentInscriptionController extends AbstractController
         ]);
         $form->handleRequest($request);
         $currentStep = $request->request->getInt('currentStep', 0);
+        $local = $request->getLocale();
         try {
             if (!$parrain) {
                 $parrain = $this->getParainByUsername($ambassador_username);
@@ -139,6 +140,7 @@ class AgentInscriptionController extends AbstractController
                     $user->setRoles($roles);
                     $user->setActive(1);
                     $user->setParrain($parrain);
+                    $user->setLang($local);
                     // $user->setAccountStatus(User::ACCOUNT_STATUS['UNPAID']);
                     $user->setAccountStatus(User::ACCOUNT_STATUS['ACTIVE']); // On met temporairement le statut comme ACTIVE
                     $this->entityManager->save($user);

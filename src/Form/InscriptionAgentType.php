@@ -34,6 +34,11 @@ class InscriptionAgentType extends AbstractType
         $locale = $this->requestStack->getCurrentRequest()->getLocale()  ?? 'fr';
         $countryNames = Countries::getNames($locale);
 
+
+        $rolesWithTranslation = [];
+        foreach (User::SIGNING_UP_ROLES as $key => $value) {
+            $rolesWithTranslation[$this->translator->trans($key)] = $value;
+        }
         $user = $options ["data"];
         $builder
             ->add('nom', TextType::class, [
@@ -172,7 +177,7 @@ class InscriptionAgentType extends AbstractType
                 'attr' => ['class' => 'form-control', 'step' => 0],
             ])
             ->add('roles', ChoiceType::class, [
-                'choices' => User::SIGNING_UP_ROLES,
+                'choices' => $rolesWithTranslation,
                 'expanded' => true,  
                 'multiple' => true,  
                 'required' => true,  
