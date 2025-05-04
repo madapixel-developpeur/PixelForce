@@ -5,12 +5,12 @@ namespace App\Controller;
 use App\Util\Status;
 use App\Entity\Ressource;
 use App\Entity\Announcement;
-use App\Form\AnnouncementFilterType;
-use App\Form\AnnouncementFormType;
 use App\Services\FileHandler;
 use App\Form\RessourceFormType;
 use App\Services\SearchService;
 use App\Form\RessourceFilterType;
+use App\Form\AnnouncementFormType;
+use App\Form\AnnouncementFilterType;
 use App\Util\Search\MyCriteriaParam;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
@@ -19,6 +19,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -27,7 +28,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class CoachAnnouncementController extends AbstractController
 {
 
-    public function __construct(private EntityManagerInterface $entityManager, private FileHandler $fileHandler)
+    public function __construct(private EntityManagerInterface $entityManager, private FileHandler $fileHandler,
+        private TranslatorInterface $translator
+    )
     {
     }
 
@@ -51,7 +54,7 @@ class CoachAnnouncementController extends AbstractController
                 $this->entityManager->persist($announcement);
                 $this->entityManager->flush();
 
-                $this->addFlash('success', 'Annonce ajoutée avec succès');
+                $this->addFlash('success', $this->translator->trans('Annonce ajoutée avec succès'));
                 return $this->redirectToRoute('app_coach_announcement_list');
             } catch (\Exception $ex) {
                 // $this->addFlash('danger', $ex->getMessage());
@@ -83,7 +86,7 @@ class CoachAnnouncementController extends AbstractController
                 $this->entityManager->persist($announcement);
                 $this->entityManager->flush();
 
-                $this->addFlash('success', 'Annonce modifiée avec succès');
+                $this->addFlash('success', $this->translator->trans('Annonce modifiée avec succès'));
                 return $this->redirectToRoute('app_coach_announcement_list');
             } catch (\Exception $ex) {
                 $this->addFlash('danger', $ex->getMessage());
@@ -105,7 +108,7 @@ class CoachAnnouncementController extends AbstractController
         try {
             $this->entityManager->remove($announcement);
             $this->entityManager->flush();
-            $this->addFlash('success', 'Annonce supprimée avec succès');
+            $this->addFlash('success', $this->translator->trans('Annonce supprimée avec succès'));
         } catch (\Exception $ex) {
             $this->addFlash('danger', $ex->getMessage());
         }

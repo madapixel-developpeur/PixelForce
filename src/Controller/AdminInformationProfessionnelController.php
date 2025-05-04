@@ -37,6 +37,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Repository\ProduitSecuFavoriRepository;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -45,7 +46,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
  */
 class AdminInformationProfessionnelController extends AbstractController
 {
-    public function __construct(private EntityManagerInterface $entityManager){
+    public function __construct(private EntityManagerInterface $entityManager,private TranslatorInterface $translator
+    ){
 
     }
 

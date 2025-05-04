@@ -129,7 +129,7 @@ class AgentContactController extends AbstractController
             $contact->setNote($note);
             $this->entityManager->save($contact);
 
-            $this->addFlash('success', 'Note enregistré avec succès');
+            $this->addFlash('success', $this->translator->trans('Note enregistré avec succès'));
             return $this->redirectToRoute('agent_contact_view', ['id' => $contact->getId()]);
         }
 

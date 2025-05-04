@@ -11,6 +11,7 @@ use Knp\Component\Pager\PaginatorInterface;
 use App\Repository\UserTransactionRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Session\Storage\SessionStorageInterface;
@@ -19,7 +20,9 @@ use Symfony\Component\HttpFoundation\Session\Storage\SessionStorageInterface;
  */
 class CoachTransactionController extends AbstractController
 {
-    public function __construct(private SessionInterface $session, private EntityManagerInterface $entityManager, private UserTransactionRepository $userTransactionRepository, private SecteurRepository $secteurRepository){
+    public function __construct(private SessionInterface $session, private EntityManagerInterface $entityManager, private UserTransactionRepository $userTransactionRepository, private SecteurRepository $secteurRepository,
+        private TranslatorInterface $translator
+    ){
 
     }
     /**
@@ -50,7 +53,7 @@ class CoachTransactionController extends AbstractController
                 $data->setStatus(UserTransaction::STATUS_CREATED);
                 $this->entityManager->persist($data);
                 $this->entityManager->flush();
-                $this->addFlash("success", "Retrait effectué avec succès");
+                $this->addFlash("success", $this->translator->trans("Retrait effectué avec succès"));
                 if(strcasecmp($data->getRib(), $user->getRib()) != 0){
                     return $this->redirectToRoute('coach_change_rib',['newRib'=>$data->getRib()]);  
                 }
@@ -83,7 +86,7 @@ class CoachTransactionController extends AbstractController
                 $user->setRib($newRib);
                 $this->entityManager->persist($user);
                 $this->entityManager->flush();
-                $this->addFlash("success", "RIB changé avec succès");
+                $this->addFlash("success", $this->translator->trans("RIB changé avec succès"));
             }
             return $this->redirectToRoute('coach_transaction_retrait');  
         }

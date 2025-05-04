@@ -2,31 +2,34 @@
 // src/Controller/FileUploadController.php
 namespace App\Controller;
 
+use App\Util\Status;
+use App\Services\FileHandler;
 use App\Entity\FormationTheme;
+use App\Services\SearchService;
+use App\Form\FormationThemeFormType;
+use App\Util\Search\MyCriteriaParam;
+use App\Form\FormationThemeFilterType;
+use App\Repository\FormationRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\String\Slugger\SluggerInterface;
-use App\Services\FileHandler;
-use App\Util\Status;
-use App\Form\FormationThemeFormType;
-use App\Services\SearchService;
-use App\Util\Search\MyCriteriaParam;
-use Knp\Component\Pager\PaginatorInterface;
-use App\Form\FormationThemeFilterType;
 use App\Repository\CategorieFormationRepository;
-use App\Repository\FormationRepository;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/coach/formation-themes')]
 class CoachFormationThemeController extends AbstractController
 {
 
-    public function __construct(private EntityManagerInterface $entityManager, private CategorieFormationRepository $categorieFormationRepository, private FormationRepository $formationRepository)
+    public function __construct(private EntityManagerInterface $entityManager, private CategorieFormationRepository $categorieFormationRepository, private FormationRepository $formationRepository,
+        private TranslatorInterface $translator
+    )
     {
     }
     #[Route('/add', name: 'app_coach_formation_theme_add')]
@@ -46,7 +49,7 @@ class CoachFormationThemeController extends AbstractController
                 $theme->setStatut(Status::VALID);
                 $this->entityManager->persist($theme);
                 $this->entityManager->flush();
-                $this->addFlash('success', 'Thème ajouté avec succès');
+                $this->addFlash('success', $this->translator->trans('Thème ajouté avec succès'));
                 return $this->redirectToRoute('coach_formation_list');
             } catch (\Exception $ex) {
                 $this->addFlash('danger', $ex->getMessage());
@@ -81,7 +84,7 @@ class CoachFormationThemeController extends AbstractController
                 $theme->setStatut(Status::VALID);
                 $this->entityManager->persist($theme);
                 $this->entityManager->flush();
-                $this->addFlash('success', 'Thème modifié avec succès');
+                $this->addFlash('success', $this->translator->trans('Thème modifié avec succès'));
                 return $this->redirectToRoute('coach_formation_list');
             } catch (\Exception $ex) {
                 $this->addFlash('danger', $ex->getMessage());
@@ -111,7 +114,7 @@ class CoachFormationThemeController extends AbstractController
             }
             $this->entityManager->persist($theme);
             $this->entityManager->flush();
-            $this->addFlash('success', 'Thème supprimé avec succès');
+            $this->addFlash('success', $this->translator->trans('Thème supprimé avec succès'));
         } catch (\Exception $ex) {
             $this->addFlash('danger', $ex->getMessage());
         }

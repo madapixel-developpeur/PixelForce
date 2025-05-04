@@ -29,6 +29,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\CategorieFormationRepository;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class CoachAgentController extends AbstractController
@@ -53,7 +54,8 @@ class CoachAgentController extends AbstractController
         EntityManager $entityManager,
         CoachSecteurRepository $repoCoachSecteur,
         AgentSecteurRepository $repoAgentSecteur,
-        private FormationRepository $repoFormation
+        private FormationRepository $repoFormation,
+        private TranslatorInterface $translator
     ) {
         $this->coachAgentRepository = $coachAgentRepository;
         $this->repoUser = $repoUser;
@@ -128,7 +130,7 @@ class CoachAgentController extends AbstractController
             $this->entityManager->save($agentSecteur);
             $this->entityManager->save($coachAgent);
 
-            $this->addFlash('success', 'Informations enregistrées avec succès');
+            $this->addFlash('success', $this->translator->trans('Informations enregistrées avec succès'));
             return $this->redirectToRoute('coach_agent_password_generate', ['id' => $agent->getId()]);
 
         }
@@ -151,7 +153,7 @@ class CoachAgentController extends AbstractController
             $agent->setActive(true);
             $agent->setUsername($request->request->get('user_login')['username']);
             $this->userManager->setUserPasword($agent, $request->request->get('user_login')['password']['first'], '', false);
-            $this->addFlash('success', 'Ajout de l\'utilisateur Agent efféctué avec succès');
+            $this->addFlash('success', $this->translator->trans('Ajout de l\'utilisateur Agent efféctué avec succès'));
             return $this->redirectToRoute('coach_agent_list');
         }
 

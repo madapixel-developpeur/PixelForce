@@ -31,6 +31,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Nucleos\DompdfBundle\Wrapper\DompdfWrapperInterface;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -56,7 +57,8 @@ class AdminAmbassadeurController extends AbstractController
         SecteurRepository $repoSecteur,
         CoachSecteurRepository $repoCoachSecteur,
         private ExcelService $excelService,
-        private PdfExport $pdfExport
+        private PdfExport $pdfExport,
+        private TranslatorInterface $translator
     )
     {
         $this->repoUser = $repoUser;
@@ -165,7 +167,7 @@ class AdminAmbassadeurController extends AbstractController
         $formUser->handleRequest($request);
         if ($formUser->isSubmitted() && $formUser->isValid()) {
             $this->entityManager->save($ambassadeur);
-            $this->addFlash('success', "Modification du coach avec succès");
+            $this->addFlash('success', $this->translator->trans("Modification du coach avec succès"));
             return $this->redirectToRoute('admin_ambassadeur_list');    
         }
 
@@ -210,11 +212,11 @@ class AdminAmbassadeurController extends AbstractController
             $this->entityManager->save($coachSecteur);
 
             if ($request->query->get('edition') === 'attribution_only') {
-                $this->addFlash('success', 'Secteur attribué avec succès');
+                $this->addFlash('success', $this->translator->trans('Secteur attribué avec succès'));
                 return $this->redirectToRoute('admin_ambassadeur_list');    
             }
 
-            $this->addFlash('primary', "Secteur choisi avec succès");
+            $this->addFlash('primary', $this->translator->trans("Secteur choisi avec succès"));
             return $this->redirectToRoute('admin_ambassadeur_password_generate', ['id' => $ambassadeur->getId()]);    
         }
         return $this->render('user_category/admin/ambassadeur/relate_secteur.html.twig', [
@@ -235,7 +237,7 @@ class AdminAmbassadeurController extends AbstractController
             $ambassadeur->setActive(true);
             $ambassadeur->setUsername($request->request->get('user_login')['username']);
             $this->userManager->setUserPasword($ambassadeur, $request->request->get('user_login')['password']['first'], '', false);
-            $this->addFlash('success', 'Les informations sur le nouveau ambassadeur ont été bien enregistrées');
+            $this->addFlash('success', $this->translator->trans('Les informations sur le nouveau ambassadeur ont été bien enregistrées'));
             return $this->redirectToRoute('admin_ambassadeur_list');    
         }
 
@@ -256,7 +258,7 @@ class AdminAmbassadeurController extends AbstractController
             $ambassadeur->setActive(-1);
            $this->entityManager->save($ambassadeur);
 
-            $this->addFlash('danger', 'L\'Ambassadeur a été banni du plateforme');
+            $this->addFlash('danger', $this->translator->trans('L\'Ambassadeur a été banni du plateforme'));
         }
         return $this->redirectToRoute('admin_ambassadeur_list');    
     }
@@ -270,7 +272,7 @@ class AdminAmbassadeurController extends AbstractController
         $ambassadeur->setActive(1);
         $this->entityManager->save($ambassadeur);
 
-        $this->addFlash('success', 'L\'Ambassadeur a été réactivé');
+        $this->addFlash('success', $this->translator->trans('L\'Ambassadeur a été réactivé'));
 
         return $this->redirectToRoute('admin_ambassadeur_list');
     }

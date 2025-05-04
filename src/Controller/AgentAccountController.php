@@ -32,6 +32,7 @@ use App\Services\CategorieFormationAgentService;
 use App\Repository\RFormationCategorieRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Repository\SecteurVideoFormationRepository;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -74,7 +75,8 @@ class AgentAccountController extends AbstractController
         CoachSecteurRepository $repoCoachSecteur,
         private SecteurVideoFormationRepository $secteurVideoFormationRepository,
         private StatAgentService $statAgentService,
-        private AnnouncementRepository $announcementRepository
+        private AnnouncementRepository $announcementRepository,
+        private TranslatorInterface $translator
     ) {
         $this->repoSecteur = $repoSecteur;
         $this->repoAgentSecteur = $repoAgentSecteur;

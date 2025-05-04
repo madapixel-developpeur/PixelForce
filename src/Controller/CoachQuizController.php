@@ -3,23 +3,24 @@
 
 namespace App\Controller;
 
-use App\Entity\Formation;
-use App\Entity\FormationQuizItem;
-use App\Entity\FormationQuizItemChoice;
-use App\Form\QuizFormType;
-use App\Form\QuizItemChoiceFormType;
-use App\Form\QuizItemFormType;
-use App\Repository\FormationQuizItemChoiceRepository;
-use App\Repository\FormationQuizItemRepository;
-use App\Repository\FormationThemeRepository;
-use App\Util\Status;
-use Doctrine\ORM\EntityManagerInterface;
 use Exception;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Util\Status;
+use App\Entity\Formation;
+use App\Form\QuizFormType;
+use App\Form\QuizItemFormType;
+use App\Entity\FormationQuizItem;
+use App\Form\QuizItemChoiceFormType;
+use App\Entity\FormationQuizItemChoice;
+use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\FormationThemeRepository;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Response;
+use App\Repository\FormationQuizItemRepository;
+use Symfony\Component\Routing\Annotation\Route;
+use App\Repository\FormationQuizItemChoiceRepository;
+use Symfony\Contracts\Translation\TranslatorInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
   * @Route("/coach/quiz")
@@ -27,7 +28,9 @@ use Symfony\Component\HttpFoundation\Response;
   */
 class CoachQuizController extends AbstractController
 {
-    public function __construct(private EntityManagerInterface $entityManager, private FormationQuizItemRepository $formationQuizItemRepository, private FormationQuizItemChoiceRepository $formationQuizItemChoiceRepository, private FormationThemeRepository $formationThemeRepository){
+    public function __construct(private EntityManagerInterface $entityManager, private FormationQuizItemRepository $formationQuizItemRepository, private FormationQuizItemChoiceRepository $formationQuizItemChoiceRepository, private FormationThemeRepository $formationThemeRepository,
+        private TranslatorInterface $translator
+    ){
 
     }
     /**
@@ -61,7 +64,7 @@ class CoachQuizController extends AbstractController
             $quiz->setType(Formation::TYPE_QUIZ);
             $this->entityManager->persist($quiz);
             $this->entityManager->flush();
-            $this->addFlash('success', $isEdit ? 'Quiz modifié avec succès' : 'Quiz ajouté avec succès');
+            $this->addFlash('success', $isEdit ? $this->translator->trans('Quiz modifié avec succès') : $this->translator->trans('Quiz ajouté avec succès'));
             return $this->redirectToRoute('coach_quiz_details', ['id'=> $quiz->getId()]);
         } catch(\Exception $e){
             $this->addFlash('danger', $e->getMessage());
@@ -85,7 +88,7 @@ class CoachQuizController extends AbstractController
                 $formation->setStatut(Formation::STATUS_DELETED);
                 $this->entityManager->persist($formation);
                 $this->entityManager->flush();
-                $this->addFlash('success', 'Quiz supprimé avec succès'); 
+                $this->addFlash('success', $this->translator->trans('Quiz supprimé avec succès')); 
             } catch(Exception $ex){
                 $this->addFlash('danger',$ex->getMessage());
             } 
@@ -139,7 +142,7 @@ class CoachQuizController extends AbstractController
                  $item->setStatut(Status::VALID);
                  $this->entityManager->persist($item);
                  $this->entityManager->flush();
-                 $this->addFlash('success', $isEdit ? 'Question modifiée avec succès':'Question ajoutée avec succès');
+                 $this->addFlash('success', $isEdit ? $this->translator->trans('Question modifiée avec succès'):$this->translator->trans('Question ajoutée avec succès'));
                  return $this->redirectToRoute('coach_quiz_item_details', ['id'=> $item->getId()]);
              } catch(\Exception $e){
                  $this->addFlash('danger', $e->getMessage());
@@ -179,7 +182,7 @@ class CoachQuizController extends AbstractController
                 $item->setStatut(Status::INVALID);
                 $this->entityManager->persist($item);
                 $this->entityManager->flush();
-                $this->addFlash('success', 'Question supprimée avec succès'); 
+                $this->addFlash('success', $this->translator->trans('Question supprimée avec succès')); 
             } catch(Exception $ex){
                 $this->addFlash('danger',$ex->getMessage());
             } 
@@ -196,7 +199,7 @@ class CoachQuizController extends AbstractController
                 $choice->setStatut(Status::INVALID);
                 $this->entityManager->persist($choice);
                 $this->entityManager->flush();
-                $this->addFlash('success', 'Choix supprimé avec succès'); 
+                $this->addFlash('success', $this->translator->trans('Choix supprimé avec succès')); 
             } catch(Exception $ex){
                 $this->addFlash('danger',$ex->getMessage());
             } 
@@ -244,7 +247,7 @@ class CoachQuizController extends AbstractController
                  $this->entityManager->persist($choice);
                  
                  $this->entityManager->flush();
-                 $this->addFlash('success', $isEdit ? 'Choix modifié avec succès' :  'Choix ajouté avec succès');
+                 $this->addFlash('success', $isEdit ? $this->translator->trans('Choix modifié avec succès') :  $this->translator->trans('Choix ajouté avec succès'));
                  return $this->redirectToRoute('coach_quiz_item_details', ['id'=> $item->getId()]);
              } catch(\Exception $e){
                  $this->addFlash('danger', $e->getMessage());

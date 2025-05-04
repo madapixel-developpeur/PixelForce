@@ -16,6 +16,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\CategorieFormationRepository;
 use App\Entity\SearchEntity\CategorieFormationSearch;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -28,7 +29,9 @@ class AdminCategorieFormationController extends AbstractController
 
     public function __construct(CategorieFormationRepository $repoCatFormation, EntityManager $entityManager,
         private ExcelService $excelService,
-        private PdfExport $pdfExport)
+        private PdfExport $pdfExport,
+        private TranslatorInterface $translator
+    )
     {
         $this->repoCatFormation = $repoCatFormation;
         $this->entityManager = $entityManager;
@@ -80,7 +83,7 @@ class AdminCategorieFormationController extends AbstractController
                 $category->setOrdreCatFormation($newOrderCat);
             }
             $this->entityManager->save($category);
-            $this->addFlash('success', "Catégorie ajoutée avec succès");
+            $this->addFlash('success', $this->translator->trans("Catégorie ajoutée avec succès"));
             return $this->redirectToRoute('admin_formation_categorie_list');    
         }
 
@@ -101,7 +104,7 @@ class AdminCategorieFormationController extends AbstractController
             $lastOrderCat = $this->repoCatFormation->findBy([],['id'=>'DESC'],1,0);
             $lastOrderCat = $lastOrderCat[0]->getOrdreCatFormation() + 1;
             $this->entityManager->save($category);
-            $this->addFlash('success', "Catégorie modifiée avec succès");
+            $this->addFlash('success', $this->translator->trans("Catégorie modifiée avec succès"));
             return $this->redirectToRoute('admin_formation_categorie_list');    
         }
 
@@ -118,7 +121,7 @@ class AdminCategorieFormationController extends AbstractController
     {
         $category->setStatut(-1);
         $this->entityManager->save($category);
-        $this->addFlash('danger', "Catégorie supprimée");
+        $this->addFlash('danger', $this->translator->trans("Catégorie supprimée"));
         return $this->redirectToRoute('admin_formation_categorie_list');    
     }
 
@@ -131,7 +134,7 @@ class AdminCategorieFormationController extends AbstractController
         $category->setStatut(1);
         $this->entityManager->save($category);
 
-        $this->addFlash('success', 'Catégorie réactiver');
+        $this->addFlash('success', $this->translator->trans('Catégorie réactiver'));
 
         return $this->redirectToRoute('admin_formation_categorie_list');
     }

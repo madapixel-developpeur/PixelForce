@@ -9,10 +9,11 @@ use App\Form\TagType;
 use App\Manager\EntityManager;
 use App\Repository\TagRepository;
 use Knp\Component\Pager\PaginatorInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class AdminTagController extends AbstractController
 {
@@ -26,7 +27,9 @@ class AdminTagController extends AbstractController
      */
     private $entityManager;
 
-    public function __construct(TagRepository $tagRepository, EntityManager $entityManager)
+    public function __construct(TagRepository $tagRepository, EntityManager $entityManager,
+        private TranslatorInterface $translator
+    )
     {
         $this->tagRepository = $tagRepository;
         $this->entityManager = $entityManager;
@@ -84,7 +87,7 @@ class AdminTagController extends AbstractController
     {
         if ($this->isCsrfTokenValid('delete'. $tag->getId(), $request->request->get('_token'))) {
             $this->entityManager->delete($tag);
-            $this->addFlash('danger', 'Le coach a été banni du plateforme');
+            $this->addFlash('danger', $this->translator->trans('Le coach a été banni du plateforme'));
         }
         return $this->redirectToRoute('admin_tag_list');
     }

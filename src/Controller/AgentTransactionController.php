@@ -17,6 +17,7 @@ use App\Repository\UserTransactionRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Nucleos\DompdfBundle\Wrapper\DompdfWrapperInterface;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -32,7 +33,8 @@ class AgentTransactionController extends AbstractController
     public function __construct(private SessionInterface $session, private EntityManagerInterface $entityManager, private UserTransactionRepository $userTransactionRepository, private SecteurRepository $secteurRepository,
         private ExcelService $excelService,
         private DompdfWrapperInterface $wrapper,
-        private PdfExport $pdfExport
+        private PdfExport $pdfExport,
+        private TranslatorInterface $translator
     )
     {
     }
@@ -52,11 +54,11 @@ class AgentTransactionController extends AbstractController
             try {
                 $countPendintRetrait = $this->userTransactionRepository->getNumberOfPendingRetrait($user, [$secteurId]);
                 if ($countPendintRetrait) {
-                    throw new \Exception('Une demande de retrait est déjà en cours.');
+                    throw new \Exception($this->translator->trans('Une demande de retrait est déjà en cours.'));
                 }
                 $data = $form->getData();
                 if ($data->getAmount() > $userSolde) {
-                    throw new \Exception('Solde insuffisant');
+                    throw new \Exception($this->translator->trans('Solde insuffisant'));
                 }
                 $data->setCreatedAt(new \DateTimeImmutable());
                 $data->setSecteur($secteur);
@@ -66,7 +68,7 @@ class AgentTransactionController extends AbstractController
                 $data->setStatus(UserTransaction::STATUS_CREATED);
                 $this->entityManager->persist($data);
                 $this->entityManager->flush();
-                $this->addFlash("success", "Retrait effectué avec succès");
+                $this->addFlash("success", $this->translator->trans("Retrait effectué avec succès"));
                 if (strcasecmp($data->getRib(), $user->getRib()) != 0) {
                     return $this->redirectToRoute('agent_change_rib', ['newRib' => $data->getRib()]);
                 }
@@ -188,7 +190,7 @@ class AgentTransactionController extends AbstractController
                 $user->setRib($newRib);
                 $this->entityManager->persist($user);
                 $this->entityManager->flush();
-                $this->addFlash("success", "RIB changé avec succès");
+                $this->addFlash("success", $this->translator->trans("RIB changé avec succès"));
             }
             return $this->redirectToRoute('agent_transaction_retrait');
         }
