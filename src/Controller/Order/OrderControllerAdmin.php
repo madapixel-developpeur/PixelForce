@@ -449,7 +449,7 @@ class OrderControllerAdmin extends AbstractController
         $orderList = $paginator->paginate(
             $result['items'],
             1,
-            $result['itemNumberPerPage'] ?? $limit
+            ($result['itemNumberPerPage'] == 0 || is_null($result['itemNumberPerPage']))? $limit : $result['itemNumberPerPage']
         );
         $orderList->setTotalItemCount($result['total']);
         $orderList->setCurrentPageNumber($result['currentPageNumber']);
@@ -494,7 +494,7 @@ class OrderControllerAdmin extends AbstractController
         $caHistory = $paginator->paginate(
             $result['items'],
             1,
-            $result['itemNumberPerPage'] ?? $limit
+            ($result['itemNumberPerPage'] == 0 || is_null($result['itemNumberPerPage']))? $limit : $result['itemNumberPerPage']
         );
         $caHistory->setTotalItemCount($result['total']);
         $caHistory->setCurrentPageNumber($result['currentPageNumber']);
