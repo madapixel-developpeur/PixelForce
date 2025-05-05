@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-	Liste des Audits
+    {% trans %}Liste des Audits{% endtrans %}
 {% endblock %}
 
 {% block stylesheets %}
@@ -61,10 +61,10 @@
                 <div class=" w-100 h-100 ps-3 py-3  bg-white border pe-3">
                     <div class="row h-100">
                         <div class="col-6">
-                            <h4 class="my-auto">Liste des Audits</h4>
+                            <h4 class="my-auto">{% trans %}Liste des Audits{% endtrans %}</h4>
                         </div>
                         <div class="col-6 ">
-                            <a href="{{ path('audit_add') }}" class="btn btn-primary btn-sm waves-effect waves-float waves-light fw-bolder d-flex float-end d-flex align-items-center"><i class="fa-solid fa-user-plus me-2"></i> Ajouter</a>
+                            <a href="{{ path('audit_add') }}" class="btn btn-primary btn-sm waves-effect waves-float waves-light fw-bolder d-flex float-end d-flex align-items-center"><i class="fa-solid fa-user-plus me-2"></i> {% trans %}Ajouter{% endtrans %}</a>
                         </div>
                     </div>
                 </div>
@@ -75,10 +75,10 @@
 				<thead>
 					<tr style="white-space:nowrap" >
 						<th scope="col" class="text-center">#</th>
-						<th scope="col" class="text-center">Nom du Projet</th>
-						<th scope="col" class="text-center">url du site</th>
-						<th scope="col" class="text-center">Date d'ajout</th>
-						<th scope="col" class="text-center table-th-notSortable">ACTION</th>
+						<th scope="col" class="text-center">{% trans %}Nom du Projet{% endtrans %}</th>
+						<th scope="col" class="text-center">{% trans %}url du site{% endtrans %}</th>
+						<th scope="col" class="text-center">{% trans %}Date d'ajout{% endtrans %}</th>
+						<th scope="col" class="text-center table-th-notSortable">{% trans %}ACTION{% endtrans %}</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -100,11 +100,11 @@
                                 </a>
                                 
                                 {% if  audit.isActive == constant('App\\Entity\\Reponse::ACTIVE_YES') %}
-									<a href="{{ path('audit_delete', {'id': audit.id}) }}" class="btn btn-secondary" onclick="confirmation('{{ path('audit_delete', {'id': audit.id}) }}','Êtes-vous sûr(e) de vouloir supprimer cet Audit?')">
+									<a href="{{ path('audit_delete', {'id': audit.id}) }}" class="btn btn-secondary" onclick="confirmation('{{ path('audit_delete', {'id': audit.id}) }}','{{ 'Êtes-vous sûr(e) de vouloir supprimer cet Audit?' | trans }}')">
                                     <i class="fa fa-trash" aria-hidden="true"></i>
                                     </a>	
 								{% else %}
-                                    <a  href="{{ path('audit_restore', {'id': audit.id}) }}" class="btn btn-secondary" onclick="confirmation('{{ path('audit_restore', {'id': audit.id}) }}','Êtes-vous sûr(e) de vouloir restorer cet Audit?')">
+                                    <a  href="{{ path('audit_restore', {'id': audit.id}) }}" class="btn btn-secondary" onclick="confirmation('{{ path('audit_restore', {'id': audit.id}) }}','{{ 'Êtes-vous sûr(e) de vouloir restorer cet Audit?' | trans }}')">
 									 <i class="fa fa-undo" aria-hidden="true"></i>
                                     </a>	
 								{% endif %}	

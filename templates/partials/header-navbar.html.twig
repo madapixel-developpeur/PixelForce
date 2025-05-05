@@ -22,7 +22,7 @@
           
             
         </ul>
-        {% if not app.session.has('secteurId') %}
+        {% if not app.session.has('secteurId') and is_granted('ROLE_AGENT') %}
         <ul class="nav navbar-nav d-none d-xl-block">
             <li class="nav-item  pixelforce-logo ms-3">
                <div  class="text-center text-muted  d-flex align-items-center justify-content-center ">
@@ -73,6 +73,17 @@
 
                         <div class="user-nav  me-2 d-none d-md-block">
                             <ul class="list-unstyled p-0">
+                                <li>
+                                    {% set route = app.request.attributes.get('_route') %}
+                                    {% set route_params = app.request.attributes.get('_route_params') %}
+                                    {% set params = route_params|merge(app.request.query.all) %}
+                                    <ul class="d-flex align-items-center flex-end " style="padding:5px; list-style-type:none; justify-content:flex-end;">
+                                        <li><a href="{{ path(route, params|merge({ lang: 'fr' })) }}"><img src="{{asset( "assets/flags/fr.png" ) }}" style="height: 15px;" alt="FR" /></a></li>
+                                        <li style="margin-left:10px; margin-right:10px"> | </li>
+                                        <li><a href="{{ path(route, params|merge({ lang: 'en' })) }}"><img src="{{asset( "assets/flags/en.png" ) }}"  style="height: 15px;" alt="EN" /></a></li>
+
+                                    </ul>
+                                </li>
                                 <li class="p-0">
                                     <span class="user-status header-user">{{ app.user.prenom|default(' ') }}</span>
                                     <span class="user-name header-user" >{{ app.user.nom }}</span>
@@ -83,7 +94,7 @@
                                 <li class="d-flex p-0">
                                     <span class="">
                                         <a class="header-user text-primary" href="#"  onclick="copyLink('{{ url('agent_inscription', {'ambassador_username':  app.user.username != "" ?  app.user.username : ' '}) }}') " >
-                                            Lien réseau
+                                           {% trans %} Lien réseau{% endtrans %}
                                             <i class="fa-solid fa-copy"></i>
                                         </a>
                                     </span>
@@ -91,8 +102,8 @@
                                 <li class="d-flex p-0">
                                     {% set productLink = generate_product_link(app.session.get('secteurId'),app.user.id) %}
                                     <span class="">
-                                    <a class="header-user text-primary" href="#"  onclick="copyLink('{{ productLink }}','Votre lien produit a été copié avec succès') "  >
-                                            Lien produit
+                                        <a class="header-user text-primary" href="#"  onclick="copyLink('{{ catalogues_base_url }}?ref={{ generateReference(app.user.id,app.user.id) }}',{{'Votre lien produit a été copié avec succès' | trans }}) "  >
+                                            {% trans %}Lien produit{% endtrans %}
                                             <i class="fa-solid fa-copy"></i>
                                         </a>
                                     </span>
@@ -109,8 +120,8 @@
 
                 
                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdown-user">
-                    <a class="dropdown-item" href="{{ path('user_accountSetting', {id:app.user.id}) }}"><i class="me-50" data-feather="user"></i> Mon compte</a>
-                    <a class="dropdown-item" href="{{ path('app_logout') }}"><i class="me-50" data-feather="power"></i> Se déconnecter</a>
+                    <a class="dropdown-item" href="{{ path('user_accountSetting', {id:app.user.id}) }}"><i class="me-50" data-feather="user"></i> {% trans %}Mon compte{% endtrans %}</a>
+                    <a class="dropdown-item" href="{{ path('app_logout') }}"><i class="me-50" data-feather="power"></i> {% trans %}Se déconnecter{% endtrans %}</a>
                 </div>   
             </li>
         </ul>

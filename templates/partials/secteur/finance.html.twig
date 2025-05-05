@@ -10,7 +10,7 @@
 				</div>
 			</div>
 			<div class="my-auto">
-				<h4 class="card-text font-small-1 mb-0 text-dark-template d-none d-xl-block">Total investi</h4>
+				<h4 class="card-text font-small-1 mb-0 text-dark-template d-none d-xl-block">{% trans %}Total investi{% endtrans %}</h4>
 				<h6 class="fw-bolder mb-0 ">
 					{{ statFinance.total_invested_number | number_format(2, ',', ' ')}}
 					$
@@ -31,7 +31,7 @@
 				</div>
 			</div>
 			<div class="my-auto">
-				<h4 class="card-text font-small-1 mb-0 text-dark-template d-none d-xl-block">Rendement total</h4>
+				<h4 class="card-text font-small-1 mb-0 text-dark-template d-none d-xl-block">{% trans %}Rendement total{% endtrans %}</h4>
 				<h6 class="fw-bolder mb-0 ">
 					{{ statFinance.total_returns_number | number_format(2, ',', ' ')}}
 					$
@@ -52,7 +52,7 @@
 				</div>
 			</div>
 			<div class="my-auto">
-				<h4 class="card-text font-small-1 mb-0 text-dark-template d-none d-xl-block">Pourcentage de rendement total</h4>
+				<h4 class="card-text font-small-1 mb-0 text-dark-template d-none d-xl-block">{% trans %}Pourcentage de rendement total{% endtrans %}</h4>
 				<h6 class="fw-bolder mb-0 ">
 					{{ statFinance.total_returns_percent_number | number_format(2, ',', ' ')}}
 					%
@@ -73,7 +73,7 @@
 				</div>
 			</div>
 			<div class="my-auto">
-				<h4 class="card-text font-small-1 mb-0 text-dark-template d-none d-xl-block">Solde</h4>
+				<h4 class="card-text font-small-1 mb-0 text-dark-template d-none d-xl-block">{% trans %}Solde{% endtrans %}</h4>
 				<h6 class="fw-bolder mb-0 ">
 					{{ statFinance.wallet_balance_number | number_format(2, ',', ' ')}}
 					$

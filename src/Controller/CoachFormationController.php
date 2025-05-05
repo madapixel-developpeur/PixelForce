@@ -35,6 +35,7 @@ use App\Form\FormationPageConfigurationFormType;
 use App\Repository\CategorieFormationRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Repository\SecteurVideoFormationRepository;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use App\Repository\FormationPageConfigurationRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -102,7 +103,8 @@ class CoachFormationController extends AbstractController
         private SecteurVideoFormationRepository $secteurVideoFormationRepository,
         private FormationPageConfigurationRepository $formationPageConfigurationRepository,
         private FileHandler $fileHandler,
-        private FormationThemeRepository $formationThemeRepository
+        private FormationThemeRepository $formationThemeRepository,
+        private TranslatorInterface $translator
 
     ) {
         $this->fileUploader = $fileUploader;
@@ -217,7 +219,7 @@ class CoachFormationController extends AbstractController
 
                 $this->entityManager->flush();
                 $this->entityManager->commit();
-                $this->addFlash('success', 'Formation ajouté avec succès');
+                $this->addFlash('success', $this->translator->trans('Formation ajouté avec succès'));
                 return $this->redirectToRoute('coach_formation_fiche', ['id' => $formation->getId()]);
             } catch (\Throwable $th) {
                 $error = $th->getMessage();
@@ -272,7 +274,7 @@ class CoachFormationController extends AbstractController
                 $this->uploadFormationFiles($request, $formation);
                 $this->entityManager->flush();
                 $this->entityManager->commit();
-                $this->addFlash('success', 'Formation ajouté avec succès');
+                $this->addFlash('success', $this->translator->trans('Formation ajouté avec succès'));
                 return $this->redirectToRoute('coach_formation_fiche', ['id' => $formation->getId()]);
             } catch (\Throwable $th) {
                 $error = $th->getMessage();
@@ -431,7 +433,7 @@ class CoachFormationController extends AbstractController
         try {
             $formation->setStatut(Formation::STATUS_DELETED);
             $this->entityManager->save($formation);
-            $this->addFlash('success', 'Formation supprimée');
+            $this->addFlash('success', $this->translator->trans('Formation supprimée'));
         } catch (Exception $ex) {
             $this->addFlash('danger', $ex->getMessage());
         }
@@ -464,7 +466,7 @@ class CoachFormationController extends AbstractController
 
                 $this->entityManager->persist($video);
                 $this->entityManager->flush();
-                $this->addFlash('success', 'Video ajoutée avec succès');
+                $this->addFlash('success', $this->translator->trans('Video ajoutée avec succès'));
             } catch (\Throwable $th) {
                 //throw $th;
                 $this->addFlash('danger', $_ENV['CUSTOM_ERROR_MESSAGE']);
@@ -510,7 +512,7 @@ class CoachFormationController extends AbstractController
                 $this->entityManager->persist($configuration);
                 $this->entityManager->flush();
                 $textSuccess = $isCreation ? 'Configuration ajoutée avec succès' : 'Configuration modifiée avec succès';
-                $this->addFlash('success', 'Configuration ajoutée avec succès');
+                $this->addFlash('success', $this->translator->trans('Configuration ajoutée avec succès'));
             } catch (\Throwable $th) {
                 // throw $th;
                 $this->addFlash('danger', $_ENV['CUSTOM_ERROR_MESSAGE']);

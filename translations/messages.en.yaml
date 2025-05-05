@@ -1,0 +1,561 @@
+Authentification: 'Authentication'
+Connexion: 'Login'
+'Email ou mot de passe invalide': 'Invalid email or password'
+'Nom d''utilisateur/Email': 'Username/Email'
+'Mot de passe': 'Password'
+'Se connecter': 'Log in'
+'Mot de passe oublié ?': 'Forgot password?'
+'S''inscrire': 'Sign up'
+Facture: 'Invoice'
+Sous-total: 'Subtotal'
+TVA: 'VAT'
+'Prix net (sans TVA)': 'Net price (without VAT)'
+'Frais de livraison': 'Shipping fees'
+'Prix total (TVA incluse)': 'Total price (VAT included)'
+'Conditions générales de vente': 'Terms and Conditions of Sale'
+'Conditions générales d''utilisation': 'Terms of Use'
+'Conditions générales d''utilisations (CGU)': 'Terms of Use (ToU)'
+'Conditions générales de vente (CGV)': 'Terms and Conditions of Sale (TCS)'
+Vous devez sélectionner au moins un type de compte !: You must select at least one account type!
+Inscription: Registration
+Information du compte: Account Information
+Type: Type
+Compte Revendeur: Reseller Account
+"Vous souhaitez recommander des services sans les réaliser vous-même ?\nChoisissez le compte Revendeur pour accéder à une sélection de services proposés par nos partenaires (agences, professionnels…). Vous pourrez les recommander en toute autonomie et toucher des commissions à chaque vente.": "Do you want to recommend services without delivering them yourself?\nChoose the Reseller Account to access a selection of services offered by our partners (agencies, professionals, etc.). You can recommend them independently and earn commissions on each sale."
+'🔹 Id&eacute;al si vous &ecirc;tes apporteur d&rsquo;affaires, influenceur, ou que vous d&eacute;veloppez une activit&eacute; de vente indirecte.<br />🔹 Vous n&rsquo;avez pas besoin de comp&eacute;tences techniques ni de g&eacute;rer la prestation.<br />🔹 Vous b&eacute;n&eacute;ficiez d&rsquo;outils de suivi, d&rsquo;un lien d&rsquo;affiliation personnel, et d&rsquo;un syst&egrave;me de commissions automatique.': "🔹 Ideal if you're a business introducer, influencer, or running an indirect sales activity.<br />🔹 No need for technical skills or service management.<br />🔹 You get tracking tools, a personal affiliate link, and an automatic commission system."
+Compte Professionnel (Pro): Professional Account (Pro)
+Vous avez des compétences techniques ou un savoir-faire métier ? Rejoignez l’équipe Pixelforce en tant que professionnel labellisé.: Do you have technical skills or professional expertise? Join the Pixelforce team as a certified professional.
+"Le compte Pro est destiné aux prestataires qualifiés qui souhaitent collaborer avec Pixelforce sur le terrain, dans leur domaine d’expertise.\nVous intervenez pour réaliser des prestations concrètes pour les clients de la plateforme, en lien avec notre équipe centrale.": "The Pro account is for qualified providers who want to work with Pixelforce on the ground in their area of expertise.\nYou’ll provide services directly to platform clients, in collaboration with our central team."
+'🔹 Qui est concern&eacute; ?<br />D&eacute;veloppeurs, community managers, experts SEO/SEA, installateurs de syst&egrave;mes d&rsquo;alarmes etc.': "🔹 Who is this for?<br />Developers, community managers, SEO/SEA experts, alarm system installers, etc."
+'🔹 Pourquoi nous rejoindre ?<br />Vous travaillez en collaboration directe avec Pixelforce, b&eacute;n&eacute;ficiez d&rsquo;opportunit&eacute;s de missions r&eacute;guli&egrave;res, et &ecirc;tes form&eacute; &agrave; nos standards de qualit&eacute;.': "🔹 Why join us?<br />You’ll work directly with Pixelforce, benefit from regular job opportunities, and receive training on our quality standards."
+'🔹 Ce que vous gagnez :<br />Un label Pixelforce, une visibilit&eacute; accrue, des missions qualifi&eacute;es, et un accompagnement personnalis&eacute; pour d&eacute;velopper votre activit&eacute;.': "🔹 What you gain:<br />A Pixelforce certification, greater visibility, qualified missions, and personalized support to grow your business."
+Suivant: Next
+Information: Information
+Information sur la connexion: Login Information
+Retour: Back
+S’inscrire: Sign Up
+Déjà un compte ? Connectez-vous: Already have an account? Log in
+Entrer votre nom: "Enter your name"
+Champ obligatoire: "Required field"
+Entrer votre prénom: "Enter your first name"
+Votre adresse: "Your address"
+Numéro téléphone: "Phone number"
+Code postal: "Postal code"
+Nom d'utilisateur: "Username"
+Adresse mail: "Email address"
+Le mot de passe saisi doit être le même.: "Passwords must match"
+Confirmation Mot de passe: "Confirm password"
+Numéro de rue: "Street number"
+Ville: "City"
+Pays: "Country"
+Sélectionnez un pays: "Select a country"
+Veuillez choisir un pays: "Please choose a country"
+Nom d'utilisateur du parrain: "Referrer's username"
+'À ce jour, la plateforme n''est pas ouverte aux professionnels basés en France.': To date, the platform is not open to professionals based in France
+Bonjour %prenom%! Bienvenue sur Pixelforce: "Hello %prenom%! Welcome to Pixelforce"
+Paiement efféctué avec succès !: "Payment completed successfully!"
+Découvrez comment Pixelforce peut transformer votre activité. Regardez cette courte vidéo pour en savoir plus sur les opportunités qui vous attendent.: "Discover how Pixelforce can transform your business. Watch this short video to learn more about the opportunities waiting for you."
+Ajouter: "Add"
+Accéder: "Access"
+En attente de validation: "Pending validation"
+Bientôt Disponible: "Coming Soon"
+Choix du secteur: "Sector selection"
+Total investi: "Total invested"
+Rendement total: "Total return"
+Pourcentage de rendement total: "Total return percentage"
+Solde: "Balance"
+CA: "Revenue"
+Mes ⁠Gains: "My ⁠Earnings"
+⁠CA: "Revenue"
+Rémunération: "Commissions"
+Statut: "Status"
+Lien réseau: "Network link"
+Votre lien produit a été copié avec succès: "Your product link has been successfully copied"
+Lien produit: "Product link"
+Mon compte: "My account"
+Se déconnecter: "Log out"
+Tableau de bord: "Dashboard"
+Choix secteur: "Sector choice"
+Développez vos compétences et maîtrisez nos services: "Develop your skills and master our services"
+Formations: "Training"
+Planifiez vos rendez-vous et événements clés: "Schedule your appointments and key events"
+Mon Agenda: "My Calendar"
+Historique et suivi de vos paiements: "History and tracking of your payments"
+Mes transactions: "My transactions"
+Accédez à votre coach dédié et aux ressources d’accompagnement: "Access your dedicated coach and support resources"
+Coaching & Suppor: "Coaching & Support"
+Gérez votre carnet d’adresses et suivez vos prospects: "Manage your address book and track your prospects"
+Contacts & Prospects: "Contacts & Prospects"
+Suivi de vos ventes et commandes en cours: "Track your sales and current orders"
+Mes ventes: "My sales"
+Demandes de devis: "Quote requests"
+Devis: "Quotes"
+Paramètre: "Setting"
+Référence: "Reference"
+Société: "Company"
+Client: "Client"
+Service: "Service"
+Commandes: "Orders"
+Détails sur votre rémunération et vos bonus: "Details about your compensation and bonuses"
+Mes gains & commissions: "My earnings & commissions"
+Analyse et suivi de votre performance financière: "Analysis and tracking of your financial performance"
+Chiffre d'affaires: "Revenue"
+Guides, outils et supports pour booster vos ventes: "Guides, tools, and resources to boost your sales"
+Centre de ressources: "Resource center"
+Vue globale de vos commandes et services activés: "Overview of your orders and activated services"
+Formation: "Training"
+Accédez aux outils et guides pour optimiser votre activité: "Access tools and guides to optimize your activity"
+Gestion des ressources: "Resource management"
+Historique des services souscrits et suivi des prestations: "History of subscribed services and service tracking"
+Mes services: "My services"
+Suivi des paiements et téléchargement des factures: "Payment tracking and invoice download"
+Facturation & paiements: "Billing & payments"
+Besoin d’aide ? Contactez notre équipe techniquev: "Need help? Contact our technical team"
+Support & assistance: "Support & assistance"
+Gérez vos données et préférences professionnelles: "Manage your data and professional preferences"
+Mes informations: "My information"
+Dashboard: Dashboard
+'Liste des formations': 'List of trainings'
+'Il n''y a plus de formation à terminer': 'There are no more trainings to complete'
+'Dernièr résultat': 'Last result'
+'Résultat maximum': 'Highest score'
+RÉUSSI: SUCCESS
+ÉCHOUÉ: FAILED
+Commencer: Start
+Réessayer: Retry
+'Voir le dérnier résultat': 'See the last result'
+'Fiche formation': 'Training sheet'
+'Accéder à mes formations': 'Access my trainings'
+'Je veux découvrir les services de Pixelsior': 'I want to discover Pixelsior services'
+'J’ai un client qui veut prendre un service': 'I have a client who wants to get a service'
+'J’ai un partenaire qui veut rejoindre mon équipe': 'I have a partner who wants to join my team'
+'Besoin d’un accompagnement ?': 'Need support?'
+Nom: Name
+Email: Email
+'Réserver un rendez-vous': 'Book an appointment'
+'Lien d''affiliation produit': 'Product affiliate link'
+'Explorez nos offres': 'Explore our offers'
+'Lien d''invitation': 'Invitation link'
+'Cliquer ici': 'Click here'
+'Mon planning d’activités': 'My activity schedule'
+'Gérer mes rendez-vous': 'Manage my appointments'
+'Aucun évenement à venir.': 'No upcoming events.'
+'Mon réseau': 'My network'
+'Espace revendeur': 'Reseller space'
+'Espace professionnel': 'Professional space'
+Référencement: SEO
+'Naturel (SEO)': 'Organic (SEO)'
+'Accélérez votre visibilité avec notre stratégie SEO sur-mesure, optimisant contenu et balises pour Google.': 'Boost your visibility with our tailored SEO strategy, optimizing content and tags for Google.'
+'Nos offres exclusives': 'Our exclusive offers'
+Développement: Development
+Web: Web
+'Bénéficiez d''un service sur-mesure optimisé selon vos objectifs, et faites de votre projet un réel levier de croissance.': 'Benefit from a tailored service optimized to your goals, and turn your project into a real growth driver.'
+'Social Media': 'Social Media'
+Marketing: Marketing
+'Amplifiez votre présence en ligne avec une stratégie de médias sociaux personnalisée, créant du buzz engageant.': 'Amplify your online presence with a personalized social media strategy that creates engaging buzz.'
+Conception: Design
+Graphique: Graphic
+'Sublimez votre marque avec des visuels captivants, conçus pour marquer les esprits et se démarquer.': 'Elevate your brand with captivating visuals designed to make a lasting impression and stand out.'
+'Gestion Google AdWords': 'Google AdWords Management'
+'Maximisez votre ROI avec une campagne AdWords ciblée, optimisée pour attirer des prospects de qualité.': 'Maximize your ROI with a targeted AdWords campaign optimized to attract quality leads.'
+'Développement d''App Mobiles': 'Mobile App Development'
+'Rapprochez-vous de vos clients avec une application mobile intuitive et fonctionnelle, pour une expérience utilisateur parfaite.': 'Get closer to your clients with an intuitive and functional mobile app for a perfect user experience.'
+'Ajouter un évènement': 'Add an event'
+Filtrer: 'Filter'
+'Tout voir': 'View all'
+Evènement: 'Event'
+Titre: 'Title'
+Etiquette: 'Label'
+'Date de début': 'Start date'
+'Date de fin': 'End date'
+'Toute la journée': 'All day'
+'URL de l''évènement': 'Event URL'
+Annuler: 'Cancel'
+Modifier: 'Edit'
+Supprimer: 'Delete'
+'Votre agenda n''est rattaché à aucun compte': 'Your calendar is not linked to any account'
+'Votre agenda est rattaché à': 'Your calendar is linked to'
+'Configurer votre agenda': 'Set up your calendar'
+'Mon calendrier': 'My calendar'
+'Agent - Formation fiche': 'Agent - Training sheet'
+'Fichiers joints': 'Attached files'
+Documents: 'Documents'
+Audios: 'Audios'
+Contenu: 'Content'
+'Vous avez déjà terminé cette formation': 'You have already completed this training'
+Description: 'Description'
+brouillon: 'Draft'
+'Quiz bloqué': 'Quiz locked'
+'Formation bloquée': 'Training locked'
+'Formation terminée': 'Training completed'
+'Aucune formation pour cet thème': 'No training for this theme'
+'Aucune formation': 'No training'
+client: 'Client'
+'Information sur le contact': 'Contact information'
+'Information sur le gérant': 'Manager information'
+'Information sur l''entreprise': 'Company information'
+'Choisir le ou les tags': 'Choose one or more tags'
+'Pas de tags diponibles': 'No tags available'
+'Une erreur s''est survenue, veuillez retourner dans la page de selection de secteur.': 'An error occurred, please return to the sector selection page.'
+'Merci !': 'Thank you!'
+'Liste  contacts agent': 'Agent contact list'
+'Contact ajouté avec succès': 'Contact added successfully'
+'Liste de mes contacts': 'My contact list'
+Ajout: 'Add'
+Filtres: 'Filters'
+'Options de filtre': 'Filter options'
+Ordre: 'Order'
+ASC: 'ASC'
+DESC: 'DESC'
+'Type du contact': 'Contact type'
+'Date d''enregistrement à partir de': 'Registration date from'
+'Date d''enregistrement jusqu''à': 'Registration date until'
+'Importer/Exportation mobile': 'Mobile import/export'
+Rechercher: 'Search'
+'Exporter excel': 'Export Excel'
+'Exporter csv': 'Export CSV'
+'Exporter pdf': 'Export PDF'
+'Aucun contact.': 'No contacts.'
+Id: 'Id'
+nom: 'Name'
+Téléphone: 'Phone'
+Adresse: 'Address'
+'Nom de l''entreprise': 'Company name'
+'Liste des coachs': 'Coach list'
+'Aucun Coach trouvé': 'No coach found'
+Photo: 'Photo'
+'Nom et prénoms': 'First and last name'
+Secteur: 'Sector'
+ACTION: 'ACTION'
+'Prendre RDV': 'Make an appointment'
+'Visualisation utilisateur agent': 'Agent user view'
+'Votre réseau et vos performances': 'Your network and performance'
+'Développez votre réseau': 'Grow your network'
+'Partagez votre lien unique et invitez d’autres personnes à rejoindre l’aventure (Plus votre réseau grandit, plus vous augmentez vos opportunités de gains)': 'Share your unique link and invite others to join the adventure (The more your network grows, the more your earning opportunities increase)'
+'Copier votre lien': 'Copy your link'
+'CA personnel': 'Personal turnover'
+'CA equipe': 'Team turnover'
+'Nombre de filleuls directs': 'Number of direct referrals'
+'Taille de votre équipe': 'Team size'
+'Votre organisation en un coup d’oeil': 'Your organisation at a glance'
+'Chaque niveau représente un nouvelle génération de votre réseau.': 'Each level represents a new generation of your network.'
+Retrait: 'Withdrawal'
+'Demande de retrait': 'Withdrawal request'
+Enregistrer: 'Save'
+'Votre solde actuel': 'Your current balance'
+Historique: 'History'
+Date: 'Date'
+Montant: 'Amount'
+RIB: 'Bank account details (RIB)'
+Contact: 'Contact'
+'Pas de numero': 'No number'
+'Désolé, une erreur s''est survenue !': 'Sorry, an error occurred!'
+'Ajout du client avec succès': 'Client added successfully'
+'Nom ou prénom': 'First name or surname'
+'Tous les secteurs': 'All sectors'
+'Date d''inscription à partir de': 'Registration date from'
+'Date d''inscription jusqu''à': 'Registration date until'
+libelle: 'Label'
+Prénom: 'First name'
+'Entrer le prénom': 'Enter first name'
+'Entrer le nom': 'Enter surname'
+E-mail: 'Email'
+'Entrer l''adresse mail': 'Enter email address'
+'Entrer le numéro téléphone': 'Enter phone number'
+'Entrer l''adresse': 'Enter address'
+Rue: 'Street'
+Numéro: 'Number'
+'Type du Logement': 'Type of accommodation'
+'Nombre de personnes du foyer': 'Number of household members'
+Note: 'Note'
+'Année de construction de la maison': 'Year of house construction'
+Siret: 'Siret'
+'Adresse postale (rue, ville, code postal, pays)': 'Postal address (street, city, postcode, country)'
+'Liens de la référence %linkRef% copié avec succès': 'Reference link %linkRef% copied successfully'
+'Êtes vous vraiment sûr de supprimer ce contact ?': 'Are you sure you really want to delete this contact?'
+'Exemple de contact': 'Contact example'
+'Vrai contact': 'Real contact'
+'Particulier': 'Individual'
+'Entreprise': 'Company'
+'Commande': 'Order'
+'Home': 'Home'
+'eCommerce': 'eCommerce'
+'Informations sur le client': 'Customer information'
+'Nom et prénom(s)': 'Full name'
+'Informations sur la livraison': 'Delivery information'
+'Pays/région': 'Country/region'
+'Détails de la commande': 'Order details'
+'Montant total': 'Total amount'
+'Liste des commandes': 'Order list'
+'Chercher': 'Search'
+'Aucune Commande': 'No orders'
+'Pack - (service)': 'Pack - (service)'
+"Créée": "Created"
+"Payée" : "Paid" 
+"Livrée": "Delivered"
+"Créé": "Created"
+"Payé" : "Paid" 
+"Livré": "Delivered"
+Rémunérations: "Remuneration"
+"Historique des rémunérations": "Remuneration history"
+"Aucun résultat trouvé.": "No results found."
+Ressource: "Resource"
+"Rubrique(s)": "Section(s)"
+"Fichier(s)": "File(s)"
+"Découvrez toutes les ressources à votre disposition. Accédez à des contenus essentiels pour vous guider et vous accompagner dans vos démarches.": "Discover all the resources available to you. Access essential content to guide and support you in your endeavours."
+"Aucun résultat": "No results"
+"Accéder à la ressource": "Access the resource"
+"Aucune ressource": "No resources"
+"Chiffre d'affaires - Détail": "Turnover - Detail"
+"Vente du mois de": "Sales for the month of"
+"Aucune commande.": "No orders."
+"Chiffre d'affaires total du mois": "Total turnover for the month"
+Portfolio(lien): "Portfolio (link)"
+Portfolio(fichier): "Portfolio (file)"
+Compétence: "Skill"
+Langues: "Languages"
+"Compétence technique": "Technical skill"
+"Bientôt disponible": "Coming soon"
+"Cette fonctionnalité sera bientôt disponible. Restez à l'écoute !": "This feature will be available soon. Stay tuned!"
+"Professionnel - Information": "Professional - Information"
+Informations: "Information"
+"Soumettre à nouveau": "Resubmit"
+"Nom & Prénom": "First & Last Name"
+"Date d'inscription": "Registration date"
+Télécharger: "Download"
+Catégorie: "Category"
+"Nom du projet": "Project name"
+"Le nom du projet est obligatoire": "The project name is required"
+"Url du site": "Website URL"
+"L'url du site est obligatoire": "The website URL is required"
+"La description est obligatoire": "The description is required"
+"Coach - Liste Formations Video": "Coach - Video Training List"
+"Formation revendeur": "Reseller training"
+"Formation professionnel": "Professional training"
+"Video fin de formation": "End-of-training video"
+"Ajouter une formation": "Add a training"
+"Ajouter un quiz": "Add a quiz"
+"Configurer page de formation": "Configure training page"
+Etat: "Status"
+Tous: "All"
+Brouillon: "Draft"
+"Trier par": "Sort by"
+Auteur: "Author"
+"Ajouter un thème": "Add a theme"
+"Fiche quiz": "Quiz sheet"
+Thème: "Theme"
+"Ajout Audit": "Add Audit"
+"Ajouter un audit": "Add an audit"
+"Visualisation Audit": "Audit View"
+"Liste des réponses potentiels": "List of potential answers"
+Déscription: "Description"
+"Fichier jointe": "Attached file"
+Action: "Action"
+"Êtes-vous sûr(e) de vouloir supprimer cette réponse?": "Are you sure you want to delete this answer?"
+"Êtes-vous sûr(e) de vouloir réstorer cette réponse?": "Are you sure you want to restore this answer?"
+"Liste des Audits": "Audit List"
+"Nom du Projet": "Project Name"
+"url du site": "Website URL"
+"Date d'ajout": "Date added"
+"Êtes-vous sûr(e) de vouloir supprimer cet Audit?": "Are you sure you want to delete this Audit?"
+"Êtes-vous sûr(e) de vouloir restorer cet Audit?": "Are you sure you want to restore this Audit?"
+"Liste des agents": "Agent List"
+"Ajouter des Agents": "Add Agents"
+"Date inscription": "Registration date"
+Valider: "Validate"
+Bloquer: "Block"
+"Liste de contact": "Contact list"
+"Liste des secteurs de l'agent": "Agent's sector list"
+"Date de validation": "Validation date"
+Bloqué: "Blocked"
+Validé: "Validated"
+"Thème de formation": "Training theme"
+"Modifier le thème de formation": "Edit training theme"
+"Ajouter un thème de formation": "Add a training theme"
+"Pour débloquer cette formation, assurez-vous d’avoir enregistré plus de 100 contacts dans votre liste de prospection.": "To unlock this training, ensure you have recorded more than 100 contacts in your prospecting list."
+"J'ai terminé cette formation": "I have completed this training"
+"Copier le lien d'affiliation": "Copy the affiliate link"
+"Pour inviter d'autres personnes à se joindre à vous, veuillez cliquer ici.": "To invite others to join you, please click here."
+Copier: "Copy"
+"Espace coach": "Coach area"
+"Mes Agents": "My Agents"
+Filleul: "Referral"
+Audit: "Audit"
+Catalogue: "Catalogue"
+Catégories: "Categories"
+Produits: "Products"
+Stock: "Stock"
+Inventaire: "Inventory"
+Implantations: "Locations"
+Contrat: "Contract"
+Kits: "Kits"
+Ressources: "Resources"
+Rubriques: "Sections"
+Liste: "List"
+Annonces: "Announcements"
+"Réseaux sociaux": "Social networks"
+"Code promo": "Promo code"
+Détails: "Details"
+"Nom et prénom": "Full name"
+"Détails de l'audit": "Audit details"
+Proprietaire: "Owner"
+"Google Formulaire": "Google Form"
+"Accéder aux formulaires": "Access forms"
+"Réponse du Google Formulaire": "Google Form response"
+"Accéder aux réponses du formulaire": "Access form responses"
+'Titre de la réponse': 'Answer title'
+'Le titre de problème  est obligatoire': 'The problem title is required'
+'La description  est obligatoire': 'The description is required'
+'Image invalide. Le format doit être: .jpeg ou .png': 'Invalid image. The format must be: .jpeg or .png'
+'Coach - Fiche formation': 'Coach - Training record'
+Confirmation: 'Confirmation'
+'Voulez-vous vraiment supprimer la formation ?': 'Are you sure you want to delete the training?'
+Fermer: 'Close'
+Videos: 'Videos'
+'Modifier le lien de la video': 'Edit video link'
+Loading: 'Loading'
+Document: 'Document'
+'Pas de document': 'No document'
+'Ajouter un document': 'Add a document'
+Audio: 'Audio'
+'Pas d''audio': 'No audio'
+'Ajouter un audio': 'Add an audio'
+'Ajout Réponse': 'Add Answer'
+'Ajouter une réponse sur l''audit': 'Add an answer to the audit'
+'Liste de contacts': 'Contact list'
+Prénoms: 'First names'
+'Visualisation utilisateur coach': 'Coach user view'
+Equipe: 'Team'
+'Filleul direct': 'Direct referral'
+'Liste des catégories': 'Category list'
+'Aucune catégorie disponible pour le moment.': 'No categories available at the moment.'
+'Référencement<br>Naturel (SEO)': 'Natural<br>Referencing (SEO)'
+'Développement<br> Web': 'Web<br>Development'
+'Social Media<br>Marketing': 'Social Media<br>Marketing'
+'Conception<br>Graphique': 'Graphic<br>Design'
+'Veuillez fournir votre portfolio, sous forme de lien ou de fichier.': 'Please provide your portfolio, either as a link or a file.'
+'Information enregistrée avec succès.': 'Information successfully saved.'
+'Nouvel Audit Enregistré,veuillez visualiser la fiche de votre rendez-vous': 'New audit saved, please view the details of your appointment.'
+'Nouvel Audit enregistrée avec succès': 'New audit successfully saved.'
+'Modification Audit effectuée avec succès': 'Audit successfully updated.'
+'Suppression Audit effectuée avec succès': 'Audit successfully deleted.'
+'Restoration Audit effectuée avec succès': 'Audit successfully restored.'
+'Note enregistré avec succès': 'Note successfully saved.'
+'Ajout d''une type de commercialisation avec succès': 'Marketing type successfully added.'
+'Modification type de commercialisation avec succès': 'Marketing type successfully updated.'
+'Ajout d''un secteur avec succès': 'Sector successfully added.'
+'Modification secteur avec succès': 'Sector successfully updated.'
+'Secteur restauré': 'Sector restored.'
+'Vous devez sélectionner au moins un type de compte.': 'You must select at least one account type.'
+'À ce jour, la plateforme %platform% n''est pas ouverte aux professionnels basés en France.': 'As of now, the %platform% platform is not available to professionals based in France.'
+'Votre inscription sur Pixelforce a été effectuée avec succès': 'Your registration on Pixelforce was successful.'
+'Le nom d''utilisateur inscrit en haut n''existe pas ou n''est pas valide.': 'The username entered above does not exist or is invalid.'
+'Vous avez été rediriger vers cette page car une erreur s''est produite !': 'You were redirected to this page because an error occurred!'
+'Plan d''abonnement null, n''oublie pas de créer des plans d''abonnement pour les agents dans l''espace Admin': 'Subscription plan is null, don’t forget to create subscription plans for agents in the Admin area.'
+'Le coach a été banni du plateforme': 'The coach has been banned from the platform.'
+'Une demande de retrait est déjà en cours.': 'A withdrawal request is already in progress.'
+'Solde insuffisant': 'Insufficient balance.'
+'Retrait effectué avec succès': 'Withdrawal completed successfully.'
+'RIB changé avec succès': 'Bank details successfully changed.'
+'Modification du coach avec succès': 'Coach successfully updated.'
+'Secteur attribué avec succès': 'Sector successfully assigned.'
+'Secteur choisi avec succès': 'Sector successfully selected.'
+'Les informations sur le nouveau ambassadeur ont été bien enregistrées': 'The new ambassador’s information has been successfully saved.'
+'L''Ambassadeur a été banni du plateforme': 'The ambassador has been banned from the platform.'
+'L''Ambassadeur a été réactivé': 'The ambassador has been reactivated.'
+'Votre rendez-vous a été programmé.': 'Your appointment has been scheduled.'
+'Votre rendez-vous a été mis à jour.': 'Your appointment has been updated.'
+'Script ajouté avec succès': 'Script successfully added.'
+'Script modifié avec succès': 'Script successfully updated.'
+'Fichier(s) ajouté(s) avec succès.': 'File(s) successfully added.'
+'Annonce ajoutée avec succès': 'Listing successfully added.'
+'Annonce modifiée avec succès': 'Listing successfully updated.'
+'Annonce supprimée avec succès': 'Listing successfully deleted.'
+'Rubrique ajouté avec succès': 'Section successfully added.'
+'Rubrique modifié avec succès': 'Section successfully updated.'
+'Rubrique supprimé avec succès': 'Section successfully deleted.'
+'Code promo ajouté avec succès': 'Promo code successfully added.'
+'Code promo modifié avec succès': 'Promo code successfully updated.'
+'Code promo supprimé avec succès': 'Promo code successfully deleted.'
+'Formation ajouté avec succès': 'Training successfully added.'
+'Formation supprimée': 'Training deleted.'
+'Video ajoutée avec succès': 'Video successfully added.'
+'Configuration ajoutée avec succès': 'Configuration successfully added.'
+'Veuillez choisir un fichier, s''il vous plaît.': 'Please select a file.'
+'Aucun fichier detectée': 'No file detected.'
+'Exemple de contact ajouté avec succès': 'Contact example successfully added.'
+'Exemple de contact modifié avec succès': 'Contact example successfully updated.'
+'Exemple de contact supprimé': 'Contact example deleted.'
+'Catégorie ajoutée avec succès': 'Category successfully added.'
+'Catégorie modifiée avec succès': 'Category successfully updated.'
+'Catégorie supprimée': 'Category deleted.'
+'Catégorie réactiver': 'Category reactivated.'
+'Quiz modifié avec succès': 'Quiz successfully updated.'
+'Quiz ajouté avec succès': 'Quiz successfully added.'
+'Quiz supprimé avec succès': 'Quiz successfully deleted.'
+'Question modifiée avec succès': 'Question successfully updated.'
+'Question ajoutée avec succès': 'Question successfully added.'
+'Question supprimée avec succès': 'Question successfully deleted.'
+'Choix supprimé avec succès': 'Choice successfully deleted.'
+'Choix modifié avec succès': 'Choice successfully updated.'
+'Choix ajouté avec succès': 'Choice successfully added.'
+'Produit supprimé des favoris': 'Product removed from favourites.'
+'Produit ajouté aux favoris': 'Product added to favourites.'
+'Information enregistrée avec succès, choisissez son secteur': 'Information saved successfully, choose their sector.'
+'Les informations sur le nouveau coach ont été bien enregistrées': 'The new coach’s information has been successfully saved.'
+'Le compte du coach a été réactivé': 'The coach’s account has been reactivated.'
+'Ressource supprimée avec succès': 'Resource successfully deleted.'
+'Planification de la réunion terminée avec succès': 'Meeting successfully scheduled.'
+'Live supprimé': 'Live session deleted.'
+'Modification du agent avec succès': 'Agent successfully updated.'
+'Utilisateur agent ajouté avec succès': 'Agent user successfully added.'
+'L''agent a été banni du plateforme avec succès': 'The agent has been successfully banned from the platform.'
+'Le compte de l''agent a été réactivé': 'The agent’s account has been reactivated.'
+'Le secteur a été changé avec succès': 'The sector has been successfully changed.'
+'Erreur : %nom% n''est pas un agent': 'Error: %nom% is not an agent.'
+'Création prix d''abonnement avec succès': 'Subscription price successfully created.'
+'Thème ajouté avec succès': 'Theme successfully added.'
+'Thème modifié avec succès': 'Theme successfully updated.'
+'Thème supprimé avec succès': 'Theme successfully deleted.'
+'Informations enregistrées avec succès': 'Information successfully saved.'
+'Ajout de l''utilisateur Agent efféctué avec succès': 'Agent user successfully added.'
+"Revendeur": "Reseller"
+"Professionnel": "Professional" 
+'Bienvenue sur Pixelforce 🚀 - Votre aventure commence maintenant !': 'Welcome to Pixelforce 🚀 – Your journey starts now!'
+Bienvenue: Welcome
+Bonjour: Hello
+'F&eacute;licitations, vous faites d&eacute;sormais partie de Pixelforce ! 🎉 Nous sommes ravis de vous accueillir parmi nous.': 'Congratulations, you’re now part of Pixelforce! 🎉 We’re delighted to welcome you.'
+'Voici quelques informations importantes pour bien d&eacute;marrer': 'Here is some important information to help you get started'
+'Votre email d&rsquo;inscription': 'Your registration email'
+'Acc&eacute;dez &agrave; votre compte ici': 'Access your account here'
+'Profitez de votre lien de parrainage': 'Make the most of your referral link'
+'Recommandez Pixelforce et b&eacute;n&eacute;ficiez d&rsquo;avantages exclusifs ! Partagez votre lien d&egrave;s maintenant': 'Recommend Pixelforce and enjoy exclusive benefits! Share your link now'
+'Et maintenant ?': 'What’s next?'
+'Il ne vous reste plus qu&rsquo;&agrave; explorer la plateforme et d&eacute;couvrir toutes les opportunit&eacute;s qui vous attendent. Si vous avez la moindre question, notre &eacute;quipe est &agrave; votre disposition &agrave;': 'All that’s left is to explore the platform and discover the opportunities that await you. If you have any questions, our team is here to help at'
+'&Agrave; tr&egrave;s vite !': 'See you soon!'
+'L&rsquo;&eacute;quipe Pixelforce 🚀': 'The Pixelforce Team 🚀'
+"Nom d'utilisateur déjà utilisé": "Username already taken"
+"Adresse email déjà utilisée": "Email address already in use"
+'Nom obligatoire': 'Name is required'
+'Prix obligatoire': 'Price is required'
+'Le prix n''est pas valide': 'The price is not valid'
+'Catégorie obligatoire': 'Category is required'
+'Prix mininum': 'Minimum price'
+'Prix maximum': 'Maximum price'
+'Formulaire Produit': 'Product Form'
+'Enregistrer les modifications': 'Save changes'
+Créer: Create
+'Liste des produits': 'Product List'
+Export: Export
+Excel: Excel
+Pdf: PDF
+'Toutes les données': 'All data'
+'Seulement celles qui sont affichées': 'Only displayed data'
+Exporter: Export
+'Nouveau produit': 'New product'
+'Aucun produit disponible pour le moment.': 'No products available at the moment.'
+Prix: Price
+Image: Image
+'Formulaire Catégorie': 'Category Form'
+
+

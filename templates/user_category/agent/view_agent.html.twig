@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-	Visualisation utilisateur agent
+	{% trans %}Visualisation utilisateur agent{% endtrans %}
 {% endblock %}
 
 {% block stylesheets %}
@@ -31,17 +31,17 @@
 							<div class="row">
 								<div class="card text-center col-lg-12 col-12 align-items-center mb-3 p-4">
 									<div class="card-body">
-										<h5 class="general-primary-text">Développez votre réseau</h5>
+										<h5 class="general-primary-text">{% trans %}Développez votre réseau{% endtrans %}</h5>
 										{# {% if app.user.canAccessFonct('RDV', app.session.get('secteurId')) %} #}
-										<p >Partagez votre lien unique et invitez d’autres personnes à rejoindre l’aventure (Plus votre réseau grandit, plus vous augmentez vos opportunités de gains)</p>
+										<p >{% trans %}Partagez votre lien unique et invitez d’autres personnes à rejoindre l’aventure (Plus votre réseau grandit, plus vous augmentez vos opportunités de gains){% endtrans %}</p>
 										<a class="regular-button w-100 text-center" href="#"
 												{% if secteurNetwork %} 
 													style="pointer-events: none;"
 												{% else %}
 												 	onclick="copyLink('{{ url('agent_inscription', {'ambassador_username':  app.user.username != "" ?  app.user.username : ' '}) }}') "
 												{% endif %} >
-											Copier votre lien
-										</a>    
+											{% trans %}Copier votre lien
+										{% endtrans %}</a>    
 										{# {% endif %} #}
 									</div>
 								</div>
@@ -59,7 +59,7 @@
 														</div>
 													</div>
 													<div class="my-auto">
-														<a href="#"><p class="card-text font-small-3 mb-0 text-black">CA personnel</p></a>
+														<a href="#"><p class="card-text font-small-3 mb-0 text-black">{% trans %}CA personnel{% endtrans %}</p></a>
 														<h4 class="fw-bolder mb-0">{{ caStat.ca_perso | number_format(2, ',', ' ')  }} €</h4>
 													</div>
 												</div>
@@ -72,7 +72,7 @@
 														</div>
 													</div>
 													<div class="my-auto">
-														<a href="#"><p class="card-text font-small-3 mb-0 text-black">CA equipe</p></a>
+														<a href="#"><p class="card-text font-small-3 mb-0 text-black">{% trans %}CA equipe{% endtrans %}</p></a>
 														<h4 class="fw-bolder mb-0">{{ caStat.ca_equipe | number_format(2, ',', ' ')  }} €</h4>
 													</div>
 												</div>
@@ -85,7 +85,7 @@
 														</div>
 													</div>
 													<div class="my-auto">
-														<a href="#"><p class="card-text font-small-3 mb-0 text-black">Nombre de filleuls directs</p></a>
+														<a href="#"><p class="card-text font-small-3 mb-0 text-black">{% trans %}Nombre de filleuls directs{% endtrans %}</p></a>
 														<h4 class="fw-bolder mb-0">{{ countDirect  }}</h4>
 													</div>
 												</div>
@@ -98,7 +98,7 @@
 														</div>
 													</div>
 													<div class="my-auto">
-														<a href="#"><p class="card-text font-small-3 mb-0 text-black">Taille de votre équipe</p></a>
+														<a href="#"><p class="card-text font-small-3 mb-0 text-black">{% trans %}Taille de votre équipe{% endtrans %}</p></a>
 														<h4 class="fw-bolder mb-0">{{ countEquipe  }}</h4>
 													</div>
 												</div>
@@ -127,12 +127,12 @@
                     {% endfor %}
                 </div> #}
 				<div class="row mb-5">
-					<h4 class=" mt-2 mb-3 choix-secteur-primary">Votre organisation en un coup d’oeil</h4>
+					<h4 class=" mt-2 mb-3 choix-secteur-primary">{% trans %}Votre organisation en un coup d’oeil{% endtrans %}</h4>
 					<!-- User Sidebar -->
 					<div class="col-12  col-md-12 order-1 order-md-0">
 						<div id="card-arbol" class="card full-height">
 							<div class="card-body position-relative">
-                    			<p class="text-center fs-5 mt-3">Chaque niveau représente un nouvelle génération de votre réseau.</p>
+                    			<p class="text-center fs-5 mt-3">{% trans %}Chaque niveau représente un nouvelle génération de votre réseau.{% endtrans %}</p>
 								<div id="full-container">
 									
 									<div id="svgChart" style="overflow: hidden;"></div>

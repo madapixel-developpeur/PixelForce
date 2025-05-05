@@ -22,6 +22,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Security;
 use App\Repository\PlanAgentAccountRepository;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -55,7 +56,9 @@ class AgentInscriptionController extends AbstractController
     private $secteurRepository;
     public function __construct(EntityManager $entityManager, UserManager $userManager, StripeManager $stripeManager, SessionInterface $session, UserRepository $userRepository, AgentSecteurRepository $repoAgentSecteur, PlanAgentAccountRepository $repoPlanAgentAccount, SecteurRepository $secteurRepository, private MailerService $mailerService,
         private TokenStorageInterface $tokenStorage,
-        private Security $security)
+        private Security $security,
+        private TranslatorInterface $translator
+    )
     {
         $this->entityManager = $entityManager;
         $this->userManager = $userManager;
@@ -118,6 +121,7 @@ class AgentInscriptionController extends AbstractController
         ]);
         $form->handleRequest($request);
         $currentStep = $request->request->getInt('currentStep', 0);
+        $local = $request->getLocale();
         try {
             if (!$parrain) {
                 $parrain = $this->getParainByUsername($ambassador_username);
@@ -126,16 +130,17 @@ class AgentInscriptionController extends AbstractController
                 if($form->isValid()){
                     $roles = $form->get('roles')->getData();
                     if (empty($roles)) {
-                        throw new CustomException('Vous devez sélectionner au moins un type de compte.');
+                        throw new CustomException($this->translator->trans('Vous devez sélectionner au moins un type de compte.'));
                     }
                     if(in_array(User::ROLE_PROFESSIONNEL, $roles) && $user->getPays() == 'FR'){
-                        throw new CustomException("À ce jour, la plateforme ".$_ENV['PLATFORM_NAME']." n'est pas ouverte aux professionnels basés en France.");
+                        throw new CustomException($this->translator->trans("À ce jour, la plateforme %platform% n'est pas ouverte aux professionnels basés en France.",['%platform%' => $_ENV['PLATFORM_NAME']]));
                     }
                     $this->userManager->setUserPasword($user, $request->request->get('inscription_agent')['password']['first'], '', false);
                     array_unshift($roles, User::ROLE_AGENT);
                     $user->setRoles($roles);
                     $user->setActive(1);
                     $user->setParrain($parrain);
+                    $user->setLang($local);
                     // $user->setAccountStatus(User::ACCOUNT_STATUS['UNPAID']);
                     $user->setAccountStatus(User::ACCOUNT_STATUS['ACTIVE']); // On met temporairement le statut comme ACTIVE
                     $this->entityManager->save($user);
@@ -148,7 +153,7 @@ class AgentInscriptionController extends AbstractController
 
                     $this->addFlash(
                         'success',
-                        'Votre inscription sur Pixelforce a été effectuée avec succès'
+                        $this->translator->trans('Votre inscription sur Pixelforce a été effectuée avec succès')
                     );
                     return $this->redirectToRoute('agent_home');
                 }else{
@@ -164,7 +169,7 @@ class AgentInscriptionController extends AbstractController
         } catch (\Exception $e) {
             $this->addFlash(
                 'danger',
-                $_ENV['CUSTOM_ERROR_MESSAGE']
+                $this->translator->trans($_ENV['CUSTOM_ERROR_MESSAGE'])
             );
         }
        
@@ -185,7 +190,7 @@ class AgentInscriptionController extends AbstractController
             if ($parrain) {
                 return $parrain;
             }
-            throw new \Exception("Le nom d'utilisateur inscrit en haut n'existe pas ou n'est pas valide.");
+            throw new \Exception($this->translator->trans("Le nom d'utilisateur inscrit en haut n'existe pas ou n'est pas valide."));
         }
         return null;
     }
@@ -250,7 +255,7 @@ class AgentInscriptionController extends AbstractController
             if (!$sessionAgentId) {
                 $this->addFlash(
                     'warning',
-                    'Vous avez été rediriger vers cette page car une erreur s\'est produite !'
+                    $this->translator->trans('Vous avez été rediriger vers cette page car une erreur s\'est produite !')
                 );
                 return $this->redirectToRoute('app_login');
             }
@@ -263,7 +268,7 @@ class AgentInscriptionController extends AbstractController
 
             // Gestion exeption
             if (is_null($planAgentAccount)) {
-                return throw new \Exception("Plan d'abonnement null, n'oublie pas de créer des plans d'abonnement pour les agents dans l'espace Admin", 1);
+                return throw new \Exception($this->translator->trans("Plan d'abonnement null, n'oublie pas de créer des plans d'abonnement pour les agents dans l'espace Admin"), 1);
             }
 
             $planPrice = $planAgentAccount->getAmount();

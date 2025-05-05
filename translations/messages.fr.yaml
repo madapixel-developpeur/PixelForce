@@ -1,0 +1,559 @@
+Authentification: Authentification
+Connexion: Connexion
+'Email ou mot de passe invalide': 'Email ou mot de passe invalide'
+'Nom d''utilisateur/Email': 'Nom d''utilisateur/Email'
+'Mot de passe': 'Mot de passe'
+'Se connecter': 'Se connecter'
+'Mot de passe oublié ?': 'Mot de passe oublié ?'
+'S''inscrire': 'S''inscrire'
+Facture: Facture
+Sous-total: Sous-total
+TVA: TVA
+'Prix net (sans TVA)': 'Prix net (sans TVA)'
+'Frais de livraison': 'Frais de livraison'
+'Prix total (TVA incluse)': 'Prix total (TVA incluse)'
+'Conditions générales de vente': 'Conditions générales de vente'
+'Conditions générales d''utilisation': 'Conditions générales d''utilisation'
+'Conditions générales d''utilisations (CGU)': 'Conditions générales d''utilisations (CGU)'
+'Conditions générales de vente (CGV)': 'Conditions générales de vente (CGV)'
+'Vous devez sélectionner au moins un type de compte !': 'Vous devez sélectionner au moins un type de compte !'
+Inscription: Inscription
+'Information du compte': 'Information du compte'
+Type: Type
+'Compte Revendeur': 'Compte Revendeur'
+"Vous souhaitez recommander des services sans les réaliser vous-même ?\nChoisissez le compte Revendeur pour accéder à une sélection de services proposés par nos partenaires (agences, professionnels…). Vous pourrez les recommander en toute autonomie et toucher des commissions à chaque vente.": "Vous souhaitez recommander des services sans les réaliser vous-même ?\nChoisissez le compte Revendeur pour accéder à une sélection de services proposés par nos partenaires (agences, professionnels…). Vous pourrez les recommander en toute autonomie et toucher des commissions à chaque vente."
+'🔹 Id&eacute;al si vous &ecirc;tes apporteur d&rsquo;affaires, influenceur, ou que vous d&eacute;veloppez une activit&eacute; de vente indirecte.<br />🔹 Vous n&rsquo;avez pas besoin de comp&eacute;tences techniques ni de g&eacute;rer la prestation.<br />🔹 Vous b&eacute;n&eacute;ficiez d&rsquo;outils de suivi, d&rsquo;un lien d&rsquo;affiliation personnel, et d&rsquo;un syst&egrave;me de commissions automatique.': '🔹 Id&eacute;al si vous &ecirc;tes apporteur d&rsquo;affaires, influenceur, ou que vous d&eacute;veloppez une activit&eacute; de vente indirecte.<br />🔹 Vous n&rsquo;avez pas besoin de comp&eacute;tences techniques ni de g&eacute;rer la prestation.<br />🔹 Vous b&eacute;n&eacute;ficiez d&rsquo;outils de suivi, d&rsquo;un lien d&rsquo;affiliation personnel, et d&rsquo;un syst&egrave;me de commissions automatique.'
+'Compte Professionnel (Pro)': 'Compte Professionnel (Pro)'
+'Vous avez des compétences techniques ou un savoir-faire métier ? Rejoignez l’équipe Pixelforce en tant que professionnel labellisé.': 'Vous avez des compétences techniques ou un savoir-faire métier ? Rejoignez l’équipe Pixelforce en tant que professionnel labellisé.'
+"Le compte Pro est destiné aux prestataires qualifiés qui souhaitent collaborer avec Pixelforce sur le terrain, dans leur domaine d’expertise.\nVous intervenez pour réaliser des prestations concrètes pour les clients de la plateforme, en lien avec notre équipe centrale.": "Le compte Pro est destiné aux prestataires qualifiés qui souhaitent collaborer avec Pixelforce sur le terrain, dans leur domaine d’expertise.\nVous intervenez pour réaliser des prestations concrètes pour les clients de la plateforme, en lien avec notre équipe centrale."
+'🔹 Qui est concern&eacute; ?<br />D&eacute;veloppeurs, community managers, experts SEO/SEA, installateurs de syst&egrave;mes d&rsquo;alarmes etc.': '🔹 Qui est concern&eacute; ?<br />D&eacute;veloppeurs, community managers, experts SEO/SEA, installateurs de syst&egrave;mes d&rsquo;alarmes etc.'
+'🔹 Pourquoi nous rejoindre ?<br />Vous travaillez en collaboration directe avec Pixelforce, b&eacute;n&eacute;ficiez d&rsquo;opportunit&eacute;s de missions r&eacute;guli&egrave;res, et &ecirc;tes form&eacute; &agrave; nos standards de qualit&eacute;.': '🔹 Pourquoi nous rejoindre ?<br />Vous travaillez en collaboration directe avec Pixelforce, b&eacute;n&eacute;ficiez d&rsquo;opportunit&eacute;s de missions r&eacute;guli&egrave;res, et &ecirc;tes form&eacute; &agrave; nos standards de qualit&eacute;.'
+'🔹 Ce que vous gagnez :<br />Un label Pixelforce, une visibilit&eacute; accrue, des missions qualifi&eacute;es, et un accompagnement personnalis&eacute; pour d&eacute;velopper votre activit&eacute;.': '🔹 Ce que vous gagnez :<br />Un label Pixelforce, une visibilit&eacute; accrue, des missions qualifi&eacute;es, et un accompagnement personnalis&eacute; pour d&eacute;velopper votre activit&eacute;.'
+Suivant: Suivant
+Information: Information
+'Information sur la connexion': 'Information sur la connexion'
+Retour: Retour
+S’inscrire: S’inscrire
+'Déjà un compte ? Connectez-vous': 'Déjà un compte ? Connectez-vous'
+'Entrer votre nom': 'Entrer votre nom'
+'Champ obligatoire': 'Champ obligatoire'
+'Entrer votre prénom': 'Entrer votre prénom'
+'Votre adresse': 'Votre adresse'
+'Numéro téléphone': 'Numéro téléphone'
+'Code postal': 'Code postal'
+'Nom d''utilisateur': 'Nom d''utilisateur'
+'Adresse mail': 'Adresse mail'
+'Le mot de passe saisi doit être le même.': 'Le mot de passe saisi doit être le même.'
+'Confirmation Mot de passe': 'Confirmation Mot de passe'
+'Numéro de rue': 'Numéro de rue'
+Ville: Ville
+Pays: Pays
+'Sélectionnez un pays': 'Sélectionnez un pays'
+'Veuillez choisir un pays': 'Veuillez choisir un pays'
+'Nom d''utilisateur du parrain': 'Nom d''utilisateur du parrain'
+'À ce jour, la plateforme n''est pas ouverte aux professionnels basés en France.': 'À ce jour, la plateforme n''est pas ouverte aux professionnels basés en France.'
+'Bonjour %prenom%! Bienvenue sur Pixelforce': 'Bonjour %prenom%! Bienvenue sur Pixelforce'
+'Paiement efféctué avec succès !': 'Paiement efféctué avec succès !'
+'Découvrez comment Pixelforce peut transformer votre activité. Regardez cette courte vidéo pour en savoir plus sur les opportunités qui vous attendent.': 'Découvrez comment Pixelforce peut transformer votre activité. Regardez cette courte vidéo pour en savoir plus sur les opportunités qui vous attendent.'
+Ajouter: Ajouter
+Accéder: Accéder
+'En attente de validation': 'En attente de validation'
+'Bientôt Disponible': 'Bientôt Disponible'
+'Choix du secteur': 'Choix du secteur'
+'Total investi': 'Total investi'
+'Rendement total': 'Rendement total'
+'Pourcentage de rendement total': 'Pourcentage de rendement total'
+Solde: Solde
+'Mes ⁠Gains': 'Mes ⁠Gains'
+⁠CA: ⁠CA
+Rémunération: Rémunération
+Statut: Statut
+'Lien réseau': 'Lien réseau'
+'Votre lien produit a été copié avec succès': 'Votre lien produit a été copié avec succès'
+'Lien produit': 'Lien produit'
+'Mon compte': 'Mon compte'
+'Se déconnecter': 'Se déconnecter'
+'Tableau de bord': 'Tableau de bord'
+'Choix secteur': 'Choix secteur'
+'Développez vos compétences et maîtrisez nos services': 'Développez vos compétences et maîtrisez nos services'
+Formations: Formations
+'Planifiez vos rendez-vous et événements clés': 'Planifiez vos rendez-vous et événements clés'
+'Mon Agenda': 'Mon Agenda'
+'Historique et suivi de vos paiements': 'Historique et suivi de vos paiements'
+'Mes transactions': 'Mes transactions'
+'Accédez à votre coach dédié et aux ressources d’accompagnement': 'Accédez à votre coach dédié et aux ressources d’accompagnement'
+'Coaching & Suppor': 'Coaching & Suppor'
+'Gérez votre carnet d’adresses et suivez vos prospects': 'Gérez votre carnet d’adresses et suivez vos prospects'
+'Contacts & Prospects': 'Contacts & Prospects'
+'Suivi de vos ventes et commandes en cours': 'Suivi de vos ventes et commandes en cours'
+'Mes ventes': 'Mes ventes'
+'Demandes de devis': 'Demandes de devis'
+Devis: Devis
+Paramètre: Paramètre
+Référence: Référence
+Société: Société
+Client: Client
+Service: Service
+Commandes: Commandes
+'Détails sur votre rémunération et vos bonus': 'Détails sur votre rémunération et vos bonus'
+'Mes gains & commissions': 'Mes gains & commissions'
+'Analyse et suivi de votre performance financière': 'Analyse et suivi de votre performance financière'
+'Chiffre d''affaires': 'Chiffre d''affaires'
+'Guides, outils et supports pour booster vos ventes': 'Guides, outils et supports pour booster vos ventes'
+'Centre de ressources': 'Centre de ressources'
+'Vue globale de vos commandes et services activés': 'Vue globale de vos commandes et services activés'
+Formation: Formation
+'Accédez aux outils et guides pour optimiser votre activité': 'Accédez aux outils et guides pour optimiser votre activité'
+'Gestion des ressources': 'Gestion des ressources'
+'Historique des services souscrits et suivi des prestations': 'Historique des services souscrits et suivi des prestations'
+'Mes services': 'Mes services'
+'Suivi des paiements et téléchargement des factures': 'Suivi des paiements et téléchargement des factures'
+'Facturation & paiements': 'Facturation & paiements'
+'Besoin d’aide ? Contactez notre équipe techniquev': 'Besoin d’aide ? Contactez notre équipe techniquev'
+'Support & assistance': 'Support & assistance'
+'Gérez vos données et préférences professionnelles': 'Gérez vos données et préférences professionnelles'
+'Mes informations': 'Mes informations'
+Dashboard: Dashboard
+'Liste des formations': 'Liste des formations'
+'Il n''y a plus de formation à terminer': 'Il n''y a plus de formation à terminer'
+'Dernièr résultat': 'Dernièr résultat'
+'Résultat maximum': 'Résultat maximum'
+RÉUSSI: RÉUSSI
+ÉCHOUÉ: ÉCHOUÉ
+Commencer: Commencer
+Réessayer: Réessayer
+'Voir le dérnier résultat': 'Voir le dérnier résultat'
+'Fiche formation': 'Fiche formation'
+'Accéder à mes formations': 'Accéder à mes formations'
+'Je veux découvrir les services de Pixelsior': 'Je veux découvrir les services de Pixelsior'
+'J’ai un client qui veut prendre un service': 'J’ai un client qui veut prendre un service'
+'J’ai un partenaire qui veut rejoindre mon équipe': 'J’ai un partenaire qui veut rejoindre mon équipe'
+'Besoin d’un accompagnement ?': 'Besoin d’un accompagnement ?'
+Nom: Nom
+Email: Email
+'Réserver un rendez-vous': 'Réserver un rendez-vous'
+'Lien d''affiliation produit': 'Lien d''affiliation produit'
+'Explorez nos offres': 'Explorez nos offres'
+'Lien d''invitation': 'Lien d''invitation'
+'Cliquer ici': 'Cliquer ici'
+'Mon planning d’activités': 'Mon planning d’activités'
+'Gérer mes rendez-vous': 'Gérer mes rendez-vous'
+'Aucun évenement à venir.': 'Aucun évenement à venir.'
+'Mon réseau': 'Mon réseau'
+'Espace revendeur': 'Espace revendeur'
+'Espace professionnel': 'Espace professionnel'
+Référencement: Référencement
+'Naturel (SEO)': 'Naturel (SEO)'
+'Accélérez votre visibilité avec notre stratégie SEO sur-mesure, optimisant contenu et balises pour Google.': 'Accélérez votre visibilité avec notre stratégie SEO sur-mesure, optimisant contenu et balises pour Google.'
+'Nos offres exclusives': 'Nos offres exclusives'
+Développement: Développement
+Web: Web
+'Bénéficiez d''un service sur-mesure optimisé selon vos objectifs, et faites de votre projet un réel levier de croissance.': 'Bénéficiez d''un service sur-mesure optimisé selon vos objectifs, et faites de votre projet un réel levier de croissance.'
+'Social Media': 'Social Media'
+Marketing: Marketing
+'Amplifiez votre présence en ligne avec une stratégie de médias sociaux personnalisée, créant du buzz engageant.': 'Amplifiez votre présence en ligne avec une stratégie de médias sociaux personnalisée, créant du buzz engageant.'
+Conception: Conception
+Graphique: Graphique
+'Sublimez votre marque avec des visuels captivants, conçus pour marquer les esprits et se démarquer.': 'Sublimez votre marque avec des visuels captivants, conçus pour marquer les esprits et se démarquer.'
+'Gestion Google AdWords': 'Gestion Google AdWords'
+'Maximisez votre ROI avec une campagne AdWords ciblée, optimisée pour attirer des prospects de qualité.': 'Maximisez votre ROI avec une campagne AdWords ciblée, optimisée pour attirer des prospects de qualité.'
+'Développement d''App Mobiles': 'Développement d''App Mobiles'
+'Rapprochez-vous de vos clients avec une application mobile intuitive et fonctionnelle, pour une expérience utilisateur parfaite.': 'Rapprochez-vous de vos clients avec une application mobile intuitive et fonctionnelle, pour une expérience utilisateur parfaite.'
+'Ajouter un évènement': 'Ajouter un évènement'
+Filtrer: Filtrer
+'Tout voir': 'Tout voir'
+Evènement: Evènement
+Titre: Titre
+Etiquette: Etiquette
+'Date de début': 'Date de début'
+'Date de fin': 'Date de fin'
+'Toute la journée': 'Toute la journée'
+'URL de l''évènement': 'URL de l''évènement'
+Annuler: Annuler
+Modifier: Modifier
+Supprimer: Supprimer
+'Votre agenda n''est rattaché à aucun compte': 'Votre agenda n''est rattaché à aucun compte'
+'Votre agenda est rattaché à': 'Votre agenda est rattaché à'
+'Configurer votre agenda': 'Configurer votre agenda'
+'Mon calendrier': 'Mon calendrier'
+'Agent - Formation fiche': 'Agent - Formation fiche'
+'Fichiers joints': 'Fichiers joints'
+Documents: Documents
+Audios: Audios
+Contenu: Contenu
+'Vous avez déjà terminé cette formation': 'Vous avez déjà terminé cette formation'
+Description: Description
+brouillon: brouillon
+'Quiz bloqué': 'Quiz bloqué'
+'Formation bloquée': 'Formation bloquée'
+'Formation terminée': 'Formation terminée'
+'Aucune formation pour cet thème': 'Aucune formation pour cet thème'
+'Aucune formation': 'Aucune formation'
+client: client
+'Information sur le contact': 'Information sur le contact'
+'Information sur le gérant': 'Information sur le gérant'
+'Information sur l''entreprise': 'Information sur l''entreprise'
+'Choisir le ou les tags': 'Choisir le ou les tags'
+'Pas de tags diponibles': 'Pas de tags diponibles'
+'Une erreur s''est survenue, veuillez retourner dans la page de selection de secteur.': 'Une erreur s''est survenue, veuillez retourner dans la page de selection de secteur.'
+'Merci !': 'Merci !'
+'Liste  contacts agent': 'Liste  contacts agent'
+'Contact ajouté avec succès': 'Contact ajouté avec succès'
+'Liste de mes contacts': 'Liste de mes contacts'
+Ajout: Ajout
+Filtres: Filtres
+'Options de filtre': 'Options de filtre'
+Ordre: Ordre
+ASC: ASC
+DESC: DESC
+'Type du contact': 'Type du contact'
+'Date d''enregistrement à partir de': 'Date d''enregistrement à partir de'
+'Date d''enregistrement jusqu''à': 'Date d''enregistrement jusqu''à'
+'Importer/Exportation mobile': 'Importer/Exportation mobile'
+Rechercher: Rechercher
+'Exporter excel': 'Exporter excel'
+'Exporter csv': 'Exporter csv'
+'Exporter pdf': 'Exporter pdf'
+'Aucun contact.': 'Aucun contact.'
+Id: Id
+nom: nom
+Téléphone: Téléphone
+Adresse: Adresse
+'Nom de l''entreprise': 'Nom de l''entreprise'
+'Liste des coachs': 'Liste des coachs'
+'Aucun Coach trouvé': 'Aucun Coach trouvé'
+Photo: Photo
+'Nom et prénoms': 'Nom et prénoms'
+Secteur: Secteur
+ACTION: ACTION
+'Prendre RDV': 'Prendre RDV'
+'Visualisation utilisateur agent': 'Visualisation utilisateur agent'
+'Votre réseau et vos performances': 'Votre réseau et vos performances'
+'Développez votre réseau': 'Développez votre réseau'
+'Partagez votre lien unique et invitez d’autres personnes à rejoindre l’aventure (Plus votre réseau grandit, plus vous augmentez vos opportunités de gains)': 'Partagez votre lien unique et invitez d’autres personnes à rejoindre l’aventure (Plus votre réseau grandit, plus vous augmentez vos opportunités de gains)'
+'Copier votre lien': 'Copier votre lien'
+'CA personnel': 'CA personnel'
+'CA equipe': 'CA equipe'
+'Nombre de filleuls directs': 'Nombre de filleuls directs'
+'Taille de votre équipe': 'Taille de votre équipe'
+'Votre organisation en un coup d’oeil': 'Votre organisation en un coup d’oeil'
+'Chaque niveau représente un nouvelle génération de votre réseau.': 'Chaque niveau représente un nouvelle génération de votre réseau.'
+Retrait: Retrait
+'Demande de retrait': 'Demande de retrait'
+Enregistrer: Enregistrer
+'Votre solde actuel': 'Votre solde actuel'
+Historique: Historique
+Date: Date
+Montant: Montant
+RIB: RIB
+Contact: Contact
+'Pas de numero': 'Pas de numero'
+'Désolé, une erreur s''est survenue !': 'Désolé, une erreur s''est survenue !'
+'Ajout du client avec succès': 'Ajout du client avec succès'
+'Nom ou prénom': 'Nom ou prénom'
+'Tous les secteurs': 'Tous les secteurs'
+'Date d''inscription à partir de': 'Date d''inscription à partir de'
+'Date d''inscription jusqu''à': 'Date d''inscription jusqu''à'
+libelle: libelle
+Prénom: Prénom
+'Entrer le prénom': 'Entrer le prénom'
+'Entrer le nom': 'Entrer le nom'
+E-mail: E-mail
+'Entrer l''adresse mail': 'Entrer l''adresse mail'
+'Entrer le numéro téléphone': 'Entrer le numéro téléphone'
+'Entrer l''adresse': 'Entrer l''adresse'
+Rue: Rue
+Numéro: Numéro
+'Type du Logement': 'Type du Logement'
+'Nombre de personnes du foyer': 'Nombre de personnes du foyer'
+Note: Note
+'Année de construction de la maison': 'Année de construction de la maison'
+Siret: Siret
+'Adresse postale (rue, ville, code postal, pays)': 'Adresse postale (rue, ville, code postal, pays)'
+'Liens de la référence %linkRef% copié avec succès': 'Liens de la référence %linkRef% copié avec succès'
+'Êtes vous vraiment sûr de supprimer ce contact ?': 'Êtes vous vraiment sûr de supprimer ce contact ?'
+'Exemple de contact': 'Exemple de contact'
+'Vrai contact': 'Vrai contact'
+Particulier: Particulier
+Entreprise: Entreprise
+Commande: Commande
+Home: Home
+eCommerce: eCommerce
+'Informations sur le client': 'Informations sur le client'
+'Nom et prénom(s)': 'Nom et prénom(s)'
+'Informations sur la livraison': 'Informations sur la livraison'
+Pays/région: Pays/région
+'Détails de la commande': 'Détails de la commande'
+'Montant total': 'Montant total'
+'Liste des commandes': 'Liste des commandes'
+Chercher: Chercher
+'Aucune Commande': 'Aucune Commande'
+'Pack - (service)': 'Pack - (service)'
+Créée: Créée
+Payée: Payée
+Livrée: Livrée
+Créé: Créé
+Payé: Payé
+Livré: Livré
+Rémunérations: Rémunérations
+'Historique des rémunérations': 'Historique des rémunérations'
+'Aucun résultat trouvé.': 'Aucun résultat trouvé.'
+Ressource: Ressource
+Rubrique(s): Rubrique(s)
+Fichier(s): Fichier(s)
+'Découvrez toutes les ressources à votre disposition. Accédez à des contenus essentiels pour vous guider et vous accompagner dans vos démarches.': 'Découvrez toutes les ressources à votre disposition. Accédez à des contenus essentiels pour vous guider et vous accompagner dans vos démarches.'
+'Aucun résultat': 'Aucun résultat'
+ressource_file_count: ressource_file_count
+'Accéder à la ressource': 'Accéder à la ressource'
+'Aucune ressource': 'Aucune ressource'
+'Chiffre d''affaires - Détail': 'Chiffre d''affaires - Détail'
+'Vente du mois de': 'Vente du mois de'
+'Aucune commande.': 'Aucune commande.'
+'Chiffre d''affaires total du mois': 'Chiffre d''affaires total du mois'
+Portfolio(lien): Portfolio(lien)
+Portfolio(fichier): Portfolio(fichier)
+Compétence: Compétence
+Langues: Langues
+'Compétence technique': 'Compétence technique'
+'Bientôt disponible': 'Bientôt disponible'
+'Cette fonctionnalité sera bientôt disponible. Restez à l''écoute !': 'Cette fonctionnalité sera bientôt disponible. Restez à l''écoute !'
+'Professionnel - Information': 'Professionnel - Information'
+Informations: Informations
+'Soumettre à nouveau': 'Soumettre à nouveau'
+'Nom & Prénom': 'Nom & Prénom'
+'Date d''inscription': 'Date d''inscription'
+Télécharger: Télécharger
+Catégorie: Catégorie
+'Nom du projet': 'Nom du projet'
+'Le nom du projet est obligatoire': 'Le nom du projet est obligatoire'
+'Url du site': 'Url du site'
+'L''url du site est obligatoire': 'L''url du site est obligatoire'
+'La description est obligatoire': 'La description est obligatoire'
+'Coach - Liste Formations Video': 'Coach - Liste Formations Video'
+'Formation revendeur': 'Formation revendeur'
+'Formation professionnel': 'Formation professionnel'
+'Video fin de formation': 'Video fin de formation'
+'Ajouter une formation': 'Ajouter une formation'
+'Ajouter un quiz': 'Ajouter un quiz'
+'Configurer page de formation': 'Configurer page de formation'
+Etat: Etat
+Tous: Tous
+Brouillon: Brouillon
+'Trier par': 'Trier par'
+Auteur: Auteur
+'Ajouter un thème': 'Ajouter un thème'
+'Fiche quiz': 'Fiche quiz'
+Thème: Thème
+'Ajout Audit': 'Ajout Audit'
+'Ajouter un audit': 'Ajouter un audit'
+'Visualisation Audit': 'Visualisation Audit'
+'Liste des réponses potentiels': 'Liste des réponses potentiels'
+Déscription: Déscription
+'Fichier jointe': 'Fichier jointe'
+Action: Action
+'Êtes-vous sûr(e) de vouloir supprimer cette réponse?': 'Êtes-vous sûr(e) de vouloir supprimer cette réponse?'
+'Êtes-vous sûr(e) de vouloir réstorer cette réponse?': 'Êtes-vous sûr(e) de vouloir réstorer cette réponse?'
+'Liste des Audits': 'Liste des Audits'
+'Nom du Projet': 'Nom du Projet'
+'url du site': 'url du site'
+'Date d''ajout': 'Date d''ajout'
+'Êtes-vous sûr(e) de vouloir supprimer cet Audit?': 'Êtes-vous sûr(e) de vouloir supprimer cet Audit?'
+'Êtes-vous sûr(e) de vouloir restorer cet Audit?': 'Êtes-vous sûr(e) de vouloir restorer cet Audit?'
+'Liste des agents': 'Liste des agents'
+'Ajouter des Agents': 'Ajouter des Agents'
+'Date inscription': 'Date inscription'
+Valider: Valider
+Bloquer: Bloquer
+'Liste de contact': 'Liste de contact'
+'Liste des secteurs de l''agent': 'Liste des secteurs de l''agent'
+'Date de validation': 'Date de validation'
+Bloqué: Bloqué
+Validé: Validé
+'Thème de formation': 'Thème de formation'
+'Modifier le thème de formation': 'Modifier le thème de formation'
+'Ajouter un thème de formation': 'Ajouter un thème de formation'
+'Pour débloquer cette formation, assurez-vous d’avoir enregistré plus de 100 contacts dans votre liste de prospection.': 'Pour débloquer cette formation, assurez-vous d’avoir enregistré plus de 100 contacts dans votre liste de prospection.'
+'J''ai terminé cette formation': 'J''ai terminé cette formation'
+'Copier le lien d''affiliation': 'Copier le lien d''affiliation'
+'Pour inviter d''autres personnes à se joindre à vous, veuillez cliquer ici.': 'Pour inviter d''autres personnes à se joindre à vous, veuillez cliquer ici.'
+Copier: Copier
+'Espace coach': 'Espace coach'
+'Mes Agents': 'Mes Agents'
+Filleul: Filleul
+Audit: Audit
+Catalogue: Catalogue
+Catégories: Catégories
+Produits: Produits
+Stock: Stock
+Inventaire: Inventaire
+Implantations: Implantations
+Contrat: Contrat
+Kits: Kits
+Ressources: Ressources
+Rubriques: Rubriques
+Liste: Liste
+Annonces: Annonces
+'Réseaux sociaux': 'Réseaux sociaux'
+'Code promo': 'Code promo'
+Détails: Détails
+'Nom et prénom': 'Nom et prénom'
+'Détails de l''audit': 'Détails de l''audit'
+Proprietaire: Proprietaire
+'Google Formulaire': 'Google Formulaire'
+'Accéder aux formulaires': 'Accéder aux formulaires'
+'Réponse du Google Formulaire': 'Réponse du Google Formulaire'
+'Accéder aux réponses du formulaire': 'Accéder aux réponses du formulaire'
+'Titre de la réponse': 'Titre de la réponse'
+'Le titre de problème  est obligatoire': 'Le titre de problème  est obligatoire'
+'La description  est obligatoire': 'La description  est obligatoire'
+'Image invalide. Le format doit être: .jpeg ou .png': 'Image invalide. Le format doit être: .jpeg ou .png'
+'Coach - Fiche formation': 'Coach - Fiche formation'
+Confirmation: Confirmation
+'Voulez-vous vraiment supprimer la formation ?': 'Voulez-vous vraiment supprimer la formation ?'
+Fermer: Fermer
+Videos: Videos
+'Modifier le lien de la video': 'Modifier le lien de la video'
+Loading: Loading
+Document: Document
+'Pas de document': 'Pas de document'
+'Ajouter un document': 'Ajouter un document'
+Audio: Audio
+'Pas d''audio': 'Pas d''audio'
+'Ajouter un audio': 'Ajouter un audio'
+'Ajout Réponse': 'Ajout Réponse'
+'Ajouter une réponse sur l''audit': 'Ajouter une réponse sur l''audit'
+'Liste de contacts': 'Liste de contacts'
+Prénoms: Prénoms
+'Visualisation utilisateur coach': 'Visualisation utilisateur coach'
+Equipe: Equipe
+'Filleul direct': 'Filleul direct'
+'Liste des catégories': 'Liste des catégories'
+'Aucune catégorie disponible pour le moment.': 'Aucune catégorie disponible pour le moment.'
+'Référencement<br>Naturel (SEO)': 'Référencement<br>Naturel (SEO)'
+'Développement<br> Web': 'Développement<br> Web'
+'Social Media<br>Marketing': 'Social Media<br>Marketing'
+Conception<br>Graphique: Conception<br>Graphique
+'Veuillez fournir votre portfolio, sous forme de lien ou de fichier.': 'Veuillez fournir votre portfolio, sous forme de lien ou de fichier.'
+'Information enregistrée avec succès.': 'Information enregistrée avec succès.'
+'Nouvel Audit Enregistré,veuillez visualiser la fiche de votre rendez-vous': 'Nouvel Audit Enregistré,veuillez visualiser la fiche de votre rendez-vous'
+'Nouvel Audit enregistrée avec succès': 'Nouvel Audit enregistrée avec succès'
+'Modification Audit effectuée avec succès': 'Modification Audit effectuée avec succès'
+'Suppression Audit effectuée avec succès': 'Suppression Audit effectuée avec succès'
+'Restoration Audit effectuée avec succès': 'Restoration Audit effectuée avec succès'
+'Note enregistré avec succès': 'Note enregistré avec succès'
+'Ajout d''une type de commercialisation avec succès': 'Ajout d''une type de commercialisation avec succès'
+'Modification type de commercialisation avec succès': 'Modification type de commercialisation avec succès'
+'Ajout d''un secteur avec succès': 'Ajout d''un secteur avec succès'
+'Modification secteur avec succès': 'Modification secteur avec succès'
+'Secteur restauré': 'Secteur restauré'
+'Vous devez sélectionner au moins un type de compte.': 'Vous devez sélectionner au moins un type de compte.'
+'À ce jour, la plateforme %platform% n''est pas ouverte aux professionnels basés en France.': 'À ce jour, la plateforme %platform% n''est pas ouverte aux professionnels basés en France.'
+'Votre inscription sur Pixelforce a été effectuée avec succès': 'Votre inscription sur Pixelforce a été effectuée avec succès'
+'Le nom d''utilisateur inscrit en haut n''existe pas ou n''est pas valide.': 'Le nom d''utilisateur inscrit en haut n''existe pas ou n''est pas valide.'
+'Vous avez été rediriger vers cette page car une erreur s''est produite !': 'Vous avez été rediriger vers cette page car une erreur s''est produite !'
+'Plan d''abonnement null, n''oublie pas de créer des plans d''abonnement pour les agents dans l''espace Admin': 'Plan d''abonnement null, n''oublie pas de créer des plans d''abonnement pour les agents dans l''espace Admin'
+'Le coach a été banni du plateforme': 'Le coach a été banni du plateforme'
+'Une demande de retrait est déjà en cours.': 'Une demande de retrait est déjà en cours.'
+'Solde insuffisant': 'Solde insuffisant'
+'Retrait effectué avec succès': 'Retrait effectué avec succès'
+'RIB changé avec succès': 'RIB changé avec succès'
+'Modification du coach avec succès': 'Modification du coach avec succès'
+'Secteur attribué avec succès': 'Secteur attribué avec succès'
+'Secteur choisi avec succès': 'Secteur choisi avec succès'
+'Les informations sur le nouveau ambassadeur ont été bien enregistrées': 'Les informations sur le nouveau ambassadeur ont été bien enregistrées'
+'L''Ambassadeur a été banni du plateforme': 'L''Ambassadeur a été banni du plateforme'
+'L''Ambassadeur a été réactivé': 'L''Ambassadeur a été réactivé'
+'Votre rendez-vous a été programmé.': 'Votre rendez-vous a été programmé.'
+'Votre rendez-vous a été mis à jour.': 'Votre rendez-vous a été mis à jour.'
+'Script ajouté avec succès': 'Script ajouté avec succès'
+'Script modifié avec succès': 'Script modifié avec succès'
+'Fichier(s) ajouté(s) avec succès.': 'Fichier(s) ajouté(s) avec succès.'
+'Annonce ajoutée avec succès': 'Annonce ajoutée avec succès'
+'Annonce modifiée avec succès': 'Annonce modifiée avec succès'
+'Annonce supprimée avec succès': 'Annonce supprimée avec succès'
+'Rubrique ajouté avec succès': 'Rubrique ajouté avec succès'
+'Rubrique modifié avec succès': 'Rubrique modifié avec succès'
+'Rubrique supprimé avec succès': 'Rubrique supprimé avec succès'
+'Code promo ajouté avec succès': 'Code promo ajouté avec succès'
+'Code promo modifié avec succès': 'Code promo modifié avec succès'
+'Code promo supprimé avec succès': 'Code promo supprimé avec succès'
+'Formation ajouté avec succès': 'Formation ajouté avec succès'
+'Formation supprimée': 'Formation supprimée'
+'Video ajoutée avec succès': 'Video ajoutée avec succès'
+'Configuration ajoutée avec succès': 'Configuration ajoutée avec succès'
+'Veuillez choisir un fichier, s''il vous plaît.': 'Veuillez choisir un fichier, s''il vous plaît.'
+'Aucun fichier detectée': 'Aucun fichier detectée'
+'Exemple de contact ajouté avec succès': 'Exemple de contact ajouté avec succès'
+'Exemple de contact modifié avec succès': 'Exemple de contact modifié avec succès'
+'Exemple de contact supprimé': 'Exemple de contact supprimé'
+'Catégorie ajoutée avec succès': 'Catégorie ajoutée avec succès'
+'Catégorie modifiée avec succès': 'Catégorie modifiée avec succès'
+'Catégorie supprimée': 'Catégorie supprimée'
+'Catégorie réactiver': 'Catégorie réactiver'
+'Quiz modifié avec succès': 'Quiz modifié avec succès'
+'Quiz ajouté avec succès': 'Quiz ajouté avec succès'
+'Quiz supprimé avec succès': 'Quiz supprimé avec succès'
+'Question modifiée avec succès': 'Question modifiée avec succès'
+'Question ajoutée avec succès': 'Question ajoutée avec succès'
+'Question supprimée avec succès': 'Question supprimée avec succès'
+'Choix supprimé avec succès': 'Choix supprimé avec succès'
+'Choix modifié avec succès': 'Choix modifié avec succès'
+'Choix ajouté avec succès': 'Choix ajouté avec succès'
+'Produit supprimé des favoris': 'Produit supprimé des favoris'
+'Produit ajouté aux favoris': 'Produit ajouté aux favoris'
+'Information enregistrée avec succès, choisissez son secteur': 'Information enregistrée avec succès, choisissez son secteur'
+'Les informations sur le nouveau coach ont été bien enregistrées': 'Les informations sur le nouveau coach ont été bien enregistrées'
+'Le compte du coach a été réactivé': 'Le compte du coach a été réactivé'
+'Ressource supprimée avec succès': 'Ressource supprimée avec succès'
+'Planification de la réunion terminée avec succès': 'Planification de la réunion terminée avec succès'
+'Live supprimé': 'Live supprimé'
+'Modification du agent avec succès': 'Modification du agent avec succès'
+'Utilisateur agent ajouté avec succès': 'Utilisateur agent ajouté avec succès'
+'L''agent a été banni du plateforme avec succès': 'L''agent a été banni du plateforme avec succès'
+'Le compte de l''agent a été réactivé': 'Le compte de l''agent a été réactivé'
+'Le secteur a été changé avec succès': 'Le secteur a été changé avec succès'
+'Erreur : %nom% n''est pas un agent': 'Erreur : %nom% n''est pas un agent'
+'Création prix d''abonnement avec succès': 'Création prix d''abonnement avec succès'
+'Thème ajouté avec succès': 'Thème ajouté avec succès'
+'Thème modifié avec succès': 'Thème modifié avec succès'
+'Thème supprimé avec succès': 'Thème supprimé avec succès'
+'Informations enregistrées avec succès': 'Informations enregistrées avec succès'
+'Ajout de l''utilisateur Agent efféctué avec succès': 'Ajout de l''utilisateur Agent efféctué avec succès'
+Revendeur: Revendeur
+Professionnel: Professionnel
+'Bienvenue sur Pixelforce 🚀 - Votre aventure commence maintenant !': 'Bienvenue sur Pixelforce 🚀 - Votre aventure commence maintenant !'
+Bienvenue: Bienvenue
+Bonjour: Bonjour
+'F&eacute;licitations, vous faites d&eacute;sormais partie de Pixelforce ! 🎉 Nous sommes ravis de vous accueillir parmi nous.': 'F&eacute;licitations, vous faites d&eacute;sormais partie de Pixelforce ! 🎉 Nous sommes ravis de vous accueillir parmi nous.'
+'Voici quelques informations importantes pour bien d&eacute;marrer': 'Voici quelques informations importantes pour bien d&eacute;marrer'
+'Votre email d&rsquo;inscription': 'Votre email d&rsquo;inscription'
+'Acc&eacute;dez &agrave; votre compte ici': 'Acc&eacute;dez &agrave; votre compte ici'
+'Profitez de votre lien de parrainage': 'Profitez de votre lien de parrainage'
+'Recommandez Pixelforce et b&eacute;n&eacute;ficiez d&rsquo;avantages exclusifs ! Partagez votre lien d&egrave;s maintenant': 'Recommandez Pixelforce et b&eacute;n&eacute;ficiez d&rsquo;avantages exclusifs ! Partagez votre lien d&egrave;s maintenant'
+'Et maintenant ?': 'Et maintenant ?'
+'Il ne vous reste plus qu&rsquo;&agrave; explorer la plateforme et d&eacute;couvrir toutes les opportunit&eacute;s qui vous attendent. Si vous avez la moindre question, notre &eacute;quipe est &agrave; votre disposition &agrave;': 'Il ne vous reste plus qu&rsquo;&agrave; explorer la plateforme et d&eacute;couvrir toutes les opportunit&eacute;s qui vous attendent. Si vous avez la moindre question, notre &eacute;quipe est &agrave; votre disposition &agrave;'
+'&Agrave; tr&egrave;s vite !': '&Agrave; tr&egrave;s vite !'
+'L&rsquo;&eacute;quipe Pixelforce 🚀': 'L&rsquo;&eacute;quipe Pixelforce 🚀'
+'Nom d''utilisateur déjà utilisé': 'Nom d''utilisateur déjà utilisé'
+'Adresse email déjà utilisée': 'Adresse email déjà utilisée'
+'Nom obligatoire': 'Nom obligatoire'
+'Prix obligatoire': 'Prix obligatoire'
+'Le prix n''est pas valide': 'Le prix n''est pas valide'
+'Catégorie obligatoire': 'Catégorie obligatoire'
+'Prix mininum': 'Prix mininum'
+'Prix maximum': 'Prix maximum'
+'Formulaire Produit': 'Formulaire Produit'
+'Enregistrer les modifications': 'Enregistrer les modifications'
+Créer: Créer
+'Liste des produits': 'Liste des produits'
+Export: Export
+Excel: Excel
+Pdf: Pdf
+'Toutes les données': 'Toutes les données'
+'Seulement celles qui sont affichées': 'Seulement celles qui sont affichées'
+Exporter: Exporter
+'Nouveau produit': 'Nouveau produit'
+'Aucun produit disponible pour le moment.': 'Aucun produit disponible pour le moment.'
+Prix: Prix
+Image: Image
+'Formulaire Catégorie': 'Formulaire Catégorie'

@@ -5,6 +5,7 @@ namespace App\Services;
 use SplFileObject;
 use App\Util\GenericUtil;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ExcelService
 {
@@ -12,7 +13,9 @@ class ExcelService
     public const SEPARATOR = ";";
     public const EXPORT_FILE_NAME = "export.csv";
 
-    public function __construct(){
+    public function __construct(
+        private TranslatorInterface $translator,
+    ){
 
     }
 
@@ -68,6 +71,7 @@ class ExcelService
     
         $col = 'A'; 
         foreach ($headers as $header) {
+            $header = $this->translator->trans($header);
             $sheet->setCellValue($col . '1', $header);
             $col = $this->incrementColumn($col); 
         }
@@ -78,6 +82,9 @@ class ExcelService
             $col = 'A'; 
             foreach ($fields as $field) {
                 $value = GenericUtil::getPropertyValue($item, $field);
+                if (is_string($value) && trim($value) !== '') {
+                    $value = $this->translator->trans($value);
+                }
                 $sheet->setCellValue($col . $row,$value ?? ''); 
                 $col = $this->incrementColumn($col); 
             }

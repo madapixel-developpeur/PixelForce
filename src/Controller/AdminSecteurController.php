@@ -25,6 +25,7 @@ use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -48,7 +49,9 @@ class AdminSecteurController extends AbstractController
         FileHandler $fileHandler,
         CoachSecteurRepository $repoCoachSecteur,
         private ExcelService $excelService,
-        private PdfExport $pdfExport
+        private PdfExport $pdfExport,
+        private TranslatorInterface $translator
+
     )
     {
         $this->repoUser = $repoUser;
@@ -135,7 +138,7 @@ class AdminSecteurController extends AbstractController
             // $coachSecteur->setSecteur($sector);
             // $this->entityManager->save($coachSecteur);
 
-            $this->addFlash('success', "Ajout d'un secteur avec succès");
+            $this->addFlash('success', $this->translator->trans("Ajout d'un secteur avec succès"));
             return $this->redirectToRoute('admin_sector_list');    
         }
 
@@ -165,7 +168,7 @@ class AdminSecteurController extends AbstractController
                 $sector->setAffiche($photo);
             }
             $this->entityManager->save($sector);
-            $this->addFlash('success', "Modification secteur avec succès");
+            $this->addFlash('success', $this->translator->trans("Modification secteur avec succès"));
             return $this->redirectToRoute('admin_sector_list');    
         }
 
@@ -196,7 +199,7 @@ class AdminSecteurController extends AbstractController
             $sector->setActive(1);
             $this->entityManager->save($sector);
 
-            $this->addFlash( 'success', 'Secteur restauré');
+            $this->addFlash( 'success', $this->translator->trans('Secteur restauré'));
         return $this->redirectToRoute('admin_sector_list');    
     }
 

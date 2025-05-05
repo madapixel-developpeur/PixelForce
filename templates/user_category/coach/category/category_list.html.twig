@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-	Liste des catégories
+	{% trans %}Liste des catégories{% endtrans %}
 {% endblock %}
 
 {% block stylesheets %}
@@ -10,7 +10,7 @@
 
 {% block body %} 
     <div class="block block--bordered block--rounded">
-        <h1 class="block__text block__text--center mt-2" >Options de filtre :</h1>
+        <h1 class="block__text block__text--center mt-2" >{% trans %}Options de filtre{% endtrans %} :</h1>
         <div class="filter-wrap">
             {% if error %}
                 <div class="alert alert-danger" role="alert">
@@ -32,7 +32,7 @@
                     {{form_errors(form.description)}}
                 </div>
                 <div class="btn-wrap">
-                    <button class="btn btn-primary" type="submit"><i data-feather="filter"></i>Filtrer</button>
+                    <button class="btn btn-primary" type="submit"><i data-feather="filter"></i>{% trans %}Filtrer{% endtrans %}</button>
                 </div>
             {{ form_end(form) }}
         </div>
@@ -46,15 +46,15 @@
             </div>
         {% endfor %}
         <div class="block__header mb-1" >
-            <h1 class="block__title">Liste des catégories :</h1>
+            <h1 class="block__title">{% trans %}Liste des catégories{% endtrans %} :</h1>
             <div class="fab-btn-wrap">
-                <a  href="{{path('admin_category_new')}}" class="btn btn-primary btn--rounded fab-btn"><i data-feather="plus"></i>Nouvelle catégorie</a>
+                <a  href="{{path('admin_category_new')}}" class="btn btn-primary btn--rounded fab-btn"><i data-feather="plus"></i></a>
             </div>
         </div>
         {% if categoryList|length ==0 %}
                 <div class="alert alert-primary p-3 text-center" role="alert">
                     <div class="alert-body">
-                        Aucune catégorie disponible pour le moment.
+                       {% trans %}Aucune catégorie disponible pour le moment.{% endtrans %}
                     </div>
                 </div>
         {% endif %}
@@ -64,8 +64,8 @@
                 <thead>
                     <tr>
                         <th>Id</th>
-                        <th>Nom</th>
-                        <th>Description</th>
+                        <th>{% trans %}Nom{% endtrans %}</th>
+                        <th>{% trans %}Description{% endtrans %}</th>
                         <th></th>
                         <th></th>
 

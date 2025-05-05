@@ -54,13 +54,13 @@
             <img  src="data:image/png;base64,{{ img }}" style="max-height : 10%; width : 10%;"/>
         </div>
     </div>
-    <h1>{{ title }}</h1>
+    <h1>{{ title |trans }}</h1>
 
     <table>
         <thead>
             <tr>
                 {% for header in headers %}
-                    <th class="{{ header.class ?? 'text-center' }}">{{ header.name }}</th>
+                    <th class="{{ header.class ?? 'text-center' }}">{{ header.name |trans  }}</th>
                 {% endfor %}
             </tr>
         </thead>

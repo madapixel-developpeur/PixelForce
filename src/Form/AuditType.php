@@ -12,6 +12,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -22,7 +23,11 @@ class AuditType extends AbstractType
     private $entityManager;
     private $secteurRepository;
 
-    public function __construct(EntityManagerInterface $entityManager,SecteurRepository $secteurRepository)
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        SecteurRepository $secteurRepository,
+        private TranslatorInterface $translator,
+    )
     {
         $this->entityManager = $entityManager;
     }
@@ -32,32 +37,32 @@ class AuditType extends AbstractType
         $builder
             ->add('nomProjet', TextType::class, [
                 'required' => true,
-                'label' =>'Nom du projet',
+                'label' =>$this->translator->trans('Nom du projet'),
                 'attr' => [
-                    'placeholder' => 'Nom du projet',
+                    'placeholder' => $this->translator->trans('Nom du projet'),
                 ],
                 "constraints" => [
-                    new NotBlank(["message" => "Le nom du projet est obligatoire"])
+                    new NotBlank(["message" => $this->translator->trans("Le nom du projet est obligatoire")])
                 ]
             ])
             ->add('urlSite', TextType::class, [
                 'required' => false,
-                'label' =>"Url du site",
+                'label' => $this->translator->trans("Url du site"),
                 'attr' => [
-                    'placeholder' => 'Url du site',
+                    'placeholder' =>$this->translator->trans('Url du site') ,
                 ],
                 "constraints" => [
-                    new NotBlank(["message" => "L'url du site est obligatoire"])
+                    new NotBlank(["message" =>$this->translator->trans("L'url du site est obligatoire") ])
                 ]
             ])
             ->add('description', TextareaType::class, [
                 'required' => false,
-                'label' => "Description",
+                'label' => $this->translator->trans("Description"),
                 'attr' => [
-                    'placeholder' => 'Description',
+                    'placeholder' => $this->translator->trans('Description'),
                 ],
                 "constraints" => [
-                    new NotBlank(["message" => "La description est obligatoire"])
+                    new NotBlank(["message" => $this->translator->trans("La description est obligatoire")])
                 ]
             ])    
         ;

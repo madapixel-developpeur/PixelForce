@@ -31,6 +31,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -55,7 +56,8 @@ class AdminCoachController extends AbstractController
         SecteurRepository $repoSecteur,
         CoachSecteurRepository $repoCoachSecteur,
         private ExcelService $excelService,
-        private PdfExport $pdfExport
+        private PdfExport $pdfExport,
+        private TranslatorInterface $translator
     )
     {
         $this->repoUser = $repoUser;
@@ -126,7 +128,7 @@ class AdminCoachController extends AbstractController
             
             $this->entityManager->save($coach);
 
-            $this->addFlash('primary', "Information enregistrée avec succès, choisissez son secteur");
+            $this->addFlash('primary', $this->translator->trans("Information enregistrée avec succès, choisissez son secteur"));
             return $this->redirectToRoute('admin_coach_secteur_relate', ['id' =>  $coach->getId()]);    
         }
 
@@ -156,7 +158,7 @@ class AdminCoachController extends AbstractController
         $formUser->handleRequest($request);
         if ($formUser->isSubmitted() && $formUser->isValid()) {
             $this->entityManager->save($coach);
-            $this->addFlash('success', "Modification du coach avec succès");
+            $this->addFlash('success', $this->translator->trans("Modification du coach avec succès"));
             return $this->redirectToRoute('admin_coach_list');    
         }
 
@@ -201,11 +203,11 @@ class AdminCoachController extends AbstractController
             $this->entityManager->save($coachSecteur);
 
             if ($request->query->get('edition') === 'attribution_only') {
-                $this->addFlash('success', 'Secteur attribué avec succès');
+                $this->addFlash('success', $this->translator->trans('Secteur attribué avec succès'));
                 return $this->redirectToRoute('admin_coach_list');    
             }
 
-            $this->addFlash('primary', "Secteur choisi avec succès");
+            $this->addFlash('primary', $this->translator->trans("Secteur choisi avec succès"));
             return $this->redirectToRoute('admin_coach_password_generate', ['id' => $coach->getId()]);    
         }
         return $this->render('user_category/admin/coach/relate_secteur.html.twig', [
@@ -226,7 +228,7 @@ class AdminCoachController extends AbstractController
             $coach->setActive(true);
             $coach->setUsername($request->request->get('user_login')['username']);
             $this->userManager->setUserPasword($coach, $request->request->get('user_login')['password']['first'], '', false);
-            $this->addFlash('success', 'Les informations sur le nouveau coach ont été bien enregistrées');
+            $this->addFlash('success', $this->translator->trans('Les informations sur le nouveau coach ont été bien enregistrées'));
             return $this->redirectToRoute('admin_coach_list');    
         }
 
@@ -247,7 +249,7 @@ class AdminCoachController extends AbstractController
            $coach->setActive(-1);
            $this->entityManager->save($coach);
 
-            $this->addFlash('danger', 'Le coach a été banni du plateforme');
+            $this->addFlash('danger', $this->translator->trans('Le coach a été banni du plateforme'));
         }
         return $this->redirectToRoute('admin_coach_list');    
     }
@@ -261,7 +263,7 @@ class AdminCoachController extends AbstractController
         $coach->setActive(1);
         $this->entityManager->save($coach);
 
-        $this->addFlash('success', 'Le compte du coach a été réactivé');
+        $this->addFlash('success', $this->translator->trans('Le compte du coach a été réactivé'));
 
         return $this->redirectToRoute('admin_coach_list');
     }

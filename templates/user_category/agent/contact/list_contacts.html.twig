@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-	Liste  contacts agent
+	{% trans %}Liste  contacts agent{% endtrans %}
 {% endblock %}
 
 {% block stylesheets %}
@@ -21,14 +21,14 @@
             {% endfor %}
             {% if app.request.get('contactMobile') and app.request.get('contactMobile') == 'added' %}
                 <div class="alert alert-success text-center">
-                    Contact ajouté avec succès
+                    {% trans %}Contact ajouté avec succès{% endtrans %}
                 </div>
             {% endif %}
             
         </div>
          <div class="row mb-3">
             <div class="col-12  mt-2 mt-md-3">
-                <h4 class="my-auto general-primary-text">Liste de mes contacts</h4>
+                <h4 class="my-auto general-primary-text">{% trans %}Liste de mes contacts{% endtrans %}</h4>
             </div>
         </div>
         <div class="card card-company-table p-5 rounded-3" style="">
@@ -47,7 +47,7 @@
                                         </form>
                                     </div>
                                     <div class="col-4 col-md-3">
-                                    <a href="{{path('agent_contact_info_add')}}" class="btn btn-success btn mx-2 rounded-3" style="width: 100%;"><i class="fa fa-file-text"></i> <span class="ms-1">Ajout</span></a>
+                                    <a href="{{path('agent_contact_info_add')}}" class="btn btn-success btn mx-2 rounded-3" style="width: 100%;"><i class="fa fa-file-text"></i> <span class="ms-1">{% trans %}Ajout{% endtrans %}</span></a>
                                     </div>
                                     <div class="col-4 col-md-3">
                                         <div class="input-group rounded-3">
@@ -55,7 +55,7 @@
                                                 <span class="input-group-text border-0 w-25 rounded-4 me-4" id="filter-toggle">
                                                     <i class="fa-solid fa-bars-staggered"></i>
                                                 </span>
-                                                Filtres
+                                                {% trans %}Filtres{% endtrans %}
                                             </button>
                                         </div>
                                     </div>
@@ -67,7 +67,7 @@
                         {{form_start(searchForm)}}
                             <div class="collapse" id="filters">
                                 <div class="block block--bordered block--rounded">
-                                    <h1 class="block__text block__text--center mt-2" >Options de filtre :</h1>
+                                    <h1 class="block__text block__text--center mt-2" >{% trans %}Options de filtre{% endtrans %} :</h1>
                                     <div class="filter-wrap">
                                             <!-- Formulaire de recherche -->
                                             <div class="search-form">
@@ -86,34 +86,34 @@
                                                         </div>
                                                         <div class="col-12 col-sm-1 col-md-1">
                                                             <select class="form-select" name="ordre">
-                                                                <option value="ASC"selected>Ordre</option>
-                                                                <option value="ASC">ASC</option>
-                                                                <option value="DESC">DESC</option>
+                                                                <option value="ASC"selected>{% trans %}Ordre{% endtrans %}</option>
+                                                                <option value="ASC">{% trans %}ASC{% endtrans %}</option>
+                                                                <option value="DESC">{% trans %}DESC{% endtrans %}</option>
                                                             </select>
                                                         </div>
                                                         <div class=" col-12 col-sm-2 col-md-2">
                                                             {{form_row(searchForm.tag)}}
                                                         </div>
                                                         <div class="col-2">
-                                                            <label for="dateInscriptionMin" class="form-label">Type du contact</label>
+                                                            <label for="dateInscriptionMin" class="form-label">{% trans %}Type du contact{% endtrans %}</label>
                                                             {{form_widget(searchForm.type)}}
                                                         </div>
                                                         <div class="col-5">
-                                                            <label for="dateInscriptionMin" class="form-label">Date d'enregistrement à partir de</label>
+                                                            <label for="dateInscriptionMin" class="form-label">{% trans %}Date d'enregistrement à partir de{% endtrans %}</label>
                                                             {{form_widget(searchForm.dateInscriptionMin)}}
                                                         </div>
                                                         <div class="col-5">
-                                                            <label for="dateInscriptionMax" class="form-label">Date d'enregistrement jusqu'à</label>
+                                                            <label for="dateInscriptionMax" class="form-label">{% trans %}Date d'enregistrement jusqu'à{% endtrans %}</label>
                                                             {{form_widget(searchForm.dateInscriptionMax)}}
                                                         </div>
                                                     
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-12 col-md-8 mt-3 d-flex align-items-center justify-content-start ">
-                                                            <a href="{{path('agent_contact_import_export_mobile')}}" class="mt-2 btn btn-secondary btn-sm mx-2"><i class="fa-solid fa-mobile-screen-button"></i><span class="imp-exp-text-js ms-1">Importer/Exportation mobile</span></a>
+                                                            <a href="{{path('agent_contact_import_export_mobile')}}" class="mt-2 btn btn-secondary btn-sm mx-2"><i class="fa-solid fa-mobile-screen-button"></i><span class="imp-exp-text-js ms-1">{% trans %}Importer/Exportation mobile{% endtrans %}</span></a>
                                                         </div>
                                                         <div class="col-12  col-md-4 mt-3 d-flex align-items-center justify-content-end">
-                                                            <button class="regular-button w-50 rounded-3 fw-bolder" type='submit'   name="action_button" value="search_action" >Rechercher</button>
+                                                            <button class="regular-button w-50 rounded-3 fw-bolder" type='submit'   name="action_button" value="search_action" >{% trans %}Rechercher{% endtrans %}</button>
                                                         </div>
                                                     </div>
                                                     
@@ -124,9 +124,9 @@
                             </div>
                             <div class="row ">
                                 <div class="col-12 col-md-12 mt-3 d-flex align-items-center justify-content-start p-0 mb-3 ">
-                                    <button name="action_button" value="excel"  class=" mt-2 btn btn-success btn-sm me-2 rounded-3"><i class="fa fa-print"></i> <span class="ms-1">Exporter excel</span></button>
-                                    <button name="action_button" value="csv"  class=" mt-2 btn btn-success btn-sm me-2 rounded-3"><i class="fa fa-print"></i> <span class="ms-1">Exporter csv</span></button>
-                                    <button name="action_button" value="pdf"  class=" mt-2  btn btn-danger btn-sm me-2 rounded-3"><i class="fa fa-file-text"></i> <span class="ms-1">Exporter pdf</span></button>
+                                    <button name="action_button" value="excel"  class=" mt-2 btn btn-success btn-sm me-2 rounded-3"><i class="fa fa-print"></i> <span class="ms-1">{% trans %}Exporter excel{% endtrans %}</span></button>
+                                    <button name="action_button" value="csv"  class=" mt-2 btn btn-success btn-sm me-2 rounded-3"><i class="fa fa-print"></i> <span class="ms-1">{% trans %}Exporter csv{% endtrans %}</span></button>
+                                    <button name="action_button" value="pdf"  class=" mt-2  btn btn-danger btn-sm me-2 rounded-3"><i class="fa fa-file-text"></i> <span class="ms-1">{% trans %}Exporter pdf{% endtrans %}</span></button>
                                 </div>
                             </div>
                         {{form_end(searchForm)}}
@@ -134,7 +134,7 @@
                         {% if contacts|length ==0 %}
                             <div class="alert alert-primary p-3 text-center" role="alert">
                                 <div class="alert-body">
-                                    Aucun contact.
+                                    {% trans %}Aucun contact.{% endtrans %}
                                 </div>
                             </div>
                         {% endif %}
@@ -144,16 +144,16 @@
                                 <tbody class="align-items-center">
                                     <tr>
                                         
-                                        <th>Id</th>
-                                        <th>Type du contact</th>
-                                        <th>nom</th>
-                                        <th>Email</th>
-                                        <th>Téléphone</th>
-                                        <th>Adresse</th>
-                                        <th>Nom de l'entreprise</th>
-                                        <th>Statut</th>
-                                        <th>Type</th>
-                                        <th>Référence</th>
+                                        <th>{% trans %}Id{% endtrans %}</th>
+                                        <th>{% trans %}Type du contact{% endtrans %}</th>
+                                        <th>{% trans %}nom{% endtrans %}</th>
+                                        <th>{% trans %}Email{% endtrans %}</th>
+                                        <th>{% trans %}Téléphone{% endtrans %}</th>
+                                        <th>{% trans %}Adresse{% endtrans %}</th>
+                                        <th>{% trans %}Nom de l'entreprise{% endtrans %}</th>
+                                        <th>{% trans %}Statut{% endtrans %}</th>
+                                        <th>{% trans %}Type{% endtrans %}</th>
+                                        <th>{% trans %}Référence{% endtrans %}</th>
                                         <th class="table-th-notSortable"></th>
                                         <th></th>
                                     </tr>
@@ -179,7 +179,9 @@
                                         <td>{{ information.stringType }}</td>
                                         <td>
                                         <a href="{{ path('agent_order_list_digital',{'referenceVente' : generateReference(contact.agent ? contact.agent.id : 'AGENT_ID',app.user.id,contact.id)  }) }}"> {{ generateReference(contact.agent ? contact.agent.id : 'AGENT_ID',app.user.id,contact.id) }} </a>
-                                        <a class="p-2" href="#" onclick="copyLink('{{configSecteurService.getRefUrl(generateReference(contact.agent ? contact.agent.id : 'AGENT_ID',app.user.id,contact.id))}}','Liens de la référence {{  generateReference(contact.agent ? contact.agent.id : 'AGENT_ID',app.user.id,contact.id) }} copié avec succès') "><i class="fa-solid fa-copy"></i></a> 
+                                        {% set linkToBeCopied = generateReference(contact.agent ? contact.agent.id : 'AGENT_ID',app.user.id,contact.id) %}
+                                        {% set alertLabel =  'Liens de la référence %linkRef% copié avec succès'|trans({'%linkRef%': linkToBeCopied }) %}
+                                        <a class="p-2" href="#" onclick="copyLink('{{configSecteurService.getRefUrl(generateReference(contact.agent ? contact.agent.id : 'AGENT_ID',app.user.id,contact.id))}}','{{ alertLabel }}') "><i class="fa-solid fa-copy"></i></a> 
                                         </td>
                                         <td class="d-flex justify-content-center">
                                             <a href="{{ path('agent_contact_view', {'id': contact.id}) }}" class="btn btn-secondary">
@@ -190,14 +192,14 @@
                                                 <i class="fas fa-edit"></i>
                                             </a>
                                             
-                                            <form method="post" action="{{path('agent_contact_info_delete', {id: contact.id})}}" class="ms-1" style="display: inline-block;" onsubmit="return confirm('Êtes vous vraiment sûr de supprimer ce contact ?')">
+                                            <form method="post" action="{{path('agent_contact_info_delete', {id: contact.id})}}" class="ms-1" style="display: inline-block;" onsubmit="return confirm({{ 'Êtes vous vraiment sûr de supprimer ce contact ?' | trans }})">
                                                 <input type="hidden" name="_method" value="DELETE">
                                                 <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ contact.id) }}">
                                                 <button class="btn btn-danger"><i class="fas fa-trash-alt"></i></button>
                                             </form>  
                                             {% endif %}
                                         </td>
-                                        <td>{{ contact.isExample ? 'Exemple de contact' : 'Vrai contact' }}</td>
+                                        <td>{{ contact.isExample ? 'Exemple de contact'| trans  : 'Vrai contact' | trans }}</td>
                                     </tr>
                                     {% endfor %}
 

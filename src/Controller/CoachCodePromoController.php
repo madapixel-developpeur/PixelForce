@@ -14,6 +14,7 @@ use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 
@@ -23,7 +24,9 @@ class CoachCodePromoController extends AbstractController
 
 
     
-    public function __construct(private EntityManagerInterface $entityManager)
+    public function __construct(private EntityManagerInterface $entityManager,
+        private TranslatorInterface $translator    
+    )
     {
     }
 
@@ -108,7 +111,7 @@ class CoachCodePromoController extends AbstractController
                 $this->entityManager->commit();
 
 
-                $this->addFlash('success', 'Code promo ajouté avec succès');
+                $this->addFlash('success', $this->translator->trans('Code promo ajouté avec succès'));
                 return $this->redirectToRoute('code_promo_list');
             } catch (\Exception $ex) {
                 if ($this->entityManager->getConnection()->isTransactionActive()) {
@@ -165,7 +168,7 @@ class CoachCodePromoController extends AbstractController
                 }
                 $this->entityManager->flush();
                 $this->entityManager->commit();
-                $this->addFlash('success', 'Code promo modifié avec succès');
+                $this->addFlash('success', $this->translator->trans('Code promo modifié avec succès'));
                 return $this->redirectToRoute('code_promo_list');
             } catch (\Throwable $th) {
                 if ($this->entityManager->getConnection()->isTransactionActive()) {
@@ -191,7 +194,7 @@ class CoachCodePromoController extends AbstractController
         try {
             $this->entityManager->remove($codePromo);
             $this->entityManager->flush();
-            $this->addFlash('success', 'Code promo supprimé avec succès');
+            $this->addFlash('success', $this->translator->trans('Code promo supprimé avec succès'));
         } catch (\Exception $ex) {
             $this->addFlash('danger', $ex->getMessage());
         }

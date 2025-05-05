@@ -20,6 +20,7 @@ use App\Repository\CoachSecteurRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -47,7 +48,8 @@ class ProfessionnelInformationController extends AbstractController
         PaginatorInterface $paginator, 
         UserRepository $userRepository, 
         SessionInterface $session,
-        private FileHandler $fileHandler
+        private FileHandler $fileHandler,
+        private TranslatorInterface $translator
     )
     {
 
@@ -85,7 +87,7 @@ class ProfessionnelInformationController extends AbstractController
             try{
                 $file = $form->get('portfolioFile')->getData();
                 if(!$file  && empty($userInformation->getPortfolioLink())){
-                    throw new CustomException('Veuillez fournir votre portfolio, sous forme de lien ou de fichier.');
+                    throw new CustomException($this->translator->trans('Veuillez fournir votre portfolio, sous forme de lien ou de fichier.'));
                 }
                 if($file){
                     $filename = $this->fileHandler->upload($file, Constants::PORTFOLIO_FOLDER);
@@ -95,14 +97,14 @@ class ProfessionnelInformationController extends AbstractController
                 $user->setProfesionnalInformationState(User::INFORMATION_PENDING);
                 $user->setInformation($userInformation);
                 $this->entityManager->flush();
-                $this->addFlash('success',"Information enregistrée avec succès.");
+                $this->addFlash('success',$this->translator->trans("Information enregistrée avec succès."));
                 return $this->redirectToRoute('professionnel_info');    
             } catch(CustomException $ex){
                 $error = $ex->getMessage();
                 $this->addFlash('danger', $error);
             } catch(Exception $ex){
                 $error = $ex->getMessage();
-                $this->addFlash('danger', $_ENV['CUSTOM_ERROR_MESSAGE']);
+                $this->addFlash('danger', $this->translator->trans($_ENV['CUSTOM_ERROR_MESSAGE']));
             }
         }
 

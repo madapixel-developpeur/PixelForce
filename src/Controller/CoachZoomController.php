@@ -4,16 +4,17 @@
 namespace App\Controller;
 
 
-use App\Entity\AgentSecteur;
 use App\Entity\User;
+use App\Services\LiveVideo;
+use App\Entity\AgentSecteur;
 use App\Manager\EntityManager;
 use App\Repository\LiveChatVideoRepository;
-use App\Services\LiveVideo;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
 
 class CoachZoomController extends AbstractController
@@ -34,7 +35,9 @@ class CoachZoomController extends AbstractController
 
     public function __construct(LiveVideo $liveVideo,
                                 LiveChatVideoRepository $liveChatVideoRepository,
-                                EntityManager $entityManager)
+                                EntityManager $entityManager,
+                                private TranslatorInterface $translator
+        )
     {
         $this->liveVideo = $liveVideo;
         $this->liveChatVideoRepository = $liveChatVideoRepository;
@@ -103,7 +106,7 @@ class CoachZoomController extends AbstractController
                     $secteur
                 );
             }
-            $this->addFlash('success', 'Planification de la réunion terminée avec succès');
+            $this->addFlash('success', $this->translator->trans('Planification de la réunion terminée avec succès'));
         } else {
             $this->addFlash('danger', 'Vous devez entrer au moin un agent');
         }
@@ -128,7 +131,7 @@ class CoachZoomController extends AbstractController
                 'message' => 'live supprimé'
             ]);
         }
-        $this->addFlash('success', 'Live supprimé');
+        $this->addFlash('success', $this->translator->trans('Live supprimé'));
         return $this->redirectToRoute('coach_zoom_list');
     }
 

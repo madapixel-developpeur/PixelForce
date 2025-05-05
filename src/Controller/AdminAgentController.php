@@ -38,6 +38,7 @@ use App\Repository\PlanAgentAccountRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Constraints\Json;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -79,7 +80,8 @@ class AdminAgentController extends AbstractController
         StripeManager $stripeManager,
         SubscriptionPlanAgentAccountRepository $repoSubscriptionPlanAgentAccount,
         private ExcelService $excelService,
-        private PdfExport $pdfExport
+        private PdfExport $pdfExport,
+        private TranslatorInterface $translator
     )
     {
         $this->repoUser = $repoUser;
@@ -163,7 +165,7 @@ class AdminAgentController extends AbstractController
         $formUser->handleRequest($request);
         if ($formUser->isSubmitted() && $formUser->isValid()) {
             $this->entityManager->save($agent);
-            $this->addFlash('success', "Modification du agent avec succès");
+            $this->addFlash('success', $this->translator->trans("Modification du agent avec succès"));
             return $this->redirectToRoute('admin_agent_list');    
         }
 
@@ -187,7 +189,7 @@ class AdminAgentController extends AbstractController
         if ($formUserPassword->isSubmitted() && $formUserPassword->isValid()) {
             $agent->setActive(true);
             $this->userManager->setUserPasword($agent, $request->request->get('reset_password')['password']['first'], '', false);
-            $this->addFlash('success', 'Utilisateur agent ajouté avec succès');
+            $this->addFlash('success', $this->translator->trans('Utilisateur agent ajouté avec succès'));
             return $this->redirectToRoute('admin_agent_list');    
         }
 
@@ -208,7 +210,7 @@ class AdminAgentController extends AbstractController
             $agent->setActive(-1);
             $this->entityManager->save($agent);
 
-            $this->addFlash( 'danger', 'L\'agent a été banni du plateforme avec succès');
+            $this->addFlash( 'danger', $this->translator->trans('L\'agent a été banni du plateforme avec succès'));
         }
         return $this->redirectToRoute('admin_agent_list');    
     }
@@ -222,7 +224,7 @@ class AdminAgentController extends AbstractController
         $coach->setActive(1);
         $this->entityManager->save($coach);
 
-        $this->addFlash('success', 'Le compte de l\'agent a été réactivé');
+        $this->addFlash('success', $this->translator->trans('Le compte de l\'agent a été réactivé'));
 
         return $this->redirectToRoute('admin_agent_list');
     }
@@ -320,7 +322,7 @@ class AdminAgentController extends AbstractController
                 $secteur = $this->repoSecteur->findOneBy(['id' => $secteur]);
                 $agentSecteur->setSecteur($secteur);
                 $this->entityManager->save($agentSecteur);
-                $this->addFlash('success', 'Le secteur a été changé avec succès');
+                $this->addFlash('success', $this->translator->trans('Le secteur a été changé avec succès'));
                 return $this->redirectToRoute('admin_agent_view', ['id' => $request->request->get('agent_id')]);
             }
         }
@@ -375,7 +377,7 @@ class AdminAgentController extends AbstractController
                 'agent' => $user
             ]);
         }
-        $this->addFlash('danger', 'Erreur : '.$user->getNom().' n\'est pas un agent');
+        $this->addFlash('danger', $this->translator->trans('Erreur : %nom% n\'est pas un agent',[ '%nom%' => $user->getNom()]));
         return $this->redirectToRoute('admin_agent_list');
     }
 
@@ -440,7 +442,7 @@ class AdminAgentController extends AbstractController
             $priceName = $_POST['plan_agent_account']['priceName'];
             $planDescription = $_POST['plan_agent_account']['planDescription'];
             $this->agentService->create_PlanAgentAccount($amount, StripeService::INTERVAL_UNIT_MONTH, $priceName, $planDescription);
-            $this->addFlash('success', "Création prix d'abonnement avec succès");
+            $this->addFlash('success', $this->translator->trans("Création prix d'abonnement avec succès"));
             return $this->redirectToRoute('admin_agent_list');    
         }
 

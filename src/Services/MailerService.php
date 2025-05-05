@@ -17,6 +17,7 @@ use Symfony\Component\Mime\Address;
 use Twig\Environment as Twig_Environment;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Nucleos\DompdfBundle\Wrapper\DompdfWrapperInterface;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
@@ -35,7 +36,9 @@ class MailerService
     private $wrapper;
     private $fileHandler;
 
-    public function __construct(MailerInterface $mailer, ParameterBagInterface $parameterBag, Twig_Environment $twig, DompdfWrapperInterface $wrapper, FileHandler $fileHandler)
+    public function __construct(MailerInterface $mailer, ParameterBagInterface $parameterBag, Twig_Environment $twig, DompdfWrapperInterface $wrapper, FileHandler $fileHandler,
+        private TranslatorInterface $translator
+    )
     {
         $this->mailer = $mailer;
         $this->from = $_ENV['MAILER_SEND_FROM'];
@@ -258,14 +261,17 @@ class MailerService
     public function sendUserWelcome(User $user)
     {
 
+        $currentLocale = $user->getLang()?? 'fr';
         $body = $this->renderTwig('emails/user_welcome.html.twig', [
             'user' => $user,
-        ]);
+            'currentLocale' => $currentLocale
 
+        ]);
+        $currentLocale = $user->getLang();
         $attachmentsPath = [];
         $embeddedImages = ['logo' => 'assets/img/logo/pixelforce/logo-pixelforce-min.png'];
         $this->mySendMail([
-            'subject' => 'Bienvenue sur Pixelforce 🚀 - Votre aventure commence maintenant !',
+            'subject' => $this->translator->trans('Bienvenue sur Pixelforce 🚀 - Votre aventure commence maintenant !',[],null,$currentLocale),
             'to' => $user->getEmail(),
             'body' => $body
         ], $attachmentsPath, null, $embeddedImages);

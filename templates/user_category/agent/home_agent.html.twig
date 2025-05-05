@@ -1,7 +1,7 @@
 {% extends 'base-choix.html.twig' %}
 
 {% block title %}
-	Choix du secteur
+	{% trans %}Choix du secteur{% endtrans %}
 {% endblock %}
 
 {% block stylesheets %}
@@ -22,17 +22,17 @@
     {% set stripe_defaultButton =  "S'abonner (" ~ planPrice ~ " €)" %}
 
     <div class="container-page">
-        <h1 class="choix-secteur-primary mt-3">Bonjour {{app.user.prenom|default(' ')}}! Bienvenue sur Pixelforce</h1>    
+        <h1 class="choix-secteur-primary mt-3">{{ 'Bonjour %prenom%! Bienvenue sur Pixelforce'|trans({'%prenom%': app.user.prenom|default('')}) }} </h1>    
 
         {% if app.session.get('enabledContent') == true %}
             {% if app.request.get('stripe_checkout') == 'successfully' %}
                 <div class="text-center alert alert-success h5">
-                    Paiement efféctué avec succès !
+                    {% trans %}Paiement efféctué avec succès !{% endtrans %}
                 </div>
             {% endif %}
             <div class="row pt-3">
                 <div class="col-12 col-md-5">
-                    <h6 class="">Découvrez comment Pixelforce peut transformer votre activité. Regardez cette courte vidéo pour en savoir plus sur les opportunités qui vous attendent.</h6>
+                    <h6 class="">{% trans %}Découvrez comment Pixelforce peut transformer votre activité. Regardez cette courte vidéo pour en savoir plus sur les opportunités qui vous attendent.{% endtrans %} </h6>
                 </div>
                 <div class="col-0 col-md-7"></div>
             </div>
@@ -81,13 +81,13 @@
                                                             <div class="col-4 text-end">
                                                                 {% if agentSecteur is null and s.active > 0 %}
                                                                     <!-- <a href="" class="btn btn-primary" disabled><i class="fa-solid fa-location-arrow"></i> Découvrir</a> -->
-                                                                    <a href="{{ path('agent_add_sector', {id: s.id}) }}" class="regular-white-button   font-weight-bold rounded-3 pl-3 pr-3"> Ajouter </a>
+                                                                    <a href="{{ path('agent_add_sector', {id: s.id}) }}" class="regular-white-button   font-weight-bold rounded-3 pl-3 pr-3"> {% trans %}Ajouter{% endtrans %} </a>
                                                                     {% elseif agentSecteur and agentSecteur.statut == true and s.active > 0 %}
-                                                                        <a href="{{ path('agent_generate_sessionSecteur_before_redirect_to_route_dahsboard', {id: s.id}) }}" class="regular-white-button  font-weight-bold rounded-3 pl-3 pr-3"> Accéder </a>
+                                                                        <a href="{{ path('agent_generate_sessionSecteur_before_redirect_to_route_dahsboard', {id: s.id}) }}" class="regular-white-button  font-weight-bold rounded-3 pl-3 pr-3"> {% trans %}Accéder{% endtrans %} </a>
                                                                     {% elseif agentSecteur and agentSecteur.statut == false and s.active > 0 %}
-                                                                        <a class="regular-white-button   font-weight-bold rounded-3 pl-3 pr-3"> En attente de validation</a>
+                                                                        <a class="regular-white-button   font-weight-bold rounded-3 pl-3 pr-3"> {% trans %}En attente de validation{% endtrans %}</a>
                                                                 {% else %}
-                                                                    <a href="#" class="btn btn-primary" disabled>Bientôt Disponible</a>
+                                                                    <a href="#" class="btn btn-primary" disabled>{% trans %}Bientôt Disponible{% endtrans %}</a>
                                                                 {% endif %}
                                                             </div>
                                                         </div>

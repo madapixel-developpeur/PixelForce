@@ -2,40 +2,41 @@
 
 namespace App\Controller;
 
-use App\Entity\ImplantationAroma;
-use App\Entity\KitBaseSecu;
-use App\Entity\Produit;
-use App\Entity\ProduitDD;
-use App\Entity\ProduitFavori;
-use App\Entity\ProduitSecu;
-use App\Entity\ProduitSecuFavori;
-use App\Entity\Secteur;
-use App\Entity\User;
-use App\Form\ImplantationAromaFilterType;
-use App\Form\KitBaseFilterType;
-use App\Form\MyProduitDDFilterType;
-use App\Form\MyProduitFilterType;
-use App\Form\MyProduitSecuFilterType;
-use App\Repository\AgentSecteurRepository;
-use App\Repository\KitBaseElmtSecuRepository;
-use App\Repository\KitBaseSecuRepository;
-use App\Repository\ProduitFavoriRepository;
-use App\Repository\ProduitRepository;
-use App\Repository\ProduitSecuFavoriRepository;
-use App\Repository\UserRepository;
-use App\Services\FileHandler;
-use App\Services\OrderServiceAroma;
-use App\Services\SearchService;
-use App\Util\Search\MyCriteriaParam;
 use DateTime;
-use Doctrine\ORM\EntityManagerInterface;
 use Exception;
+use App\Entity\User;
+use App\Entity\Produit;
+use App\Entity\Secteur;
+use App\Entity\ProduitDD;
+use App\Entity\KitBaseSecu;
+use App\Entity\ProduitSecu;
+use App\Entity\ProduitFavori;
+use App\Services\FileHandler;
+use App\Form\KitBaseFilterType;
+use App\Services\SearchService;
+use App\Entity\ImplantationAroma;
+use App\Entity\ProduitSecuFavori;
+use App\Form\MyProduitFilterType;
+use App\Repository\UserRepository;
+use App\Form\MyProduitDDFilterType;
+use App\Services\OrderServiceAroma;
+use App\Util\Search\MyCriteriaParam;
+use App\Form\MyProduitSecuFilterType;
+use App\Repository\ProduitRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use App\Form\ImplantationAromaFilterType;
+use App\Repository\KitBaseSecuRepository;
+use App\Repository\AgentSecteurRepository;
+use App\Repository\ProduitFavoriRepository;
 use Knp\Component\Pager\PaginatorInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Repository\KitBaseElmtSecuRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use App\Repository\ProduitSecuFavoriRepository;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
  * @Route("/boutique/{token}")
@@ -49,7 +50,9 @@ class BoutiqueController extends AbstractController
     private $fileHandler;
 
     public function __construct(UserRepository $userRepository, SessionInterface $session, 
-        EntityManagerInterface $entityManager, ProduitRepository $produitRepository, FileHandler $fileHandler)
+        EntityManagerInterface $entityManager, ProduitRepository $produitRepository, FileHandler $fileHandler,
+        private TranslatorInterface $translator
+    )
     {
         $this->userRepository = $userRepository;
         $this->session = $session;
@@ -493,7 +496,7 @@ class BoutiqueController extends AbstractController
             $message = null;
             if($produitFavori){
                 $produitFavori->setStatut(0);
-                $message = 'Produit supprimé des favoris';
+                $message = $this->translator->trans('Produit supprimé des favoris');
             } else {
                 $produitFavori = new ProduitFavori();
                 $produitFavori->setClient($user);
@@ -501,7 +504,7 @@ class BoutiqueController extends AbstractController
                 $produitFavori->setStatut(1);
                 $produitFavori->setDateFavori(new DateTime());
                 $this->entityManager->persist($produitFavori);
-                $message = 'Produit ajouté aux favoris';
+                $message = $this->translator->trans('Produit ajouté aux favoris');
             }
             
             $this->entityManager->flush();
@@ -643,7 +646,7 @@ class BoutiqueController extends AbstractController
             $message = null;
             if($produitFavori){
                 $produitFavori->setStatut(0);
-                $message = 'Produit supprimé des favoris';
+                $message = $this->translator->trans('Produit supprimé des favoris');
             } else {
                 $produitFavori = new ProduitSecuFavori();
                 $produitFavori->setClient($user);
@@ -651,7 +654,7 @@ class BoutiqueController extends AbstractController
                 $produitFavori->setStatut(1);
                 $produitFavori->setDateFavori(new DateTime());
                 $this->entityManager->persist($produitFavori);
-                $message = 'Produit ajouté aux favoris';
+                $message = $this->translator->trans('Produit ajouté aux favoris');
             }
             
             $this->entityManager->flush();

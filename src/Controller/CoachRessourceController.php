@@ -2,29 +2,31 @@
 // src/Controller/FileUploadController.php
 namespace App\Controller;
 
-use App\Entity\Ressource;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\ResponseHeaderBag;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\String\Slugger\SluggerInterface;
-use App\Services\FileHandler;
 use App\Util\Status;
+use App\Entity\Ressource;
+use App\Services\FileHandler;
 use App\Form\RessourceFormType;
 use App\Services\SearchService;
-use App\Util\Search\MyCriteriaParam;
-use Knp\Component\Pager\PaginatorInterface;
 use App\Form\RessourceFilterType;
+use App\Util\Search\MyCriteriaParam;
+use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/coach/ressources')]
 class CoachRessourceController extends AbstractController
 {
 
-    public function __construct(private EntityManagerInterface $entityManager, private FileHandler $fileHandler)
+    public function __construct(private EntityManagerInterface $entityManager, private FileHandler $fileHandler,
+    private TranslatorInterface $translator)
     {
     }
 
@@ -156,7 +158,7 @@ class CoachRessourceController extends AbstractController
             $res->setStatus(Status::INVALID);
             $this->entityManager->persist($res);
             $this->entityManager->flush();
-            $this->addFlash('success', 'Ressource supprimée avec succès');
+            $this->addFlash('success', $this->translator->trans('Ressource supprimée avec succès'));
         } catch (\Exception $ex) {
             $this->addFlash('danger', $ex->getMessage());
         }

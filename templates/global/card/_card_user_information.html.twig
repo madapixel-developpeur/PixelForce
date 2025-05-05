@@ -34,19 +34,19 @@
 {#                </div>#}
 {#            </div>#}
 {#        </div>#}
-        <h4 class="fw-bolder border-bottom pb-50 mb-1 mt-4">Détails</h4>
+        <h4 class="fw-bolder border-bottom pb-50 mb-1 mt-4">{% trans %}Détails{% endtrans %}</h4>
         <div class="info-container">
             <ul class="list-unstyled">
                 <li class="mb-75">
-                    <span class="fw-bolder me-25">Nom et prénom:</span>
+                    <span class="fw-bolder me-25">{% trans %}Nom et prénom{% endtrans %}:</span>
                     <span>{{ user.fullName }}</span>
                 </li>
                 <li class="mb-75">
-                    <span class="fw-bolder me-25">Email:</span>
+                    <span class="fw-bolder me-25">{% trans %}Email{% endtrans %}:</span>
                     <span>{{ user.email }}</span>
                 </li>
                 <li class="mb-75">
-                    <span class="fw-bolder me-25">Statut:</span>
+                    <span class="fw-bolder me-25">{% trans %}Statut{% endtrans %}:</span>
                     <span class="badge bg-light-success">{{ user.active == 1 ? 'Active' : 'Banni' }}</span>
                 </li>
 {#                <li class="mb-75">#}
@@ -54,16 +54,16 @@
 {#                    <span>{{ user.roles[0]|slice(5)}}</span>#}
 {#                </li>#}
                 <li class="mb-75">
-                    <span class="fw-bolder me-25">Contact:</span>
-                    <span>{% if user.telephone %} {{ user.telephone }} {% else %} Pas de numero {% endif %}</span>
+                    <span class="fw-bolder me-25">{% trans %}Contact{% endtrans %}:</span>
+                    <span>{% if user.telephone %} {{ user.telephone }} {% else %} {% trans %}Pas de numero{% endtrans %} {% endif %}</span>
                 </li>
                 <li class="mb-75">
-                    <span class="fw-bolder me-25">Adresse:</span>
+                    <span class="fw-bolder me-25">{% trans %}Adresse{% endtrans %}:</span>
                     <span>{{ user.adresse }}</span>
                 </li>
                 {% if detailAgentCoach is defined  %}
                    <li class="mb-75">
-                    <span class="fw-bolder me-25">Chiffre d'affaires:</span>
+                    <span class="fw-bolder me-25">{% trans %}Chiffre d'affaires{% endtrans %}:</span>
                     <span>{{ chiffreAffaireTotal | number_format(2, ',', ' ') }} € </span>
                 </li>
                 {% endif %}
@@ -92,7 +92,7 @@
                 {% endif %}
                 {% if is_granted('ROLE_ADMINISTRATEUR')  %}
                     <a href="{{ path('admin_agent_edit', {id:user.id}) }}" class="btn btn-primary me-1 d-none" >
-                        Modifier
+                        {% trans %}Modifier{% endtrans %}
                     </a>
                 {% endif %}
                

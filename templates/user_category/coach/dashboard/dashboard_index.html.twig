@@ -1,6 +1,8 @@
 {% extends 'base_admin.html.twig' %}
 
-{% block title %}Tableau de bord{% endblock %}
+{% block title %}
+    {% trans %}Tableau de bord{% endtrans %}
+{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -31,13 +33,13 @@
                                 </div>
                             {% elseif formations == null %}
                                 <div class="alert alert-primary text-center m-5">
-                                    Il n'y a plus de formation à terminer
+                                   {% trans %} Il n'y a plus de formation à terminer{% endtrans %}
                                 </div>
                             {% else %}
                                 {% if currentCategorie and currentCategorie.ordreCatFormation == constant('App\\Entity\\CategorieFormation::ORDRE_LISTE_DE_CONTACT') and nbrAllMyContacts < constant('App\\Entity\\CategorieFormation::CONDITION_LISTE_DE_CONTACT') %}
                                     <h3 class="fw-bolder text-center mt-2">{{ firstFormation.titre}} </h3>    
                                     <div class="alert alert-warning m-5 text-center h2">
-                                        Pour débloquer cette formation, assurez-vous d’avoir enregistré plus de 100 contacts dans votre liste de prospection.
+                                        {% trans %}Pour débloquer cette formation, assurez-vous d’avoir enregistré plus de 100 contacts dans votre liste de prospection.{% endtrans %}
                                     </div>
                                 {% else %}
                                     <h3 class="fw-bolder text-center mt-2">{{ firstFormation.titre}} </h3>
@@ -47,13 +49,13 @@
                                     <div class="text-center m-2 p-2">
                                         <div class="row">
                                             <div class="col">
-                                                <a href="{{ path('agent_formation_fiche', {id:firstFormation.id}) }}" class="btn btn-primary fw-bolder mt-4"><i class="fa-solid fa-file me-2"></i> Fiche formation</a>
+                                                <a href="{{ path('agent_formation_fiche', {id:firstFormation.id}) }}" class="btn btn-primary fw-bolder mt-4"><i class="fa-solid fa-file me-2"></i> {% trans %}Fiche formation{% endtrans %}</a>
                                             </div>
                                             <div class="col">
-                                                <a href="{{ path('agent_formation_terminer', {id:firstFormation.id, path: 'fromDashboard'}) }}" class="btn btn-success fw-bolder mt-4"><i class="fa fa-check"></i> J'ai terminé cette formation</a>
+                                                <a href="{{ path('agent_formation_terminer', {id:firstFormation.id, path: 'fromDashboard'}) }}" class="btn btn-success fw-bolder mt-4"><i class="fa fa-check"></i>{% trans %} J'ai terminé cette formation{% endtrans %}</a>
                                             </div>
                                             <div class="col">
-                                                <a href="{{ path('agent_formation_list') }}" class="btn btn-secondary fw-bolder mt-4"><i class="fa-solid fa-list me-2"></i> Liste des formations</a>
+                                                <a href="{{ path('agent_formation_list') }}" class="btn btn-secondary fw-bolder mt-4"><i class="fa-solid fa-list me-2"></i>{% trans %} Liste des formations{% endtrans %}</a>
                                             </div>
                                         </div>
                                     </div>
@@ -68,14 +70,14 @@
             <!-- Developer Meetup Card -->
             <div class="col-lg-4 col-md-6 col-12">
                 <div class="card-body position-relative mb-2">
-					<h5 class="card-title">Copier le lien d'affiliation</h5>
-					<p class="card-text">Pour inviter d'autres personnes à se joindre à vous, veuillez cliquer ici.</p>
-					<a class="btn btn-primary w-100 font-weight-bold" href="#" onclick="copyLink('{{ url('agent_inscription', {'ambassador_username':  app.user.username != "" ?  app.user.username : ' '}) }}') " >Copier</a>
+					<h5 class="card-title">{% trans %}Copier le lien d'affiliation{% endtrans %}</h5>
+					<p class="card-text">{% trans %}Pour inviter d'autres personnes à se joindre à vous, veuillez cliquer ici.{% endtrans %}</p>
+					<a class="btn btn-primary w-100 font-weight-bold" href="#" onclick="copyLink('{{ url('agent_inscription', {'ambassador_username':  app.user.username != "" ?  app.user.username : ' '}) }}') " >{% trans %}Copier{% endtrans %}</a>
 				</div>
                 {% if app.user.uniqueCoachSecteur.isFonctionnaliteActive(constant('App\\Util\\FonctionnalitesTypeSecteur::FONCTIONNALITE_COMMON_AGENDA')) %}
                 <div class="card card-developer-meetup position-relative">
                     <div class="position-absolute right-0 top-0 m-3">
-                        <a href="{{ path('calendar_index') }}" class="btn btn-primary d-flex justify-content-center align-items-center">Mon Agenda <i data-feather="calendar" class="ms-3"></i></a>
+                        <a href="{{ path('calendar_index') }}" class="btn btn-primary d-flex justify-content-center align-items-center">{% trans %}Mon Agenda{% endtrans %} <i data-feather="calendar" class="ms-3"></i></a>
                     </div>
                     <div class="meetup-img-wrapper rounded-top text-center">
                         <img src="{{asset('assets/vuexy/images/illustration/email.svg')}}" alt="Meeting Pic" height="170" />
@@ -117,7 +119,7 @@
                         </div>
                         {% endfor %}
                         {% if upcomingEvents|length == 0 %}
-                            <div class="alert alert-secondary">Aucun évenement à venir.</div>
+                            <div class="alert alert-secondary">{% trans %}Aucun évenement à venir.{% endtrans %}</div>
                         {% endif %}
                     </div>
                 </div>

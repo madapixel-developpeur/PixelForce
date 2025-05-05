@@ -38,6 +38,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\CalendarEventLabelRepository;
 use App\Repository\CategorieFormationRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -59,6 +60,7 @@ class AgentContactMeetingController extends AbstractController
         private FormationRepository $formationRepository,
         private CallScriptRepository $callScriptRepository,
         private FileHandler $fileHandler, 
+        private TranslatorInterface $translator
     )
     {
         $this->entityManager = $entityManager;
@@ -160,7 +162,7 @@ class AgentContactMeetingController extends AbstractController
 
                 $this->addFlash(
                     'success',
-                    "Votre rendez-vous a été programmé."
+                    $this->translator->trans("Votre rendez-vous a été programmé.")
                 );
 
                 return $this->redirectToRoute('agent_contact_meeting_fiche', ['id' => $meeting->getId()]);
@@ -203,7 +205,7 @@ class AgentContactMeetingController extends AbstractController
                 $this->entityManager->commit();
                 $this->addFlash(
                     'success',
-                    "Votre rendez-vous a été mis à jour."
+                    $this->translator->trans("Votre rendez-vous a été mis à jour.")
                 );
 
                 return $this->redirectToRoute('agent_contact_meeting_fiche', ['id' => $meeting->getId()]);
@@ -366,7 +368,7 @@ class AgentContactMeetingController extends AbstractController
 
                 $this->entityManager->persist($script);
                 $this->entityManager->flush();
-                $this->addFlash('success', 'Script ajouté avec succès');
+                $this->addFlash('success', $this->translator->trans('Script ajouté avec succès'));
                 return $this->redirectToRoute('agent_call_script_list');
             } catch (\Throwable $th) {
                 $this->addFlash('danger', $_ENV['CUSTOM_ERROR_MESSAGE']);
@@ -394,7 +396,7 @@ class AgentContactMeetingController extends AbstractController
 
                 $this->entityManager->persist($script);
                 $this->entityManager->flush();
-                $this->addFlash('success', 'Script modifié avec succès');
+                $this->addFlash('success', $this->translator->trans('Script modifié avec succès'));
                 return $this->redirectToRoute('agent_call_script_list');
             } catch (\Throwable $th) {
                 $this->addFlash('danger', $_ENV['CUSTOM_ERROR_MESSAGE']);
@@ -437,7 +439,7 @@ class AgentContactMeetingController extends AbstractController
                 $this->entityManager->flush();
                 $this->entityManager->commit();
                 $this->entityManager->clear();
-                $this->addFlash('success',"Fichier(s) ajouté(s) avec succès.");
+                $this->addFlash('success',$this->translator->trans("Fichier(s) ajouté(s) avec succès."));
             }
             else{
                 $this->addFlash('danger',"Veuillez choisir un fichier, s'il vous plaît.");

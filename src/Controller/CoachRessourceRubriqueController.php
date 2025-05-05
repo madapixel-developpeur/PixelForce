@@ -2,30 +2,33 @@
 // src/Controller/FileUploadController.php
 namespace App\Controller;
 
+use App\Util\Status;
+use App\Services\FileHandler;
+use App\Services\SearchService;
 use App\Entity\RessourceRubrique;
+use App\Util\Search\MyCriteriaParam;
+use App\Form\RessourceRubriqueFormType;
+use App\Repository\RessourceRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use App\Form\RessourceRubriqueFilterType;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\String\Slugger\SluggerInterface;
-use App\Services\FileHandler;
-use App\Util\Status;
-use App\Form\RessourceRubriqueFormType;
-use App\Services\SearchService;
-use App\Util\Search\MyCriteriaParam;
-use Knp\Component\Pager\PaginatorInterface;
-use App\Form\RessourceRubriqueFilterType;
-use App\Repository\RessourceRepository;
+use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/coach/ressource-rubriques')]
 class CoachRessourceRubriqueController extends AbstractController
 {
 
-    public function __construct(private EntityManagerInterface $entityManager, private RessourceRepository $ressourceRepository)
+    public function __construct(private EntityManagerInterface $entityManager, private RessourceRepository $ressourceRepository,
+    private TranslatorInterface $translator
+    )
     {
     }
 
@@ -87,7 +90,7 @@ class CoachRessourceRubriqueController extends AbstractController
                 $rb->setStatus(Status::VALID);
                 $this->entityManager->persist($rb);
                 $this->entityManager->flush();
-                $this->addFlash('success', 'Rubrique ajouté avec succès');
+                $this->addFlash('success', $this->translator->trans('Rubrique ajouté avec succès'));
                 return $this->redirectToRoute('app_coach_ressource_rubrique_list');
             } catch (\Exception $ex) {
                 $this->addFlash('danger', $ex->getMessage());
@@ -114,7 +117,7 @@ class CoachRessourceRubriqueController extends AbstractController
                 $rb->setStatus(Status::VALID);
                 $this->entityManager->persist($rb);
                 $this->entityManager->flush();
-                $this->addFlash('success', 'Rubrique modifié avec succès');
+                $this->addFlash('success', $this->translator->trans('Rubrique modifié avec succès'));
                 return $this->redirectToRoute('app_coach_ressource_rubrique_list');
             } catch (\Exception $ex) {
                 $this->addFlash('danger', $ex->getMessage());
@@ -144,7 +147,7 @@ class CoachRessourceRubriqueController extends AbstractController
             }
             $this->entityManager->persist($rb);
             $this->entityManager->flush();
-            $this->addFlash('success', 'Rubrique supprimé avec succès');
+            $this->addFlash('success', $this->translator->trans('Rubrique supprimé avec succès'));
         } catch (\Exception $ex) {
             $this->addFlash('danger', $ex->getMessage());
         }

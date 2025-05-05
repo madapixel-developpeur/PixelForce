@@ -5,13 +5,14 @@ namespace App\Controller;
 
 
 use App\Entity\TypeSecteur;
-use App\Form\CommercialisationType;
 use App\Manager\EntityManager;
+use App\Form\CommercialisationType;
 use App\Repository\TypeSecteurRepository;
 use Knp\Component\Pager\PaginatorInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class AdminTypeCommercialisationController extends AbstractController
 {
@@ -28,7 +29,9 @@ class AdminTypeCommercialisationController extends AbstractController
      */
     private $entityManager;
 
-    public function __construct(TypeSecteurRepository $typeSecteurRepository, PaginatorInterface $paginator, EntityManager $entityManager)
+    public function __construct(TypeSecteurRepository $typeSecteurRepository, PaginatorInterface $paginator, EntityManager $entityManager,
+        private TranslatorInterface $translator
+    )
     {
         $this->typeSecteurRepository = $typeSecteurRepository;
         $this->paginator = $paginator;
@@ -63,7 +66,7 @@ class AdminTypeCommercialisationController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $this->entityManager->save($typeSecteur);
-            $this->addFlash('success', "Ajout d'une type de commercialisation avec succès");
+            $this->addFlash('success', $this->translator->trans("Ajout d'une type de commercialisation avec succès"));
             return $this->redirectToRoute('admin_typeCommercialisation_list');
         }
 
@@ -83,7 +86,7 @@ class AdminTypeCommercialisationController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $this->entityManager->save($typeSecteur);
-            $this->addFlash('success', "Modification type de commercialisation avec succès");
+            $this->addFlash('success', $this->translator->trans("Modification type de commercialisation avec succès"));
             return $this->redirectToRoute('admin_typeCommercialisation_list');
         }
 

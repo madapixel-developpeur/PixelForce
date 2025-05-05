@@ -55,7 +55,7 @@
 
 							<!-- Course Overview -->
 							<div class="course-overview mb-5">
-								<h3 class="my-auto general-primary-text mb-3">Description</h3>
+								<h3 class="my-auto general-primary-text mb-3">{% trans %}Description{% endtrans %}</h3>
 								<p>{{ configuration.description | raw }}</p>
 							</div>
 
@@ -106,25 +106,27 @@
 														<div class="col-md-9">
 															<h5 class="{{isQuiz ? 'text-warning': 'text-primary'}}">{{isQuiz ? 'QUIZ: ': ''}}{{ formation.titre }}
 																{% if formation.brouillon %}
-																	<small class="text-danger">[ brouillon ]</small>
+																	<small class="text-danger">[ {{
+																		"brouillon" | trans
+																	}} ]</small>
 																{% endif %}
 															</h5>
 															<p>{{ (formation.description??'')|slice(0, 300) }}</p>
 															{% if formationAgentRelation and isQuiz and statut != constant('App\\Entity\\Formation::STATUT_BLOQUEE') %}
 																<p>
-																	<b>Dernièr résultat:</b>
+																	<b>{% trans %}Dernièr résultat{% endtrans %}:</b>
 																	{{formationAgentRelation.lastResultScore | number_format(2, ',', ' ')}}
 																	%</p>
 																<p>
-																	<b>Résultat maximum:</b>
+																	<b>{% trans %}Résultat maximum{% endtrans %}:</b>
 																	{{formationAgentRelation.maxResultScore | number_format(2, ',', ' ')}}
 																	%</p>
 																<p>
-																	<b>Statut:</b>&nbsp;
+																	<b>{% trans %}Statut{% endtrans %}:</b>&nbsp;
 																	{% if formationAgentRelation.statut == constant('App\\Entity\\Formation::STATUT_TERMINER') %}
-																		<b class="text-success">RÉUSSI</b>
+																		<b class="text-success">{% trans %}RÉUSSI{% endtrans %}</b>
 																	{% else %}
-																		<b class="text-danger">ÉCHOUÉ</b>
+																		<b class="text-danger">{% trans %}ÉCHOUÉ{% endtrans %}</b>
 																	{% endif %}
 																</p>
 															{% endif %}
@@ -133,32 +135,32 @@
 																	{# title="Information de déblocage" data-bs-content="{{formation.DescriptionDeblocage}}" data-trigger="hover" data-bs-toggle="popover" data-bs-placement="left" #}
 																	<button type="button" class="btn btn-sm btn-danger">
 																		<i class="fa fa-lock"></i>
-																		Quiz bloqué</button>
+																		{% trans %}Quiz bloqué{% endtrans %}</button>
 																{% elseif statut == constant('App\\Entity\\Formation::STATUT_DISPONIBLE')%}
 																	<a href="{{ path('agent_quiz_begin', {id:formation.id}) }}" class="btn btn-primary btn-sm">
 																		{# <i class="fa fa-chevron-right"></i> #}
-																		Commencer</a>
+																		{% trans %}Commencer{% endtrans %}</a>
 																{% elseif statut == constant('App\\Entity\\Formation::STATUT_IN_PROGRESS') or statut == constant('App\\Entity\\Formation::STATUT_TERMINER') %}
 																	<a href="{{ path('agent_quiz_begin', {id:formation.id}) }}" class="btn btn-primary btn-sm">
 																		{# <i class="fa fa-repeat"></i> #}
-																		Réessayer</a>
+																		{% trans %}Réessayer{% endtrans %}</a>
 																	<a href="{{ path('agent_quiz_result', {id:formationAgentRelation.id}) }}" class="btn btn-success btn-sm ms-2">
 																		{# <i class="fa fa-chevron-right"></i> #}
-																		Voir le dérnier résultat</a>
+																		{% trans %}Voir le dérnier résultat{% endtrans %}</a>
 																{% endif %}
 															{% else %}
 																{% if statut == constant('App\\Entity\\Formation::STATUT_BLOQUEE') %}
 																	<button type="button" class="btn btn-sm btn-danger">
 																		{# <i class="fa fa-lock"></i> #}
-																		Formation bloquée</button>
+																		{% trans %}Formation bloquée{% endtrans %}</button>
 																{% elseif statut == constant('App\\Entity\\Formation::STATUT_DISPONIBLE')%}
 																	<a href="{{ path('agent_formation_fiche', {id:formation.id}) }}" class="btn btn-primary btn-sm">
 																		{# <i class="fa fa-chevron-right"></i> #}
-																		Fiche formation</a>
+																		{% trans %}Fiche formation{% endtrans %}</a>
 																{% elseif statut == constant('App\\Entity\\Formation::STATUT_TERMINER')%}
 																	<a href="{{ path('agent_formation_fiche', {id:formation.id}) }}" class="btn btn-success btn-sm">
 																		{# <i class="fa fa-check"></i> #}
-																		Formation terminée</a>
+																		{% trans %}Formation terminée{% endtrans %}</a>
 																{% endif %}
 															{% endif %}
 
@@ -222,25 +224,25 @@
 														<div class="col-md-9">
 															<h5 class="{{isQuiz ? 'text-warning': 'text-primary'}}">{{isQuiz ? 'QUIZ: ': ''}}{{ formation.titre }}
 																{% if formation.brouillon %}
-																	<small class="text-danger">[ brouillon ]</small>
+																	<small class="text-danger">[ {{ 'brouillon'| trans }} ]</small>
 																{% endif %}
 															</h5>
 															<p>{{ (formation.description??'')|slice(0, 300) }}</p>
 															{% if formationAgentRelation and isQuiz and statut != constant('App\\Entity\\Formation::STATUT_BLOQUEE') %}
 																<p>
-																	<b>Dernièr résultat:</b>
+																	<b>{% trans %}Dernièr résultat{% endtrans %}:</b>
 																	{{formationAgentRelation.lastResultScore | number_format(2, ',', ' ')}}
 																	%</p>
 																<p>
-																	<b>Résultat maximum:</b>
+																	<b>{% trans %}Résultat maximum{% endtrans %}:</b>
 																	{{formationAgentRelation.maxResultScore | number_format(2, ',', ' ')}}
 																	%</p>
 																<p>
-																	<b>Statut:</b>&nbsp;
+																	<b>{% trans %}Statut{% endtrans %}:</b>&nbsp;
 																	{% if formationAgentRelation.statut == constant('App\\Entity\\Formation::STATUT_TERMINER') %}
-																		<b class="text-success">RÉUSSI</b>
+																		<b class="text-success">{% trans %}RÉUSSI{% endtrans %}</b>
 																	{% else %}
-																		<b class="text-danger">ÉCHOUÉ</b>
+																		<b class="text-danger">{% trans %}ÉCHOUÉ{% endtrans %}</b>
 																	{% endif %}
 																</p>
 															{% endif %}
@@ -249,32 +251,32 @@
 																	{# title="Information de déblocage" data-bs-content="{{formation.DescriptionDeblocage}}" data-trigger="hover" data-bs-toggle="popover" data-bs-placement="left" #}
 																	<button type="button" class="btn btn-sm btn-danger">
 																		<i class="fa fa-lock"></i>
-																		Quiz bloqué</button>
+																		{% trans %}Quiz bloqué{% endtrans %}</button>
 																{% elseif statut == constant('App\\Entity\\Formation::STATUT_DISPONIBLE')%}
 																	<a href="{{ path('agent_quiz_begin', {id:formation.id}) }}" class="btn btn-primary btn-sm">
 																		{# <i class="fa fa-chevron-right"></i> #}
-																		Commencer</a>
+																		{% trans %}Commencer{% endtrans %}</a>
 																{% elseif statut == constant('App\\Entity\\Formation::STATUT_IN_PROGRESS') or statut == constant('App\\Entity\\Formation::STATUT_TERMINER') %}
 																	<a href="{{ path('agent_quiz_begin', {id:formation.id}) }}" class="btn btn-primary btn-sm">
 																		{# <i class="fa fa-repeat"></i> #}
-																		Réessayer</a>
+																		{% trans %}Réessayer{% endtrans %}</a>
 																	<a href="{{ path('agent_quiz_result', {id:formationAgentRelation.id}) }}" class="btn btn-success btn-sm ms-2">
 																		{# <i class="fa fa-chevron-right"></i> #}
-																		Voir le dérnier résultat</a>
+																		{% trans %}Voir le dérnier résultat{% endtrans %}</a>
 																{% endif %}
 															{% else %}
 																{% if statut == constant('App\\Entity\\Formation::STATUT_BLOQUEE') %}
 																	<button type="button" class="btn btn-sm btn-danger">
 																		{# <i class="fa fa-lock"></i> #}
-																		Formation bloquée</button>
+																		{% trans %}Formation bloquée{% endtrans %}</button>
 																{% elseif statut == constant('App\\Entity\\Formation::STATUT_DISPONIBLE')%}
 																	<a href="{{ path('agent_formation_fiche', {id:formation.id}) }}" class="btn btn-primary btn-sm">
 																		{# <i class="fa fa-chevron-right"></i> #}
-																		Fiche formation</a>
+																		{% trans %}Fiche formation{% endtrans %}</a>
 																{% elseif statut == constant('App\\Entity\\Formation::STATUT_TERMINER')%}
 																	<a href="{{ path('agent_formation_fiche', {id:formation.id}) }}" class="btn btn-success btn-sm">
 																		{# <i class="fa fa-check"></i> #}
-																		Formation terminée</a>
+																		{% trans %}Formation terminée{% endtrans %}</a>
 																{% endif %}
 															{% endif %}
 
@@ -311,7 +313,7 @@
 											{% if countFormationsTheme < 1 %}
 											<div class="row">
 													<div class="col-md-12 text-center">
-														<p>Aucune formation pour cet thème</p>
+														<p>{% trans %}Aucune formation pour cet thème{% endtrans %}</p>
 													</div>
 												</div>
 											{% endif %}
@@ -319,7 +321,7 @@
 											{% if countFomrationInside < 1 and themes|length < 1 %}
 												<div class="row">
 													<div class="col-md-12 text-center">
-														<h4>Aucune formation</h4>
+														<h4>{% trans %}Aucune formation{% endtrans %}</h4>
 													</div>
 												</div>
 											{% endif %}

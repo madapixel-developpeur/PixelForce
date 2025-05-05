@@ -23,6 +23,7 @@ use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\ContactInformationRepository;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Nucleos\DompdfBundle\Wrapper\DompdfWrapperInterface;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -45,7 +46,9 @@ class AdminContactExampleController extends AbstractController
      */
     private $tagRepository;
 
-    public function __construct(TagRepository $tagRepository, UserRepository $repoUser, ContactRepository $repoContact, ContactInformationRepository $repoContactInfo, SessionInterface $session, SecteurRepository $repoSecteur, EntityManager $entityManager)
+    public function __construct(TagRepository $tagRepository, UserRepository $repoUser, ContactRepository $repoContact, ContactInformationRepository $repoContactInfo, SessionInterface $session, SecteurRepository $repoSecteur, EntityManager $entityManager,
+        private TranslatorInterface $translator
+    )
     {
         $this->repoUser = $repoUser;
         $this->repoContact = $repoContact;
@@ -108,7 +111,7 @@ class AdminContactExampleController extends AbstractController
             $this->entityManager->save($contact);
 
 
-            $this->addFlash('success', "Exemple de contact ajouté avec succès");
+            $this->addFlash('success', $this->translator->trans("Exemple de contact ajouté avec succès"));
             return $this->redirectToRoute('admin_contact_example_view', ['id' => $contact->getId()]);
         }
 
@@ -144,7 +147,7 @@ class AdminContactExampleController extends AbstractController
             $contact->setIsExample(true);
             $this->entityManager->save($contact);
 
-            $this->addFlash('success', "Exemple de contact modifié avec succès");
+            $this->addFlash('success', $this->translator->trans("Exemple de contact modifié avec succès"));
             return $this->redirectToRoute('admin_contact_example_view', ['id' => $contact->getId()]);
         }
 
@@ -168,7 +171,7 @@ class AdminContactExampleController extends AbstractController
         if ($this->isCsrfTokenValid('delete' . $contact->getId(), $request->get('_token'))) {
             $this->repoContact->remove($contact);
 
-            $this->addFlash('success', 'Exemple de contact supprimé');
+            $this->addFlash('success', $this->translator->trans('Exemple de contact supprimé'));
         }
         return $this->redirectToRoute('admin_contact_example_list');
     }

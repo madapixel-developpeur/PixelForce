@@ -2,24 +2,27 @@
 
 namespace App\Form;
 
-use App\Entity\Categorie;
 use App\Entity\Produit;
+use App\Entity\Categorie;
 use App\Repository\CategorieRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+
+
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-
-
-class MyProduitFilterType extends AbstractType
+    class MyProduitFilterType extends AbstractType
 {
     private $categorieRepository;
-    public function __construct(CategorieRepository $categorieRepository){
+    public function __construct(CategorieRepository $categorieRepository,
+        private TranslatorInterface $translator,
+    ){
         $this->categorieRepository = $categorieRepository;
     }
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -31,7 +34,7 @@ class MyProduitFilterType extends AbstractType
             "trim" => true,
             "required" => false,
             "attr" => [
-                "placeholder" => "Nom"
+                "placeholder" => $this->translator->trans("Nom")
             ]
         ])
         ->add('description', TextType::class, [
@@ -39,7 +42,7 @@ class MyProduitFilterType extends AbstractType
             "trim" => true,
             "required" => false,
             "attr" => [
-                "placeholder" => "Description"
+                "placeholder" => $this->translator->trans("Description")
             ]
         ])
         ->add('categorie', EntityType::class, [
@@ -50,14 +53,14 @@ class MyProduitFilterType extends AbstractType
                 return $category ? strtoupper($category->getNom()) : '';
             },
             "required" => false,
-            "placeholder" => "Catégorie"
+            "placeholder" => $this->translator->trans("Catégorie")
         ])
         ->add('prixMin', TextType::class, [
             "label" => false,
             "trim" => true,
             "required" => false,
             "attr" => [
-                "placeholder" => "Prix mininum"
+                "placeholder" => $this->translator->trans("Prix mininum")
             ]
         ])
         ->add('prixMax', TextType::class, [
@@ -65,7 +68,7 @@ class MyProduitFilterType extends AbstractType
             "trim" => true,
             "required" => false,
             "attr" => [
-                "placeholder" => "Prix maximum"
+                "placeholder" => $this->translator->trans("Prix maximum")
             ]
         ])
         ->add('sort', ChoiceType::class, [
@@ -76,7 +79,7 @@ class MyProduitFilterType extends AbstractType
                 'Prix' => "p.prix"
             ],
             "required" => false,
-            "placeholder" => "Trier par"
+            "placeholder" => $this->translator->trans("Trier par")
         ])
         ->add('direction', ChoiceType::class, [
             "label" => false,
@@ -85,7 +88,7 @@ class MyProduitFilterType extends AbstractType
                 'Décroissant' => "desc"
             ],
             "required" => false,
-            "placeholder" => "Ordre"
+            "placeholder" => $this->translator->trans("Ordre")
         ])
         ;
     }

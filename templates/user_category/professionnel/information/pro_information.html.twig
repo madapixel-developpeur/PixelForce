@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-    Professionnel - Information
+    {% trans %}Professionnel - Information{% endtrans %}
 {% endblock %}
 {% block stylesheets %}
    {{ parent() }}
@@ -41,10 +41,10 @@
             <!-- profile -->
             <div class="card mt-2">
                 <div class="card-header border-bottom">
-                    <h4 class="card-title">Informations</h4>
+                    <h4 class="card-title">{% trans %}Informations{% endtrans %}</h4>
                 </div>
                 <div class="card-body py-2 my-25">
-                    {% if user.profesionnalInformationState == constant('App\\Entity\\User::INFORMATION_VALIDATED') %}
+                    {% if user.profesionnalInformationState == constant('App\\Entity\\User::INFORMATION_VALIDATED') and userInformation  %}
                         <button class="btn btn-success btn-sm">{{ user.profesionnalInformationStateString}}</button>
                         {{ include ('global/card/_card_professionnel_information.html.twig', {user : user , userInformation : userInformation}) }}
                     {% else %}     
@@ -52,7 +52,7 @@
                         {% if user.profesionnalInformationState == constant('App\\Entity\\User::INFORMATION_REJECTED') %}
                             <i class="fas fa-ban rejected"></i>
                             <div class="status-text mb-2">{{ user.profesionnalInformationStateString}}</div>
-                            <a class="btn btn-primary" href="{{ path('professionnel_resend_info')}}">Soumettre à nouveau</a>
+                            <a class="btn btn-primary" href="{{ path('professionnel_resend_info')}}">{% trans %}Soumettre à nouveau{% endtrans %}</a>
                         
                         {% elseif user.profesionnalInformationState == constant('App\\Entity\\User::INFORMATION_PENDING') %}
                             <i class="fas fa-clock pending"></i>

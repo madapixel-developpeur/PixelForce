@@ -1,7 +1,9 @@
 {% set FORMATION_STATUS_CREATED = constant('App\\Entity\\Formation::STATUS_CREATED') %}
 {% set FORMATION_STATUS_DRAFT = constant('App\\Entity\\Formation::STATUS_DRAFT') %}
 {% extends 'base.html.twig' %}
-{% block title %}Coach - Liste Formations Video {% endblock %}
+{% block title %}
+    {% trans %}Coach - Liste Formations Video{% endtrans %}
+{% endblock %}
 {% block body %}
     <div>
         <div class="row mt-4">
@@ -16,7 +18,7 @@
                                     <circle cx="20" cy="21" r="1"></circle>
                                     <path d="M1 1h4l2 12h13l2-9H5"></path>
                                 </svg>
-                                <span class="fw-bold">Formation revendeur</span>
+                                <span class="fw-bold">{% trans %}Formation revendeur{% endtrans %}</span>
                             </a>
                         </li>
                         <!-- security -->
@@ -27,21 +29,21 @@
                                     <path d="M16 7V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v3"></path>
                                 </svg>
 
-                                <span class="fw-bold">Formation professionnel</span>
+                                <span class="fw-bold">{% trans %}Formation professionnel{% endtrans %}</span>
                             </a>
                         </li>
                     </ul>
                 </div>
             {% endif %}
             <div class="col-12 col-md-6">
-                <h3>Liste des formations</h3>
+                <h3>{% trans %}Liste des formations{% endtrans %}</h3>
             </div>
             <div class="col-12 col-md-6 d-flex align-items-center justify-content-end">
                 {% if is_granted('ROLE_COACH') %}
-                <a href="{{ path('coach_video_formation_add',{ 'section' : section })}}" class="btn bg-info text-white ms-2"><i class="fa fa-plus"></i> Video fin de formation</a>
-                <a href="{{ path('coach_formation_add',{ 'section' : section }) }}" class="btn bg-princ text-white ms-2"><i class="fa fa-plus"></i> Ajouter une formation</a>
-                <a href="{{ path('coach_quiz_add',{ 'section' : section }) }}" class="btn btn-warning text-white ms-2"><i class="fa fa-plus"></i> Ajouter un quiz</a>
-                <a href="{{ path('coach_configure_formation_page' ,{ 'section' : section })}}" class="btn bg-info text-white ms-2"><i class="fa fa-gear"></i> Configurer page de formation</a>
+                <a href="{{ path('coach_video_formation_add',{ 'section' : section })}}" class="btn bg-info text-white ms-2"><i class="fa fa-plus"></i> {% trans %}Video fin de formation{% endtrans %}</a>
+                <a href="{{ path('coach_formation_add',{ 'section' : section }) }}" class="btn bg-princ text-white ms-2"><i class="fa fa-plus"></i> {% trans %}Ajouter une formation{% endtrans %}</a>
+                <a href="{{ path('coach_quiz_add',{ 'section' : section }) }}" class="btn btn-warning text-white ms-2"><i class="fa fa-plus"></i> {% trans %}Ajouter un quiz{% endtrans %}</a>
+                <a href="{{ path('coach_configure_formation_page' ,{ 'section' : section })}}" class="btn bg-info text-white ms-2"><i class="fa fa-gear"></i> {% trans %}Configurer page de formation{% endtrans %}</a>
                 {% endif %}
             </div>
         </div>
@@ -61,31 +63,31 @@
                 </div>
                 <div class="col-12 col-md-3 mt-4">
                     <select class="form-select" name="q[etat]">
-                        <option value="" selected>Etat</option>
-                        <option value="">Tous</option>
-                        <option value="{{FORMATION_STATUS_CREATED}}" {{ criteres and criteres.etat == FORMATION_STATUS_CREATED ? 'selected' : '' }}>Créée</option>
-                        <option value="{{FORMATION_STATUS_DRAFT}}" {{ criteres and criteres.etat == FORMATION_STATUS_DRAFT ? 'selected' : '' }}>Brouillon</option>
+                        <option value="" selected>{% trans %}Etat{% endtrans %}</option>
+                        <option value="">{% trans %}Tous{% endtrans %}</option>
+                        <option value="{{FORMATION_STATUS_CREATED}}" {{ criteres and criteres.etat == FORMATION_STATUS_CREATED ? 'selected' : '' }}>{% trans %}Créée{% endtrans %}</option>
+                        <option value="{{FORMATION_STATUS_DRAFT}}" {{ criteres and criteres.etat == FORMATION_STATUS_DRAFT ? 'selected' : '' }}>{% trans %}Brouillon{% endtrans %}</option>
                     </select>
                 </div>
                 <div class="col-12 col-md-4 mt-4">
                     <select class="form-select" name="q[trie]">
-                        <option value="titre" selected>Trier par</option>
-                        <option value="titre" {{ criteres and criteres.trie == 'titre' ? 'selected' : '' }}>Titre</option>
-                        <option value="description" {{ criteres and criteres.trie == 'description' ? 'selected' : '' }}>Description</option>
-                        <option value="auteur" {{ criteres and criteres.trie == 'auteur' ? 'selected' : '' }}>Auteur</option>
+                        <option value="titre" selected>{% trans %}Trier par{% endtrans %}</option>
+                        <option value="titre" {{ criteres and criteres.trie == 'titre' ? 'selected' : '' }}>{% trans %}Titre{% endtrans %}</option>
+                        <option value="description" {{ criteres and criteres.trie == 'description' ? 'selected' : '' }}>{% trans %}Description{% endtrans %}</option>
+                        <option value="auteur" {{ criteres and criteres.trie == 'auteur' ? 'selected' : '' }}>{% trans %}Auteur{% endtrans %}</option>
                         {# <option value="sdf" {{ criteres and criteres.trie == 'sss' ? 'selected' : '' }}>Catégorie</option> #}
                     </select>
                 </div>
                 <div class="col-12 col-md-4 mt-4">
                     <select class="form-select" name="q[ordre]">
-                        <option value="ASC"selected>Ordre</option>
-                        <option value="ASC" {{ criteres and criteres.ordre == 'ASC' ? 'selected' : '' }}>ASC</option>
-                        <option value="DESC" {{ criteres and criteres.ordre == 'DESC' ? 'selected' : '' }}>DESC</option>
+                        <option value="ASC"selected>{% trans %}Ordre{% endtrans %}</option>
+                        <option value="ASC" {{ criteres and criteres.ordre == 'ASC' ? 'selected' : '' }}>{% trans %}ASC{% endtrans %}</option>
+                        <option value="DESC" {{ criteres and criteres.ordre == 'DESC' ? 'selected' : '' }}>{% trans %}DESC{% endtrans %}</option>
                     </select>
                 </div>
                 <div class="col-12 col-md-3 mt-4">
                     <select class="form-select" name="q[categorie]">
-                        <option value="" selected>Catégorie</option>
+                        <option value="" selected>{% trans %}Catégorie{% endtrans %}</option>
                         {% for categorie in categories %}
                             <option value="{{ categorie.nom}}">{{ categorie.nom}}</option>
                         {% endfor %}
@@ -103,7 +105,7 @@
                 <div class="d-flex align-items-center justify-content-between">
                     <h1>{{ categorie.nom }}</h1>
                     {% if is_granted('ROLE_COACH') %}
-                <a href="{{ path('app_coach_formation_theme_add',{ 'categorieFormationId' : categorie.id })}}" class="btn bg-info text-white ms-2"><i class="fa fa-plus"></i> Ajouter un thème</a>
+                <a href="{{ path('app_coach_formation_theme_add',{ 'categorieFormationId' : categorie.id })}}" class="btn bg-info text-white ms-2"><i class="fa fa-plus"></i> {% trans %}Ajouter un thème{% endtrans %}</a>
                     {% endif %}
                     </div>
                     {% set i = 1 %}
@@ -117,7 +119,7 @@
                             {% endif %}
                             {% set i = i + 1 %}
                             {% set isQuiz = formation.type == constant('App\\Entity\\Formation::TYPE_QUIZ') %}
-                            <h5 class="{{isQuiz ? 'text-warning': 'text-primary'}}">{{isQuiz ? 'QUIZ: ': ''}} {{ formation.titre }} {% if formation.brouillon %}<small class="text-danger">[ brouillon ]</small>{% endif %}</h5>
+                            <h5 class="{{isQuiz ? 'text-warning': 'text-primary'}}">{{isQuiz ? 'QUIZ: ': ''}} {{ formation.titre }} {% if formation.brouillon %}<small class="text-danger">[ {{ 'brouillon' | trans }} ]</small>{% endif %}</h5>
                             <div class="row mt-3">
                                 <div class="col-12  col-md-10">
                                     <p>{{ formation.description|slice(0, 300) }}</p>
@@ -125,10 +127,10 @@
                                 <div class="col-12 col-md-2 text-end d-flex align-items-center justify-content-end">
                                 {% if is_granted('ROLE_COACH') %}
                                     {% if isQuiz %}
-                                    <a href="{{ path('coach_quiz_details', {id:formation.id}) }}" class="btn btn-warning btn-sm"><i class="fa fa-chevron-right"></i> Fiche quiz</a>
+                                    <a href="{{ path('coach_quiz_details', {id:formation.id}) }}" class="btn btn-warning btn-sm"><i class="fa fa-chevron-right"></i> {% trans %}Fiche quiz{% endtrans %}</a>
                                     <a class="btn btn-warning btn-sm ms-2" href="#" onclick="copyLink('{{url('app_agent_view_share', { 'shareKey': 'secteur' ~ '-' ~ app.user.uniqueCoachSecteur.id ~ '-' ~ 'quiz' ~ '-' ~ formation.id})}}','Lien {{url('app_agent_view_share', { 'shareKey': 'secteur' ~ '-' ~ app.user.uniqueCoachSecteur.id ~ '-' ~ 'quiz' ~ '-' ~ formation.id})}} copié avec succès')"><i class="fa-solid fa-share"></i></a> 
                                     {% else %}
-                                    <a href="{{ path('coach_formation_fiche', {id:formation.id}) }}" class="btn btn-primary btn-sm"><i class="fa fa-chevron-right"></i> Fiche formation</a>
+                                    <a href="{{ path('coach_formation_fiche', {id:formation.id}) }}" class="btn btn-primary btn-sm"><i class="fa fa-chevron-right"></i> {% trans %}Fiche formation{% endtrans %}</a>
                                     <a class="btn btn-warning btn-sm ms-2" href="#" onclick="copyLink('{{url('app_agent_view_share', { 'shareKey': 'secteur' ~ '-' ~ app.user.uniqueCoachSecteur.id ~ '-' ~ 'formation' ~ '-' ~ formation.id})}}','Lien {{url('app_agent_view_share', { 'shareKey': 'secteur' ~ '-' ~ app.user.uniqueCoachSecteur.id ~ '-' ~ 'formation' ~ '-' ~ formation.id})}} copié avec succès')"><i class="fa-solid fa-share"></i></a>
                                     {% endif %}
                                 {% endif %}
@@ -140,7 +142,7 @@
                     {% for theme in themes %}
                     <hr class="my-3" style="height: 3px;">
                     <div class="d-flex align-items-center justify-content-between">
-                    <h4>Thème: {{theme.titre}}</h4>
+                    <h4>{% trans %}Thème{% endtrans %}: {{theme.titre}}</h4>
                     {% set countFormationsTheme = 0 %}
                     {% if is_granted('ROLE_COACH') %}
                   <div class="d-flex align-items-center gap-2 justify-content-end" >
@@ -154,7 +156,7 @@
                             {% set countFormationsTheme = countFormationsTheme + 1 %}
                             <hr class="my-3" style="height: 1px;">
                             {% set isQuiz = formation.type == constant('App\\Entity\\Formation::TYPE_QUIZ') %}
-                            <h5 class="{{isQuiz ? 'text-warning': 'text-primary'}}">{{isQuiz ? 'QUIZ: ': ''}} {{ formation.titre }} {% if formation.brouillon %}<small class="text-danger">[ brouillon ]</small>{% endif %}</h5>
+                            <h5 class="{{isQuiz ? 'text-warning': 'text-primary'}}">{{isQuiz ? 'QUIZ: ': ''}} {{ formation.titre }} {% if formation.brouillon %}<small class="text-danger">[ {{ 'brouillon' | trans }} ]</small>{% endif %}</h5>
                             <div class="row mt-3">
                                 <div class="col-12  col-md-10">
                                     <p>{{ formation.description|slice(0, 300) }}</p>
@@ -162,10 +164,10 @@
                                 <div class="col-12 col-md-2 text-end d-flex align-items-center justify-content-end">
                                 {% if is_granted('ROLE_COACH') %}
                                     {% if isQuiz %}
-                                    <a href="{{ path('coach_quiz_details', {id:formation.id}) }}" class="btn btn-warning btn-sm"><i class="fa fa-chevron-right"></i> Fiche quiz</a>
+                                    <a href="{{ path('coach_quiz_details', {id:formation.id}) }}" class="btn btn-warning btn-sm"><i class="fa fa-chevron-right"></i> {% trans %}Fiche quiz{% endtrans %}</a>
                                     <a class="btn btn-warning btn-sm ms-2" href="#" onclick="copyLink('{{url('app_agent_view_share', { 'shareKey': 'secteur' ~ '-' ~ app.user.uniqueCoachSecteur.id ~ '-' ~ 'quiz' ~ '-' ~ formation.id})}}','Lien {{url('app_agent_view_share', { 'shareKey': 'secteur' ~ '-' ~ app.user.uniqueCoachSecteur.id ~ '-' ~ 'quiz' ~ '-' ~ formation.id})}} copié avec succès')"><i class="fa-solid fa-share"></i></a> 
                                     {% else %}
-                                    <a href="{{ path('coach_formation_fiche', {id:formation.id}) }}" class="btn btn-primary btn-sm"><i class="fa fa-chevron-right"></i> Fiche formation</a>
+                                    <a href="{{ path('coach_formation_fiche', {id:formation.id}) }}" class="btn btn-primary btn-sm"><i class="fa fa-chevron-right"></i> {% trans %}Fiche formation{% endtrans %}</a>
                                     <a class="btn btn-warning btn-sm ms-2" href="#" onclick="copyLink('{{url('app_agent_view_share', { 'shareKey': 'secteur' ~ '-' ~ app.user.uniqueCoachSecteur.id ~ '-' ~ 'formation' ~ '-' ~ formation.id})}}','Lien {{url('app_agent_view_share', { 'shareKey': 'secteur' ~ '-' ~ app.user.uniqueCoachSecteur.id ~ '-' ~ 'formation' ~ '-' ~ formation.id})}} copié avec succès')"><i class="fa-solid fa-share"></i></a>
                                     {% endif %}
                                 {% endif %}
@@ -185,7 +187,7 @@
                         {% endif %}
                     {% endfor %}
                     {% if countFormationsTheme == 0 %}
-                    <p>Aucune formation pour cet thème</p>
+                    <p>{% trans %}Aucune formation pour cet thème{% endtrans %}</p>
                     {% endif %}
                     {% endfor %}
                 </div>

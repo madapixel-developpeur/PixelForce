@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-	Visualisation Audit
+	{% trans %}Visualisation Audit{% endtrans %}
 {% endblock %}
 
 {% block stylesheets %}
@@ -17,11 +17,11 @@
     {% endif %}
 	<div class="mt-2">
 		{% if meeting == null %}
-		<a href="{{ path('audit_list') }}" class="btn btn-secondary"> <i class="fa-solid fa-circle-arrow-left"></i> Retour </a>
+		<a href="{{ path('audit_list') }}" class="btn btn-secondary"> <i class="fa-solid fa-circle-arrow-left"></i> {% trans %}Retour{% endtrans %} </a>
 		{% elseif previousUrl is defined %}
-		<a href="{{  previousUrl }}" class="btn btn-secondary"> <i class="fa-solid fa-circle-arrow-left"></i> Retour </a>
+		<a href="{{  previousUrl }}" class="btn btn-secondary"> <i class="fa-solid fa-circle-arrow-left"></i> {% trans %}Retour{% endtrans %} </a>
 		{% else %}
-		<a href="{{ path('agent_contact_meeting_fiche',{'id':meeting.getId()}) }}" class="btn btn-secondary"> <i class="fa-solid fa-circle-arrow-left"></i> Retour </a>
+		<a href="{{ path('agent_contact_meeting_fiche',{'id':meeting.getId()}) }}" class="btn btn-secondary"> <i class="fa-solid fa-circle-arrow-left"></i> {% trans %}Retour{% endtrans %} </a>
 		{% endif %}
 		<div class="content-card-user-information mt-3">
 			<section class="app-user-view-account">
@@ -48,10 +48,10 @@
 								<div class=" w-100 h-100 ps-3 py-3  bg-white border pe-3">
 									<div class="row h-100">
 										<div class="col-6">
-											<h4 class="my-auto">Liste des réponses potentiels</h4>
+											<h4 class="my-auto">{% trans %}Liste des réponses potentiels{% endtrans %}</h4>
 										</div>
 										<div class="col-6 ">
-											<a href="{{ path('reponse_add', {'id': audit.id}) }}" class="btn btn-primary btn-sm waves-effect waves-float waves-light fw-bolder d-flex float-end d-flex align-items-center"><i class="fa-solid fa-user-plus me-2"></i> Ajouter</a>
+											<a href="{{ path('reponse_add', {'id': audit.id}) }}" class="btn btn-primary btn-sm waves-effect waves-float waves-light fw-bolder d-flex float-end d-flex align-items-center"><i class="fa-solid fa-user-plus me-2"></i> {% trans %}Ajouter{% endtrans %}</a>
 										</div>
 									</div>
 								</div>
@@ -62,10 +62,10 @@
 								<thead>
 									<tr style="white-space:nowrap" >
 										<th scope="col" class="text-center">#</th>
-										<th scope="col" class="text-center">Titre</th>
-										<th scope="col" class="text-center">Déscription</th>
-										<th scope="col" class="text-center">Fichier jointe</th>
-										<th scope="col" class="text-center">Action</th>
+										<th scope="col" class="text-center">{% trans %}Titre{% endtrans %}</th>
+										<th scope="col" class="text-center">{% trans %}Déscription{% endtrans %}</th>
+										<th scope="col" class="text-center">{% trans %}Fichier jointe{% endtrans %}</th>
+										<th scope="col" class="text-center">{% trans %}Action{% endtrans %}</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -77,7 +77,7 @@
 											<td>{{ reponse.titre }}</td>
 											<td>{{ reponse.description}}</td>
 											<td>
-											<a class="bg-light-primary" href="{{ path('reponse_download', {'id': reponse.id}) }}"><span>Télécharger</span></a>
+											<a class="bg-light-primary" href="{{ path('reponse_download', {'id': reponse.id}) }}"><span>{% trans %}Télécharger{% endtrans %}</span></a>
 											</td>
 											<td style="white-space:nowrap">
 												<a href="{{path('reponse_view',{'id':reponse.id})}}" class="btn btn-secondary">
@@ -87,11 +87,11 @@
 													<i class="fa fa-pencil-square" aria-hidden="true"></i>
 												</a>		
 												{% if reponse.isActive == constant('App\\Entity\\Reponse::ACTIVE_YES') %}
-													<a href="{{ path('reponse_delete', {'id':reponse.id}) }}" class="btn btn-secondary" onclick="confirmation('{{ path('reponse_delete', {'id':reponse.id}) }}','Êtes-vous sûr(e) de vouloir supprimer cette réponse?')">
+													<a href="{{ path('reponse_delete', {'id':reponse.id}) }}" class="btn btn-secondary" onclick="confirmation('{{ path('reponse_delete', {'id':reponse.id}) }}','{{ 'Êtes-vous sûr(e) de vouloir supprimer cette réponse?' | trans }}')">
 													 <i class="fa fa-trash" aria-hidden="true"></i>
 													</a>	
 												{% else %}
-													<a href="{{ path('reponse_restore', {'id': reponse.id}) }}" class="btn btn-secondary" onclick="confirmation('{{ path('reponse_restore', {'id':reponse.id}) }}','Êtes-vous sûr(e) de vouloir réstorer cette réponse?')">
+													<a href="{{ path('reponse_restore', {'id': reponse.id}) }}" class="btn btn-secondary" onclick="confirmation('{{ path('reponse_restore', {'id':reponse.id}) }}','{{ 'Êtes-vous sûr(e) de vouloir réstorer cette réponse?' | trans }}')">
 													 <i class="fa fa-undo" aria-hidden="true"></i>
 													</a>	
 												{% endif %}			

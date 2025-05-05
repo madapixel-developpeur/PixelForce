@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-    Liste des coachs
+    {% trans %}Liste des coachs{% endtrans %}
 {% endblock %}
 
 {% block stylesheets %}
@@ -12,7 +12,7 @@
 
      <div class="row mb-3">
 		<div class="col-12  mt-2 mt-md-3">
-			<h4 class="my-auto general-primary-text">Liste des coachs</h4>
+			<h4 class="my-auto general-primary-text">{% trans %}Liste des coachs{% endtrans %}</h4>
 		</div>
 	</div>
 	<div class="card card-company-table p-5 rounded-3" style="">
@@ -35,7 +35,7 @@
                                             <span class="input-group-text border-0 w-25 rounded-4 me-4" id="filter-toggle">
                                                 <i class="fa-solid fa-bars-staggered"></i>
                                             </span>
-                                            Filtres
+                                            {% trans %}Filtres{% endtrans %}
                                         </button>
                                     </div>
                                 </div>
@@ -45,7 +45,7 @@
                     {{ form_start(searchForm) }}
                     <div class="collapse" id="filters">
                         <div class="block block--bordered block--rounded">
-                            <h1 class="block__text block__text--center mt-2">Options de filtre :</h1>
+                            <h1 class="block__text block__text--center mt-2">{% trans %}Options de filtre{% endtrans %} :</h1>
                             <div class="filter-wrap">
                                 <!-- Formulaire de recherche -->
                                 <div class="search-form">
@@ -60,7 +60,7 @@
                                             {{ form_row(searchForm.telephone) }}
                                         </div>
                                         <div class="col-12 col-sm-12 col-md-12 mt-3 d-flex">
-                                            <button class="btn btn-primary"  name="action_button" value="search_action" ><i class="fa-solid fa-magnifying-glass"></i> Rechercher</button>
+                                            <button class="btn btn-primary"  name="action_button" value="search_action" ><i class="fa-solid fa-magnifying-glass"></i> {% trans %}Rechercher{% endtrans %}</button>
                                             
                                         </div>
                                     </div>
@@ -70,9 +70,9 @@
                     </div>
                     <div class="row">
                         <div class="col-12 col-md-12 mt-3 d-flex align-items-center justify-content-start p-0 mb-3 ">
-                            <button name="action_button" value="excel"  class=" mt-2 btn btn-success btn-sm me-2 rounded-3"><i class="fa fa-print"></i> <span class="ms-1">Exporter excel</span></button>
-                            <button name="action_button" value="csv"  class=" mt-2 btn btn-success btn-sm me-2 rounded-3"><i class="fa fa-print"></i> <span class="ms-1">Exporter csv</span></button>
-                            <button name="action_button" value="pdf"  class=" mt-2  btn btn-danger btn-sm me-2 rounded-3"><i class="fa fa-file-text"></i> <span class="ms-1">Exporter pdf</span></button>
+                            <button name="action_button" value="excel"  class=" mt-2 btn btn-success btn-sm me-2 rounded-3"><i class="fa fa-print"></i> <span class="ms-1">{% trans %}Exporter excel{% endtrans %}</span></button>
+                            <button name="action_button" value="csv"  class=" mt-2 btn btn-success btn-sm me-2 rounded-3"><i class="fa fa-print"></i> <span class="ms-1">{% trans %}Exporter csv{% endtrans %}</span></button>
+                            <button name="action_button" value="pdf"  class=" mt-2  btn btn-danger btn-sm me-2 rounded-3"><i class="fa fa-file-text"></i> <span class="ms-1">{% trans %}Exporter pdf{% endtrans %}</span></button>
                         </div>
                     </div>
                     {{ form_end(searchForm) }}
@@ -81,7 +81,7 @@
                     {% if coachs|length ==0 %}
                         <div class="alert alert-primary p-3 text-center" role="alert">
                             <div class="alert-body">
-                                Aucun Coach trouvé
+                                {% trans %}Aucun Coach trouvé{% endtrans %}
                             </div>
                         </div>
                     {% endif %}
@@ -91,12 +91,12 @@
 							<tbody class="align-items-center">
 								<tr>
                                         <th scope="col">#</th>
-                                        <th scope="col">Photo</th>
-                                        <th scope="col">Nom et prénoms</th>
-                                        <th scope="col">Email</th>
-                                        <th scope="col">Téléphone</th>
-                                        <th scope="col">Secteur</th>
-                                        <th scope="col">ACTION</th>
+                                        <th scope="col">{% trans %}Photo{% endtrans %}</th>
+                                        <th scope="col">{% trans %}Nom et prénoms{% endtrans %}</th>
+                                        <th scope="col">{% trans %}Email{% endtrans %}</th>
+                                        <th scope="col">{% trans %}Téléphone{% endtrans %}</th>
+                                        <th scope="col">{% trans %}Secteur{% endtrans %}</th>
+                                        <th scope="col">{% trans %}ACTION{% endtrans %}</th>
                                 </tr>
 								{% for coach in coachs %}
                                             {% set secteurs = repoCoachSecteur.findBy({'coach' : coach}) %}
@@ -121,13 +121,13 @@
                                                     <span class="badge bg-light-warning ">{{ coach.allSecteursOfUser(secteurs)|default('-') }}</span>     
                                                 </td>
                                                 <td>
-                                                    <a class="regular-button text-center rounded-3"  href="#" onclick="Calendly.initPopupWidget({url: '{{coach.getLienCalendly()}}'});return false;" style="min-width:140px;">Prendre RDV </a>
+                                                    <a class="regular-button text-center rounded-3"  href="#" onclick="Calendly.initPopupWidget({url: '{{coach.getLienCalendly()}}'});return false;" style="min-width:140px;">{% trans %}Prendre RDV{% endtrans %} </a>
                                                 </td>    
                                             </tr>
                       
                                     {% else %}
                                         <tr>
-                                            <td class="text-center" colspan="5">Aucun Coach trouvé</td>
+                                            <td class="text-center" colspan="5">{% trans %}Aucun Coach trouvé{% endtrans %}</td>
                                         </tr>
                                     {% endfor %}
 							</tbody>

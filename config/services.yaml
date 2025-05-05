@@ -82,3 +82,5 @@ services:
           event: "kernel.request",
           method: "onKernelRequest",
         }
+  App\EventSubscriber\LocaleSubscriber:
+    tags: ["kernel.event_subscriber"]

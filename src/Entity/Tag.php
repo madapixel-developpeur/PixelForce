@@ -26,9 +26,19 @@ class Tag
     private $libelle;
 
     /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $libelleEN;
+
+    /**
      * @ORM\Column(type="text", nullable=true)
      */
     private $description;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $descriptionEN;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -125,5 +135,51 @@ class Tag
         $this->contacts->removeElement($contact);
 
         return $this;
+    }
+
+    /**
+     * Get the value of descriptionEN
+     */
+    public function getDescriptionEN()
+    {
+        return $this->descriptionEN;
+    }
+
+    /**
+     * Set the value of descriptionEN
+     */
+    public function setDescriptionEN($descriptionEN): self
+    {
+        $this->descriptionEN = $descriptionEN;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of libelleEN
+     */
+    public function getLibelleEN()
+    {
+        return $this->libelleEN;
+    }
+
+    /**
+     * Set the value of libelleEN
+     */
+    public function setLibelleEN($libelleEN): self
+    {
+        $this->libelleEN = $libelleEN;
+
+        return $this;
+    }
+
+    public function getLibelleBasedOnLocale($locale = 'fr'){
+        if($locale == 'en') return $this->getLibelleEN();
+        return $this->getLibelle();
+    }
+
+    public function descriptionBasedOnLocale($locale = 'fr'){
+        if($locale == 'en') return $this->getDescriptionEN();
+        return $this->getDescription();
     }
 }

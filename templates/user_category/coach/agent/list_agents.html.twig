@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-	Liste des agents
+	{% trans %}Liste des agents{% endtrans %}
 {% endblock %}
 
 {% block stylesheets %}
@@ -41,7 +41,7 @@
                     {{form_row(searchForm.dateInscriptionMax)}}
                 </div>
                 <div class="col-12 col-sm-12 col-md-12 mt-3">
-                    <button class="btn btn-primary "><i class="fa-solid fa-magnifying-glass"></i> Rechercher</button>
+                    <button class="btn btn-primary "><i class="fa-solid fa-magnifying-glass"></i> {% trans %}Rechercher{% endtrans %}</button>
                 </div>
             </div>
             {{form_end(searchForm)}}
@@ -52,10 +52,10 @@
             <div class="col-12  mt-2 mt-md-3">
                 <div class="row mb-4 mt-3 mt-m-0">
                     <div class="col-12 col-md-6 order-2 order-md-1">
-                        <h4><i class="fa fa-book-atlas"></i> Liste des agents</h4>
+                        <h4><i class="fa fa-book-atlas"></i> {% trans %}Liste des agents{% endtrans %}</h4>
                     </div>
                     <div class="col-12 col-md-6 text-sm-start text-md-end order-1 order-md-1 mb-3 mb-md-0">
-                        <a href="{{ path('coach_agent_add') }}" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> Ajouter des Agents</a>
+                        <a href="{{ path('coach_agent_add') }}" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> {% trans %}Ajouter des Agents{% endtrans %}</a>
                     </div>
                 </div>
             </div>
@@ -65,11 +65,11 @@
 				<thead>
 					<tr>
 						<th scope="col">#</th>
-						<th scope="col">Nom et prénoms</th>
-						<th scope="col">Email</th>
-						<th scope="col">Téléphone</th>
-						<th scope="col">Date inscription</th>
-						<th scope="col">ACTION</th>
+						<th scope="col">{% trans %}Nom et prénoms{% endtrans %}</th>
+						<th scope="col">{% trans %}Email{% endtrans %}</th>
+						<th scope="col">{% trans %}Téléphone{% endtrans %}</th>
+						<th scope="col">{% trans %}Date inscription{% endtrans %}</th>
+						<th scope="col">{% trans %}ACTION{% endtrans %}</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -98,11 +98,11 @@
                                 
                                 {% if agentSecteur.statut == false or agentSecteur.statut is null %}
                                     <a href="{{ path('coach_agent_secteur_validate', {'agentSecteur': agentSecteur.id, 'pageReloaded': 'true'}) }}" class="ms-1 btn btn-success" onclick="confirmation('{{ path('coach_agent_secteur_validate', {'agentSecteur': agentSecteur.id, 'pageReloaded': 'true'}) }}','Êtes-vous sûr(e) de vouloir valider cet Agent?')">
-                                        <i class="fa-solid fa-circle-check"></i> Valider
+                                        <i class="fa-solid fa-circle-check"></i> {% trans %}Valider{% endtrans %}
                                     </a>
                                 {% else %}
                                     <a href="{{ path('coach_agent_secteur_invalidate', {'agentSecteur': agentSecteur.id, 'pageReloaded': 'true'}) }}" class="ms-1 btn btn-danger" onclick="confirmation('{{ path('coach_agent_secteur_invalidate', {'agentSecteur': agentSecteur.id, 'pageReloaded': 'true'}) }}','Êtes-vous sûr(e) de vouloir bloquer cet Agent?')">
-                                        <i class="fa-solid fa-circle-minus"></i> Bloquer
+                                        <i class="fa-solid fa-circle-minus"></i> {% trans %}Bloquer{% endtrans %}
                                     </a>
 
                                 {% endif %}

@@ -3,26 +3,27 @@
 
 namespace App\Controller;
 
-use App\Entity\Contact;
-use App\Entity\SearchEntity\UserSearch;
 use App\Entity\User;
+use App\Entity\Contact;
 use App\Form\UserSearchType;
 use App\Manager\EntityManager;
-use App\Repository\CoachSecteurRepository;
-use App\Repository\ContactInformationRepository;
+use App\Services\ExcelService;
+use App\Repository\UserRepository;
 use App\Repository\ContactRepository;
 use App\Repository\SecteurRepository;
-use App\Repository\UserRepository;
-use App\Services\ExcelService;
-use FOS\CKEditorBundle\Form\Type\CKEditorType;
+use App\Entity\SearchEntity\UserSearch;
+use App\Repository\CoachSecteurRepository;
 use Knp\Component\Pager\PaginatorInterface;
-use Nucleos\DompdfBundle\Wrapper\DompdfWrapperInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
+use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Repository\ContactInformationRepository;
+use Symfony\Contracts\Translation\TranslatorInterface;
+use Nucleos\DompdfBundle\Wrapper\DompdfWrapperInterface;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class CoachAgentContactController extends AbstractController
 {
@@ -34,7 +35,9 @@ class CoachAgentContactController extends AbstractController
     protected $entityManager;
     protected $repoCoachSecteur;
 
-    public function __construct(UserRepository $repoUser, ContactRepository $repoContact, ContactInformationRepository $repoContactInfo, SessionInterface $session, SecteurRepository $repoSecteur, EntityManager $entityManager, CoachSecteurRepository $repoCoachSecteur)
+    public function __construct(UserRepository $repoUser, ContactRepository $repoContact, ContactInformationRepository $repoContactInfo, SessionInterface $session, SecteurRepository $repoSecteur, EntityManager $entityManager, CoachSecteurRepository $repoCoachSecteur,
+        private TranslatorInterface $translator
+    )
     {
         $this->repoUser = $repoUser;
         $this->repoContact = $repoContact;
@@ -103,7 +106,7 @@ class CoachAgentContactController extends AbstractController
             $contact->setNote($note);
             $this->entityManager->save($contact);
 
-            $this->addFlash('success', 'Note enregistré avec succès');
+            $this->addFlash('success', $this->translator->trans('Note enregistré avec succès'));
             return $this->redirectToRoute('coach_agent_contact_view', ['id' => $contact->getId()]);
 
         }

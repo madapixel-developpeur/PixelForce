@@ -69,6 +69,19 @@
                         <!-- /Left Text-->
                         <!-- Login-->
                         <div class=" col-md-5 auth-bg px-1 d-flex flex-column justify-content-center align-items-center">
+                            <div class="row w-100">
+                                <div class="col-md-12 justify-content-end">
+                                    {% set route = app.request.attributes.get('_route') %}
+                                    {% set route_params = app.request.attributes.get('_route_params') %}
+                                    {% set params = route_params|merge(app.request.query.all) %}
+                                    <ul class="d-flex align-items-center flex-end " style="padding:5px; list-style-type:none; justify-content:flex-end;">
+                                        <li><a href="{{ path(route, params|merge({ lang: 'fr' })) }}"><img src="{{asset( "assets/flags/fr.png" ) }}" style="height: 15px;" alt="FR" /></a></li>
+                                        <li style="margin-left:10px; margin-right:10px"> | </li>
+                                        <li><a href="{{ path(route, params|merge({ lang: 'en' })) }}"><img src="{{asset( "assets/flags/en.png" ) }}"  style="height: 15px;" alt="EN" /></a></li>
+
+                                    </ul>
+                                </div>
+                            </div>
                             <div class="col-12 col-sm-8 col-md-8 col-lg-12 p-lg-3 mx-auto flex-grow-1">
                                 <div class="p-lg-4 p-3">
                                     <h2 class="card-title   text-center  pixelforce-logo">
@@ -81,7 +94,7 @@
                                     
                                     {% block form %}
                                  
-                                    <h2 class="text-center fw-bold mb-3">Inscription</h2>
+                                    <h2 class="text-center fw-bold mb-3">{% trans %}Inscription{% endtrans %}</h2>
                                         <!-- Message alert -->
                                             <div class="alert-message">
                                                 {% for label, messages in app.flashes %}
@@ -94,13 +107,13 @@
                                             </div>
                                         {{ form_start(form) }}
                                             <div class="form-step {% if currentStep == 0 %}active{% endif %}" id="step-0">
-                                                 <h5 class="mt-4 mb-3">Information du compte</h5>
+                                                 <h5 class="mt-4 mb-3">{% trans %}Information du compte{% endtrans %}</h5>
                                                 <div class="row">
                                                     <div class="col-md-12 col-12">
                                                         {{ form_row(form.pays) }}
                                                     </div>
                                                 </div>
-                                                <label class=" mb-3">Type</label>
+                                                <label class=" mb-3">{% trans %}Type{% endtrans %}</label>
                                                 <div class="toggle-buttons mb-3">
                                                     {{ form_errors(form.roles) }}
                                                     {% for choice in form.roles.vars.choices %}
@@ -121,37 +134,37 @@
                                          
 
                                                <div style="margin-top: 15px;" class="account-info">
-                                                    <p style="font-weight: bold; margin-bottom: 5px;">Compte Revendeur</p>
+                                                    <p style="font-weight: bold; margin-bottom: 5px;">{% trans %}Compte Revendeur{% endtrans %}</p>
                                                     <p style="font-size: 0.9em; color: #777;">
-                                                        Vous souhaitez recommander des services sans les réaliser vous-même ?
-Choisissez le compte Revendeur pour accéder à une sélection de services proposés par nos partenaires (agences, professionnels…). Vous pourrez les recommander en toute autonomie et toucher des commissions à chaque vente.
+                                                       {% trans %} Vous souhaitez recommander des services sans les réaliser vous-même ?
+Choisissez le compte Revendeur pour accéder à une sélection de services proposés par nos partenaires (agences, professionnels…). Vous pourrez les recommander en toute autonomie et toucher des commissions à chaque vente.{% endtrans %}
                                                     </p>
                                                     <p class="highlight" style="font-size: 0.9em;">
-                                                        🔹 Id&eacute;al si vous &ecirc;tes apporteur d&rsquo;affaires, influenceur, ou que vous d&eacute;veloppez une activit&eacute; de vente indirecte.<br />🔹 Vous n&rsquo;avez pas besoin de comp&eacute;tences techniques ni de g&eacute;rer la prestation.<br />🔹 Vous b&eacute;n&eacute;ficiez d&rsquo;outils de suivi, d&rsquo;un lien d&rsquo;affiliation personnel, et d&rsquo;un syst&egrave;me de commissions automatique.
+                                                        {% trans %}🔹 Id&eacute;al si vous &ecirc;tes apporteur d&rsquo;affaires, influenceur, ou que vous d&eacute;veloppez une activit&eacute; de vente indirecte.<br />🔹 Vous n&rsquo;avez pas besoin de comp&eacute;tences techniques ni de g&eacute;rer la prestation.<br />🔹 Vous b&eacute;n&eacute;ficiez d&rsquo;outils de suivi, d&rsquo;un lien d&rsquo;affiliation personnel, et d&rsquo;un syst&egrave;me de commissions automatique.{% endtrans %}
                                                     </p>
                                                 </div>
 
                                                 <div class="account-info">
-                                                    <p style="font-weight: bold; margin-bottom: 5px;">Compte Professionnel (Pro) <span id="restriction" style=" font-size: 0.9em; color: #d9534f; "></span> </p>
+                                                    <p style="font-weight: bold; margin-bottom: 5px;">{% trans %}Compte Professionnel (Pro) {% endtrans %}<span id="restriction" style=" font-size: 0.9em; color: #d9534f; "></span> </p>
                                                     <p style="font-size: 0.9em; color: #777;">
-                                                        Vous avez des compétences techniques ou un savoir-faire métier ? Rejoignez l’équipe Pixelforce en tant que professionnel labellisé.
+                                                        {% trans %}Vous avez des compétences techniques ou un savoir-faire métier ? Rejoignez l’équipe Pixelforce en tant que professionnel labellisé.{% endtrans %}
                                                     </p>
                                                     <p style="font-size: 0.9em; color: #777;">
-                                                        Le compte Pro est destiné aux prestataires qualifiés qui souhaitent collaborer avec Pixelforce sur le terrain, dans leur domaine d’expertise.
-Vous intervenez pour réaliser des prestations concrètes pour les clients de la plateforme, en lien avec notre équipe centrale.
+                                                       {% trans %} Le compte Pro est destiné aux prestataires qualifiés qui souhaitent collaborer avec Pixelforce sur le terrain, dans leur domaine d’expertise.
+Vous intervenez pour réaliser des prestations concrètes pour les clients de la plateforme, en lien avec notre équipe centrale.{% endtrans %}
                                                     </p>
                                                     
-                                                    <p class="highlight" style="font-size: 0.9em;">🔹 Qui est concern&eacute; ?<br />D&eacute;veloppeurs, community managers, experts SEO/SEA, installateurs de syst&egrave;mes d&rsquo;alarmes etc.</p>
-<p class="highlight" style="font-size: 0.9em;">🔹 Pourquoi nous rejoindre ?<br />Vous travaillez en collaboration directe avec Pixelforce, b&eacute;n&eacute;ficiez d&rsquo;opportunit&eacute;s de missions r&eacute;guli&egrave;res, et &ecirc;tes form&eacute; &agrave; nos standards de qualit&eacute;.</p>
-<p class="highlight" style="font-size: 0.9em;">🔹 Ce que vous gagnez :<br />Un label Pixelforce, une visibilit&eacute; accrue, des missions qualifi&eacute;es, et un accompagnement personnalis&eacute; pour d&eacute;velopper votre activit&eacute;.</p>
+                                                    <p class="highlight" style="font-size: 0.9em;">{% trans %}🔹 Qui est concern&eacute; ?<br />D&eacute;veloppeurs, community managers, experts SEO/SEA, installateurs de syst&egrave;mes d&rsquo;alarmes etc.{% endtrans %}</p>
+<p class="highlight" style="font-size: 0.9em;">{% trans %}🔹 Pourquoi nous rejoindre ?<br />Vous travaillez en collaboration directe avec Pixelforce, b&eacute;n&eacute;ficiez d&rsquo;opportunit&eacute;s de missions r&eacute;guli&egrave;res, et &ecirc;tes form&eacute; &agrave; nos standards de qualit&eacute;.{% endtrans %}</p>
+<p class="highlight" style="font-size: 0.9em;">{% trans %}🔹 Ce que vous gagnez :<br />Un label Pixelforce, une visibilit&eacute; accrue, des missions qualifi&eacute;es, et un accompagnement personnalis&eacute; pour d&eacute;velopper votre activit&eacute;.{% endtrans %}</p>
                                                 </div>
 
                                                 <div class="w-100 text-end">
-                                                    <button   type="button" name="currentStep" value="0" class="next-step btn-primary font-weight-bold rounded-3 p-2">Suivant</button>
+                                                    <button   type="button" name="currentStep" value="0" class="next-step btn-primary font-weight-bold rounded-3 p-2">{% trans %}Suivant{% endtrans %}</button>
                                                 </div>
                                             </div>
                                             <div class="form-step {% if currentStep == 1 %}active{% endif %}" id="step-1">
-                                                 <h5 class="mt-4 mb-3">Information</h5>
+                                                 <h5 class="mt-4 mb-3">{% trans %}Information{% endtrans %}</h5>
                                                 <div class="row">
                                                     <div class="col-md-6 col-12">
                                                         {{ form_row(form.prenom) }}
@@ -194,12 +207,12 @@ Vous intervenez pour réaliser des prestations concrètes pour les clients de la
                                                 </div> #}
                                                 
                                                 <div class="d-flex justify-content-between">  
-                                                    <button type="button" class="prev-step  btn-primary font-weight-bold rounded-3 p-2">Retour</button>
-                                                    <button type="button" name="currentStep" value="1" class="next-step  btn-primary font-weight-bold rounded-3 p-2">Suivant</button>
+                                                    <button type="button" class="prev-step  btn-primary font-weight-bold rounded-3 p-2">{% trans %}Retour{% endtrans %}</button>
+                                                    <button type="button" name="currentStep" value="1" class="next-step  btn-primary font-weight-bold rounded-3 p-2">{% trans %}Suivant{% endtrans %}</button>
                                                 </div>
                                             </div>
                                             <div class="form-step {% if currentStep == 2 %}active{% endif %}" id="step-2">
-                                                <h5 class="mt-4 mb-3">Information sur la connexion</h5>
+                                                <h5 class="mt-4 mb-3">{% trans %}Information sur la connexion{% endtrans %}</h5>
                                                 {% if form.ambassador_username is defined %}
                                                     {{ form_row(form.ambassador_username) }}
                                                 {% endif %}
@@ -227,8 +240,8 @@ Vous intervenez pour réaliser des prestations concrètes pour les clients de la
                                                 <div class="d-flex justify-content-between">  
                                                     {#            <button class="btn btn-primary" type="submit" id="btn-next">Procéder au paiement <i class="fa-solid fa-angles-right"></i></button>#}
                                     
-                                                    <button type="button" class="prev-step btn-primary font-weight-bold rounded-3 p-2">Retour</button>
-                                                    <button type="button" class="sign-in-button h-30 font-weight-bold rounded-3 p-2 next-step "  name="currentStep" value="3" id="btn-next">S’inscrire</button>
+                                                    <button type="button" class="prev-step btn-primary font-weight-bold rounded-3 p-2">{% trans %}Retour{% endtrans %}</button>
+                                                    <button type="button" class="sign-in-button h-30 font-weight-bold rounded-3 p-2 next-step "  name="currentStep" value="3" id="btn-next">{% trans %}S’inscrire{% endtrans %}</button>
                                                 </div>
                                             </div>
 
@@ -242,14 +255,14 @@ Vous intervenez pour réaliser des prestations concrètes pour les clients de la
                                                 <div class="col-12 ">
                                                     <div class=" text-center">
                                                         <a class="w-100 font-weight-bold login-other-button" href="{{ path('app_forgetPassword') }}">
-                                                            Mot de passe oublié ?
+                                                            {% trans %}Mot de passe oublié ?{% endtrans %}
                                                         </a>
                                                     </div>
                                                 </div>
                                                 <div class="col-12 ">
                                                     <div class=" text-center">
                                                         <a class=" w-100 font-weight-bold login-other-button " href="{{ path('app_login') }}">
-                                                            Déjà un compte ? Connectez-vous
+                                                           {% trans %} Déjà un compte ? Connectez-vous{% endtrans %}
                                                         </a>
                                                     </div>
                                                 </div>
@@ -335,7 +348,7 @@ Vous intervenez pour réaliser des prestations concrètes pour les clients de la
                            const selectedRoles = $('input[name^="inscription_agent[roles][]"]:checked');
                            console.log(selectedRoles);
                             if (selectedRoles.length === 0) {
-                                Swal.fire({ title: "Attention!", text: "Vous devez sélectionner au moins un type de compte !", type: "warning", confirmButtonClass: "btn long", buttonsStyling: !1 });
+                                Swal.fire({ title: "Attention!", text: '{{ "Vous devez sélectionner au moins un type de compte !" | trans }}', type: "warning", confirmButtonClass: "btn long", buttonsStyling: !1 });
                                 return;
                             }
                         }
@@ -369,8 +382,9 @@ Vous intervenez pour réaliser des prestations concrètes pour les clients de la
             
             $('#inscription_agent_pays, #ROLE_PROFESSIONNEL').on('change', function() {
                 let countryCode = $('#inscription_agent_pays').val();
+                let textError = '{{ "À ce jour, la plateforme n\'est pas ouverte aux professionnels basés en France." |trans }}'
                 if(countryCode == "FR"){
-                    $('#restriction').html(`<i class="fas fa-exclamation-triangle" style="margin-right: 5px;"></i>À ce jour, la plateforme n'est pas ouverte aux professionnels basés en France.`);
+                    $('#restriction').html(`<i class="fas fa-exclamation-triangle" style="margin-right: 5px;"></i>`+textError);
                     $("#ROLE_PROFESSIONNEL").prop("checked", false).prop("disabled", true).closest("label").addClass("disabled-label");
                     $("#ROLE_PROFESSIONNEL_lock").removeClass('d-none');
                 }

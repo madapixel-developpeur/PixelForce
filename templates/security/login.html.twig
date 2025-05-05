@@ -8,7 +8,9 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="google-site-verification" content="O5bvNXZxdhGiT5VN5hPxisFh_XZeZCQr4aN4yoy0Ilk" />
-        <title>{% block title %}Authentification{% endblock %}</title>
+        <title>{% block title %}
+            {% trans %}Authentification{% endtrans %}
+        {% endblock %}</title>
         <link rel="stylesheet" href="/assets/fontawesome-free-6.0.0-web/css/all.css" />
         <link rel="stylesheet" href="{{ asset('/assets/vuexy/css/pages/authentication.css') }}" />
         <link rel="stylesheet" type="text/css" href="{{asset('assets/css/animations.css')}}">
@@ -36,19 +38,33 @@
         <div class="header-navbar-shadow"></div>
         <div class="content-wrapper">
             <div class="content-header row">
+              
             </div>
             <div class="content-body">
                 <div class="auth-wrapper auth-cover">
                     <div class="auth-inner row m-0">
-                        
-
                         <!-- Left Text-->
                         <div class="d-none d-lg-flex col-md-7 align-items-center m-0 p-0 bg-image">
+                            
                         </div>
                         <!-- /Left Text-->
                         <!-- Login-->
                         <div class=" col-md-5 auth-bg px-2 container-fluid  d-flex flex-column justify-content-center align-items-center">
+                            <div class="row w-100">
+                                <div class="col-md-12 justify-content-end">
+                                    {% set route = app.request.attributes.get('_route') %}
+                                    {% set route_params = app.request.attributes.get('_route_params') %}
+                                    {% set params = route_params|merge(app.request.query.all) %}
+                                    <ul class="d-flex align-items-center flex-end " style="padding:5px; list-style-type:none; justify-content:flex-end;">
+                                        <li><a href="{{ path(route, params|merge({ lang: 'fr' })) }}"><img src="{{asset( "assets/flags/fr.png" ) }}" style="height: 15px;" alt="FR" /></a></li>
+                                        <li style="margin-left:10px; margin-right:10px"> | </li>
+                                        <li><a href="{{ path(route, params|merge({ lang: 'en' })) }}"><img src="{{asset( "assets/flags/en.png" ) }}"  style="height: 15px;" alt="EN" /></a></li>
+
+                                    </ul>
+                                </div>
+                            </div>
                             <div class="col-12 col-sm-8 col-md-6 col-lg-12 p-lg-5 d-flex align-items-center min-vh-95">
+                                
                                 <div class="w-100">
                                     <div class="p-lg-4 p-3">
                                         <h2 class="card-title  mb-1 text-center  pixelforce-logo">
@@ -58,7 +74,7 @@
                                                 </div>  
                                         </h2>
                                         
-                                        <h2 class="text-center fw-bold mt-3">Connexion</h2>
+                                        <h2 class="text-center fw-bold mt-3">{% trans %}Connexion{% endtrans %}</h2>
                                         {% block form %}
                                             <form class="auth-login-form mt-3" method="POST">
                                                 <!-- Affichage des messages flash -->
@@ -70,15 +86,15 @@
                                                     {% endfor %}
                                                 {% else %}
                                                     {% if error %}
-                                                        <div class="mt-3 alert alert-danger">Email ou mot de passe invalide</div>
+                                                        <div class="mt-3 alert alert-danger">{% trans %}Email ou mot de passe invalide{% endtrans %}</div>
                                                     {% endif %}
                                                 {% endfor %}
                                                 <div class="mb-2">
-                                                    <input type="text" class="form-control"  placeholder="Nom d'utilisateur/Email" value="{{ last_username }}" name="email" id="inputMail_users"  required autofocus>
+                                                    <input type="text" class="form-control"  placeholder="{{ "Nom d'utilisateur/Email" | trans }}" value="{{ last_username }}" name="email" id="inputMail_users"  required autofocus>
                                                 </div>
                                                 <div class="mb-2">   
                                                     <div class="input-group input-group-merge form-password-toggle">
-                                                        <input class="form-control form-control-merge" id="login-password" type="password" name="password" placeholder="Mot de passe" aria-describedby="login-password" tabindex="2" required/><span class="input-group-text cursor-pointer"><i data-feather="eye"></i></span>
+                                                        <input class="form-control form-control-merge" id="login-password" type="password" name="password" placeholder="{{ "Mot de passe"| trans }}" aria-describedby="login-password" tabindex="2" required/><span class="input-group-text cursor-pointer"><i data-feather="eye"></i></span>
                                                     </div>
                                                 </div>
                                                 <input type="hidden" name="agentToken" value="{{agentToken}}" />
@@ -90,7 +106,7 @@
 
                                                 <div class=" text-center mt-4">
                                                     <button class="login-button w-100 h-30 font-weight-bold rounded-3 p-2" type="submit">
-                                                        Se connecter
+                                                        {% trans %}Se connecter{% endtrans %}
                                                     </button>
                                                     
                                                 </div>
@@ -102,14 +118,14 @@
                                                     <div class="col-12 ">
                                                         <div class=" text-center">
                                                             <a class="w-100 font-weight-bold login-other-button" href="{{ path('app_forgetPassword') }}">
-                                                                Mot de passe oublié ?
+                                                                {% trans %}Mot de passe oublié ?{% endtrans %}
                                                             </a>
                                                         </div>
                                                     </div>
                                                     <div class="col-12 ">
                                                         <div class=" text-center">
                                                             <a class=" w-100 font-weight-bold login-other-button" href="{% if agentToken %} {{ path('signup_client', {'token': agentToken}) }} {% else %} {{ path('agent_inscription') }} {% endif %}">
-                                                                S'inscrire
+                                                                {% trans %}S'inscrire{% endtrans %}
                                                             </a>
                                                         </div>
                                                     </div>

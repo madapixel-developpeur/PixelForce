@@ -19,6 +19,7 @@ use App\Repository\CoachSecteurRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -47,7 +48,8 @@ class AuditController extends AbstractController
                                 AuditRepository $auditRepository,
                                 AuditService $auditService,
                                 SessionInterface $session,
-                                CoachSecteurRepository $repoCoachSecteur)
+                                CoachSecteurRepository $repoCoachSecteur,
+                                private TranslatorInterface $translator)
     {
         $this->repoUser = $repoUser;
         $this->entityManager = $entityManager;
@@ -135,12 +137,12 @@ class AuditController extends AbstractController
                 $this->entityManager->save($meeting);
                 $this->addFlash(
                     'success',
-                    "Nouvel Audit Enregistré,veuillez visualiser la fiche de votre rendez-vous"
+                    $this->translator->trans("Nouvel Audit Enregistré,veuillez visualiser la fiche de votre rendez-vous")
                  );    
                  return $this->redirectToRoute('agent_contact_meeting_fiche',['id'=>$meeting->getId()]);
             }
             else {
-                $this->addFlash('success', "Nouvel Audit enregistrée avec succès");
+                $this->addFlash('success', $this->translator->trans("Nouvel Audit enregistrée avec succès"));
                 return $this->redirectToRoute('audit_view', ['id' =>  $audit->getId()]);
             }
     
@@ -165,7 +167,7 @@ class AuditController extends AbstractController
         if ($formUser->isSubmitted() && $formUser->isValid()) {
             $this->entityManager->save($audit);
 
-            $this->addFlash('success', "Modification Audit effectuée avec succès");
+            $this->addFlash('success', $this->translator->trans("Modification Audit effectuée avec succès"));
             return $this->redirectToRoute('audit_view', ['id' =>  $audit->getId()]);    
         }
 
@@ -182,7 +184,7 @@ class AuditController extends AbstractController
     {
             $audit->setIsActive(Audit::ACTIVE_NO);
             $this->entityManager->save($audit);
-            $this->addFlash('success', "Suppression Audit effectuée avec succès");
+            $this->addFlash('success', $this->translator->trans("Suppression Audit effectuée avec succès"));
             return $this->redirectToRoute('audit_list');    
            
     }
@@ -193,7 +195,7 @@ class AuditController extends AbstractController
     {
             $audit->setIsActive(Audit::ACTIVE_YES);
             $this->entityManager->save($audit);
-            $this->addFlash('success', "Restoration Audit effectuée avec succès");
+            $this->addFlash('success', $this->translator->trans("Restoration Audit effectuée avec succès"));
             return $this->redirectToRoute('audit_list');    
            
     }
