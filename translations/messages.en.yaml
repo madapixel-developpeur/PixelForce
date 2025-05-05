@@ -536,4 +536,26 @@ Bonjour: Hello
 'L&rsquo;&eacute;quipe Pixelforce 🚀': 'The Pixelforce Team 🚀'
 "Nom d'utilisateur déjà utilisé": "Username already taken"
 "Adresse email déjà utilisée": "Email address already in use"
+'Nom obligatoire': 'Name is required'
+'Prix obligatoire': 'Price is required'
+'Le prix n''est pas valide': 'The price is not valid'
+'Catégorie obligatoire': 'Category is required'
+'Prix mininum': 'Minimum price'
+'Prix maximum': 'Maximum price'
+'Formulaire Produit': 'Product Form'
+'Enregistrer les modifications': 'Save changes'
+Créer: Create
+'Liste des produits': 'Product List'
+Export: Export
+Excel: Excel
+Pdf: PDF
+'Toutes les données': 'All data'
+'Seulement celles qui sont affichées': 'Only displayed data'
+Exporter: Export
+'Nouveau produit': 'New product'
+'Aucun produit disponible pour le moment.': 'No products available at the moment.'
+Prix: Price
+Image: Image
+'Formulaire Catégorie': 'Category Form'
+
 

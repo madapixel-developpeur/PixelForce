@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-	Formulaire Catégorie
+	{% trans %}Formulaire Catégorie{% endtrans %}
 {% endblock %}
 
 {% block stylesheets %}
@@ -11,7 +11,7 @@
 
 {% block body %} 
     <div class="block block--bordered block--rounded">
-        <h1 class="block__text block__text--center mt-2" >Formulaire Catégorie :</h1>
+        <h1 class="block__text block__text--center mt-2" >{% trans %}Formulaire Catégorie{% endtrans %} :</h1>
             
             {{ form_start(form, {'attr': {'class': 'my-form', 'id': 'category-form'}}) }}
                 {% if error %}
@@ -32,7 +32,7 @@
                     {{form_errors(form.description)}}
                 </div>
                 <div class="btn-wrap">
-                    <button class="btn btn-primary" type="submit"><i data-feather="save"></i>{{ isEdit ? 'Enregistrer les modifications' : 'Créer' }}</button>
+                    <button class="btn btn-primary" type="submit"><i data-feather="save"></i>{{ isEdit ? ('Enregistrer les modifications' | trans) : ('Créer' | trans) }}</button>
                 </div>
             {{ form_end(form) }}
     </div>

@@ -534,5 +534,26 @@ Bonjour: Bonjour
 'Il ne vous reste plus qu&rsquo;&agrave; explorer la plateforme et d&eacute;couvrir toutes les opportunit&eacute;s qui vous attendent. Si vous avez la moindre question, notre &eacute;quipe est &agrave; votre disposition &agrave;': 'Il ne vous reste plus qu&rsquo;&agrave; explorer la plateforme et d&eacute;couvrir toutes les opportunit&eacute;s qui vous attendent. Si vous avez la moindre question, notre &eacute;quipe est &agrave; votre disposition &agrave;'
 '&Agrave; tr&egrave;s vite !': '&Agrave; tr&egrave;s vite !'
 'L&rsquo;&eacute;quipe Pixelforce 🚀': 'L&rsquo;&eacute;quipe Pixelforce 🚀'
-"Nom d'utilisateur déjà utilisé": "Nom d'utilisateur déjà utilisé"
-"Adresse email déjà utilisée": "Adresse email déjà utilisée"
+'Nom d''utilisateur déjà utilisé': 'Nom d''utilisateur déjà utilisé'
+'Adresse email déjà utilisée': 'Adresse email déjà utilisée'
+'Nom obligatoire': 'Nom obligatoire'
+'Prix obligatoire': 'Prix obligatoire'
+'Le prix n''est pas valide': 'Le prix n''est pas valide'
+'Catégorie obligatoire': 'Catégorie obligatoire'
+'Prix mininum': 'Prix mininum'
+'Prix maximum': 'Prix maximum'
+'Formulaire Produit': 'Formulaire Produit'
+'Enregistrer les modifications': 'Enregistrer les modifications'
+Créer: Créer
+'Liste des produits': 'Liste des produits'
+Export: Export
+Excel: Excel
+Pdf: Pdf
+'Toutes les données': 'Toutes les données'
+'Seulement celles qui sont affichées': 'Seulement celles qui sont affichées'
+Exporter: Exporter
+'Nouveau produit': 'Nouveau produit'
+'Aucun produit disponible pour le moment.': 'Aucun produit disponible pour le moment.'
+Prix: Prix
+Image: Image
+'Formulaire Catégorie': 'Formulaire Catégorie'

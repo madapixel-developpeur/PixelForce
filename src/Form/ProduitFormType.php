@@ -3,27 +3,30 @@
 namespace App\Form;
 
 use App\Entity\Produit;
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
-
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-
 use App\Entity\Categorie;
 use App\Repository\CategorieRepository;
+use Symfony\Component\Form\AbstractType;
+use FOS\CKEditorBundle\Form\Type\CKEditorType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Validator\Constraints\File;
 
-use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Component\Validator\Constraints\Regex;
+
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Contracts\Translation\TranslatorInterface;
+
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 class ProduitFormType extends AbstractType
 {
     private $categorieRepository;
-    public function __construct(CategorieRepository $categorieRepository){
+    public function __construct(CategorieRepository $categorieRepository,
+        private TranslatorInterface $translator,
+    ){
         $this->categorieRepository = $categorieRepository;
     }
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -31,11 +34,11 @@ class ProduitFormType extends AbstractType
         $categoryList = $this->categorieRepository->findAll();
         $builder
             ->add('nom', TextType::class, [
-                "label" => "Nom",
+                "label" => $this->translator->trans("Nom"),
                 "trim" => true,
                 "required" => false,
                 "constraints" => [
-                    new NotBlank(["message" => "Nom obligatoire"])
+                    new NotBlank(["message" => $this->translator->trans("Nom obligatoire")])
                 ]
             ])
             ->add('description', CKEditorType::class,  array(
@@ -50,8 +53,8 @@ class ProduitFormType extends AbstractType
                 "trim" => true,
                 "required" => false,
                 "constraints" => [
-                    new NotBlank(["message" => "Prix obligatoire"]),
-                    new Regex(["pattern"=>'/^[0-9]*([\.])?[0-9]*$/',"match"=>true,"message" => "Le prix n'est pas valide"])
+                    new NotBlank(["message" => $this->translator->trans("Prix obligatoire")]),
+                    new Regex(["pattern"=>'/^[0-9]*([\.])?[0-9]*$/',"match"=>true,"message" => $this->translator->trans("Le prix n'est pas valide")])
                 ]
             ])
             ->add('categorie', EntityType::class, [
@@ -63,7 +66,7 @@ class ProduitFormType extends AbstractType
                 },
                 "required" => false,
                 "constraints" => [
-                    new NotBlank(["message" => "Catégorie obligatoire"])
+                    new NotBlank(["message" => $this->translator->trans("Catégorie obligatoire")])
                 ]
             ])
             ->add('imageFile', FileType::class, [
@@ -77,7 +80,7 @@ class ProduitFormType extends AbstractType
                             'image/jpeg',
                             'image/png',
                         ],
-                        'mimeTypesMessage' => 'Image invalide. Le format doit être: .jpeg ou .png',
+                        'mimeTypesMessage' => $this->translator->trans('Image invalide. Le format doit être: .jpeg ou .png'),
                     ])
                 ]
             ])
