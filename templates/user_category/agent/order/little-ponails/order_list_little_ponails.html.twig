@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-	Commandes
+	{% trans %}Commandes{% endtrans %}
 {% endblock %}
 
 {% block stylesheets %}
@@ -11,7 +11,7 @@
 {% block body %}
 	<div class="row mb-3">
 		<div class="col-12  mt-2 mt-md-3">
-			<h4 class="my-auto general-primary-text">Liste des commandes</h4>
+			<h4 class="my-auto general-primary-text">{% trans %}Liste des commandes{% endtrans %}</h4>
 		</div>
 	</div>
 	<div class="card card-company-table p-5 rounded-3" style="">
@@ -89,7 +89,7 @@
 
 				{% if orderList|length ==0 %}
 					<div class="alert alert-primary p-3 text-center" role="alert"> <div class="alert-body">
-						Aucune Commande
+						{% trans %}Aucune Commande{% endtrans %}
 					</div>
 
 				{% endif %}
@@ -98,10 +98,10 @@
 						<table class="table text-center">
 							<tbody class="align-items-center">
 								<tr>
-									<th>Créée le</th>
-									<th>Nom d'utilisateur</th>
-									<th>Total</th>
-									<th>Statut</th>
+									<th>{% trans %}Créée le{% endtrans %}</th>
+									<th>{% trans %}Nom d'utilisateur{% endtrans %}</th>
+									<th>{% trans %}Total{% endtrans %}</th>
+									<th>{% trans %}Statut{% endtrans %}</th>
 									<th></th>
 								</tr>
 

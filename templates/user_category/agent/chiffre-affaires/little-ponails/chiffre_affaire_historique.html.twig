@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-	Chiffre d'affaires
+	{% trans %}Chiffre d'affaires{% endtrans %}
 {% endblock %}
 
 {% block stylesheets %}
@@ -12,7 +12,7 @@
 {% block body %}
     <div class="row mb-3">
 		<div class="col-12  mt-2 mt-md-3">
-			<h4 class="my-auto general-primary-text">Historique du chiffre d'affaires</h4>
+			<h4 class="my-auto general-primary-text">{% trans %}Historique du chiffre d'affaires{% endtrans %}</h4>
 		</div>
 	</div>
 	<div class="card card-company-table p-5 rounded-3" style="">
@@ -76,7 +76,7 @@
                     {% if caHistory|length ==0 %}
                         <div class="alert alert-primary p-3 text-center" role="alert">
                             <div class="alert-body">
-                                Aucun résultat trouvé.
+                                {% trans %}Aucun résultat trouvé.{% endtrans %}
                             </div>
                         </div>
                     {% endif %}
@@ -86,10 +86,10 @@
 						<table class="table">
 							<tbody class="align-items-center">
 								<tr>
-                                    <th >Mois</th>
-                                    <th class="text-end">Achats perso</th>
-                                    <th class="text-end">Achats clients</th>
-                                    <th class="text-end">Chiffre d'affaire personnel</th>
+                                    <th >{% trans %}Mois{% endtrans %}</th>
+                                    <th class="text-end">{% trans %}Achats perso{% endtrans %}</th>
+                                    <th class="text-end">{% trans %}Achats clients{% endtrans %}</th>
+                                    <th class="text-end">{% trans %}Chiffre d'affaire personnel{% endtrans %}</th>
                                     <th></th>
                                 </tr>
 

@@ -557,3 +557,77 @@ Exporter: Exporter
 Prix: Prix
 Image: Image
 'Formulaire Catégorie': 'Formulaire Catégorie'
+'Code renvoyé': 'Code renvoyé'
+'Identifiant obligatoire.': 'Identifiant obligatoire.'
+'Compte relié avec succès.': 'Compte relié avec succès.'
+'Code de sécurité': 'Code de sécurité'
+'Code de sécurité obligatoire': 'Code de sécurité obligatoire'
+Prénom(s): Prénom(s)
+'Veuillez renseigner vos prénoms.': 'Veuillez renseigner vos prénoms.'
+'Nom de famille': 'Nom de famille'
+'Veuillez renseigner votre nom de famille.': 'Veuillez renseigner votre nom de famille.'
+'Nom d''utilisateur sur Little Ponails': 'Nom d''utilisateur sur Little Ponails'
+'Veuillez renseigner votre nom d''utilisateur.': 'Veuillez renseigner votre nom d''utilisateur.'
+Parrain: Parrain
+'Adresse email': 'Adresse email'
+'Veuillez renseigner votre email.': 'Veuillez renseigner votre email.'
+'L''email est invalide': 'L''email est invalide'
+'Confirmation du mot de passe': 'Confirmation du mot de passe'
+'Les mots de passe ne sont pas identiques.': 'Les mots de passe ne sont pas identiques.'
+'Veuillez renseigner un mot de passe.': 'Veuillez renseigner un mot de passe.'
+'Statut juridique': 'Statut juridique'
+'Sélectionnez votre statut': 'Sélectionnez votre statut'
+'Veuillez renseigner votre statut juridique.': 'Veuillez renseigner votre statut juridique.'
+'Pièce(s) d''identité': 'Pièce(s) d''identité'
+'Veuillez fournir au moins une pièce d''identité.': 'Veuillez fournir au moins une pièce d''identité.'
+'Carte Vitale': 'Carte Vitale'
+'Le KBis est requis pour les revendeurs.': 'Le KBis est requis pour les revendeurs.'
+'La Carte Vitale est requise pour les VDI.': 'La Carte Vitale est requise pour les VDI.'
+'Le SIREN VDI est requis pour les VDI.': 'Le SIREN VDI est requis pour les VDI.'
+'Vérifiez votre identité': 'Vérifiez votre identité'
+'Saisissez ci-dessous le code de sécurité que vous avez reçu par email.': 'Saisissez ci-dessous le code de sécurité que vous avez reçu par email.'
+'Renvoyer le code': 'Renvoyer le code'
+Vérifier: Vérifier
+'Historique du chiffre d''affaires': 'Historique du chiffre d''affaires'
+Mois: Mois
+'Achats perso': 'Achats perso'
+'Achats clients': 'Achats clients'
+'Chiffre d''affaire personnel': 'Chiffre d''affaire personnel'
+'Position de l''égerie du mois': 'Position de l''égerie du mois'
+articles: articles
+'Chiffre d''affaire personnel (Achats perso + achats clients)': 'Chiffre d''affaire personnel (Achats perso + achats clients)'
+'Chiffre d''affaire équipe': 'Chiffre d''affaire équipe'
+'Chiffre d''affaire global (CA Perso + CA Equipe)': 'Chiffre d''affaire global (CA Perso + CA Equipe)'
+'Commissions sur achats clients': 'Commissions sur achats clients'
+'Commissions sur chiffre d''affaire équipe': 'Commissions sur chiffre d''affaire équipe'
+'Date de la commande': 'Date de la commande'
+Total: Total
+'Adresse de livraison': 'Adresse de livraison'
+'Liste des articles achetés': 'Liste des articles achetés'
+Libellé: Libellé
+'Prix unitaire': 'Prix unitaire'
+Quantité: Quantité
+'Aucun article trouvé': 'Aucun article trouvé'
+'Liste des coupons utilisés': 'Liste des coupons utilisés'
+Code: Code
+Remise: Remise
+'Tax remisé': 'Tax remisé'
+'Type de la remise': 'Type de la remise'
+'Livraison gratuite': 'Livraison gratuite'
+'Aucun coupon trouvé': 'Aucun coupon trouvé'
+'Créée le': 'Créée le'
+Statistiques: Statistiques
+'MES VENTES PERSONNELLES': 'MES VENTES PERSONNELLES'
+'MES VENTES EQUIPES': 'MES VENTES EQUIPES'
+'Mes gains': 'Mes gains'
+'Mon CA': 'Mon CA'
+Compte: Compte
+'Bienvenue !': 'Bienvenue !'
+'Avez-vous déjà un compte sur la plateforme de Litte Ponails ?': 'Avez-vous déjà un compte sur la plateforme de Litte Ponails ?'
+'Vous n''avez pas encore de compte ?': 'Vous n''avez pas encore de compte ?'
+'Créez-en un ici': 'Créez-en un ici'
+'Inscription !': 'Inscription !'
+'J''accepte les Termes & Conditions.': 'J''accepte les Termes & Conditions.'
+'Ma boutique en ligne': 'Ma boutique en ligne'
+'Réseau Little Ponails': 'Réseau Little Ponails'
+'Ma boutique': 'Ma boutique'

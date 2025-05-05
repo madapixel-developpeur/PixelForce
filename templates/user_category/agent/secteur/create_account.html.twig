@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-	Compte
+	{% trans %}Compte{% endtrans %}
 {% endblock %}
 
 {% block stylesheets %}
@@ -14,7 +14,7 @@
 		<div class="card card-body-custom mt-2 px-5 py-5">
 			<div class="row  justify-content-center">
 				<div class="col-md-8">
-					<h1 class='text-center'>Inscription !</h1>
+					<h1 class='text-center'>{% trans %}Inscription !{% endtrans %}</h1>
 					{{ form_start(form, { attr: { id: 'registration-form', enctype: 'multipart/form-data' } }) }}
 
 					<!-- First Name Field -->
@@ -97,11 +97,11 @@
 					<!-- Terms and Conditions Checkbox -->
 					<div class="form-group mb-4">
 						<input type="checkbox" id="accept_terms" name="accept_terms" class="" value="1" required>
-						<label for="accept_terms">J'accepte les Termes & Conditions.</label>
+						<label for="accept_terms">{% trans %}J'accepte les Termes & Conditions.{% endtrans %}</label>
 					</div>
 
 					<!-- Submit Button -->
-					<button type="submit" class="btn btn-primary">S'inscrire</button>
+					<button type="submit" class="btn btn-primary">{% trans %}S'inscrire{% endtrans %}</button>
 
 					{{ form_end(form) }}
 				</div>

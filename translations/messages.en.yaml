@@ -557,5 +557,80 @@ Exporter: Export
 Prix: Price
 Image: Image
 'Formulaire Catégorie': 'Category Form'
+'Code renvoyé': 'Code resent'
+'Identifiant obligatoire.': 'Username is required.'
+'Compte relié avec succès.': 'Account successfully linked.'
+'Code de sécurité': 'Security code'
+'Code de sécurité obligatoire': 'Security code is required'
+Prénom(s): First name(s)
+'Veuillez renseigner vos prénoms.': 'Please enter your first name(s).'
+'Nom de famille': 'Last name'
+'Veuillez renseigner votre nom de famille.': 'Please enter your last name.'
+'Nom d''utilisateur sur Little Ponails': 'Username on Little Ponails'
+'Veuillez renseigner votre nom d''utilisateur.': 'Please enter your username.'
+Parrain: Sponsor
+'Adresse email': 'Email address'
+'Veuillez renseigner votre email.': 'Please enter your email.'
+'L''email est invalide': 'The email is invalid'
+'Confirmation du mot de passe': 'Confirm password'
+'Les mots de passe ne sont pas identiques.': 'Passwords do not match.'
+'Veuillez renseigner un mot de passe.': 'Please enter a password.'
+'Statut juridique': 'Legal status'
+'Sélectionnez votre statut': 'Select your status'
+'Veuillez renseigner votre statut juridique.': 'Please provide your legal status.'
+'Pièce(s) d''identité': 'ID document(s)'
+'Veuillez fournir au moins une pièce d''identité.': 'Please provide at least one ID document.'
+'Carte Vitale': 'Carte Vitale'
+'Le KBis est requis pour les revendeurs.': 'KBis is required for resellers.'
+'La Carte Vitale est requise pour les VDI.': 'Carte Vitale is required for VDI.'
+'Le SIREN VDI est requis pour les VDI.': 'VDI SIREN is required for VDI.'
+'Vérifiez votre identité': 'Verify your identity'
+'Saisissez ci-dessous le code de sécurité que vous avez reçu par email.': 'Enter the security code you received by email below.'
+'Renvoyer le code': 'Resend the code'
+Vérifier: Verify
+'Historique du chiffre d''affaires': 'Sales history'
+Mois: Month
+'Achats perso': 'Personal purchases'
+'Achats clients': 'Client purchases'
+'Chiffre d''affaire personnel': 'Personal sales turnover'
+'Position de l''égerie du mois': 'Position of brand ambassador of the month'
+articles: items
+'Chiffre d''affaire personnel (Achats perso + achats clients)': 'Personal sales turnover (Personal + Client purchases)'
+'Chiffre d''affaire équipe': 'Team sales turnover'
+'Chiffre d''affaire global (CA Perso + CA Equipe)': 'Total sales turnover (Personal + Team)'
+'Commissions sur achats clients': 'Commissions on client purchases'
+'Commissions sur chiffre d''affaire équipe': 'Commissions on team sales turnover'
+'Date de la commande': 'Order date'
+Total: Total
+'Adresse de livraison': 'Delivery address'
+'Liste des articles achetés': 'List of purchased items'
+Libellé: Description
+'Prix unitaire': 'Unit price'
+Quantité: Quantity
+'Aucun article trouvé': 'No items found'
+'Liste des coupons utilisés': 'List of used coupons'
+Code: Code
+Remise: Discount
+'Tax remisé': 'Discounted tax'
+'Type de la remise': 'Type of discount'
+'Livraison gratuite': 'Free shipping'
+'Aucun coupon trouvé': 'No coupons found'
+'Créée le': 'Created on'
+Statistiques: Statistics
+'MES VENTES PERSONNELLES': 'MY PERSONAL SALES'
+'MES VENTES EQUIPES': 'MY TEAM SALES'
+'Mes gains': 'My earnings'
+'Mon CA': 'My turnover'
+Compte: Account
+'Bienvenue !': 'Welcome!'
+'Avez-vous déjà un compte sur la plateforme de Litte Ponails ?': 'Do you already have an account on the Litte Ponails platform?'
+'Vous n''avez pas encore de compte ?': 'Don’t have an account yet?'
+'Créez-en un ici': 'Create one here'
+'Inscription !': 'Sign up!'
+'J''accepte les Termes & Conditions.': 'I accept the Terms & Conditions.'
+'Ma boutique en ligne': 'My online shop'
+'Réseau Little Ponails': 'Little Ponails Network'
+'Ma boutique': 'My shop'
+
 
 

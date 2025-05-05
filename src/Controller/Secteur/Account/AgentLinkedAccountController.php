@@ -16,6 +16,7 @@ use Symfony\Component\Mime\Part\DataPart;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -29,7 +30,8 @@ class AgentLinkedAccountController extends AbstractController
         private SecteurRepository $secteurRepository,
         private SessionInterface $session,
         private AuthService $authService,
-        private OtpService $otpService
+        private OtpService $otpService,
+        private TranslatorInterface $translator,
     ) {
 
     }
@@ -53,7 +55,7 @@ class AgentLinkedAccountController extends AbstractController
             try {
                 $identifier = $form->get('identifier')->getData();
                 if (!$identifier) {
-                    throw new CUstomException('Identifiant obligatoire.');
+                    throw new CUstomException($this->translator->trans('Identifiant obligatoire.'));
                 }
                 // $this->authService->linkAccount($user,$secteur,$identifier);
                 $linkedAccountInfo = $this->authService->linkAccountInfo($user,$secteur,$identifier);
@@ -61,7 +63,7 @@ class AgentLinkedAccountController extends AbstractController
                 $this->otpService->sendOtp(null, $identifier, UserOTP::LINKED_ACCOUNT_CONFIRMATION);
                 return $this->redirectToRoute('app_otp_home', ['operationType' => UserOTP::LINKED_ACCOUNT_CONFIRMATION]);
 
-                $this->addFlash('success', 'Compte relié avec succès.'); 
+                $this->addFlash('success', $this->translator->trans('Compte relié avec succès.')); 
                 return $this->redirectToRoute('agent_dashboard_secteur', ['id' =>  $secteur_id]);
             } catch (CustomException $e) {
                 $this->addFlash(
@@ -110,7 +112,7 @@ class AgentLinkedAccountController extends AbstractController
                 ]);
                 $multipart = array_merge($data,$files);
                 $this->authService->createLittlePonailsAccount($this->getUser(),$secteur,$multipart);
-                $this->addFlash('success', 'Compte relié avec succès.');
+                $this->addFlash('success', $this->translator->trans('Compte relié avec succès.'));
                 return $this->redirectToRoute('agent_dashboard_secteur', ['id' =>  $secteur_id]);
             } catch (CustomException $e) {
                 $this->addFlash(

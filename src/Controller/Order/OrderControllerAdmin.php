@@ -441,6 +441,7 @@ class OrderControllerAdmin extends AbstractController
     }
 
     public function getLittlePonnailsOrder(Request $request,PaginatorInterface $paginator){
+        $limit = 20;
         $user = (object)$this->getUser();
         $page = $request->query->get('page', 1);
         $result = $this->statAgentService->getOrdersFromLittlePonails($user,$page);
@@ -448,7 +449,7 @@ class OrderControllerAdmin extends AbstractController
         $orderList = $paginator->paginate(
             $result['items'],
             1,
-            $result['itemNumberPerPage']
+            $result['itemNumberPerPage'] ?? $limit
         );
         $orderList->setTotalItemCount($result['total']);
         $orderList->setCurrentPageNumber($result['currentPageNumber']);
@@ -486,13 +487,14 @@ class OrderControllerAdmin extends AbstractController
     }
 
     public function getLittlePonnailsCaHistory(Request $request,PaginatorInterface $paginator){
+        $limit = 20;
         $user = (object)$this->getUser();
         $page = $request->query->get('page', 1);
         $result = $this->statAgentService->getCaHistoryFromLittlePonails($user,$page);
         $caHistory = $paginator->paginate(
             $result['items'],
             1,
-            $result['itemNumberPerPage']
+            $result['itemNumberPerPage'] ?? $limit
         );
         $caHistory->setTotalItemCount($result['total']);
         $caHistory->setCurrentPageNumber($result['currentPageNumber']);

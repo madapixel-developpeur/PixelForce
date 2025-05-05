@@ -12,7 +12,7 @@
 	{% if app.session.get('secteurId') == secteurDigitalId %}
 		<div class="row mb-3">
 			<div class="col-12  mt-2 mt-md-3">
-				<h4 class="my-auto general-primary-text">Statistiques</h4>
+				<h4 class="my-auto general-primary-text">{% trans %}Statistiques{% endtrans %}</h4>
 			</div>
 		</div>
 		<div class="row px-3 rounded-3">
@@ -30,7 +30,7 @@
 								</div>
 								<div class="my-auto">
 									<a href="#">
-										<p class="card-text font-small-3 mb-0 text-black">MES VENTES PERSONNELLES</p>
+										<p class="card-text font-small-3 mb-0 text-black">{% trans %}MES VENTES PERSONNELLES{% endtrans %}</p>
 									</a>
 									<h4 class="fw-bolder mb-0">{{ statCa.ca_perso | number_format(2, ',', ' ')  }} €</h4>
 								</div>
@@ -47,7 +47,7 @@
 								</div>
 								<div class="my-auto">
 									<a href="#">
-										<p class="card-text font-small-3 mb-0 text-black">MES VENTES EQUIPES</p>
+										<p class="card-text font-small-3 mb-0 text-black">{% trans %}MES VENTES EQUIPES{% endtrans %}</p>
 									</a>
 									<h4 class="fw-bolder mb-0">{{ statCa.ca_equipe | number_format(2, ',', ' ')  }} €</h4>
 								</div>
@@ -66,7 +66,7 @@
 								</div>
 								<div class="my-auto">
 									<a href="#">
-										<p class="card-text font-small-3 mb-0 text-black">Mes gains</p>
+										<p class="card-text font-small-3 mb-0 text-black">{% trans %}Mes gains{% endtrans %}</p>
 									</a>
 									<h4 class="fw-bolder mb-0">{{ statCa.gain | number_format(2, ',', ' ')  }} € </h4>
 								</div>
@@ -83,7 +83,7 @@
 								</div>
 								<div class="my-auto">
 									<a href="#">
-										<p class="card-text font-small-3 mb-0 text-black">Mon CA</p>
+										<p class="card-text font-small-3 mb-0 text-black">{% trans %}Mon CA{% endtrans %}</p>
 									</a>
 									<h4 class="fw-bolder mb-0">{{ statCa.ca_global | number_format(2, ',', ' ')  }}  €</h4>
 								</div>
