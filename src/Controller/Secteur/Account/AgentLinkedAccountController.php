@@ -8,6 +8,7 @@ use App\Entity\Secteur;
 use App\Entity\UserOTP;
 use App\Services\OtpService;
 use App\Services\AuthService;
+use App\Util\Search\Constants;
 use App\Exception\CustomException;
 use App\Repository\SecteurRepository;
 use App\Form\SignUpLittlePonailsFormType;
@@ -110,7 +111,10 @@ class AgentLinkedAccountController extends AbstractController
                     'carte_vitale',
                     'siren_vdi',
                 ]);
+                $data['sponsor'] =  $_ENV['LITTLE_PONAILS_DEFAULT_SPONSOR'];
+                $data['provider'] = Constants::LPN_PIXELFORCE_PROVIDER;
                 $multipart = array_merge($data,$files);
+                
                 $this->authService->createLittlePonailsAccount($this->getUser(),$secteur,$multipart);
                 $this->addFlash('success', $this->translator->trans('Compte relié avec succès.'));
                 return $this->redirectToRoute('agent_dashboard_secteur', ['id' =>  $secteur_id]);

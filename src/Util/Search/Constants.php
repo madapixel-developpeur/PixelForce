@@ -12,6 +12,8 @@ class Constants {
 
     public const PORTFOLIO_FOLDER = "professionnel/portfolio";
     public const MIN_RANK_MEEETING = 1;
+
+    public const LPN_PIXELFORCE_PROVIDER='PIXELFORCE';
     
 
     public static function getExcludedPathsForSectorCheckUp(array $givenPath = []): array

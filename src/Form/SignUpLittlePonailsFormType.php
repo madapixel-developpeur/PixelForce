@@ -46,11 +46,11 @@ class SignUpLittlePonailsFormType extends AbstractType
                     new Length(['max' => 255]),
                 ]
             ])
-            ->add('sponsor', TextType::class, [
-                'label' => $this->translator->trans('Parrain'),
-                'required' => false,
-                'constraints' => [new Length(['max' => 255])]
-            ])
+            // ->add('sponsor', TextType::class, [
+            //     'label' => $this->translator->trans('Parrain'),
+            //     'required' => false,
+            //     'constraints' => [new Length(['max' => 255])]
+            // ])
             ->add('email', EmailType::class, [
                 'label' => $this->translator->trans('Adresse email'),
                 'constraints' => [
