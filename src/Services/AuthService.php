@@ -193,6 +193,7 @@ class AuthService
         $agentSecteur = $user->getAgentSecteurById($secteur?->getId());
         $agentSecteur->setSectorPlatformAccountId($accountInfo['id']);
         $agentSecteur->setSectorPlatformUsername($accountInfo['identifier']);
+        $agentSecteur->setSectorPlatformAgentUsername($accountInfo['agentUsername']);
         $this->entityManager->persist($agentSecteur);
         $this->entityManager->flush();
     }
