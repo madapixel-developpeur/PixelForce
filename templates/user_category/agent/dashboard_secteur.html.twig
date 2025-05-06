@@ -28,7 +28,59 @@
     <div class="mt-3">
         <section id="dashboard-ecommerce">
             <div  class="col-md-12" >
-                {{ include ('global/util/banner.html.twig') }}
+                {# {{ include ('global/util/banner.html.twig') }} #}
+                {% if secteurAgent.isFonctionnaliteActive(constant('App\\Util\\FonctionnalitesTypeSecteur::FONCTIONNALITE_STANDARD_PRODUIT')) %}
+                {% if secteurAgent.id ==  secteurDigitalId %}
+                <div class="row match-height mt-4">
+                    <div class="col-md-12">
+                        {# <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+                            <div class="carousel-inner">
+                                <div class="carousel-item active">
+                                <img src="{{ asset('assets/vuexy/images/pages/login-images.png' )}}" class="d-block w-100" alt="...">
+                                </div>
+                                <div class="carousel-item">
+                                <img src="{{ asset('assets/vuexy/images/pages/login-images.png' )}}" class="d-block w-100" alt="...">
+                                </div>
+                                <div class="carousel-item">
+                                <img src="{{ asset('assets/vuexy/images/pages/login-images.png' )}}" class="d-block w-100" alt="...">
+                                </div>
+                            </div>
+                        <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </a>
+    <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </a>
+
+                            </div> #}
+                            {# <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-inner">
+        <div class="carousel-item active">
+        <img src="{{ asset('assets/vuexy/images/pages/login-images.png' )}}" class="d-block w-100" alt="...">
+        </div>
+        <div class="carousel-item">
+        <img src="{{ asset('assets/vuexy/images/pages/login-images.png' )}}" class="d-block w-100" alt="...">
+        </div>
+        <div class="carousel-item">
+        <img src="{{ asset('assets/vuexy/images/pages/login-images.png' )}}" class="d-block w-100" alt="...">
+        </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
+    </div> #}
+                        {{ include ('partials/section/services.html.twig') }}
+                    </div> 
+                </div>
+                {% endif %}
+                {% endif %}
 			</div>
 
 
@@ -239,67 +291,23 @@
               
             </div>
   
-            {% if secteurAgent.isFonctionnaliteActive(constant('App\\Util\\FonctionnalitesTypeSecteur::FONCTIONNALITE_STANDARD_PRODUIT')) %}
+            {# {% if secteurAgent.isFonctionnaliteActive(constant('App\\Util\\FonctionnalitesTypeSecteur::FONCTIONNALITE_STANDARD_PRODUIT')) %}
             {% if secteurAgent.id ==  secteurDigitalId %}
             <div class="row match-height mt-4">
                 <div class="col-md-12">
-                    {# <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
-                        <div class="carousel-inner">
-                            <div class="carousel-item active">
-                            <img src="{{ asset('assets/vuexy/images/pages/login-images.png' )}}" class="d-block w-100" alt="...">
-                            </div>
-                            <div class="carousel-item">
-                            <img src="{{ asset('assets/vuexy/images/pages/login-images.png' )}}" class="d-block w-100" alt="...">
-                            </div>
-                            <div class="carousel-item">
-                            <img src="{{ asset('assets/vuexy/images/pages/login-images.png' )}}" class="d-block w-100" alt="...">
-                            </div>
-                        </div>
-                       <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-bs-slide="prev">
-    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-    <span class="visually-hidden">Previous</span>
-</a>
-<a class="carousel-control-next" href="#carouselExampleControls" role="button" data-bs-slide="next">
-    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-    <span class="visually-hidden">Next</span>
-</a>
-
-                        </div> #}
-                        {# <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
-  <div class="carousel-inner">
-    <div class="carousel-item active">
-      <img src="{{ asset('assets/vuexy/images/pages/login-images.png' )}}" class="d-block w-100" alt="...">
-    </div>
-    <div class="carousel-item">
-      <img src="{{ asset('assets/vuexy/images/pages/login-images.png' )}}" class="d-block w-100" alt="...">
-    </div>
-    <div class="carousel-item">
-      <img src="{{ asset('assets/vuexy/images/pages/login-images.png' )}}" class="d-block w-100" alt="...">
-    </div>
-  </div>
-  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
-    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-    <span class="visually-hidden">Previous</span>
-  </button>
-  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
-    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-    <span class="visually-hidden">Next</span>
-  </button>
-</div> #}
                     {{ include ('partials/section/services.html.twig') }}
                 </div> 
             </div>
             {% endif %}
-            {% endif %}
+            {% endif %} #}
 
          
             
-            <div class="row match-height mt-4">
+            {# <div class="row match-height mt-4">
                 <div class="col-lg-8 col-12">
                     <h4 class=" mt-2 mb-3 choix-secteur-primary only-on-large-screens" style="visibility: hidden;">&nbsp;</h4>
                     {% if secteurAgent.isFonctionnaliteActive(constant('App\\Util\\FonctionnalitesTypeSecteur::FONCTIONNALITE_STANDARD_PRODUIT')) %}
                     {% if app.user.canAccessFonct('PRODUIT', app.session.get('secteurId')) %}
-                    {# {% if secteurAgent.id ==  secteurDigitalId %} #}
                     <div class="col-lg-12 col-md-12 mb-4">
                         <div class="vision-section rounded-3 pb-1" style="">
                             <div class=" p-0">
@@ -330,7 +338,6 @@
                                         {% endif %}
                                         </h6>
                                         {% endif %}
-                                        {# <a target="_blank" href="{{secteur.liens}}" class="card-link">Lien vers {{secteur.nom}}</strong></a> #}
                                     </div>
                                     <div class="col-md-5">
                                             <img src="{{ asset('files/')}}/{{secteur.couverture}}" class="w-100 rounded-3" alt="">
@@ -339,7 +346,6 @@
                             </div>
                         </div>
                     </div>
-                    {# {% endif %} #}
                     {% endif %}
                     {% endif %}
                 </div>
@@ -399,197 +405,13 @@
                             {% if upcomingEvents|length == 0 %}
                                 <div class="alert alert-secondary">Aucun évenement à venir.</div>
                             {% endif %}
-                            {# <div class="meetup-header d-flex align-items-center">
-                                <div class="meetup-day">
-                                    <h6 class="mb-0">MARDI</h6>
-                                    <h3 class="mb-0">24</h3>
-                                </div>
-                                <div class="my-auto">
-                                    <h4 class="card-title mb-25">Rencontre de développeurs</h4>
-                                    <p class="card-text mb-0">Rencontrez des développeurs de renommée mondiale</p>
-                                </div>
-                            </div>
-                            <div class="mt-0">
-                                <div class="avatar float-start bg-light-primary rounded me-1">
-                                    <div class="avatar-content">
-                                        <i data-feather="calendar" class="avatar-icon font-medium-3"></i>
-                                    </div>
-                                </div>
-                                <div class="more-info">
-                                    <h6 class="mb-0">Samedi, Mai 25, 2020</h6>
-                                    <small>10:AM to 6:PM</small>
-                                </div>
-                            </div>
-                            <div class="mt-2">
-                                <div class="avatar float-start bg-light-primary rounded me-1">
-                                    <div class="avatar-content">
-                                        <i data-feather="map-pin" class="avatar-icon font-medium-3"></i>
-                                    </div>
-                                </div>
-                                <div class="more-info">
-                                    <h6 class="mb-0">Parc central</h6>
-                                    <small>Manhattan, New York</small>
-                                </div>
-                            </div> #}
-                        </div>
-                    </div>
-                    {# {% if secteurAgent.id ==  secteurDigitalId %}
-                        <div class="card" style="max-height:190px;">
-                            <div class="card-body">
-                            <div class="row">
-                                <div class="col-8">
-                                    <h5 class="general-primary-text mb-4">Gestion de projet</h5>
-                                    <p>Accèder à la plateforme pour la suivie de vos projets.</p>
-                                </div>
-                                <div class="col-4 text-center">
-                                    <a class="gestion-projet bg-light-primary rounded-circle  d-flex justify-content-center align-items-center" href="{{pixelforce_url}}" >
-                                        <i class="fa fa-briefcase fs-1" aria-hidden="true"></i>
-                                    </a>
-                                </div>
-                            </div>
-                                <a target="_blank" class="regular-button w-100 text-center mt-3 rounded-3 p-3" href="{{pbbAccesClient }}">Accéder à la plateforme</a>    
-                            </div>
-                        </div>
-                    {% endif %} #}
-                </div>
-                <!--/ Developer Meetup Card -->
-                {% endif %}
-                {% endif %}
-                
-                {% if app.user.canAccessFonct('RDV', app.session.get('secteurId')) %}
-                
-                {% endif %}
-                 
-                
-                <!--/ Browser States Card -->
-                <!-- Browser States Card -->
-                {% if secteurAgent.isFonctionnaliteActive(constant('App\\Util\\FonctionnalitesTypeSecteur::FONCTIONNALITE_COMMON_RDV')) %}
-                {% if app.user.canAccessFonct('RDV', app.session.get('secteurId')) %}
-                {# <div class="col-lg-12 col-12">
-                    <div class="card card-company-table p-5" style="min-height: 300px;">
-                        <div class="card-head mb-3">
-                            <h5>Prenez rendez vous avec un expert</h5>
                             
                         </div>
-                        <div class="card-body p-0">
-                            <div class="table-responsive">
-                                <table class="table text-center">
-                                    <tbody class="align-items-center ">
-                                    <tr class="table-header-custom">
-                                        <th scope="col">#</th>
-                                        <th scope="col">Photo</th>
-                                        <th scope="col">Nom et prénoms</th>
-                                        <th scope="col">Email</th>
-                                        <th scope="col">Téléphone</th>
-                                        <th scope="col">Secteur</th>
-                                        <th scope="col">ACTION</th>
-                                    </tr>
-                                    {% for coach in coachs %}
-                                            {% set secteurs = repoCoachSecteur.findBy({'coach' : coach}) %}
-                                            {% set modal_id = "modal" ~ coach.id %}
-                                            
-                                            {{include ('partials/modalDedailCoach.html.twig',{coach:coach,secteur:secteurs[0].getSecteur()}) }}
-
-                                            <tr class="justify-content-center align-items-center">
-                                                <td>{{ coach.id }}</td>
-                                                <td >
-                                                    <div class="d-flex align-items-center justify-content-center" type="button" class="btn btn-primary" data-toggle="modal" data-target="#{{modal_id}}">
-                                                        <div class="img">
-                                                            <img src="{{ path('user_avatar', {id:coach.id}) }}" class="w-50 rounded-3" alt="">
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td class="text-dark-template " ype="button" class="btn btn-primary" data-toggle="modal" data-target="#{{modal_id}}">{{ coach.fullName }}</td>
-                                                <td ><a class="text-tableau" href= "mailto: {{ coach.email }}"> {{ coach.email }} </a></td>
-                                                <td ><a class="text-tableau" href="tel:{{ coach.telephone|default('-') }}">{{ coach.telephone|default('-') }}</a></td>
-                                                 <td>
-                                                    <span class="badge bg-light-warning ">{{ coach.allSecteursOfUser(secteurs)|default('-') }}</span>     
-                                                </td>
-                                                <td>
-                                                    <a class="regular-button text-center rounded-3"  href="#" onclick="Calendly.initPopupWidget({url: '{{coach.getLienCalendly()}}'});return false;" style="min-width:140px;">Prendre RDV </a>
-                                                </td>    
-                                            </tr>
-                      
-                                    {% else %}
-                                        <tr>
-                                            <td class="text-center" colspan="5">Aucun Coach trouvé</td>
-                                        </tr>
-                                    {% endfor %}
-
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="pagination d-flex justify-content-center">
-                                    {{ knp_pagination_render(coachs)}}
-                            </div>
-                        </div>
                     </div>
-                </div> #}
+                    
                 {% endif %}
                 {% endif %}
-                <!--/ Browser States Card -->
-    
-                {# <!-- Goal Overview Card -->
-                <div class="col-lg-4 col-md-6 col-12">
-                    <div class="card">
-                        <div class="card-header d-flex justify-content-between align-items-center">
-                            <h4 class="card-title">Aperçu des objectifs</h4>
-                            <i data-feather="help-circle" class="font-medium-3 text-muted cursor-pointer"></i>
-                        </div>
-                        <div class="card-body p-0">
-                            <div id="goal-overview-radial-bar-chart" class="my-2"></div>
-                            <div class="row border-top text-center mx-0">
-                                <div class="col-6 border-end py-1">
-                                    <p class="card-text text-muted mb-0">Terminé</p>
-                                    <h3 class="fw-bolder mb-0">786,617</h3>
-                                </div>
-                                <div class="col-6 py-1">
-                                    <p class="card-text text-muted mb-0">En cours</p>
-                                    <h3 class="fw-bolder mb-0">13,561</h3>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!--/ Goal Overview Card --> #}
-    
-                {# <!-- Liste Formation -->
-                <div class="col-lg-8 col-md-6 col-12">
-                    <div class="card card-transaction">
-                        <div class="card-header">
-                            <h4 class="card-title">Analyse clients</h4>
-                            <div class="dropdown chart-dropdown">
-                                <i data-feather="more-vertical" class="font-medium-3 cursor-pointer" data-bs-toggle="dropdown"></i>
-                                <div class="dropdown-menu dropdown-menu-end">
-                                    <a class="dropdown-item" href="#">28 derniers jours</a>
-                                    <a class="dropdown-item" href="#">Le mois dernier</a>
-                                    <a class="dropdown-item" href="#">L'année dernière</a>
-                                </div>
-                            </div> 
-                        </div>
-                        <div class="card-body p-1">
-                            {% for client in topClients %}
-                            <div class="transaction-item">
-                                <div class="d-flex">
-                                    <div class="avatar bg-light-primary rounded float-start">
-                                        <div class="avatar-content">
-                                            <i data-feather="user" class="avatar-icon font-medium-3"></i>
-                                        </div>
-                                    </div>
-                                    <div class="transaction-percentage">
-                                        <h6 class="transaction-title">{{client.prenom}} {{client.nom}}</h6>
-                                        <small>{{client.email}}</small>
-                                    </div>
-                                </div>
-                                <!-- <div class="fw-bolder text-danger">- $74</div> -->
-                                <div class="fw-bolder text-success">{{loop.index}}</div>
-                            </div>
-                            {% endfor %}
-                        </div>
-                    </div>
-                </div>
-                <!--/ Liste Formation --> #}
-            </div>
+            </div> #}
 
             <div class="row match-height">
                 {# informations statiques  #}
