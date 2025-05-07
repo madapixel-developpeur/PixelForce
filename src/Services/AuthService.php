@@ -9,6 +9,7 @@ use App\Entity\User;
 use App\Entity\Secteur;
 use App\Entity\ForgotPassword;
 use App\Entity\AccountValidation;
+use App\Entity\AgentSecteur;
 use App\Exception\CustomException;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -196,6 +197,21 @@ class AuthService
         $agentSecteur->setSectorPlatformAgentUsername($accountInfo['agentUsername']);
         $this->entityManager->persist($agentSecteur);
         $this->entityManager->flush();
+    }
+
+    public function setUsernameFromLPN(AgentSecteur $agentSecteur){
+        if($agentSecteur->getSecteur()?->getId() != $_ENV['SECTEUR_LITTLE_PONAILS_ID']){
+            throw new CustomException('Secteur non prise en charge');
+        }
+        if($agentSecteur->getSectorPlatformAgentUsername()){
+            return;
+        }
+        $accountInfo = $this->getLinkedAccountInfo($agentSecteur->getSectorPlatformUsername());
+        if($accountInfo){
+            $agentSecteur->setSectorPlatformAgentUsername($accountInfo['agentUsername']);
+            $this->entityManager->persist($agentSecteur);
+            $this->entityManager->flush();
+        }
     }
 
 

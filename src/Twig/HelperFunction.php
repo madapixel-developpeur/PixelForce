@@ -10,6 +10,7 @@ use IntlDateFormatter;
 use Twig\TwigFunction;
 use App\Util\GenericUtil;
 use App\Repository\SecteurRepository;
+use App\Services\AuthService;
 use Twig\Extension\AbstractExtension;
 use App\Services\Stat\StatAgentService;
 use Symfony\Component\Security\Core\Security;
@@ -33,7 +34,8 @@ class HelperFunction extends AbstractExtension
         Security $security,
         SessionInterface $session,
         private SecteurRepository $secteurRepository,
-        private AgentSecteurRepository $agentSecteurRepository
+        private AgentSecteurRepository $agentSecteurRepository,
+        private AuthService $authService
     ) {
         $this->router = $router;
         $this->requestStack = $requestStack;
@@ -142,6 +144,9 @@ class HelperFunction extends AbstractExtension
             'secteur' => $_ENV['SECTEUR_LITTLE_PONAILS_ID']
         ]);
         if(!$agentSecteur) return '';
+        if($agentSecteur && $agentSecteur->getSectorPlatformUsername() && empty($agentSecteur->getSectorPlatformAgentUsername()) ){
+            $this->authService->setUsernameFromLPN($agentSecteur);
+        }
         return $_ENV['LITTLE_PONAILS_WORDPRESS_BASE_URL'].'?sponsor='.$agentSecteur->getSectorPlatformAgentUsername();
     }
 
