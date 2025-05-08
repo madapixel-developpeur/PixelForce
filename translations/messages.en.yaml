@@ -12,23 +12,23 @@ TVA: 'VAT'
 'Prix net (sans TVA)': 'Net price (without VAT)'
 'Frais de livraison': 'Shipping fees'
 'Prix total (TVA incluse)': 'Total price (VAT included)'
-'Conditions générales de vente': 'Terms and Conditions of Sale'
+'Conditions générales de vente': 'Terms and Conditions'
 'Conditions générales d''utilisation': 'Terms of Use'
-'Conditions générales d''utilisations (CGU)': 'Terms of Use (ToU)'
+'Conditions générales d''utilisations (CGU)': 'Terms of Service (ToS)'
 'Conditions générales de vente (CGV)': 'Terms and Conditions of Sale (TCS)'
 Vous devez sélectionner au moins un type de compte !: You must select at least one account type!
 Inscription: Registration
 Information du compte: Account Information
 Type: Type
 Compte Revendeur: Reseller Account
-"Vous souhaitez recommander des services sans les réaliser vous-même ?\nChoisissez le compte Revendeur pour accéder à une sélection de services proposés par nos partenaires (agences, professionnels…). Vous pourrez les recommander en toute autonomie et toucher des commissions à chaque vente.": "Do you want to recommend services without delivering them yourself?\nChoose the Reseller Account to access a selection of services offered by our partners (agencies, professionals, etc.). You can recommend them independently and earn commissions on each sale."
+"Vous souhaitez recommander des services sans les réaliser vous-même ?\nChoisissez le compte Revendeur pour accéder à une sélection de services proposés par nos partenaires (agences, professionnels…). Vous pourrez les recommander en toute autonomie et toucher des commissions à chaque vente.": "Want to recommend services without delivering them yourself?\nChoose the Reseller Account to access a selection of services offered by our partners (agencies, professionals, etc.). Recommend them freely and earn commissions on every sale."
 '🔹 Id&eacute;al si vous &ecirc;tes apporteur d&rsquo;affaires, influenceur, ou que vous d&eacute;veloppez une activit&eacute; de vente indirecte.<br />🔹 Vous n&rsquo;avez pas besoin de comp&eacute;tences techniques ni de g&eacute;rer la prestation.<br />🔹 Vous b&eacute;n&eacute;ficiez d&rsquo;outils de suivi, d&rsquo;un lien d&rsquo;affiliation personnel, et d&rsquo;un syst&egrave;me de commissions automatique.': "🔹 Ideal if you're a business introducer, influencer, or running an indirect sales activity.<br />🔹 No need for technical skills or service management.<br />🔹 You get tracking tools, a personal affiliate link, and an automatic commission system."
 Compte Professionnel (Pro): Professional Account (Pro)
 Vous avez des compétences techniques ou un savoir-faire métier ? Rejoignez l’équipe Pixelforce en tant que professionnel labellisé.: Do you have technical skills or professional expertise? Join the Pixelforce team as a certified professional.
 "Le compte Pro est destiné aux prestataires qualifiés qui souhaitent collaborer avec Pixelforce sur le terrain, dans leur domaine d’expertise.\nVous intervenez pour réaliser des prestations concrètes pour les clients de la plateforme, en lien avec notre équipe centrale.": "The Pro account is for qualified providers who want to work with Pixelforce on the ground in their area of expertise.\nYou’ll provide services directly to platform clients, in collaboration with our central team."
 '🔹 Qui est concern&eacute; ?<br />D&eacute;veloppeurs, community managers, experts SEO/SEA, installateurs de syst&egrave;mes d&rsquo;alarmes etc.': "🔹 Who is this for?<br />Developers, community managers, SEO/SEA experts, alarm system installers, etc."
-'🔹 Pourquoi nous rejoindre ?<br />Vous travaillez en collaboration directe avec Pixelforce, b&eacute;n&eacute;ficiez d&rsquo;opportunit&eacute;s de missions r&eacute;guli&egrave;res, et &ecirc;tes form&eacute; &agrave; nos standards de qualit&eacute;.': "🔹 Why join us?<br />You’ll work directly with Pixelforce, benefit from regular job opportunities, and receive training on our quality standards."
-'🔹 Ce que vous gagnez :<br />Un label Pixelforce, une visibilit&eacute; accrue, des missions qualifi&eacute;es, et un accompagnement personnalis&eacute; pour d&eacute;velopper votre activit&eacute;.': "🔹 What you gain:<br />A Pixelforce certification, greater visibility, qualified missions, and personalized support to grow your business."
+'🔹 Pourquoi nous rejoindre ?<br />Vous travaillez en collaboration directe avec Pixelforce, b&eacute;n&eacute;ficiez d&rsquo;opportunit&eacute;s de missions r&eacute;guli&egrave;res, et &ecirc;tes form&eacute; &agrave; nos standards de qualit&eacute;.': "🔹 Why join us?<br />You’ll work directly with Pixelforce, benefit from regular assignements, and receive training on our quality standards."
+'🔹 Ce que vous gagnez :<br />Un label Pixelforce, une visibilit&eacute; accrue, des missions qualifi&eacute;es, et un accompagnement personnalis&eacute; pour d&eacute;velopper votre activit&eacute;.': "🔹 What you gain:<br />A Pixelforce certification, increased visibility, qualified missions, and personalized support to grow your business."
 Suivant: Next
 Information: Information
 Information sur la connexion: Login Information
@@ -76,7 +76,7 @@ Mon compte: "My account"
 Se déconnecter: "Log out"
 Tableau de bord: "Dashboard"
 Choix secteur: "Sector choice"
-Développez vos compétences et maîtrisez nos services: "Develop your skills and master our services"
+Développez vos compétences et maîtrisez nos services: "Grow your skills and master our services"
 Formations: "Training"
 Planifiez vos rendez-vous et événements clés: "Schedule your appointments and key events"
 Mon Agenda: "My Calendar"
@@ -96,7 +96,7 @@ Société: "Company"
 Client: "Client"
 Service: "Service"
 Commandes: "Orders"
-Détails sur votre rémunération et vos bonus: "Details about your compensation and bonuses"
+Détails sur votre rémunération et vos bonus: "Breakdown of your commissions and bonuses"
 Mes gains & commissions: "My earnings & commissions"
 Analyse et suivi de votre performance financière: "Analysis and tracking of your financial performance"
 Chiffre d'affaires: "Revenue"
