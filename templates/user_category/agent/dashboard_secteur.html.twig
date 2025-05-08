@@ -146,9 +146,9 @@
                         {% if true  %}
                             <div class="col-md-12 col-12">
                                 <h4 class=" mt-2 mb-3 choix-secteur-primary only-on-large-screens" style="visibility: hidden;">&nbsp;</h4>
-                                {% if firstFormation != null %}    
+                                {# {% if firstFormation != null %}     #}
                                     <a class="regular-button w-100 text-center mb-3 action-button" href="{{ path('agent_formation_list') }}"  id="startFormation" >{% trans %}Accéder à mes formations {% endtrans %}</a>  
-                                {% endif %}
+                                {# {% endif %} #}
                                 {# <a class="regular-button w-100 text-center mb-3 d-none" href="#" onclick='terminerFormation()' id="terminerFormationButton" >Terminer la formation</a>   #}
                                 {% if app.session.get('secteurId') == secteurDigitalId %}
                                 <a class="regular-button w-100 text-center mb-3 action-button" target="__blank" href="{{ catalogues_base_url }}?ref={{generateReference(app.user.id,app.user.id) }}">{% trans %}Je veux découvrir les services de Pixelsior{% endtrans %}</a>  
