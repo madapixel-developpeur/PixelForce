@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-	Ressource - Visualisation
+	{% trans %}Ressource - Visualisation{% endtrans %}
 {% endblock %}
 
 {% block stylesheets %}
@@ -17,7 +17,7 @@
 {% block body %}
     <a href="{{ path('agent_ressource_details',{ id : file.ressourceID , 'type' : type })}}" class="btn btn-secondary my-3">
 		<i class="fa-solid fa-circle-arrow-left"></i>
-		Retour
+		{% trans %}Retour{% endtrans %}
 	</a>
 	<div class="row px-3 content-formation">
 		<div class="card card-body-custom mt-1 px-5">

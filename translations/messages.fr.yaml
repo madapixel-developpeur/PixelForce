@@ -303,7 +303,6 @@ Rubrique(s): Rubrique(s)
 Fichier(s): Fichier(s)
 'Découvrez toutes les ressources à votre disposition. Accédez à des contenus essentiels pour vous guider et vous accompagner dans vos démarches.': 'Découvrez toutes les ressources à votre disposition. Accédez à des contenus essentiels pour vous guider et vous accompagner dans vos démarches.'
 'Aucun résultat': 'Aucun résultat'
-ressource_file_count: ressource_file_count
 'Accéder à la ressource': 'Accéder à la ressource'
 'Aucune ressource': 'Aucune ressource'
 'Chiffre d''affaires - Détail': 'Chiffre d''affaires - Détail'
@@ -636,3 +635,7 @@ Compte: Compte
 'Vue d’ensemble de votre activité': 'Vue d’ensemble de votre activité'
 'Choisissez votre domaine d’expertise': 'Choisissez votre domaine d’expertise'
 'Gérez vos filleuls et développez votre équipe': 'Gérez vos filleuls et développez votre équipe'
+'Ressource - Détail': 'Ressource - Détail'
+Fichier: Fichier
+Visualiser: Visualiser
+'Ressource - Visualisation': 'Ressource - Visualisation'
