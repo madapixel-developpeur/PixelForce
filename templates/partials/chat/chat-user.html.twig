@@ -19,7 +19,7 @@
           </h4>
           </div>
 
-          <i class="fa fa-cog" style="cursor: pointer;" ng-if="!isHeaderLoading && conversation.isGroup && isConversationCreator()" ng-click="openSettings()"></i>
+          <i class="fa fa-cog" style="cursor: pointer;" ng-if="!isHeaderLoading && conversation.isGroup && isConversationCreator() && conversation.handle !== 'pixelforce'" ng-click="openSettings()"></i>
         
           <i class="ti ti-loader fs-2 my-loader ms-2 me-1" ng-if="isHeaderLoading"></i>
         </div>
