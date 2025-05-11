@@ -7,9 +7,10 @@ use Exception;
 use DateInterval;
 use App\Entity\User;
 use App\Entity\Secteur;
-use App\Entity\ForgotPassword;
-use App\Entity\AccountValidation;
 use App\Entity\AgentSecteur;
+use App\Entity\ForgotPassword;
+use App\Util\Search\Constants;
+use App\Entity\AccountValidation;
 use App\Exception\CustomException;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -212,6 +213,50 @@ class AuthService
             $this->entityManager->persist($agentSecteur);
             $this->entityManager->flush();
         }
+    }
+
+    public function createLpnAccountFromPixelForceInfo(User $user){
+
+        $data = [
+            'firstnames' => $user->getPrenom(),
+            'lastname'=> $user->getNom(),
+            'username'=> $user->getUsername(),
+            'email'=> $user->getEmail(),
+            'legal_status'=> 'REVENDEUR',
+            'sponsor'=> $_ENV['LITTLE_PONAILS_DEFAULT_SPONSOR'],
+            'provider'=> Constants::LPN_PIXELFORCE_PROVIDER,
+            'password'=> Constants::DEFAULT_LPN_PASSWORD 
+        ];
+        return $this->createLittlePonailsAccountFromApi($data);
+        
+    }
+
+    public function checkAndCreateAccountLpn(User $user){
+        try {
+            $agentSecteur = $user->getAgentSecteurById($_ENV['SECTEUR_LITTLE_PONAILS_ID']);
+            if(!$agentSecteur || $agentSecteur?->getSectorPlatformUsername()){
+                return;
+            }
+            try {
+                $accountInfo = $this->getLinkedAccountInfo($user->getEmail());   
+            } catch (CustomException $th) {
+                $accountInfo = $this->createLpnAccountFromPixelForceInfo($user);
+            }catch (\Throwable $th) {
+                throw $th;
+            }
+            
+            if(!$accountInfo){
+                throw new Exception();
+            }
+            $agentSecteur->setSectorPlatformAccountId($accountInfo['id']);
+            $agentSecteur->setSectorPlatformUsername($accountInfo['identifier']);
+            $agentSecteur->setSectorPlatformAgentUsername($accountInfo['agentUsername']);
+            $this->entityManager->persist($agentSecteur);
+            $this->entityManager->flush();
+        }catch (\Throwable $th) {
+            throw $th;
+        }
+
     }
 
 

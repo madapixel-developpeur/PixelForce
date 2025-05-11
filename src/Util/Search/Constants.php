@@ -14,6 +14,9 @@ class Constants {
     public const MIN_RANK_MEEETING = 1;
 
     public const LPN_PIXELFORCE_PROVIDER='PIXELFORCE';
+
+
+    public const DEFAULT_LPN_PASSWORD='Pa$$word!'; 
     
 
     public static function getExcludedPathsForSectorCheckUp(array $givenPath = []): array

@@ -5,6 +5,7 @@ namespace App\EventListener;
 use App\Entity\User;
 use App\Util\Search\Constants;
 use App\Repository\SecteurRepository;
+use App\Services\AuthService;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -23,7 +24,8 @@ class LinkedAccountFromSectorPlatformListener
         AuthorizationCheckerInterface $authorizationChecker, 
         Security $security,
         private SessionInterface $session,
-        private SecteurRepository $secteurRepository
+        private SecteurRepository $secteurRepository,
+        private AuthService $authService
     )
     {
         $this->urlGenerator = $urlGenerator;
@@ -36,7 +38,7 @@ class LinkedAccountFromSectorPlatformListener
         $request = $event->getRequest();
         
         $excludePaths = Constants::getExcludedPathsForSectorCheckUp([
-            '/agent/compte-associe',
+           
         ]);
 
         foreach($excludePaths as $path){
@@ -51,7 +53,8 @@ class LinkedAccountFromSectorPlatformListener
         if($user && $this->authorizationChecker->isGranted(User::ROLE_AGENT) && $secteur?->getId() == $_ENV['SECTEUR_LITTLE_PONAILS_ID']){
             $agentSecteur = $user->getAgentSecteurById($secteur?->getId());
             if(!$agentSecteur->getSectorPlatformAccountId()){
-                $event->setResponse(new RedirectResponse($this->urlGenerator->generate('agent_check_platform_secteur_account')));
+                $this->authService->checkAndCreateAccountLpn($user);
+                // $event->setResponse(new RedirectResponse($this->urlGenerator->generate('agent_check_platform_secteur_account')));
             }
         }
 

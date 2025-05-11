@@ -5,10 +5,12 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Entity\Secteur;
 use App\Entity\AgentSecteur;
+use App\Services\AuthService;
 use App\Manager\EntityManager;
 use App\Manager\StripeManager;
 use App\Services\StripeService;
 use App\Entity\CategorieFormation;
+use App\Exception\CustomException;
 use App\Repository\UserRepository;
 use App\Services\User\AgentService;
 use App\Repository\ContactRepository;
@@ -76,7 +78,8 @@ class AgentAccountController extends AbstractController
         private SecteurVideoFormationRepository $secteurVideoFormationRepository,
         private StatAgentService $statAgentService,
         private AnnouncementRepository $announcementRepository,
-        private TranslatorInterface $translator
+        private TranslatorInterface $translator,
+        private AuthService $authService
     ) {
         $this->repoSecteur = $repoSecteur;
         $this->repoAgentSecteur = $repoAgentSecteur;
@@ -175,13 +178,25 @@ class AgentAccountController extends AbstractController
      */
     public function agentAddSector(Secteur $secteur)
     {
-        $user = $this->getUser();
-        $agentSecteur = new AgentSecteur();
-        $agentSecteur->setAgent($user);
-        $agentSecteur->setSecteur($secteur);
-        $agentSecteur->setStatut(1);
-        $agentSecteur->setDateValidation(new \DateTime());
-        $this->entityManager->save($agentSecteur);
+        try {
+            $user = $this->getUser();
+            $agentSecteur = new AgentSecteur();
+            $agentSecteur->setAgent($user);
+            $agentSecteur->setSecteur($secteur);
+            $agentSecteur->setStatut(1);
+            $agentSecteur->setDateValidation(new \DateTime());
+            $this->entityManager->save($agentSecteur);
+            if($secteur->getId() == $_ENV['SECTEUR_LITTLE_PONAILS_ID']){
+                $this->authService->checkAndCreateAccountLpn($user);
+            }
+        } catch (CustomException $th) {
+            $this->addFlash('danger', $th->getMessage());
+            return $this->redirectToRoute('agent_home',['id'=> $secteur->getId()]);
+        } catch (\Throwable $th) {
+            $this->addFlash('danger', $_ENV['CUSTOM_ERROR_MESSAGE']);
+            return $this->redirectToRoute('agent_home',['id'=> $secteur->getId()]);
+        }
+        
 
         return $this->redirectToRoute('agent_generate_sessionSecteur_before_redirect_to_route_dahsboard', ['id' => $secteur->getId()]);
     }
