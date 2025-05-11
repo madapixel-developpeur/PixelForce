@@ -1,0 +1,80 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	{% trans %}Compte{% endtrans %}
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+
+{% endblock %}
+
+{% block body %}
+	<div class="row px-3 content-formation">
+		<div class="card card-body-custom mt-2 px-5 py-5">
+			<div class="row  justify-content-center">
+				<div class="col-md-8">
+					<h1 class='text-center mb-5'>{% trans %}Information sur mon compte Little Ponails !{% endtrans %}</h1>
+					{{ form_start(form, { attr: { id: 'registration-form', enctype: 'multipart/form-data' } }) }}
+
+					<!-- First Name Field -->
+                    <div class="d-flex justify-content-end mb-3">
+                        <a href="{{ bo_secteur_little_ponails }}" class="btn btn-primary" target="_blank">
+                            {% trans %} Ouvrir mon back-office{% endtrans %} <i class="fas fa-external-link-alt me-2"></i>
+                        </a>
+                    </div>
+					<div class="form-group mb-3">
+                        <label for="firstname" class="form-label">{% trans %}Prénom{% endtrans %}</label>
+                        <input type="text" class="form-control" id="firstname" value="{{ user.prenom }}" disabled>
+					</div>
+
+					<!-- Last Name Field -->
+					<div class="form-group mb-3">
+                        <label for="nom" class="form-label">{% trans %}Nom de famille{% endtrans %}</label>
+                        <input type="text" class="form-control" id="nom" value="{{ user.nom }}" disabled>
+					</div>
+
+					<!-- Username Field -->
+					<div class="form-group mb-3">
+                        <label for="username" class="form-label">{% trans %}Nom d'utilisateur sur Little Ponails{% endtrans %}</label>
+                        <input type="text" class="form-control" id="username" value="{{ user.prenom }}" disabled>
+					</div>
+
+					<!-- Sponsor Field -->
+					{# <div class="form-group mb-3">
+						<label for="parrain" class="form-label">{% trans %}Parrain{% endtrans %}</label>
+                        <input type="text" class="form-control" id="parrain" value="--" disabled>
+					</div> #}
+
+					
+
+					<!-- Supporting Documents Field -->
+					<div class="form-group mb-3">
+						{{ form_row(form.supporting_documents) }}
+					</div>
+
+				
+					<div >
+						<div class="form-group mb-3">
+							{{ form_label(form.kbis) }}
+							{{ form_widget(form.kbis, {'attr': {'class': 'form-control'}}) }}
+							{{ form_errors(form.kbis) }}
+						</div>
+					</div>
+     
+
+					
+
+					<!-- Submit Button -->
+					<button type="submit" class="btn btn-primary">{% trans %}Soumettre{% endtrans %}</button>
+
+					{{ form_end(form) }}
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+{% block javascripts %}
+	{{ parent() }}
+	
+{% endblock %}

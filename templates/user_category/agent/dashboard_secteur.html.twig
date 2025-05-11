@@ -146,6 +146,18 @@
                         {% if true  %}
                             <div class="col-md-12 col-12">
                                 <h4 class=" mt-2 mb-3 choix-secteur-primary only-on-large-screens" style="visibility: hidden;">&nbsp;</h4>
+                                {% if app.session.get('secteurId') == secteur_little_ponails_id and not app.user.isLpnInformationCompleted %}
+                                    <div class="card mb-3 p-3 border ">
+                                        <p class="mb-2">
+                                        {% trans %}Vous ne pourrez recevoir vos rémunérations qu'après avoir complété les informations supplémentaires requises.{% endtrans %}
+                                        </p>
+                                        <a  href="{{path('agent_update_platform_secteur_account')}}" class="regular-button action-button text-center">
+                                            {% trans %}Compléter mes informations{% endtrans %}<i class="bi bi-arrow-right ms-2"></i>
+                                        </a>
+                                    </div>
+                                {% endif %}
+
+
                                 {# {% if firstFormation != null %}     #}
                                     <a class="regular-button w-100 text-center mb-3 action-button" href="{{ path('agent_formation_list') }}"  id="startFormation" >{% trans %}Accéder à mes formations {% endtrans %}</a>  
                                 {# {% endif %} #}

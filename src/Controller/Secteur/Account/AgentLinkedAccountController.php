@@ -13,6 +13,7 @@ use App\Exception\CustomException;
 use App\Repository\SecteurRepository;
 use App\Form\SignUpLittlePonailsFormType;
 use App\Form\SingUpLittlePonailsFormType;
+use App\Form\UpdateLittlePonailsFormType;
 use Symfony\Component\Mime\Part\DataPart;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -134,6 +135,38 @@ class AgentLinkedAccountController extends AbstractController
 
         return $this->render('user_category/agent/secteur/create_account.html.twig',[
             'form' => $form->createView(),
+        ]);
+    }
+
+    #[Route('/modifier-compte',name : 'agent_update_platform_secteur_account')]
+    public function updateAccount(Request $request): Response
+    {   
+        $form = $this->createForm(UpdateLittlePonailsFormType::class, []);
+        $secteur_id = $this->session->get('secteurId');
+        $secteur = $this->secteurRepository->findOneBy(['id' => $secteur_id]);
+
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted()  && $form->isValid()) {
+            try {
+               
+            } catch (CustomException $e) {
+                $this->addFlash(
+                    'danger',
+                    $e->getMessage()
+                );
+            } catch (\Exception $e) {
+                $this->addFlash(
+                    'danger',
+                    $_ENV['CUSTOM_ERROR_MESSAGE']
+                );
+            }
+            
+        }
+
+        return $this->render('user_category/agent/secteur/LPN/update_account.html.twig',[
+            'form' => $form->createView(),
+            'user' => $this->getUser()
         ]);
     }
 

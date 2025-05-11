@@ -11,6 +11,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class AgentSecteur
 {
+    public const DOCUMENT_NOT_PROVIDED = 0;
+    public const DOCUMENT_SENT = 1;
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -58,6 +60,14 @@ class AgentSecteur
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $sectorPlatformAgentUsername;
+
+
+    /**
+    * @ORM\Column(type="integer", options={"default": 0})
+    */
+    private $sectorPlatformDocumentState = self::DOCUMENT_NOT_PROVIDED;
+
+
 
     public function getId(): ?int
     {
@@ -181,6 +191,26 @@ class AgentSecteur
     public function setSectorPlatformAgentUsername($sectorPlatformAgentUsername): self
     {
         $this->sectorPlatformAgentUsername = $sectorPlatformAgentUsername;
+
+        return $this;
+    }
+
+
+
+    /**
+     * Get the value of sectorPlatformDocumentState
+     */
+    public function getSectorPlatformDocumentState()
+    {
+        return $this->sectorPlatformDocumentState;
+    }
+
+    /**
+     * Set the value of sectorPlatformDocumentState
+     */
+    public function setSectorPlatformDocumentState($sectorPlatformDocumentState): self
+    {
+        $this->sectorPlatformDocumentState = $sectorPlatformDocumentState;
 
         return $this;
     }

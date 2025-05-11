@@ -1970,4 +1970,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
 
         return $this;
     }
+    public function isLpnInformationCompleted(){
+        $agentSecteur = $this->getAgentSecteurById($_ENV['SECTEUR_LITTLE_PONAILS_ID']);
+        if($agentSecteur && $agentSecteur->getSectorPlatformDocumentState() == AgentSecteur::DOCUMENT_SENT){
+            return true;
+        }
+        return false;
+    }
 }
