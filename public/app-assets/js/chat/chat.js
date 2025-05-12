@@ -1,650 +1,1006 @@
-var myChatApp = angular.module("myChatApp", ['btford.socket-io']).filter('to_trusted', ['$sce', function($sce){
-    return function(text) {
+var myChatApp = angular
+  .module("myChatApp", ["btford.socket-io"])
+  .filter("to_trusted", [
+    "$sce",
+    function ($sce) {
+      return function (text) {
         return $sce.trustAsHtml(text);
-    };
-}]);
+      };
+    },
+  ]);
 const applicationName = "pixelforce";
 const baseHeadersChatApi = {
-    'authorization': 'Bearer ' + window.jwtToken,
-    'x-application': applicationName
+  authorization: "Bearer " + window.jwtToken,
+  "x-application": applicationName,
 };
 
 function linkifyText(text) {
-    return text.replace(/(?<!<a[^>]*?>)(https?:\/\/[^\s<]+)(?![^<]*?<\/a>)/g, '<a href="$1">$1</a>');
+  return text.replace(
+    /(?<!<a[^>]*?>)(https?:\/\/[^\s<]+)(?![^<]*?<\/a>)/g,
+    '<a href="$1">$1</a>',
+  );
 }
 
-myChatApp.factory('socket', function (socketFactory) {
-    // Custom configuration with extra headers and query parameters
-    var myIoSocket = io.connect(window.socketUrlChat, {
-        query: {
-            token: window.jwtToken,
-        },
-        extraHeaders: {
-            'x-application': applicationName
-        }
-    });
+myChatApp.factory("socket", function (socketFactory) {
+  // Custom configuration with extra headers and query parameters
+  var myIoSocket = io.connect(window.socketUrlChat, {
+    query: {
+      token: window.jwtToken,
+    },
+    extraHeaders: {
+      "x-application": applicationName,
+    },
+  });
 
-    return socketFactory({
-        ioSocket: myIoSocket
-    });
+  return socketFactory({
+    ioSocket: myIoSocket,
+  });
 });
 
-myChatApp.service('chat', function ($http) {
-    this.searchUsersChat = async function (search = '', page = 1, nbrPerPage = 10) {
-        const response = await $http({
-            method: "GET",
-            url: "/chatutil/users/search?search=" + search + "&page=" + page + "&nbrPerPage=" + nbrPerPage
-        });
-        return response.data;
-    }
-
-    this.addConversation = async function (data) {
-        const response = await $http({
-            method: "POST",
-            url: `${window.baseUrlChat}/chat/conversation`,
-            headers: baseHeadersChatApi,
-            data
-        });
-        return response.data;
-    }
-
-    this.findConversations = async function (params) {
-        const url = `${window.baseUrlChat}/chat/conversation`;
-        const response = await $http({
-            method: "GET",
-            url,
-            headers: baseHeadersChatApi,
-            params
-        });
-        return response.data;
-    }
-
-    this.findConversationById = async function (conversationId) {
-        const url = `${window.baseUrlChat}/chat/conversation/${conversationId}`;
-        const response = await $http({
-            method: "GET",
-            url,
-            headers: baseHeadersChatApi,
-        });
-        return response.data;
-    }
-
-    this.findConversationNotViewedCount = async function () {
-        const url = `${window.baseUrlChat}/chat/conversation/not-viewed/count`;
-        const response = await $http({
-            method: "GET",
-            url,
-            headers: baseHeadersChatApi,
-        });
-        return response.data;
-    }
-
-    this.findMessageById = async function (messageId) {
-        const url = `${window.baseUrlChat}/chat/message/${messageId}/with-user`;
-        const response = await $http({
-            method: "GET",
-            url,
-            headers: baseHeadersChatApi,
-        });
-        return response.data;
-    }
-
-    this.findConversationMessages = async function (conversationId, params) {
-        const url = `${window.baseUrlChat}/chat/conversation/${conversationId}/message`;
-        const response = await $http({
-            method: "GET",
-            url,
-            headers: baseHeadersChatApi,
-            params
-        });
-        return response.data;
-    }
-
-    this.sendMessage = async function (conversationId, message) {
-        const url = `${window.baseUrlChat}/chat/conversation/${conversationId}/message`;
-        const response = await $http({
-            method: "POST",
-            url,
-            headers: baseHeadersChatApi,
-            data: message
-        });
-        return response.data;
-    }
-
-    this.viewConversation = async function (conversationId, lastViewDate) {
-        const url = `${window.baseUrlChat}/chat/conversation/${conversationId}/view`;
-        const response = await $http({
-            method: "PATCH",
-            url,
-            headers: baseHeadersChatApi,
-            data: { lastViewDate }
-        });
-        return response.data;
-    }
-
-    this.flattenObjectWithResult = function (
-        result,
-        obj,
-        parentKey = null
-    ) {
-        if (typeof obj === 'object' && obj !== null) {
-            Object.keys(obj).forEach((key) => {
-                const newParentKey = parentKey === null ? key : `${parentKey}[${key}]`;
-                this.flattenObjectWithResult(result, obj[key], newParentKey);
-            });
-        } else if (parentKey) {
-            result[parentKey] = obj;
-        }
-    }
-
-    this.flattenObject = function (obj) {
-        const result = {};
-        this.flattenObjectWithResult(result, obj);
-        return result;
-    }
-});
-
-myChatApp.filter('truncate', function () {
-    return function (value, max) {
-        if (!value) return '';
-
-        max = parseInt(max, 10);
-        if (!max) return value;
-        if (value.length <= max) return value;
-
-        value = value.substr(0, max);
-        let lastspace = value.lastIndexOf(' ');
-        if (lastspace !== -1) {
-            //Also remove . and , so its gives a cleaner result.
-            if (value.charAt(lastspace - 1) === '.' || value.charAt(lastspace - 1) === ',') {
-                lastspace = lastspace - 1;
-            }
-            value = value.substr(0, lastspace);
-        }
-
-
-        return value + ' ...';
-    };
-});
-
-myChatApp.filter('myTimeAgo', function () {
-    return function (value, isOnlyTime = false) {
-        return isOnlyTime ? moment(value, 'HH:mm:ss').locale('fr').fromNow() : moment(value).locale('fr').fromNow();
-    };
-});
-
-myChatApp.controller('chatWidget', function ($scope, socket, chat) {
-    $scope.visible = false;
-    $scope.currentView = null; // in [LIST, USER, SEARCH]
-    $scope.conversationId = null;
-    $scope.data = [];
-    $scope.expanded = false;
-    $scope.userId = window.userId;
-    $(document).ready(function () {
-        window.addEventListener('resize', () => {
-            if(window.innerWidth < 910 && $scope.expanded){
-                $scope.toogleExpanded();
-            }
-        });
-    })
-
-    $scope.getAvatarClassRoles = function (roles){
-        roles = roles ?? [];
-        if (roles.includes("ROLE_REVENDEUR") && roles.includes("ROLE_PROFESSIONNEL")) {
-            return 'both';
-        } else if(roles.includes("ROLE_PROFESSIONNEL")) {
-            return 'professionnel';
-        } else if(roles.includes("ROLE_REVENDEUR")) {
-            return 'revendeur';
-        }
-        return '';
-        
-    }
-
-    $scope.getAvatarClassUser = function (user){
-        return $scope.getAvatarClassRoles(user.data?.roles);
-    }
-
-    $scope.toogleExpanded = function (){
-        const newExpanded = !$scope.expanded;
-        if(newExpanded && $scope.currentView === 'USER'){
-            $scope.changeView('LIST');
-        }
-        if(!newExpanded && $scope.currentView === 'LIST' && $scope.conversationId){
-            $scope.changeView('USER');
-        }
-        $scope.expanded = newExpanded;
-    }
-
-    $scope.toggleChat = function () {
-        $scope.visible = !$scope.visible;
-        if ($scope.visible) {
-            $scope.changeView('LIST');
-        } else {
-            $scope.changeView(null);
-        }
-    }
-
-    $scope.fetchData = function () {
-        chat.findConversationNotViewedCount()
-            .then(result => {
-                $scope.$apply(() => {
-                    $scope.data = result;
-                });
-            }).catch(error => console.error(error))
-
-    }
-
-    $scope.setConversationId = function (conversationId) {
-        $scope.conversationId = conversationId;
-        console.log('$scope.conversationId', $scope.conversationId)
-        $scope.changeView('USER', $scope.expanded);
-    }
-
-    $scope.changeView = function (newView, doNotChangeValue = false) {
-        if(!doNotChangeValue) $scope.currentView = newView;
-        $scope.$broadcast('changeView', { currentView: newView });
-    }
-
-    $scope.viewConversationGlobal = function (conversationId) {
-        $scope.$broadcast('viewConversationGlobal', { conversationId });
-        const tempData = $scope.data;
-        const conversationIndex = tempData.findIndex((conversation) => conversation.id == conversationId);
-        if (conversationIndex >= 0) {
-            tempData.splice(conversationIndex, 1);
-        }
-        $scope.data = [...tempData];
-    }
-
-    socket.on('connect', function () {
-        console.log('Connected to server');
+myChatApp.service("chat", function ($http) {
+  this.searchUsersChat = async function (
+    search = "",
+    page = 1,
+    nbrPerPage = 10,
+  ) {
+    const response = await $http({
+      method: "GET",
+      url:
+        "/chatutil/users/search?search=" +
+        search +
+        "&page=" +
+        page +
+        "&nbrPerPage=" +
+        nbrPerPage,
     });
+    return response.data;
+  };
 
-    socket.on('disconnect', function () {
-        console.log('Disconnected from server');
+  this.addConversation = async function (data) {
+    const response = await $http({
+      method: "POST",
+      url: `${window.baseUrlChat}/chat/conversation`,
+      headers: baseHeadersChatApi,
+      data,
     });
+    return response.data;
+  };
 
-    socket.on('reconnect', function () {
-        console.log('Reconnected to server');
+  this.addUsersToConversationGroup = async function (id, data) {
+    const response = await $http({
+      method: "POST",
+      url: `${window.baseUrlChat}/chat/conversation-group/${id}/add`,
+      headers: baseHeadersChatApi,
+      data,
     });
+    return response.data;
+  };
 
-    socket.on('new-message', (data) => {
-        chat.findMessageById(data.messageId).then(result => {
-            $scope.$apply(() => {
-                $scope.$broadcast('newMessage', { message: result });
-                const conversationIndex = $scope.data.findIndex((conversation) => conversation.id == result.conversationId);
-
-                if (conversationIndex < 0 && result.senderUser.userIdApplication !== window.userId) {
-                    $scope.data = [...$scope.data, result.conversation];
-                }
-
-            });
-        }).catch(error => console.error(error))
-
+  this.findConversations = async function (params) {
+    const url = `${window.baseUrlChat}/chat/conversation`;
+    const response = await $http({
+      method: "GET",
+      url,
+      headers: baseHeadersChatApi,
+      params,
     });
+    return response.data;
+  };
 
-    $scope.fetchData();
-
-})
-
-myChatApp.controller('chatUserList', function ($scope, chat) {
-    $scope.isLoading = false;
-    $scope.page = 1;
-    $scope.nbrPerPage = 10;
-    $scope.showLoadingMore = false;
-    $scope.isLoadingMore = false;
-    $scope.data = [];
-    $scope.total = 0;
-    $scope.messageType = null;
-    $scope.addConversation = function () {
-        $scope.$parent.changeView('SEARCH');
-    }
-
-    $scope.isAnswered = function (conversation) {
-        return conversation.lastMessage && conversation.lastMessage.senderUser.userIdApplication == window.userId;
-        
-    }
-
-    $scope.getAvatarClassConversation = function (conversation){
-        let user = conversation.createdByUser;
-        if($scope.isConversationCreator(conversation)) user = conversation.inviteeUser;
-        return $scope.$parent.getAvatarClassUser(user);
-    }
-
-    $scope.fetchData = function (newPage = 1) {
-        if (newPage == 1) $scope.isLoading = true;
-        else $scope.isLoadingMore = true;
-        const propertyNotViewed = "(((case when conversation.createdByUserId = :userId then conversation.lastUser1View else conversation.lastUser2View end) is null or (case when conversation.createdByUserId = :userId then conversation.lastUser1View else conversation.lastUser2View end) < lastMessage.createdAt) and conversation.lastMessageId is not null)";
-        const httpParamsNotFlattened = {
-            pagination: { page: newPage, nbrPerPage: $scope.nbrPerPage },
-            sort: [{ property: 'conversation.isGroup', order: 'DESC' }, { property: 'coalesce(lastMessage.createdAt, conversation.createdAt)', order: 'DESC' }],
-            filter: {}
-        };
-        if($scope.messageType === null){}
-        else {
-            httpParamsNotFlattened.filter.operator = 'and';
-            httpParamsNotFlattened.filter.filters = [
-                {property: propertyNotViewed, cond: $scope.messageType > 0 ? 'notEqual' : 'equal', value: 1}
-            ];
-        }
-        const httpParams = chat.flattenObject(httpParamsNotFlattened);
-        chat.findConversations(httpParams)
-            .then(result => {
-                $scope.$apply(() => {
-                    $scope.total = result.count;
-                    if (newPage == 1) $scope.data = result.data;
-                    else $scope.data = [...$scope.data, ...result.data];
-
-                    $scope.page = newPage;
-                    $scope.showLoadingMore = ($scope.page + 1 <= Math.ceil($scope.total / $scope.nbrPerPage));
-                    console.log($scope.data);
-                });
-            }).catch(error => console.error(error))
-            .finally(() => {
-                $scope.$apply(() => {
-                    $scope.isLoading = false;
-                    $scope.isLoadingMore = false;
-                });
-            });
-    }
-
-    $scope.loadMore = function () {
-        $scope.fetchData($scope.page + 1);
-    }
-
-    $scope.conversationSelected = function (conversationIdSelected) {
-        $scope.$parent.setConversationId(conversationIdSelected);
-    }
-
-    $scope.setNewMessageType = function (newMessageType) {
-        $scope.messageType = newMessageType;
-        $scope.fetchData();
-    }
-
-    $scope.isConversationCreator = function (conversation) {
-        return conversation.createdByUser?.userIdApplication == window.userId;
-    }
-    $scope.displayConversation = function (conversation) {
-        if(conversation.isGroup) return true;
-        let me = conversation.createdByUser;
-        let other = conversation.inviteeUser;
-        if (!$scope.isConversationCreator(conversation)) {
-            me = conversation.inviteeUser;
-            other = conversation.createdByUser;
-        }
-        const myRoles = me.data?.roles ?? [];
-        const otherRoles = other.data?.roles ?? [];
-        if (!myRoles.includes("ROLE_ADMINISTRATEUR") && !myRoles.includes("ROLE_COACH")) {
-            if (!otherRoles.includes("ROLE_ADMINISTRATEUR") && !otherRoles.includes("ROLE_COACH")) return false;
-        }
-        if(otherRoles.includes("ROLE_ADMINISTRATEUR")) return false;
-        return true;
-    }
-    $scope.isNewMessage = function (conversation) {
-        if (!conversation.lastMessage) return false;
-        if(conversation.isGroup) {
-            return !conversation.userLastViews[0].lastUserView || conversation.userLastViews[0].lastUserView < conversation.lastMessage.createdAt;
-        }
-        const lastUserView = $scope.isConversationCreator(conversation) ? conversation.lastUser1View : conversation.lastUser2View;
-        
-        return !lastUserView || lastUserView < conversation.lastMessage.createdAt;
-    }
-
-    $scope.$on('changeView', function (event, data) {
-        if (data.currentView == 'LIST') $scope.fetchData();
+  this.findConversationMembers = async function (id, params) {
+    const url = `${window.baseUrlChat}/chat/conversation-group/${id}/members`;
+    const response = await $http({
+      method: "GET",
+      url,
+      headers: baseHeadersChatApi,
+      params,
     });
+    return response.data;
+  };
 
-    $scope.$on('newMessage', function (event, data) {
-        if ($scope.$parent.currentView == 'LIST') {
-
-
-            const tempData = $scope.data;
-            const conversationIndex = tempData.findIndex((conversation) => conversation.id == data.message.conversationId);
-
-            if (conversationIndex >= 0) {
-                tempData.splice(conversationIndex, 1);
-            }
-            tempData.unshift(data.message.conversation);
-            $scope.data = [...tempData];
-        }
+  this.searchMembersToAdd = async function (params) {
+    const url = `${window.baseUrlChat}/user/search/same-app`;
+    const response = await $http({
+      method: "GET",
+      url,
+      headers: baseHeadersChatApi,
+      params,
     });
+    return response.data;
+  };
 
-
-
-})
-
-myChatApp.controller('chatUserSearchList', function ($scope, $q, chat) {
-    $scope.chatSearch = '';
-    $scope.isLoading = false;
-    $scope.page = 1;
-    $scope.nbrPerPage = 10;
-    $scope.showLoadingMore = false;
-    $scope.isLoadingMore = false;
-    $scope.data = [];
-    $scope.total = 0;
-
-    $scope.searchPage = function (newPage = 1) {
-        if (newPage == 1) $scope.isLoading = true;
-        else $scope.isLoadingMore = true;
-        chat.searchUsersChat($scope.chatSearch, newPage, $scope.nbrPerPage)
-            .then(result => {
-                $scope.$apply(() => {
-                    $scope.total = result.total;
-                    if (newPage == 1) $scope.data = result.data;
-                    else $scope.data = [...$scope.data, ...result.data];
-
-                    $scope.page = newPage;
-                    $scope.showLoadingMore = ($scope.page + 1 <= Math.ceil($scope.total / $scope.nbrPerPage));
-                });
-            }).catch(error => console.error(error))
-            .finally(() => {
-                $scope.$apply(() => {
-                    $scope.isLoading = false;
-                    $scope.isLoadingMore = false;
-                });
-            });
-    }
-
-    $scope.goBack = function () {
-        $scope.$parent.changeView('LIST');
-    }
-
-    $scope.addConversation = function (user) {
-        $scope.isLoading = true;
-        chat.addConversation({ inviteeUserId: user.userId })
-            .then((result) => {
-                $scope.$apply(() => {
-                    $scope.$parent.setConversationId(result.id);
-                });
-            }).catch(error => console.error(error))
-            .finally(() => {
-                $scope.$apply(() => {
-                    $scope.isLoading = false;
-                });
-            })
-    }
-
-    $scope.loadMore = function () {
-        $scope.searchPage($scope.page + 1);
-    }
-
-    $scope.search = function () {
-        $scope.searchPage();
-    }
-
-    $scope.$on('changeView', function (event, data) {
-        if (data.currentView == 'SEARCH') $scope.searchPage();
+  this.findConversationById = async function (conversationId) {
+    const url = `${window.baseUrlChat}/chat/conversation/${conversationId}`;
+    const response = await $http({
+      method: "GET",
+      url,
+      headers: baseHeadersChatApi,
     });
-})
+    return response.data;
+  };
 
-myChatApp.controller('chatUser', function ($scope, $q, chat) {
-    const vm = this;
-    $scope.isLoading = false;
-    $scope.page = 1;
-    $scope.nbrPerPage = 10;
-    $scope.showLoadingMore = false;
-    $scope.isLoadingMore = false;
-    $scope.data = [];
-    $scope.total = 0;
-    $scope.isHeaderLoading = false;
-    $scope.conversation = null;
-    // vm.message = '';
-    $scope.isSending = false;
+  this.findConversationNotViewedCount = async function () {
+    const url = `${window.baseUrlChat}/chat/conversation/not-viewed/count`;
+    const response = await $http({
+      method: "GET",
+      url,
+      headers: baseHeadersChatApi,
+    });
+    return response.data;
+  };
 
-    const edjsParser = edjsHTML();
-    let editorInstance = null;
-    
+  this.findMessageById = async function (messageId) {
+    const url = `${window.baseUrlChat}/chat/message/${messageId}/with-user`;
+    const response = await $http({
+      method: "GET",
+      url,
+      headers: baseHeadersChatApi,
+    });
+    return response.data;
+  };
 
-    $scope.isEditorVisible = function () {
-        return !$scope.isHeaderLoading && !$scope.isLoading && ($scope.$parent.expanded || $scope.$parent.currentView === 'USER') && !!$scope.$parent.conversationId;
-    };
-      
-      // Watch the combined condition
-      $scope.$watch($scope.isEditorVisible, function (newVal, oldVal) {
-        if (newVal === true) {
-          // Wait for DOM to render after ng-if
-          setTimeout(() => {
-                editorInstance = new EditorJS({
-                    holder: 'editorjs',
-                    placeholder: 'Écrivez ici...',
-                    // data: {
-                    //     blocks: [{
-                    //         type: "paragraph",
-                    //         data: { text: "Écrivez ici..." }
-                    //     }]
-                    // },
-                    
-                    onChange: async () => {
-                        const output = await editorInstance.save();
-                        let html = edjsParser.parse(output);
-                        console.log(html);
-                    }
-                });
-            
-          }, 0);
-        } 
+  this.findConversationMessages = async function (conversationId, params) {
+    const url = `${window.baseUrlChat}/chat/conversation/${conversationId}/message`;
+    const response = await $http({
+      method: "GET",
+      url,
+      headers: baseHeadersChatApi,
+      params,
+    });
+    return response.data;
+  };
+
+  this.sendMessage = async function (conversationId, message) {
+    const url = `${window.baseUrlChat}/chat/conversation/${conversationId}/message`;
+    const response = await $http({
+      method: "POST",
+      url,
+      headers: baseHeadersChatApi,
+      data: message,
+    });
+    return response.data;
+  };
+
+  this.viewConversation = async function (conversationId, lastViewDate) {
+    const url = `${window.baseUrlChat}/chat/conversation/${conversationId}/view`;
+    const response = await $http({
+      method: "PATCH",
+      url,
+      headers: baseHeadersChatApi,
+      data: { lastViewDate },
+    });
+    return response.data;
+  };
+
+  this.flattenObjectWithResult = function (result, obj, parentKey = null) {
+    if (typeof obj === "object" && obj !== null) {
+      Object.keys(obj).forEach((key) => {
+        const newParentKey = parentKey === null ? key : `${parentKey}[${key}]`;
+        this.flattenObjectWithResult(result, obj[key], newParentKey);
       });
+    } else if (parentKey) {
+      result[parentKey] = obj;
+    }
+  };
 
-    $scope.$on('newMessage', function (event, data) {
-        if ($scope.$parent.currentView == 'USER' && $scope.$parent.conversationId == data.message.conversationId) {
-            $scope.addMessage(data.message);
-            $scope.viewConversation();
-        }
+  this.flattenObject = function (obj) {
+    const result = {};
+    this.flattenObjectWithResult(result, obj);
+    return result;
+  };
+
+  this.createGroup = async function (data) {
+    const response = await $http({
+      method: "POST",
+      url: `${window.baseUrlChat}/chat/conversation-group`,
+      headers: baseHeadersChatApi,
+      data,
     });
+    return response.data;
+  };
+});
 
-    $scope.viewConversation = function () {
+myChatApp.filter("truncate", function () {
+  return function (value, max) {
+    if (!value) return "";
 
-        chat.viewConversation($scope.$parent.conversationId, new Date())
-            .then(() => {
-                $scope.$apply(() => {
-                    $scope.$parent.viewConversationGlobal($scope.$parent.conversationId);
-                });
-            }).catch(error => console.error(error));
+    max = parseInt(max, 10);
+    if (!max) return value;
+    if (value.length <= max) return value;
+
+    value = value.substr(0, max);
+    let lastspace = value.lastIndexOf(" ");
+    if (lastspace !== -1) {
+      //Also remove . and , so its gives a cleaner result.
+      if (
+        value.charAt(lastspace - 1) === "." ||
+        value.charAt(lastspace - 1) === ","
+      ) {
+        lastspace = lastspace - 1;
+      }
+      value = value.substr(0, lastspace);
     }
 
-    $scope.scrollToBottom = function () {
-        document.getElementById('bottom').scrollIntoView({ behavior: 'smooth', block: 'end' });
-        // $([document.documentElement, document.body]).animate({
-        //     scrollTop: $("#bottom").offset().top
-        // }, 2000);
-    }
-    $scope.addMessage = function (message) {
-        if($scope.data.find((item) => item.id === message.id)) return;
-        $scope.data = [message, ...$scope.data];
-        $scope.scrollToBottom()
-    }
+    return value + " ...";
+  };
+});
 
-    $scope.onSubmit = async function () {
-        const output = await editorInstance.save();
-        let html = edjsParser.parse(output);
-        console.log(html);
-        console.log("message ===" + html)
-        console.log('onsubmit', JSON.stringify(html))
-        if (!html) {
-            return
-        }
-        html = linkifyText(html);
-        $scope.isSending = true;
-        chat.sendMessage($scope.$parent.conversationId, { content: html })
-            .then(result => {
-                $scope.$apply(() => {
-                    editorInstance.clear();
-                    $scope.addMessage(result);
-                });
-            }).catch(error => console.error(error))
-            .finally(() => {
-                $scope.$apply(() => {
-                    $scope.isSending = false;
-                });
-            });
-    }
+myChatApp.filter("myTimeAgo", function () {
+  return function (value, isOnlyTime = false) {
+    return isOnlyTime
+      ? moment(value, "HH:mm:ss").locale("fr").fromNow()
+      : moment(value).locale("fr").fromNow();
+  };
+});
 
-    $scope.fetchConversation = function () {
-        $scope.isHeaderLoading = true;
-        chat.findConversationById($scope.$parent.conversationId)
-            .then(result => {
-                $scope.$apply(() => {
-                    $scope.conversation = result;
-                });
-            }).catch(error => console.error(error))
-            .finally(() => {
-                $scope.$apply(() => {
-                    $scope.isHeaderLoading = false;
-                });
-            });
-    }
+myChatApp.controller("chatWidget", function ($scope, socket, chat) {
+  $scope.visible = false;
+  $scope.currentView = null; // in [LIST, USER, SEARCH]
+  $scope.conversationId = null;
+  $scope.data = [];
+  $scope.expanded = false;
+  $scope.userId = window.userId;
+  $(document).ready(function () {
+    window.addEventListener("resize", () => {
+      if (window.innerWidth < 910 && $scope.expanded) {
+        $scope.toogleExpanded();
+      }
+    });
+  });
 
-    $scope.fetchData = function (newPage = 1) {
-        if (newPage == 1) $scope.isLoading = true;
-        else $scope.isLoadingMore = true;
-        const httpParams = chat.flattenObject({
-            pagination: { page: newPage, nbrPerPage: $scope.nbrPerPage },
-            sort: [{ property: 'createdAt', order: 'DESC' }],
-            filter: {}
+  $scope.getAvatarClassRoles = function (roles) {
+    roles = roles ?? [];
+    if (
+      roles.includes("ROLE_REVENDEUR") &&
+      roles.includes("ROLE_PROFESSIONNEL")
+    ) {
+      return "both";
+    } else if (roles.includes("ROLE_PROFESSIONNEL")) {
+      return "professionnel";
+    } else if (roles.includes("ROLE_REVENDEUR")) {
+      return "revendeur";
+    }
+    return "";
+  };
+
+  $scope.getAvatarClassUser = function (user) {
+    return $scope.getAvatarClassRoles(user.data?.roles);
+  };
+
+  $scope.toogleExpanded = function () {
+    const newExpanded = !$scope.expanded;
+    if (newExpanded && $scope.currentView === "USER") {
+      $scope.changeView("LIST");
+    }
+    if (
+      !newExpanded &&
+      $scope.currentView === "LIST" &&
+      $scope.conversationId
+    ) {
+      $scope.changeView("USER");
+    }
+    $scope.expanded = newExpanded;
+  };
+
+  $scope.toggleChat = function () {
+    $scope.visible = !$scope.visible;
+    if ($scope.visible) {
+      $scope.changeView("LIST");
+    } else {
+      $scope.changeView(null);
+    }
+  };
+
+  $scope.fetchData = function () {
+    chat
+      .findConversationNotViewedCount()
+      .then((result) => {
+        $scope.$apply(() => {
+          $scope.data = result;
         });
-        chat.findConversationMessages($scope.$parent.conversationId, httpParams)
-            .then(result => {
-                $scope.$apply(() => {
-                    $scope.total = result.count;
-                    if (newPage == 1) $scope.data = result.data;
-                    else $scope.data = [...$scope.data, ...result.data];
+      })
+      .catch((error) => console.error(error));
+  };
 
-                    $scope.page = newPage;
-                    $scope.showLoadingMore = ($scope.page + 1 <= Math.ceil($scope.total / $scope.nbrPerPage));
-                    console.log($scope.data);
-                });
-                if (newPage == 1) {
-                    $scope.viewConversation();
-                }
-            }).catch(error => console.error(error))
-            .finally(() => {
-                $scope.$apply(() => {
-                    $scope.isLoading = false;
-                    $scope.isLoadingMore = false;
-                });
-            });
+  $scope.setConversationId = function (conversationId) {
+    $scope.conversationId = conversationId;
+    console.log("$scope.conversationId", $scope.conversationId);
+    $scope.changeView("USER", $scope.expanded);
+  };
+
+  $scope.changeView = function (newView, doNotChangeValue = false) {
+    if (!doNotChangeValue) $scope.currentView = newView;
+    $scope.$broadcast("changeView", { currentView: newView });
+  };
+
+  $scope.viewConversationGlobal = function (conversationId) {
+    $scope.$broadcast("viewConversationGlobal", { conversationId });
+    const tempData = $scope.data;
+    const conversationIndex = tempData.findIndex(
+      (conversation) => conversation.id == conversationId,
+    );
+    if (conversationIndex >= 0) {
+      tempData.splice(conversationIndex, 1);
     }
+    $scope.data = [...tempData];
+  };
 
-    $scope.loadMore = function () {
-        $scope.fetchData($scope.page + 1);
+  socket.on("connect", function () {
+    console.log("Connected to server");
+  });
+
+  socket.on("disconnect", function () {
+    console.log("Disconnected from server");
+  });
+
+  socket.on("reconnect", function () {
+    console.log("Reconnected to server");
+  });
+
+  socket.on("new-message", (data) => {
+    chat
+      .findMessageById(data.messageId)
+      .then((result) => {
+        $scope.$apply(() => {
+          $scope.$broadcast("newMessage", { message: result });
+          const conversationIndex = $scope.data.findIndex(
+            (conversation) => conversation.id == result.conversationId,
+          );
+
+          if (
+            conversationIndex < 0 &&
+            result.senderUser.userIdApplication !== window.userId
+          ) {
+            $scope.data = [...$scope.data, result.conversation];
+          }
+        });
+      })
+      .catch((error) => console.error(error));
+  });
+
+  $scope.fetchData();
+});
+
+myChatApp.controller("chatUserList", function ($scope, chat) {
+  $scope.isLoading = false;
+  $scope.page = 1;
+  $scope.nbrPerPage = 10;
+  $scope.showLoadingMore = false;
+  $scope.isLoadingMore = false;
+  $scope.data = [];
+  $scope.total = 0;
+  $scope.messageType = null;
+  $scope.addConversation = function () {
+    $scope.$parent.changeView("SEARCH");
+  };
+
+  $scope.isAnswered = function (conversation) {
+    return (
+      conversation.lastMessage &&
+      conversation.lastMessage.senderUser.userIdApplication == window.userId
+    );
+  };
+
+  $scope.getAvatarClassConversation = function (conversation) {
+    let user = conversation.createdByUser;
+    if ($scope.isConversationCreator(conversation))
+      user = conversation.inviteeUser;
+    return $scope.$parent.getAvatarClassUser(user);
+  };
+
+  $scope.fetchData = function (newPage = 1) {
+    if (newPage == 1) $scope.isLoading = true;
+    else $scope.isLoadingMore = true;
+    const propertyNotViewed =
+      "(((case when conversation.createdByUserId = :userId then conversation.lastUser1View else conversation.lastUser2View end) is null or (case when conversation.createdByUserId = :userId then conversation.lastUser1View else conversation.lastUser2View end) < lastMessage.createdAt) and conversation.lastMessageId is not null)";
+    const httpParamsNotFlattened = {
+      pagination: { page: newPage, nbrPerPage: $scope.nbrPerPage },
+      sort: [
+        { property: "conversation.isGroup", order: "DESC" },
+        {
+          property: "coalesce(lastMessage.createdAt, conversation.createdAt)",
+          order: "DESC",
+        },
+      ],
+      filter: {},
+    };
+    if ($scope.messageType === null) {
+    } else {
+      httpParamsNotFlattened.filter.operator = "and";
+      httpParamsNotFlattened.filter.filters = [
+        {
+          property: propertyNotViewed,
+          cond: $scope.messageType > 0 ? "notEqual" : "equal",
+          value: 1,
+        },
+      ];
     }
+    const httpParams = chat.flattenObject(httpParamsNotFlattened);
+    chat
+      .findConversations(httpParams)
+      .then((result) => {
+        $scope.$apply(() => {
+          $scope.total = result.count;
+          if (newPage == 1) $scope.data = result.data;
+          else $scope.data = [...$scope.data, ...result.data];
 
-    $scope.goBack = function () {
-        $scope.$parent.changeView('LIST');
+          $scope.page = newPage;
+          $scope.showLoadingMore =
+            $scope.page + 1 <= Math.ceil($scope.total / $scope.nbrPerPage);
+          console.log($scope.data);
+        });
+      })
+      .catch((error) => console.error(error))
+      .finally(() => {
+        $scope.$apply(() => {
+          $scope.isLoading = false;
+          $scope.isLoadingMore = false;
+        });
+      });
+  };
+
+  $scope.loadMore = function () {
+    $scope.fetchData($scope.page + 1);
+  };
+
+  $scope.conversationSelected = function (conversationIdSelected) {
+    $scope.$parent.setConversationId(conversationIdSelected);
+  };
+
+  $scope.setNewMessageType = function (newMessageType) {
+    $scope.messageType = newMessageType;
+    $scope.fetchData();
+  };
+
+  $scope.isConversationCreator = function (conversation) {
+    return conversation.createdByUser?.userIdApplication == window.userId;
+  };
+  $scope.displayConversation = function (conversation) {
+    if (conversation.isGroup) return true;
+    let me = conversation.createdByUser;
+    let other = conversation.inviteeUser;
+    if (!$scope.isConversationCreator(conversation)) {
+      me = conversation.inviteeUser;
+      other = conversation.createdByUser;
     }
-
-    $scope.isConversationCreator = function () {
-        return $scope.conversation?.createdByUser?.userIdApplication == window.userId;
+    const myRoles = me.data?.roles ?? [];
+    const otherRoles = other.data?.roles ?? [];
+    if (
+      !myRoles.includes("ROLE_ADMINISTRATEUR") &&
+      !myRoles.includes("ROLE_COACH")
+    ) {
+      if (
+        !otherRoles.includes("ROLE_ADMINISTRATEUR") &&
+        !otherRoles.includes("ROLE_COACH")
+      )
+        return false;
     }
+    if (otherRoles.includes("ROLE_ADMINISTRATEUR")) return false;
+    return true;
+  };
+  $scope.isNewMessage = function (conversation) {
+    if (!conversation.lastMessage) return false;
+    if (conversation.isGroup) {
+      return (
+        !conversation.userLastViews[0].lastUserView ||
+        conversation.userLastViews[0].lastUserView <
+          conversation.lastMessage.createdAt
+      );
+    }
+    const lastUserView = $scope.isConversationCreator(conversation)
+      ? conversation.lastUser1View
+      : conversation.lastUser2View;
 
-    $scope.$on('changeView', function (event, data) {
-        if (data.currentView == 'USER') {
-            $scope.fetchConversation();
-            $scope.fetchData();
-        }
+    return !lastUserView || lastUserView < conversation.lastMessage.createdAt;
+  };
+
+  $scope.$on("changeView", function (event, data) {
+    if (data.currentView == "LIST") $scope.fetchData();
+  });
+
+  $scope.$on("newMessage", function (event, data) {
+    if ($scope.$parent.currentView == "LIST") {
+      const tempData = $scope.data;
+      const conversationIndex = tempData.findIndex(
+        (conversation) => conversation.id == data.message.conversationId,
+      );
+
+      if (conversationIndex >= 0) {
+        tempData.splice(conversationIndex, 1);
+      }
+      tempData.unshift(data.message.conversation);
+      $scope.data = [...tempData];
+    }
+  });
+});
+
+myChatApp.controller("chatUserSearchList", function ($scope, $q, chat) {
+  $scope.chatSearch = "";
+  $scope.isLoading = false;
+  $scope.page = 1;
+  $scope.nbrPerPage = 10;
+  $scope.showLoadingMore = false;
+  $scope.isLoadingMore = false;
+  $scope.isCreateGroupLoading = false;
+  $scope.data = [];
+  $scope.total = 0;
+
+  $scope.newGroup = {
+    name: "",
+  };
+
+  $scope.submitNewGroup = function () {
+    if ($scope.myFormNewGroup.$valid) {
+      //   alert("Form submitted successfully!\n" + JSON.stringify($scope.newGroup));
+      $scope.isCreateGroupLoading = true;
+      chat
+        .createGroup($scope.newGroup)
+        .then((result) => {
+          console.log("result", result);
+          $("#createGroupModal").modal("hide");
+          $scope.$apply(() => {
+            $scope.$parent.setConversationId(result.id);
+            $scope.$parent.$broadcast("openMemberModals", {});
+          });
+        })
+        .catch((error) => console.error(error))
+        .finally(() => {
+          $scope.$apply(() => {
+            $scope.isCreateGroupLoading = false;
+          });
+        });
+      // Typically you would send data to server here
+    }
+  };
+
+  $scope.resetNewGroup = function () {
+    $scope.newGroup = {
+      name: "",
+    };
+    $scope.myFormNewGroup.$setPristine();
+    $scope.myFormNewGroup.$setUntouched();
+  };
+
+  $scope.openModalCreateGroup = function () {
+    $scope.resetNewGroup();
+    $("#createGroupModal").modal({ backdrop: false });
+    $("#createGroupModal").modal("show");
+  };
+
+  $scope.searchPage = function (newPage = 1) {
+    if (newPage == 1) $scope.isLoading = true;
+    else $scope.isLoadingMore = true;
+    chat
+      .searchUsersChat($scope.chatSearch, newPage, $scope.nbrPerPage)
+      .then((result) => {
+        $scope.$apply(() => {
+          $scope.total = result.total;
+          if (newPage == 1) $scope.data = result.data;
+          else $scope.data = [...$scope.data, ...result.data];
+
+          $scope.page = newPage;
+          $scope.showLoadingMore =
+            $scope.page + 1 <= Math.ceil($scope.total / $scope.nbrPerPage);
+        });
+      })
+      .catch((error) => console.error(error))
+      .finally(() => {
+        $scope.$apply(() => {
+          $scope.isLoading = false;
+          $scope.isLoadingMore = false;
+        });
+      });
+  };
+
+  $scope.goBack = function () {
+    $scope.$parent.changeView("LIST");
+  };
+
+  $scope.addConversation = function (user) {
+    $scope.isLoading = true;
+    chat
+      .addConversation({ inviteeUserId: user.userId })
+      .then((result) => {
+        $scope.$apply(() => {
+          $scope.$parent.setConversationId(result.id);
+        });
+      })
+      .catch((error) => console.error(error))
+      .finally(() => {
+        $scope.$apply(() => {
+          $scope.isLoading = false;
+        });
+      });
+  };
+
+  $scope.loadMore = function () {
+    $scope.searchPage($scope.page + 1);
+  };
+
+  $scope.search = function () {
+    $scope.searchPage();
+  };
+
+  $scope.$on("changeView", function (event, data) {
+    if (data.currentView == "SEARCH") $scope.searchPage();
+  });
+});
+
+myChatApp.controller("chatUser", function ($scope, $q, chat) {
+  const vm = this;
+  $scope.isLoading = false;
+  $scope.page = 1;
+  $scope.nbrPerPage = 10;
+  $scope.showLoadingMore = false;
+  $scope.isLoadingMore = false;
+  $scope.data = [];
+  $scope.total = 0;
+  $scope.isHeaderLoading = false;
+  $scope.conversation = null;
+  // vm.message = '';
+  $scope.isSending = false;
+
+  $scope.searchMemberText = "";
+  $scope.isLoadingMembers = false;
+  $scope.isLoadingMoreMembers = false;
+  $scope.totalMembers = 0;
+  $scope.members = [];
+  $scope.showLoadingMoreMembers = false;
+  $scope.pageMembers = 1;
+  $scope.nbrPerPageMembers = 10;
+
+  $scope.searchAddMemberText = "";
+  $scope.isLoadingAddMembers = false;
+  $scope.isLoadingMoreAddMembers = false;
+  $scope.totalAddMembers = 0;
+  $scope.addMembersData = [];
+  $scope.showLoadingMoreAddMembers = false;
+  $scope.pageAddMembers = 1;
+  $scope.nbrPerPageAddMembers = 10;
+  $scope.membersSelectedToAdd = [];
+  $scope.isLoadingAddingMembers = false;
+
+  const edjsParser = edjsHTML();
+  let editorInstance = null;
+
+  $scope.isEditorVisible = function () {
+    return (
+      !$scope.isHeaderLoading &&
+      !$scope.isLoading &&
+      ($scope.$parent.expanded || $scope.$parent.currentView === "USER") &&
+      !!$scope.$parent.conversationId
+    );
+  };
+
+  $scope.searchMembers = function () {
+    $scope.fetchDataMembers();
+  };
+  $scope.openSettings = function () {
+    $scope.searchMemberText = "";
+    $scope.fetchDataMembers();
+    $("#groupSettings").modal({ backdrop: false });
+    $("#groupSettings").modal("show");
+  };
+
+  $scope.fetchDataMembers = function (newPage = 1) {
+    if (newPage == 1) $scope.isLoadingMembers = true;
+    else $scope.isLoadingMoreMembers = true;
+
+    const httpParamsNotFlattened = {
+      pagination: { page: newPage, nbrPerPage: $scope.nbrPerPageMembers },
+      sort: [{ property: "createdAt", order: "DESC" }],
+      filter: {
+        operator: "and",
+        filters: $scope.searchMemberText
+          ? [
+              {
+                property:
+                  "concat(coalesce(user.firstname, ''), ' ', coalesce(user.lastname, ''), ' ', coalesce(u.email, ''), ' ', coalesce(u.username, ''))",
+                value: $scope.searchMemberText.trim(),
+                cond: "like",
+                match: "contains",
+                caseSensitive: 0,
+              },
+            ]
+          : [],
+      },
+    };
+
+    const httpParams = chat.flattenObject(httpParamsNotFlattened);
+    chat
+      .findConversationMembers($scope.$parent.conversationId, httpParams)
+      .then((result) => {
+        $scope.$apply(() => {
+          $scope.totalMembers = result.count;
+          if (newPage == 1) $scope.members = result.data;
+          else $scope.members = [...$scope.members, ...result.data];
+
+          $scope.pageMembers = newPage;
+          $scope.showLoadingMoreMembers =
+            $scope.pageMembers + 1 <=
+            Math.ceil($scope.totalMembers / $scope.nbrPerPageMembers);
+          console.log($scope.members);
+        });
+      })
+      .catch((error) => console.error(error))
+      .finally(() => {
+        $scope.$apply(() => {
+          $scope.isLoadingMembers = false;
+          $scope.isLoadingMoreMembers = false;
+        });
+      });
+  };
+
+  $scope.loadMoreMembers = function () {
+    $scope.fetchDataMembers($scope.pageMembers + 1);
+  };
+
+  $scope.fetchDataAddMembers = function (newPage = 1) {
+    if (newPage == 1) $scope.isLoadingAddMembers = true;
+    else $scope.isLoadingMoreAddMembers = true;
+
+    const httpParamsNotFlattened = {
+      pagination: { page: newPage, nbrPerPage: $scope.nbrPerPageAddMembers },
+      sort: [{ property: "createdAt", order: "DESC" }],
+      filter: {
+        operator: "and",
+        filters: $scope.searchAddMemberText
+          ? [
+              {
+                property:
+                  "concat(coalesce(u.firstname, ''), ' ', coalesce(u.lastname, ''), ' ', coalesce(u.email, ''), ' ', coalesce(u.username, ''))",
+                value: $scope.searchAddMemberText.trim(),
+                cond: "like",
+                match: "contains",
+                caseSensitive: 0,
+              },
+            ]
+          : [],
+      },
+    };
+
+    const httpParams = chat.flattenObject(httpParamsNotFlattened);
+    chat
+      .searchMembersToAdd(httpParams)
+      .then((result) => {
+        $scope.$apply(() => {
+          $scope.totalAddMembers = result.count;
+          if (newPage == 1) $scope.addMembersData = result.data;
+          else
+            $scope.addMembersData = [...$scope.addMembersData, ...result.data];
+
+          $scope.pageAddMembers = newPage;
+          $scope.showLoadingMoreAddMembers =
+            $scope.pageAddMembers + 1 <=
+            Math.ceil($scope.totalAddMembers / $scope.nbrPerPageAddMembers);
+          console.log($scope.addMembersData);
+        });
+      })
+      .catch((error) => console.error(error))
+      .finally(() => {
+        $scope.$apply(() => {
+          $scope.isLoadingAddMembers = false;
+          $scope.isLoadingMoreAddMembers = false;
+        });
+      });
+  };
+
+  $scope.loadMoreAddMembers = function () {
+    $scope.fetchDataAddMembers($scope.pageAddMembers + 1);
+  };
+
+  $scope.searchAddMembers = function () {
+    $scope.fetchDataAddMembers();
+  };
+
+  $scope.openAddMember = function () {
+    $scope.membersSelectedToAdd = [];
+    $scope.searchAddMemberText = "";
+    $scope.fetchDataAddMembers();
+    $("#addMembers").modal({ backdrop: false });
+    $("#addMembers").modal("show");
+  };
+
+  $scope.onAddMemberItemChange = function (member) {
+    $scope.membersSelectedToAdd = $scope.membersSelectedToAdd.filter(
+      (item) => item != member.id,
+    );
+    if (member.selected) {
+      $scope.membersSelectedToAdd = [...$scope.membersSelectedToAdd, member.id];
+    }
+  };
+
+  $scope.addMembersSelected = function () {
+    $scope.isLoadingAddingMembers = true;
+    chat
+      .addUsersToConversationGroup($scope.$parent.conversationId, {
+        userIds: $scope.membersSelectedToAdd,
+      })
+      .then((result) => {
+        $scope.membersSelectedToAdd = [];
+        $scope.addMembersData = $scope.addMembersData.map((item) => {
+          return {
+            ...item,
+            selected: false,
+          };
+        });
+        $("#addMembers").modal("hide");
+        $scope.searchMemberText = "";
+        $scope.fetchDataMembers();
+      })
+      .catch((error) => console.error(error))
+      .finally(() => {
+        $scope.$apply(() => {
+          $scope.isLoadingAddingMembers = false;
+        });
+      });
+  };
+
+  // Watch the combined condition
+  $scope.$watch($scope.isEditorVisible, function (newVal, oldVal) {
+    if (newVal === true) {
+      // Wait for DOM to render after ng-if
+      setTimeout(() => {
+        editorInstance = new EditorJS({
+          holder: "editorjs",
+          placeholder: "Écrivez ici...",
+          // data: {
+          //     blocks: [{
+          //         type: "paragraph",
+          //         data: { text: "Écrivez ici..." }
+          //     }]
+          // },
+
+          onChange: async () => {
+            const output = await editorInstance.save();
+            let html = edjsParser.parse(output);
+            console.log(html);
+          },
+        });
+      }, 0);
+    }
+  });
+
+  $scope.$on("newMessage", function (event, data) {
+    if (
+      $scope.$parent.currentView == "USER" &&
+      $scope.$parent.conversationId == data.message.conversationId
+    ) {
+      $scope.addMessage(data.message);
+      $scope.viewConversation();
+    }
+  });
+
+  $scope.$on("openMemberModals", function (event, data) {
+    $scope.openSettings();
+    $scope.openAddMember();
+  });
+
+  $scope.viewConversation = function () {
+    chat
+      .viewConversation($scope.$parent.conversationId, new Date())
+      .then(() => {
+        $scope.$apply(() => {
+          $scope.$parent.viewConversationGlobal($scope.$parent.conversationId);
+        });
+      })
+      .catch((error) => console.error(error));
+  };
+
+  $scope.scrollToBottom = function () {
+    document
+      .getElementById("bottom")
+      .scrollIntoView({ behavior: "smooth", block: "end" });
+    // $([document.documentElement, document.body]).animate({
+    //     scrollTop: $("#bottom").offset().top
+    // }, 2000);
+  };
+  $scope.addMessage = function (message) {
+    if ($scope.data.find((item) => item.id === message.id)) return;
+    $scope.data = [message, ...$scope.data];
+    $scope.scrollToBottom();
+  };
+
+  $scope.onSubmit = async function () {
+    const output = await editorInstance.save();
+    let html = edjsParser.parse(output);
+    console.log(html);
+    console.log("message ===" + html);
+    console.log("onsubmit", JSON.stringify(html));
+    if (!html) {
+      return;
+    }
+    html = linkifyText(html);
+    $scope.isSending = true;
+    chat
+      .sendMessage($scope.$parent.conversationId, { content: html })
+      .then((result) => {
+        $scope.$apply(() => {
+          editorInstance.clear();
+          $scope.addMessage(result);
+        });
+      })
+      .catch((error) => console.error(error))
+      .finally(() => {
+        $scope.$apply(() => {
+          $scope.isSending = false;
+        });
+      });
+  };
+
+  $scope.fetchConversation = function () {
+    $scope.isHeaderLoading = true;
+    chat
+      .findConversationById($scope.$parent.conversationId)
+      .then((result) => {
+        $scope.$apply(() => {
+          $scope.conversation = result;
+        });
+      })
+      .catch((error) => console.error(error))
+      .finally(() => {
+        $scope.$apply(() => {
+          $scope.isHeaderLoading = false;
+        });
+      });
+  };
+
+  $scope.fetchData = function (newPage = 1) {
+    if (newPage == 1) $scope.isLoading = true;
+    else $scope.isLoadingMore = true;
+    const httpParams = chat.flattenObject({
+      pagination: { page: newPage, nbrPerPage: $scope.nbrPerPage },
+      sort: [{ property: "createdAt", order: "DESC" }],
+      filter: {},
     });
-})
+    chat
+      .findConversationMessages($scope.$parent.conversationId, httpParams)
+      .then((result) => {
+        $scope.$apply(() => {
+          $scope.total = result.count;
+          if (newPage == 1) $scope.data = result.data;
+          else $scope.data = [...$scope.data, ...result.data];
 
-$(document).ready(function (){
-    $('.custom-chat').removeClass('d-none');
-})
+          $scope.page = newPage;
+          $scope.showLoadingMore =
+            $scope.page + 1 <= Math.ceil($scope.total / $scope.nbrPerPage);
+          console.log($scope.data);
+        });
+        if (newPage == 1) {
+          $scope.viewConversation();
+        }
+      })
+      .catch((error) => console.error(error))
+      .finally(() => {
+        $scope.$apply(() => {
+          $scope.isLoading = false;
+          $scope.isLoadingMore = false;
+        });
+      });
+  };
+
+  $scope.loadMore = function () {
+    $scope.fetchData($scope.page + 1);
+  };
+
+  $scope.goBack = function () {
+    $scope.$parent.changeView("LIST");
+  };
+
+  $scope.isConversationCreator = function () {
+    return (
+      $scope.conversation?.createdByUser?.userIdApplication == window.userId
+    );
+  };
+
+  $scope.$on("changeView", function (event, data) {
+    if (data.currentView == "USER") {
+      $scope.fetchConversation();
+      $scope.fetchData();
+    }
+  });
+});
+
+$(document).ready(function () {
+  $(".custom-chat").removeClass("d-none");
+});

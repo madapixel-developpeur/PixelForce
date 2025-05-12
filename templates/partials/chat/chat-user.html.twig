@@ -1,8 +1,8 @@
 <div class="d-flex flex-column chat-user" style="height: 100%;" ng-controller="chatUser as ctrl">
   <div class="chat-box-header">
     <div style="height:100%;" ng-if="conversationId">
-      <div class="d-flex align-items-center">
-
+      <div class="d-flex align-items-center justify-content-between me-5">
+<div class="d-flex align-items-center ">
         <i class="ti ti-chevron-left fs-2" style="cursor: pointer;" ng-if="!expanded"  ng-click="goBack()"></i>
             <img ng-src="{{ '{{\'/user/avatar/\' + (isConversationCreator() ? conversation.inviteeUser.userIdApplication : conversation.createdByUser.userIdApplication)}}' }}"
             onerror='this.onerror=null; this.src="{{ asset('assets/img/avatar.webp') }}"'
@@ -17,6 +17,9 @@
           <h4 class="operator-name" style="color: #fff;" ng-if="!isHeaderLoading && conversation.isGroup">
             {{"{{conversation.name}}"}}
           </h4>
+          </div>
+
+          <i class="fa fa-cog" style="cursor: pointer;" ng-if="!isHeaderLoading && conversation.isGroup && isConversationCreator() && conversation.handle !== 'pixelforce'" ng-click="openSettings()"></i>
         
           <i class="ti ti-loader fs-2 my-loader ms-2 me-1" ng-if="isHeaderLoading"></i>
         </div>
@@ -77,4 +80,179 @@
         <i class="ti ti-send fs-2" ng-if="!isSending"></i>
     </button></div>
   </div>
+
+  <div class="modal fade chat-modal" tabindex="-1" id="groupSettings" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" >
+    <div class="modal-content">
+    
+      <div class="modal-header">
+      <div class="d-flex align-items-center justify-content-between flex-grow-1">
+        <h5 >Membres</h5>
+        <button class="btn btn-sm btn-outline-secondary" ng-click="openAddMember()"><i class="fa fa-plus"></i>&nbsp;Ajouter</button>
+      </div>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+      </div>
+      <div class="modal-body" style="max-height: 320px; overflow-y: auto;">
+        
+          
+        
+          <div class="form-group mb-3">
+            <label class="control-label col-sm-2" for="name">Recherche:</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control search-input" placeholder="Recherche" ng-model="searchMemberText"
+                      ng-change="searchMembers()">
+              </div>
+        </div>
+
+        <div style="height:100%;" ng-if="isLoadingMembers">
+      <div class="d-flex align-items-center justify-content-center" style="height: 100%;">
+        <i class="ti ti-loader fs-2 my-loader"></i>
+      </div>
+    </div>
+    <div style="height:100%;" ng-if="!isLoadingMembers">
+      <div style="height:100%;" ng-if="totalMembers == 0">
+        <div class="d-flex align-items-center justify-content-center" style="height: 100%;">
+          <span>Aucun membre</span>
+        </div>
+      </div>
+
+
+      <div ng-repeat="member in members"
+        class="d-flex p-1" style="border-top: 1px solid #cacdd0;"
+        >
+        <div class="d-flex align-items-center justify-content-center flex-column" style="width: 80px;" >
+          <div class="chat-user-avatar-wrapper">
+          <img ng-src="{{ '{{\'/user/avatar/\' + member.user.userIdApplication}}' }}"
+          onerror='this.onerror=null; this.src="{{ asset('assets/img/avatar.webp') }}"'
+           class="chat-user-avatar" />
+          </div>
+          
+          
+        </div>
+        
+
+        <div class="flex-grow-1 d-flex flex-column justify-content-center ms-2">
+              <span ><b>{{ "{{ member.user.firstname + ' ' +
+                  member.user.lastname}}" }}</b></span>
+                  <span style="font-size: 0.65rem;">{{ "{{member.user.email | truncate: 30}}" }}</span>
+                  <span class="fs-6 profile-name mt-1"
+            >{{ "{{member.user.data.roleLabel | truncate: 15}}" }}</span>
+                        
+        </div>
+
+      </div>
+
+      <div class="d-flex p-3 align-items-center justify-content-center mb-2">
+        <div class="d-flex flex-column align-items-center font-weight-bold" style="cursor: pointer;"
+          ng-if="showLoadingMoreMembers && !isLoadingMoreMembers" ng-click="loadMoreMembers()">
+          <i class="ti ti-chevron-down fs-2 " style="cursor: pointer;"></i>
+          <span class="fs-6">Voir plus</span>
+
+        </div>
+
+        <i class="ti ti-loader fs-2 my-loader" ng-if="isLoadingMoreMembers"></i>
+      </div>
+    </div>
+ 
+      </div>
+      
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+        
+      </div>
+    </div>
+  </div>
 </div>
+
+
+<div class="modal fade chat-modal" tabindex="-1" id="addMembers" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" >
+    <div class="modal-content">
+    
+      <div class="modal-header">
+      <div class="d-flex align-items-center justify-content-between flex-grow-1">
+        <h5 >Ajouter des personnes</h5>
+      </div>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+      </div>
+      <div class="modal-body" style="max-height: 320px; overflow-y: auto;">
+        
+          
+        
+          <div class="form-group mb-3">
+            <label class="control-label col-sm-2" for="name">Recherche:</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control search-input" placeholder="Recherche" ng-model="searchAddMemberText"
+                      ng-change="searchAddMembers()">
+              </div>
+        </div>
+
+        <div style="height:100%;" ng-if="isLoadingAddMembers">
+      <div class="d-flex align-items-center justify-content-center" style="height: 100%;">
+        <i class="ti ti-loader fs-2 my-loader"></i>
+      </div>
+    </div>
+    <div style="height:100%;" ng-if="!isLoadingAddMembers">
+      <div style="height:100%;" ng-if="totalMembers == 0">
+        <div class="d-flex align-items-center justify-content-center" style="height: 100%;">
+          <span>Aucune personne</span>
+        </div>
+      </div>
+
+
+      <div ng-repeat="member in addMembersData"
+        class="d-flex p-1" style="border-top: 1px solid #cacdd0;"
+        >
+        <div class="d-flex align-items-center justify-content-center flex-column" style="width: 80px;" >
+          <div class="chat-user-avatar-wrapper">
+          <img ng-src="{{ '{{\'/user/avatar/\' + member.userIdApplication}}' }}"
+          onerror='this.onerror=null; this.src="{{ asset('assets/img/avatar.webp') }}"'
+           class="chat-user-avatar" />
+          </div>
+          
+          
+        </div>
+        
+
+        <div class="flex-grow-1 d-flex align-items-center justify-content-between  ms-2">
+        <div class="d-flex flex-column justify-content-center">
+          <span ><b>{{ "{{ member.firstname + ' ' +
+                  member.lastname}}" }}</b></span>
+                  <span style="font-size: 0.65rem;">{{ "{{member.email | truncate: 30}}" }}</span>
+                  <span class="fs-6 profile-name mt-1"
+            >{{ "{{member.data.roleLabel | truncate: 15}}" }}</span>
+        </div>
+          <input class="form-check-input" type="checkbox" ng-model="member.selected" 
+                   ng-change="onAddMemberItemChange(member)">
+        </div>
+              
+                        
+
+      </div>
+
+      <div class="d-flex p-3 align-items-center justify-content-center mb-2">
+        <div class="d-flex flex-column align-items-center font-weight-bold" style="cursor: pointer;"
+          ng-if="showLoadingMoreAddMembers && !isLoadingMoreAddMembers" ng-click="loadMoreAddMembers()">
+          <i class="ti ti-chevron-down fs-2 " style="cursor: pointer;"></i>
+          <span class="fs-6">Voir plus</span>
+
+        </div>
+
+        <i class="ti ti-loader fs-2 my-loader" ng-if="isLoadingMoreAddMembers"></i>
+      </div>
+    </div>
+ 
+      </div>
+      
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" ng-disabled="isLoadingAddingMembers" ng-click="addMembersSelected()"><span ng-if="isLoadingAddingMembers" class="my-spinner"></span>&nbsp;Valider</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+        
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+
+
