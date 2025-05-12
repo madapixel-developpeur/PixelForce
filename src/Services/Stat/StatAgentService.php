@@ -381,7 +381,9 @@ class StatAgentService
         else {
             return [
                 "totalAmount" => 0,
-                "orderCount" => 0
+                "orderCount" => 0,
+                "total_year" => 0,
+                "total_month" => 0
             ];
         }
     }
