@@ -22,6 +22,8 @@ parameters:
   secteur_securite_id: "%env(SECTEUR_SECURITE_ID)%"
   type_secteur_securite_id: "%env(TYPE_SECTEUR_SECURITE_ID)%"
   secteur_little_ponails_id: "%env(SECTEUR_LITTLE_PONAILS_ID)%"
+  secteur_probot_x_id: "%env(SECTEUR_PROBOT_X_ID)%"
+  probot_x_link_register: "%env(PROBOT_X_LINK_REGISTER)%"
 
   
 services:

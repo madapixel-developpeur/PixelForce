@@ -166,6 +166,10 @@
                                 <a class="regular-button w-100 text-center mb-3 action-button" target="__blank" href="{{ catalogues_base_url }}?ref={{generateReference(app.user.id,app.user.id) }}">{% trans %}Je veux découvrir les services de Pixelsior{% endtrans %}</a>  
                                 <a class="regular-button w-100 text-center mb-3 action-button" href="#" onclick="copyLink('{{ catalogues_base_url }}?ref={{generateReference(app.user.id,app.user.id) }}','Lien de référence {{ catalogues_base_url }}?ref={{generateReference(app.user.id,app.user.id) }} copié avec succès') ">{% trans %}J’ai un client qui veut prendre un service{% endtrans %}</a>  
                                 {% endif %}
+                                {% if app.session.get('secteurId') == secteur_probot_x_id %}
+                                <a class="regular-button w-100 text-center mb-3 action-button" target="__blank" href="{{ probot_x_link_register }}">{% trans %}Je veux découvrir les services de Probot X{% endtrans %}</a>  
+                                <a class="regular-button w-100 text-center mb-3 action-button" href="#" onclick="copyLink('{{ probot_x_link_register }}','Lien de référence {{ probot_x_link_register }} copié avec succès') ">{% trans %}J’ai un client qui veut prendre un service{% endtrans %}</a>  
+                                {% endif %}
                                 {% if app.session.get('secteurId') == secteur_little_ponails_id %}
                                     {% set onlineShopURL = get_lpn_online_shop(app.user.id) %}
                                     <a class="regular-button w-100 text-center mb-3 action-button" href="#" onclick="copyLink('{{ onlineShopURL }}','Lien copié avec succès') ">{% trans %}Ma boutique en ligne{% endtrans %}</a>  
@@ -319,8 +323,14 @@
                                 <div class="row p-5 align-items-center">
                                     <div class="col-md-7 vision-section-1">
                                         <h4 class="general-primary-text fs-2 mb-3 text-white">{{secteur.title}}</h4>
+                                        {% set the_link = '' %}
+                                        {% if secteurAgent.id ==  secteurDigitalId %}
+                                        {% set the_link = catalogues_base_url ~ '?ref=' ~ generateReference(app.user.id,app.user.id) %}
+                                        {% elseif secteurAgent.id ==  secteur_probot_x_id %}
+                                        {% set the_link = probot_x_link_register %}
+                                        {% endif %}
                                         <p>
-                                            {{secteur.longDescriptionForDarkBackground |replace({'[the_link]': catalogues_base_url ~ '?ref=' ~ generateReference(app.user.id,app.user.id) }) | raw }}  
+                                            {{secteur.longDescriptionForDarkBackground |replace({'[the_link]': the_link }) | raw }}  
                                         </p>
                                         {% if secteurAgent.id ==  secteurDigitalId %}
                                         <h6 class="mt-3">

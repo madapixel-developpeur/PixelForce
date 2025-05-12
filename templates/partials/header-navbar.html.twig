@@ -53,6 +53,8 @@
                     {{ include ('partials/secteur/finance.html.twig') }}
                 {% elseif app.session.get('secteurId') == secteur_little_ponails_id %}
                     {{ include ('partials/secteur/little_ponails.html.twig') }}
+                {% elseif app.session.get('secteurId') == secteur_probot_x_id %}
+                    {{ include ('partials/secteur/probotx.html.twig') }}
                 {% elseif app.session.get('typeSecteurId') == type_secteur_securite_id %}
                     {{ include ('partials/secteur/security.html.twig') }}
                 {% else %}
@@ -106,7 +108,7 @@
                                 </li>
                                 
                                 
-                                {% if  app.session.get('secteurId')  in [secteurDigitalId,secteur_little_ponails_id] %}
+                                {% if  app.session.get('secteurId')  in [secteurDigitalId,secteur_little_ponails_id,secteur_probot_x_id] %}
                                 <li class="d-flex p-0">
                                     <span class="">
                                         <a class="header-user text-primary" href="#"  onclick="copyLink('{{ url('agent_inscription', {'ambassador_username':  app.user.username != "" ?  app.user.username : ' '}) }}') " >

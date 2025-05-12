@@ -179,6 +179,9 @@ class HelperFunction extends AbstractExtension
         elseif($secteurId == $_ENV['SECTEUR_LITTLE_PONAILS_ID']){
             return $this->getLPNOnlineShop($userId);
         }
+        elseif($secteurId == $_ENV['SECTEUR_PROBOT_X_ID']){
+            return $_ENV['PROBOT_X_LINK_REGISTER'];
+        }
         else{
             return $link;
         }
