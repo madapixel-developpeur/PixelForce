@@ -105,6 +105,16 @@
                                                     </div>
                                                 {% endfor %}
                                             </div>
+                                            <div class="row mt-4">
+                                                <div class="col-12 ">
+                                                    <div class="text-center alert alert-secondary">
+                                                        ⚠️ 
+                                                        {% trans %} 
+                                                            Pixelforce est entièrement gratuit. Aucune offre payante n'est associée à notre plateforme.
+                                                        {% endtrans %}
+                                                    </div>
+                                                </div>
+                                            </div>    
                                         {{ form_start(form) }}
                                             <div class="form-step {% if currentStep == 0 %}active{% endif %}" id="step-0">
                                                  <h5 class="mt-4 mb-3">{% trans %}Information du compte{% endtrans %}</h5>
