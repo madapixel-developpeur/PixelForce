@@ -185,7 +185,7 @@ class AgentAccountController extends AbstractController
             $agentSecteur->setSecteur($secteur);
             $agentSecteur->setStatut(1);
             $agentSecteur->setDateValidation(new \DateTime());
-            $this->entityManager->save($agentSecteur);
+            $this->entityManager->save($agentSecteur,true);
             if($secteur->getId() == $_ENV['SECTEUR_LITTLE_PONAILS_ID']){
                 $this->authService->checkAndCreateAccountLpn($user);
             }
