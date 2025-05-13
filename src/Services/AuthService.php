@@ -236,9 +236,9 @@ class AuthService
         
     }
 
-    public function checkAndCreateAccountLpn(User $user){
+    public function checkAndCreateAccountLpn(User $user,?AgentSecteur $agentSecteur = null){
         try {
-            $agentSecteur = $user->getAgentSecteurById($_ENV['SECTEUR_LITTLE_PONAILS_ID']);
+            $agentSecteur = $agentSecteur ??  $user->getAgentSecteurById($_ENV['SECTEUR_LITTLE_PONAILS_ID']);
             if(!$agentSecteur || $agentSecteur?->getSectorPlatformUsername()){
                 return;
             }
