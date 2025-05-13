@@ -1,0 +1,1 @@
+update agent_secteur set sector_platform_document_state = 1 where secteur_id = 20 and sector_platform_username IS NOT NULL
