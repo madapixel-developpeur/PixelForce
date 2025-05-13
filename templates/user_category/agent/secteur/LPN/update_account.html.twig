@@ -14,15 +14,24 @@
 		<div class="card card-body-custom mt-2 px-5 py-5">
 			<div class="row  justify-content-center">
 				<div class="col-md-8">
+				
 					<h1 class='text-center mb-5'>{% trans %}Information sur mon compte Little Ponails !{% endtrans %}</h1>
-					{{ form_start(form, { attr: { id: 'registration-form', enctype: 'multipart/form-data' } }) }}
-
-					<!-- First Name Field -->
-                    <div class="d-flex justify-content-end mb-3">
+					<div class="d-flex justify-content-end mb-3">
                         <a href="{{ bo_secteur_little_ponails }}" class="btn btn-primary" target="_blank">
                             {% trans %} Ouvrir mon back-office{% endtrans %} <i class="fas fa-external-link-alt me-2"></i>
                         </a>
                     </div>
+					{% if app.session.get('secteurId') == secteur_little_ponails_id and not app.user.isLpnInformationCompleted %}
+						<div class="bg-warning bg-opacity-10 border border-warning rounded p-3 d-flex align-items-start mt-3">
+							<span class="me-2 fs-5 text-warning">⚠️</span>
+							<div class="text-warning">
+								{# <strong>Action requise</strong><br> #}
+								{% trans %}Vous ne pourrez recevoir vos rémunérations qu'après avoir complété les informations supplémentaires requises.{% endtrans %}
+							</div>
+						</div>
+					{% endif %}
+					<!-- First Name Field -->
+                  
 					<div class="form-group mb-3">
                         <label for="firstname" class="form-label">{% trans %}Prénom{% endtrans %}</label>
                         <input type="text" class="form-control" id="firstname" value="{{ user.prenom }}" disabled>
@@ -40,35 +49,50 @@
                         <input type="text" class="form-control" id="username" value="{{ user.prenom }}" disabled>
 					</div>
 
-					<!-- Sponsor Field -->
-					{# <div class="form-group mb-3">
-						<label for="parrain" class="form-label">{% trans %}Parrain{% endtrans %}</label>
-                        <input type="text" class="form-control" id="parrain" value="--" disabled>
-					</div> #}
+					{% if app.session.get('secteurId') == secteur_little_ponails_id and not app.user.isLpnInformationCompleted %}
+						{{ form_start(form, { attr: { id: 'registration-form', enctype: 'multipart/form-data' } }) }}
+							
+						
+							<!-- Sponsor Field -->
+							{# <div class="form-group mb-3">
+								<label for="parrain" class="form-label">{% trans %}Parrain{% endtrans %}</label>
+								<input type="text" class="form-control" id="parrain" value="--" disabled>
+							</div> #}
 
-					
+							
 
-					<!-- Supporting Documents Field -->
-					<div class="form-group mb-3">
-						{{ form_row(form.supporting_documents) }}
-					</div>
+							<!-- Supporting Documents Field -->
+						
+							<div class="form-group mb-3">
+								{{ form_row(form.identity) }}
+							</div>
 
-				
-					<div >
-						<div class="form-group mb-3">
-							{{ form_label(form.kbis) }}
-							{{ form_widget(form.kbis, {'attr': {'class': 'form-control'}}) }}
-							{{ form_errors(form.kbis) }}
+						
+							<div class="form-group mb-3">
+								{{ form_label(form.kbis) }}
+								{{ form_widget(form.kbis, {'attr': {'class': 'form-control'}}) }}
+								{{ form_errors(form.kbis) }}
+							</div>
+
+							{% if needCredentials %}
+								<div class="form-group mb-3">
+									{{ form_row(form.password) }}
+								</div>
+							{% endif %}
+							
+							<button type="submit" class="btn btn-primary">{% trans %}Soumettre{% endtrans %}</button>
+
+						{{ form_end(form) }}
+
+					{% else %}
+						<div class="bg-success bg-opacity-10 border border-success rounded p-3 d-flex align-items-start mt-3">
+							<span class="me-2 fs-5 text-success">📄</span>
+							<div class="text-success">
+								<strong>{% trans %}Documents complétés{% endtrans %}</strong><br>
+								{% trans %}Vous avez fourni les documents supplémentaires requis.{% endtrans %}
+							</div>
 						</div>
-					</div>
-     
-
-					
-
-					<!-- Submit Button -->
-					<button type="submit" class="btn btn-primary">{% trans %}Soumettre{% endtrans %}</button>
-
-					{{ form_end(form) }}
+					{% endif %}
 				</div>
 			</div>
 		</div>

@@ -644,8 +644,15 @@ Compte: Account
 'Information sur mon compte Little Ponails !': 'My Little Ponails account information'
 'Ouvrir mon back-office': 'Open my back office'
 Soumettre: Submit
-'Vous ne pourrez recevoir vos rémunérations qu''après avoir complété les informations supplémentaires requises.': '⚠️ You will not be eligible to receive your payments until you have completed the required additional information.'
+'Vous ne pourrez recevoir vos rémunérations qu''après avoir complété les informations supplémentaires requises.': 'You will not be eligible to receive your payments until you have completed the required additional information.'
 'Compléter mes informations': 'Complete my information'
+'Vos documents ont été envoyés avec succès.': 'Your documents have been successfully submitted.'
+'Veuillez vous inscrire sur Little Ponails': 'Please register on Little Ponails'
+'Type de document non prise en charge': 'Unsupported document type'
+'Mot de passe Little Ponails': 'Password Little Ponails'
+'Documents complétés': 'Completed documents'
+'Vous avez fourni les documents supplémentaires requis.': 'You have provided the required supplementary documents.'
+'Veuillez retaper votre mot de passe Little Ponails, s''il vous plaît.': 'Please re-enter your Little Ponails password.'
 
 
 

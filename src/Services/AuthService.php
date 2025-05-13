@@ -16,11 +16,14 @@ use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\AgentSecteurRepository;
 use App\Repository\ForgotPasswordRepository;
+use Symfony\Component\HttpFoundation\Response;
 use App\Repository\AccountValidationRepository;
 use App\Repository\CategorieFormationRepository;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\Mime\Part\Multipart\FormDataPart;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Contracts\HttpClient\Exception\HttpExceptionInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
@@ -44,6 +47,8 @@ class AuthService
         private CategorieFormationRepository $categorieFormationRepository,
         private AgentSecteurRepository $agentSecteurRepository,
         private HttpClientInterface $client,
+        private SessionInterface $session,
+        private TranslatorInterface $translator,
     )
     {
         $this->entityManager = $entityManager;
@@ -257,6 +262,107 @@ class AuthService
             throw $th;
         }
 
+    }
+
+    public function getLoginToken(User $user,$data){
+        if($this->session->get('lpn_token')){
+            return $this->session->get('lpn_token');
+        }
+        $LPN_BACK_URL = $_ENV['LITTLE_PONAILS_BACK_URL'];
+
+
+        $agentSecteur = $user->getAgentSecteurById($_ENV['SECTEUR_LITTLE_PONAILS_ID']);
+        if(!$agentSecteur){
+            throw new CustomException($this->translator->trans('Veuillez vous inscrire sur Little Ponails'));
+        }
+
+        $credentials =   [
+            'password' => $data['password'],
+            'username' => $agentSecteur->getSectorPlatformUsername(),
+        ];
+        try{
+            $response = $this->client->request(
+                'GET',
+                $LPN_BACK_URL . '/api/auth/login',
+                [
+                    'json' => $credentials
+                ]
+            );
+
+            $content = json_decode($response->getContent(), true);
+            $this->session->set('lpn_token', $content['token']);
+            return $content['token'];
+        } catch (HttpExceptionInterface $e) {
+            $statusCode = $e->getResponse()->getStatusCode();
+            if ($statusCode === Response::HTTP_UNAUTHORIZED ) {
+                $content = json_decode($e->getResponse()->getContent(false), true);
+                throw new CustomException($content['message']);
+            }
+            throw $e; 
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
+
+    public function sendSupportingDocumentsToLpn(User $user,$files,$token){
+        $LPN_BACK_URL = $_ENV['LITTLE_PONAILS_BACK_URL'];
+        try{
+            $formData = new FormDataPart($files);
+            $response = $this->client->request(
+                'POST',
+                $LPN_BACK_URL . '/api/mlm/supporting_documents',
+                [
+                    'headers' => array_merge(
+                        $formData->getPreparedHeaders()->toArray(),
+                        ['Authorization' => 'Bearer ' . $token]
+                    ),
+                    'body' => $formData->bodyToIterable(),
+                ]
+            );
+
+            $content = json_decode($response->getContent(), true);
+            return $content;
+        } catch (HttpExceptionInterface $e) {
+            $statusCode = $e->getResponse()->getStatusCode();
+            if ($statusCode === 422 || $statusCode === 400) {
+                $content = json_decode($e->getResponse()->getContent(false), true);
+                throw new CustomException($content['message']);
+            }
+            if ($statusCode === 401) {
+                $this->session->remove('lpn_token');
+                throw new CustomException($this->translator->trans("Veuillez retaper votre mot de passe Little Ponails, s'il vous plaît."));
+            }
+            throw $e; 
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
+
+    public function sendSupportingDocuments(User $user,$info,$documentArray){
+        $this->session->remove('lpn_token');
+        try {
+            $token = $this->getLoginToken($user,$info);
+            $allowedDocumentType = ['identity', 'kbis', 'carte_vitale' , 'siren_vdi'];
+            foreach($documentArray as $key => $value){
+                if(!in_array($key,$allowedDocumentType)){
+                    throw new CustomException($this->translator->trans('Type de document non prise en charge'));
+                } 
+                $infoToSend = [
+                    'supporting_document_file_type' =>  $key,
+                    'supporting_documents' => $value
+                ];
+                $this->sendSupportingDocumentsToLpn($user,$infoToSend,$token);
+            }
+            $agentSecteur = $user->getAgentSecteurById($_ENV['SECTEUR_LITTLE_PONAILS_ID']);
+            if($agentSecteur){
+               $agentSecteur->setSectorPlatformDocumentState(AgentSecteur::DOCUMENT_SENT);
+               $this->entityManager->persist($agentSecteur);
+               $this->entityManager->flush();
+            }            
+            $this->session->remove('lpn_token');
+        } catch (\Throwable $th) {
+            throw $th;
+        }
     }
 
 

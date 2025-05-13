@@ -141,15 +141,28 @@ class AgentLinkedAccountController extends AbstractController
     #[Route('/modifier-compte',name : 'agent_update_platform_secteur_account')]
     public function updateAccount(Request $request): Response
     {   
-        $form = $this->createForm(UpdateLittlePonailsFormType::class, []);
+        $needCredentials = $this->session->get('lpn_token') ? false : true;
+
+
+        $form = $this->createForm(UpdateLittlePonailsFormType::class, [],[
+            'need_credentials' =>  $needCredentials
+        ]);
         $secteur_id = $this->session->get('secteurId');
         $secteur = $this->secteurRepository->findOneBy(['id' => $secteur_id]);
-
 
         $form->handleRequest($request);
         if ($form->isSubmitted()  && $form->isValid()) {
             try {
-               
+                $data = $form->getData();
+                $files = $this->getFilesDataToSendApi($request,[
+                    'identity',
+                    'kbis'
+                ],'update_little_ponails_form');
+                $this->authService->sendSupportingDocuments($this->getUser(),$data,$files);
+                $this->addFlash(
+                    'success',
+                    $this->translator->trans("Vos documents ont été envoyés avec succès.")    
+                );
             } catch (CustomException $e) {
                 $this->addFlash(
                     'danger',
@@ -166,13 +179,14 @@ class AgentLinkedAccountController extends AbstractController
 
         return $this->render('user_category/agent/secteur/LPN/update_account.html.twig',[
             'form' => $form->createView(),
-            'user' => $this->getUser()
+            'user' => $this->getUser(),
+            'needCredentials' => $needCredentials
         ]);
     }
 
-    public function getFilesDataToSendApi(Request $request , array $keys){
+    public function getFilesDataToSendApi(Request $request , array $keys,$form_name = 'sign_up_little_ponails_form' ){
         $multipart = [];
-        $filesData = $request->files->all()['sign_up_little_ponails_form'];
+        $filesData = $request->files->all()[$form_name];
         foreach ($keys as $key) {
             $documents = $filesData[$key];
             if(!$documents) continue;

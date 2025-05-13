@@ -26,7 +26,7 @@ class UpdateLittlePonailsFormType extends AbstractType
     {
         $builder
             
-            ->add('supporting_documents', FileType::class, [
+            ->add('identity', FileType::class, [
                 'label' => $this->translator->trans("Pièce(s) d'identité"),
                 'mapped' => false,
                 'multiple' => true,
@@ -48,34 +48,25 @@ class UpdateLittlePonailsFormType extends AbstractType
                 'mapped' => false,
                 'multiple' => true,
                 'required' => true,
-            ])
-        ;
+            ]);
+            
 
-        // $builder->addEventListener(\Symfony\Component\Form\FormEvents::POST_SUBMIT, function ($event) {
-        //     $form = $event->getForm();
-        //     $data = $form->getData();
+        if($options['need_credentials']){
+            $builder->add('password', PasswordType::class, [
+                'label' => $this->translator->trans("Mot de passe Little Ponails"),
+                'required' => true, 
+                ])
+            ;
+        }
 
-        //     $status = $data['legal_status'] ?? null;
-
-        //     if ($status === 'REVENDEUR' && !$form->get('kbis')->getData()) {
-        //         $form->get('kbis')->addError(new \Symfony\Component\Form\FormError($this->translator->trans('Le KBis est requis pour les revendeurs.')));
-        //     }
-
-        //     if ($status === 'VDI') {
-        //         if (!$form->get('carte_vitale')->getData()) {
-        //             $form->get('carte_vitale')->addError(new \Symfony\Component\Form\FormError($this->translator->trans('La Carte Vitale est requise pour les VDI.')));
-        //         }
-        //         if (!$form->get('siren_vdi')->getData()) {
-        //             $form->get('siren_vdi')->addError(new \Symfony\Component\Form\FormError($this->translator->trans('Le SIREN VDI est requis pour les VDI.')));
-        //         }
-        //     }
-        // });
+       
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'csrf_protection' => true,
+            'need_credentials' => true
         ]);
     }
 }
