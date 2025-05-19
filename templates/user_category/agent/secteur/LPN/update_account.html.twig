@@ -16,7 +16,15 @@
 				<div class="col-md-8">
 				
 					<h1 class='text-center mb-5'>{% trans %}Information sur mon compte Little Ponails !{% endtrans %}</h1>
-					<div class="d-flex justify-content-end mb-3">
+					<div class="d-flex justify-content-between mb-3">
+						<span><span class="h6">{{'Compte' | trans }} :</span>
+						{% set accontStatusParam = littlePonailsAgentSecteur.lpnStatusParam %}
+							<button class="btn btn-sm btn-{{accontStatusParam.btn_class }}">
+								{{
+									accontStatusParam.str | trans
+								}}
+							</button>
+						</span>
                         <a href="{{ bo_secteur_little_ponails }}" class="btn btn-primary" target="_blank">
                             {% trans %} Ouvrir mon back-office{% endtrans %} <i class="fas fa-external-link-alt me-2"></i>
                         </a>
@@ -53,14 +61,6 @@
 						{{ form_start(form, { attr: { id: 'registration-form', enctype: 'multipart/form-data' } }) }}
 							
 						
-							<!-- Sponsor Field -->
-							{# <div class="form-group mb-3">
-								<label for="parrain" class="form-label">{% trans %}Parrain{% endtrans %}</label>
-								<input type="text" class="form-control" id="parrain" value="--" disabled>
-							</div> #}
-
-							
-
 							<!-- Supporting Documents Field -->
 						
 							<div class="form-group mb-3">
@@ -92,7 +92,41 @@
 								{% trans %}Vous avez fourni les documents supplémentaires requis.{% endtrans %}
 							</div>
 						</div>
+						<hr>
+						{% if littlePonailsAgentSecteur.accountFromPlaformStatus == constant('App\\Entity\\AgentSecteur::ACCOUNT_CREATED') %}
+							<div class"next-step-block">
+								<h6>{{ 'buy_kit'|trans({'{{ url }}': lpn_starter_kit_shop_url})|raw }}</h6>
+								<h6>{{ 'fill_contract_reseller_document'|trans({'{{ url }}': lpn_link_contract_form_link})|raw }} <a href="mailto:{{ lpn_contact_mail }}">{{ lpn_contact_mail }}</a></h6>
+								<br>
+								<div class="d-flex justify-content-end mb-3">
+									<a href="{{ lpn_starter_kit_shop_url }}" class="btn btn-primary mx-1" target="_blank">
+										{% trans %}Acheter mon kit de démarrage{% endtrans %} <i class="fas fa-toolbox me-2"></i>
+									</a>
+									<a href="{{ path('agent_lpn_sign_reseller_contract') }}" class="btn btn-primary mx-1">
+										{% trans %}Remplir le contrat de revendeur{% endtrans %} <i class="fas fa-file me-2"></i>
+									</a>
+								</div>
+							</div>
+						{% elseif littlePonailsAgentSecteur.accountFromPlaformStatus == constant('App\\Entity\\AgentSecteur::ACCOUNT_WAITING_FOR_VALIDATION') %}
+							<div class="bg-warning bg-opacity-10 border border-warning rounded p-3 d-flex align-items-start mt-3">
+								<span class="me-2 fs-5 text-warning"></span>
+								<div class="text-warning">
+									{# <strong>Action requise</strong><br> #}
+									{% trans %}Votre compte est en cours de validation.{% endtrans %}
+								</div>
+							</div>
+						{% elseif littlePonailsAgentSecteur.accountFromPlaformStatus == constant('App\\Entity\\AgentSecteur::ACCOUNT_INACTIVE') %}
+							<div class="bg-danger bg-opacity-10 border border-danger rounded p-3 d-flex align-items-start mt-3">
+								<span class="me-2 fs-5 text-danger"></span>
+								<div class="text-danger">
+									{# <strong>Action requise</strong><br> #}
+									{% trans %}Votre compte a été désactivé.{% endtrans %}
+								</div>
+							</div>
+						{% endif %}
+
 					{% endif %}
+					
 				</div>
 			</div>
 		</div>

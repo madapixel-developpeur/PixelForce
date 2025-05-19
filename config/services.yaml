@@ -86,3 +86,11 @@ services:
         }
   App\EventSubscriber\LocaleSubscriber:
     tags: ["kernel.event_subscriber"]
+
+  App\EventListener\LpnTokenListener:
+    tags:
+      - {
+          name: "kernel.event_listener",
+          event: "kernel.request",
+          method: "onKernelRequest",
+        }

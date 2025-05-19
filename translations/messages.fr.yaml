@@ -652,3 +652,27 @@ Soumettre: Soumettre
 'Documents complétés': 'Documents complétés'
 'Vous avez fourni les documents supplémentaires requis.': 'Vous avez fourni les documents supplémentaires requis.'
 'Veuillez retaper votre mot de passe Little Ponails, s''il vous plaît.': 'Veuillez retaper votre mot de passe Little Ponails, s''il vous plaît.'
+buy_kit: "N’attendez plus, achetez votre Kit '<a href=\"{{ url }}\" target=\"_blank\">ici</a>' et préparez-vous à faire décoller votre activité avec nous !"
+fill_contract_reseller_document: "Après votre inscription, nous vous invitons à remplir ce document '<a href=\"{{ url }}\" target=\"_blank\">ici</a>' pour formaliser notre collaboration et nous le renvoyer à l’adresse email "
+"Désactivé": "Désactivé"
+"Actif": "Actif"
+"En cours de validation": "En cours de validation"
+'Votre signature et vos informations ont été envoyées avec succès.': 'Votre signature et vos informations ont été envoyées avec succès.'
+'Nom d’utilisateur': 'Nom d’utilisateur'
+'Accès Little Ponails vérifier avec succès': 'Accès Little Ponails vérifier avec succès'
+'Veuillez fournir une signature': 'Veuillez fournir une signature'
+N°SIREN: N°SIREN
+'Box à commander': 'Box à commander'
+'Veuillez choisir une box': 'Veuillez choisir une box'
+'Accès Little Ponails': 'Accès Little Ponails'
+'Veuillez entrer votre mot de passe Little Ponails pour continuer': 'Veuillez entrer votre mot de passe Little Ponails pour continuer'
+Login: Login
+'Acheter mon kit de démarrage': 'Acheter mon kit de démarrage'
+'Remplir le contrat de revendeur': 'Remplir le contrat de revendeur'
+'Votre compte est en cours de validation.': 'Votre compte est en cours de validation.'
+'Votre compte a été désactivé.': 'Votre compte a été désactivé.'
+'Contrat revendeur': 'Contrat revendeur'
+'CONTRAT REVENDEUR Little Egérie !': 'CONTRAT REVENDEUR Little Egérie !'
+'Signature requise': 'Signature requise'
+'Veuillez signer avant de soumettre': 'Veuillez signer avant de soumettre'
+'Je veux découvrir les services de Probot X': 'Je veux découvrir les services de Probot X'

@@ -227,7 +227,7 @@ class AuthService
             'lastname'=> $user->getNom(),
             'username'=> $user->getUsername(),
             'email'=> $user->getEmail(),
-            'legal_status'=> 'REVENDEUR',
+            'legal_status'=> Constants::DEFAULT_LPN_LEGAL_STATUS,
             'sponsor'=> $_ENV['LITTLE_PONAILS_DEFAULT_SPONSOR'],
             'provider'=> Constants::LPN_PIXELFORCE_PROVIDER,
             'password'=> Constants::DEFAULT_LPN_PASSWORD 
@@ -339,7 +339,6 @@ class AuthService
     }
 
     public function sendSupportingDocuments(User $user,$info,$documentArray){
-        $this->session->remove('lpn_token');
         try {
             $token = $this->getLoginToken($user,$info);
             $allowedDocumentType = ['identity', 'kbis', 'carte_vitale' , 'siren_vdi'];
@@ -362,6 +361,109 @@ class AuthService
             $this->session->remove('lpn_token');
         } catch (\Throwable $th) {
             throw $th;
+        }
+    }
+
+    public function getAccessToLpn(User $user,$info){
+        try {
+            $token = $this->getLoginToken($user,$info);
+            return $token; 
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
+
+    public function saveContractToLpn(User $user,$data,$token){
+        $LPN_BACK_URL = $_ENV['LITTLE_PONAILS_BACK_URL'];
+        try{
+            $formData = new FormDataPart($data);
+            $response = $this->client->request(
+                'POST',
+                $LPN_BACK_URL . '/api/mlm/agent/contracts',
+                [
+                    'headers' => array_merge(
+                        $formData->getPreparedHeaders()->toArray(),
+                        ['Authorization' => 'Bearer ' . $token]
+                    ),
+                    'body' => $formData->bodyToIterable(),
+                ]
+            );
+
+            $content = json_decode($response->getContent(), true);
+            return $content;
+        } catch (HttpExceptionInterface $e) {
+            $statusCode = $e->getResponse()->getStatusCode();
+            if ($statusCode === 422 || $statusCode === 400) {
+                $content = json_decode($e->getResponse()->getContent(false), true);
+                throw new CustomException($content['message']);
+            }
+            if ($statusCode === 401) {
+                $this->session->remove('lpn_token');
+                throw new CustomException($this->translator->trans("Veuillez retaper votre mot de passe Little Ponails, s'il vous plaît."));
+            }
+            throw $e; 
+        } catch (\Throwable $th) {
+            throw $th;
+        }      
+    }
+
+
+    public function saveAgentContract(User $user,$data){
+        $token = '';
+        if($this->session->get('lpn_token')){
+            $token = $this->session->get('lpn_token');
+        }else{
+            throw new CustomException($this->translator->trans("Veuillez retaper votre mot de passe Little Ponails, s'il vous plaît."));
+        }
+        $this->saveContractToLpn($user,$data,$token);
+        $agentSecteurLpn = $user->getAgentSecteurById($_ENV['SECTEUR_LITTLE_PONAILS_ID']);
+        $agentSecteurLpn->setAccountFromPlaformStatus(AgentSecteur::ACCOUNT_WAITING_FOR_VALIDATION);
+        $this->entityManager->persist($agentSecteurLpn);
+        $this->entityManager->flush();
+    }
+
+    public function getAgentInformationFromLpn($token){
+        $LPN_BACK_URL = $_ENV['LITTLE_PONAILS_BACK_URL'];
+        try{
+            $response = $this->client->request(
+                'GET',
+                $LPN_BACK_URL . '/api/mlm/agent',
+                [
+                    'headers' =>  ['Authorization' => 'Bearer ' . $token]
+                    
+                ]
+            );
+
+            $content = json_decode($response->getContent(), true);
+            return $content;
+        } catch (HttpExceptionInterface $e) {
+            $statusCode = $e->getResponse()->getStatusCode();
+            if ($statusCode === 422 || $statusCode === 400) {
+                $content = json_decode($e->getResponse()->getContent(false), true);
+                throw new CustomException($content['message']);
+            }
+            if ($statusCode === 401) {
+                $this->session->remove('lpn_token');
+                throw new CustomException($this->translator->trans("Veuillez retaper votre mot de passe Little Ponails, s'il vous plaît."));
+            }
+            throw $e; 
+        } catch (\Throwable $th) {
+            throw $th;
+        } 
+    }
+
+    public function getAccountStatusFromLpn(AgentSecteur $lpnAgentSecteur){
+        $token = '';
+        if($this->session->get('lpn_token')){
+            $token = $this->session->get('lpn_token');
+        }else{
+            throw new CustomException($this->translator->trans("Veuillez retaper votre mot de passe Little Ponails, s'il vous plaît."));
+        }
+        $agentInfo = $this->getAgentInformationFromLpn($token);
+        if($agentInfo){
+            $lpnAgentSecteur->setAccountFromPlaformStatus($agentInfo['status']);
+            $this->entityManager->persist($lpnAgentSecteur);
+            $this->entityManager->flush();
         }
     }
 

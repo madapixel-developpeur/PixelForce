@@ -653,6 +653,30 @@ Soumettre: Submit
 'Documents complétés': 'Completed documents'
 'Vous avez fourni les documents supplémentaires requis.': 'You have provided the required supplementary documents.'
 'Veuillez retaper votre mot de passe Little Ponails, s''il vous plaît.': 'Please re-enter your Little Ponails password.'
+buy_kit: "Don't wait any longer, purchase your kit '<a href=\"{{ url }}\" target=\"_blank\">here</a>' and get ready to launch your business with us!"
+fill_contract_reseller_document: "After your registration, we invite you to complete this document '<a href=\"{{ url }}\" target=\"_blank\">here</a>' to formalise our collaboration and send it back to us at the provided email address"
+"Désactivé": "Inactive"
+"Actif": "Active"
+"En cours de validation": "Pending validation"
+'Votre signature et vos informations ont été envoyées avec succès.': 'Your signature and information have been successfully submitted.'
+'Nom d’utilisateur': 'Username'
+'Accès Little Ponails vérifier avec succès': 'Access to Little Ponails successfully verified'
+'Veuillez fournir une signature': 'Please provide a signature'
+'N°SIREN': 'SIREN No.'
+'Box à commander': 'Box to order'
+'Veuillez choisir une box': 'Please choose a box'
+'Accès Little Ponails': 'Access Little Ponails'
+'Veuillez entrer votre mot de passe Little Ponails pour continuer': 'Please enter your Little Ponails password to continue'
+'Login': 'Login'
+'Acheter mon kit de démarrage': 'Buy my starter kit'
+'Remplir le contrat de revendeur': 'Complete the reseller contract'
+'Votre compte est en cours de validation.': 'Your account is pending validation.'
+'Votre compte a été désactivé.': 'Your account has been deactivated.'
+'Contrat revendeur': 'Reseller contract'
+'CONTRAT REVENDEUR Little Egérie !': 'Little Egérie RESELLER CONTRACT!'
+'Signature requise': 'Signature required'
+'Veuillez signer avant de soumettre': 'Please sign before submitting'
+'Je veux découvrir les services de Probot X': 'I want to discover the services of Probot X'
 
 
 

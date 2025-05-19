@@ -17,6 +17,8 @@ class Constants {
 
 
     public const DEFAULT_LPN_PASSWORD='Pa$$word!'; 
+
+    public const DEFAULT_LPN_LEGAL_STATUS = "REVENDEUR";
     
 
     public static function getExcludedPathsForSectorCheckUp(array $givenPath = []): array

@@ -1,0 +1,162 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	{% trans %}Contrat revendeur{% endtrans %}
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+
+{% endblock %}
+
+{% block body %}
+	<div class="row px-3 content-formation">
+		<div class="card card-body-custom mt-2 px-5 py-5">
+			<div class="row  justify-content-center">
+				<div class="col-md-8">
+					<h1 class='text-center'>{% trans %}CONTRAT REVENDEUR Little Egérie !{% endtrans %}</h1>
+					{{ form_start(form, { attr: { id: 'signing-contract-form', enctype: 'multipart/form-data' } }) }}
+
+                    <div class="form-group mb-3">
+						{{ form_label(form.country_code) }}
+						{{ form_widget(form.country_code, {'attr': {'class': 'form-control'}}) }}
+						{{ form_errors(form.country_code) }}
+					</div>
+
+                    <!-- Last Name Field -->
+					<div class="form-group mb-3">
+						{{ form_label(form.lastname) }}
+						{{ form_widget(form.lastname, {'attr': {'class': 'form-control'}}) }}
+						{{ form_errors(form.lastname) }}
+					</div>
+
+
+					<!-- First Name Field -->
+					<div class="form-group mb-3">
+						{{ form_label(form.firstname) }}
+						{{ form_widget(form.firstname, {'attr': {'class': 'form-control'}}) }}
+						{{ form_errors(form.firstname) }}
+					</div>
+
+					<div class="form-group mb-3">
+						{{ form_label(form.address) }}
+						{{ form_widget(form.address, {'attr': {'class': 'form-control'}}) }}
+						{{ form_errors(form.address) }}
+					</div>
+					
+
+				
+
+					<div class="form-group mb-3">
+						{{ form_label(form.phone_number) }}
+						{{ form_widget(form.phone_number, {'attr': {'class': 'form-control'}}) }}
+						{{ form_errors(form.phone_number) }}
+					</div>
+
+					<div class="form-group mb-3">
+						{{ form_label(form.postal_code) }}
+						{{ form_widget(form.postal_code, {'attr': {'class': 'form-control'}}) }}
+						{{ form_errors(form.postal_code) }}
+					</div>
+
+                    <div class="form-group mb-3">
+						{{ form_label(form.city) }}
+						{{ form_widget(form.city, {'attr': {'class': 'form-control'}}) }}
+						{{ form_errors(form.city) }}
+					</div>
+
+                    <div class="form-group mb-3">
+						{{ form_label(form.email) }}
+						{{ form_widget(form.email, {'attr': {'class': 'form-control'}}) }}
+						{{ form_errors(form.email) }}
+					</div>
+
+                      <div class="form-group mb-3">
+						{{ form_label(form.siren) }}
+						{{ form_widget(form.siren, {'attr': {'class': 'form-control'}}) }}
+						{{ form_errors(form.siren) }}
+					</div>
+
+ 					<div class="form-group mb-3">
+						{{ form_label(form.box) }}
+						{{ form_widget(form.box, {'attr': {'class': 'form-control'}}) }}
+						{{ form_errors(form.box) }}
+					</div>
+
+					<div class="form-group mb-3 text-center">
+						<label class="form-label d-block mb-2">Signature</label>
+
+						<div class="mb-2">
+							<canvas id="signatureCanvas" width="400" height="200" style="border: 1px solid #ccc;"></canvas>
+						</div>
+
+						<button type="button" class="btn btn-secondary" onclick="clearSignature()">
+							{{ 'Réessayer'|trans }}
+						</button>
+						<input type="hidden" name="signatureData" id="signatureData">
+					</div>
+
+				
+					
+
+					
+
+					<!-- Submit Button -->
+					<button type="submit" class="btn btn-primary">{% trans %}Soumettre{% endtrans %}</button>
+
+					{{ form_end(form) }}
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+{% block javascripts %}
+	{{ parent() }}
+	 <script src="https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js"></script>
+    <script>
+		var formAlreadyValidated = false;
+		$(document).ready(function () { 	
+           $('#signing-contract-form').on('submit', function(event){
+				if(formAlreadyValidated){
+					return true;
+				}
+				event.preventDefault();
+				handleSubmit();
+		   })
+        });
+
+        var canvas = document.getElementById('signatureCanvas');
+       	var signaturePad = new SignaturePad(canvas, {
+			penColor: 'black',              // Signature color
+			backgroundColor: '#f4f4f4',     // Light grey pad background
+			minWidth: 1,
+			maxWidth: 1.5,
+			throttle: 0,
+		});
+
+        
+
+        function clearSignature() {
+            signaturePad.clear();
+        }
+
+		function handleSubmit() {
+			if (signaturePad.isEmpty()) {
+				 Swal.fire({
+					icon: 'warning',
+					title: "{{ 'Signature requise' | trans }}",
+					text: "{{ 'Veuillez signer avant de soumettre' | trans }}",
+					type: "warning",
+					confirmButtonClass: "btn btn-primary long",
+					buttonsStyling: !1 
+				});
+				return; 
+			}
+			const signatureData = signaturePad.toDataURL();
+			document.getElementById('signatureData').value = signatureData;
+			formAlreadyValidated = true;
+			$('#signing-contract-form').submit(); 
+		}
+    </script>
+	
+{% endblock %}

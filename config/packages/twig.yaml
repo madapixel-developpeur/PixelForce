@@ -30,6 +30,9 @@ twig:
     bo_secteur_little_ponails: "%env(LITTLE_PONAILS_BACK_OFFICE_URL)%"
     secteur_probot_x_id: "%env(SECTEUR_PROBOT_X_ID)%"
     probot_x_link_register: "%env(PROBOT_X_LINK_REGISTER)%"
+    lpn_link_contract_form_link: "%env(LITTLE_PONAILS_FORM_LINK)%"
+    lpn_starter_kit_shop_url: "%env(LITTLE_PONAILS_STARTER_KIT_SHOP_URL)%"
+    lpn_contact_mail: "%env(LITTLE_PONAILS_CONTACT_MAIL)%"
     
   paths:
     # pour spécifier le namespace des image. Exemple d'utilisation : email.image('@images/logo.png')

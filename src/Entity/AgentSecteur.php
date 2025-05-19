@@ -13,6 +13,22 @@ class AgentSecteur
 {
     public const DOCUMENT_NOT_PROVIDED = 0;
     public const DOCUMENT_SENT = 1;
+
+
+    public const ACCOUNT_ACTIVE = 1;
+    public const ACCOUNT_INACTIVE = -1;
+    public const ACCOUNT_CREATED = 0;
+    public const ACCOUNT_WAITING_FOR_VALIDATION = 2;
+
+
+
+    public const LPN_ACCOUNT_STATUS = [
+        self::ACCOUNT_CREATED => ['str'=> 'Créé' ,'btn_class'=> 'info'],
+        self::ACCOUNT_INACTIVE => ['str'=> 'Désactivé' ,'btn_class'=> 'danger'],
+        self::ACCOUNT_ACTIVE => ['str'=> 'Actif' ,'btn_class'=> 'info'],
+        self::ACCOUNT_WAITING_FOR_VALIDATION => ['str'=> 'En cours de validation' ,'btn_class'=> 'warning'],
+    ];
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -67,6 +83,11 @@ class AgentSecteur
     */
     private $sectorPlatformDocumentState = self::DOCUMENT_NOT_PROVIDED;
 
+
+    /**
+    * @ORM\Column(type="integer", options={"default": 0})
+    */
+    private $accountFromPlaformStatus = self::ACCOUNT_CREATED;
 
 
     public function getId(): ?int
@@ -213,5 +234,33 @@ class AgentSecteur
         $this->sectorPlatformDocumentState = $sectorPlatformDocumentState;
 
         return $this;
+    }
+
+    /**
+     * Get the value of accountFromPlaformStatus
+     */
+    public function getAccountFromPlaformStatus()
+    {
+        return $this->accountFromPlaformStatus;
+    }
+
+    /**
+     * Set the value of accountFromPlaformStatus
+     */
+    public function setAccountFromPlaformStatus($accountFromPlaformStatus): self
+    {
+        $this->accountFromPlaformStatus = $accountFromPlaformStatus;
+
+        return $this;
+    }
+
+    public function getLpnStatusParam(){
+        if(isset(self::LPN_ACCOUNT_STATUS[$this->getAccountFromPlaformStatus()])){
+            return self::LPN_ACCOUNT_STATUS[$this->getAccountFromPlaformStatus()];
+        }
+        return [
+            'str' => '',
+            'btn_class' => '',
+        ];
     }
 }
