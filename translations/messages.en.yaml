@@ -677,6 +677,26 @@ fill_contract_reseller_document: "After your registration, we invite you to comp
 'Signature requise': 'Signature required'
 'Veuillez signer avant de soumettre': 'Please sign before submitting'
 'Je veux découvrir les services de Probot X': 'I want to discover the services of Probot X'
+'Document supprimé avec succès': 'Document successfully deleted'
+'Document envoyé avec succès': 'Document successfully sent'
+'Veuillez vous connecter à Little Ponails': 'Please log in to Little Ponails'
+'Pièce(s) justificatives': 'Supporting document(s)'
+'Veuillez fournir au moins une pièce justificatives.': 'Please provide at least one supporting document.'
+'Type de document justicative': 'Type of supporting document'
+'Veuillez choisir un de document justicative': 'Please select a supporting document type'
+'Pièces justificatif': 'Supporting documents'
+'Pièce justificative': 'Supporting document'
+Envoyer: Send
+'Liste des pièces justificatives': 'List of supporting documents'
+'Ajouter une pièce justificative': 'Add a supporting document'
+'Nom du fichier': 'File name'
+'Type du document': 'Document type'
+'Êtes-vous sûr(e) de vouloir supprimer ce document?': 'Are you sure you want to delete this document?'
+Vide: Empty
+'Liste des contrats': 'List of contracts'
+'Date du contrat': 'Contract date'
+Info: Info
+
 
 
 

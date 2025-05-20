@@ -36,7 +36,9 @@ class LpnTokenListener
         
         $pathsToChekPath = [
             $this->urlGenerator->generate('agent_update_platform_secteur_account'),
-            $this->urlGenerator->generate('agent_lpn_sign_reseller_contract')
+            $this->urlGenerator->generate('agent_lpn_sign_reseller_contract'),
+            $this->urlGenerator->generate('agent_lpn_supporting_documents_add'),
+            '/little-ponails/supporting-documents'
         ];
 
         $needCheckUp = false;

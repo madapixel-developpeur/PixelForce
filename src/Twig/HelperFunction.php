@@ -13,6 +13,7 @@ use App\Repository\SecteurRepository;
 use App\Services\AuthService;
 use Twig\Extension\AbstractExtension;
 use App\Services\Stat\StatAgentService;
+use App\Util\LittlePonailsConstant;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Bundle\SecurityBundle\SecurityBundle;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -54,6 +55,8 @@ class HelperFunction extends AbstractExtension
             new TwigFunction('get_lpn_online_shop', [$this, 'getLPNOnlineShop']),
             new TwigFunction('get_lpn_command_status_meaning', [$this, 'getLpnCommandStatusMeaningStr']),
             new TwigFunction('generate_product_link', [$this, 'generateProductLink']),
+            new TwigFunction('get_document_status_from_lpn', [$this, 'getDocumentStatusFromLpn']),
+            new TwigFunction('get_document_type_from_lpn', [$this, 'getDocumentTypeFromLpn']),
 
         ];
     }
@@ -186,4 +189,20 @@ class HelperFunction extends AbstractExtension
             return $link;
         }
     }
+
+    public function getDocumentStatusFromLpn($status_value){
+        if(isset(LittlePonailsConstant::DOCUMENT_STATUS[$status_value])){
+            return LittlePonailsConstant::DOCUMENT_STATUS[$status_value];
+        }
+        return '';
+    }
+
+    public function getDocumentTypeFromLpn($type_value){
+        if(isset(LittlePonailsConstant::DOCUMENT_TYPE[$type_value])){
+            return LittlePonailsConstant::DOCUMENT_TYPE[$type_value];
+        }
+        return '';
+    }
+
+    
 }

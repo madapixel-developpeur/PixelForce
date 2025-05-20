@@ -270,10 +270,13 @@ class AuthService
         }
         $LPN_BACK_URL = $_ENV['LITTLE_PONAILS_BACK_URL'];
 
-
         $agentSecteur = $user->getAgentSecteurById($_ENV['SECTEUR_LITTLE_PONAILS_ID']);
         if(!$agentSecteur){
             throw new CustomException($this->translator->trans('Veuillez vous inscrire sur Little Ponails'));
+        }
+
+        if(!isset($data['password'])){
+            throw new CustomException($this->translator->trans('Veuillez vous connecter à Little Ponails'));
         }
 
         $credentials =   [
@@ -357,8 +360,8 @@ class AuthService
                $agentSecteur->setSectorPlatformDocumentState(AgentSecteur::DOCUMENT_SENT);
                $this->entityManager->persist($agentSecteur);
                $this->entityManager->flush();
-            }            
-            $this->session->remove('lpn_token');
+            }
+            // $this->session->remove('lpn_token');
         } catch (\Throwable $th) {
             throw $th;
         }
@@ -465,6 +468,7 @@ class AuthService
             $this->entityManager->persist($lpnAgentSecteur);
             $this->entityManager->flush();
         }
+        return $agentInfo;
     }
 
 

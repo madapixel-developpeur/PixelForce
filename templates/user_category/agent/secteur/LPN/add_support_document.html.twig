@@ -1,0 +1,89 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	{% trans %}Pièces justificatif{% endtrans %}
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+
+{% endblock %}
+
+{% block body %}
+	<div class="row px-3 content-formation">
+		<div class="card card-body-custom mt-2 px-5 py-5">
+			<div class="row  justify-content-center">
+				<div class="col-md-8">
+					<h1 class='text-center'>{% trans %}Pièce justificative{% endtrans %}</h1>
+					{{ form_start(form, { attr: { id: 'piece-justificatif-form', enctype: 'multipart/form-data' } }) }}
+
+                    <div class="form-group mb-3">
+						{{ form_label(form.document_type) }}
+						{{ form_widget(form.document_type, {'attr': {'class': 'form-control'}}) }}
+						{{ form_errors(form.document_type) }}
+					</div>
+                    <div class="form-group mb-3">
+						{{ form_label(form.file_support) }}
+						{{ form_widget(form.file_support, {'attr': {'class': 'form-control'}}) }}
+						{{ form_errors(form.file_support) }}
+					</div>
+
+					<!-- Submit Button -->
+					<button type="submit" class="btn btn-primary">{% trans %}Envoyer{% endtrans %}</button>
+
+					{{ form_end(form) }}
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+{% block javascripts %}
+	{{ parent() }}
+	 <script src="https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js"></script>
+    <script>
+		var formAlreadyValidated = false;
+		$(document).ready(function () { 	
+           $('#signing-contract-form').on('submit', function(event){
+				if(formAlreadyValidated){
+					return true;
+				}
+				event.preventDefault();
+				handleSubmit();
+		   })
+        });
+
+        var canvas = document.getElementById('signatureCanvas');
+       	var signaturePad = new SignaturePad(canvas, {
+			penColor: 'black',              // Signature color
+			backgroundColor: '#f4f4f4',     // Light grey pad background
+			minWidth: 1,
+			maxWidth: 1.5,
+			throttle: 0,
+		});
+
+        
+
+        function clearSignature() {
+            signaturePad.clear();
+        }
+
+		function handleSubmit() {
+			if (signaturePad.isEmpty()) {
+				 Swal.fire({
+					icon: 'warning',
+					title: "{{ 'Signature requise' | trans }}",
+					text: "{{ 'Veuillez signer avant de soumettre' | trans }}",
+					type: "warning",
+					confirmButtonClass: "btn btn-primary long",
+					buttonsStyling: !1 
+				});
+				return; 
+			}
+			const signatureData = signaturePad.toDataURL();
+			document.getElementById('signatureData').value = signatureData;
+			formAlreadyValidated = true;
+			$('#signing-contract-form').submit(); 
+		}
+    </script>
+	
+{% endblock %}

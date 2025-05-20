@@ -57,4 +57,38 @@ class LpnService{
         }
         
     }
+
+    public function deleteSupportingDocument($id){
+        $token=  $this->session->get('lpn_token');
+        $LPN_BACK_URL = $_ENV['LITTLE_PONAILS_BACK_URL'];
+        try{
+            $response = $this->client->request(
+                'DELETE',
+                $LPN_BACK_URL . '/api/mlm/supporting_documents/'.$id,
+                [
+                    'headers' => ['Authorization' => 'Bearer ' . $token]
+                    ,
+                ]
+            );
+            $content = json_decode($response->getContent(), true);
+            return $content;
+        } catch (HttpExceptionInterface $e) {
+            $statusCode = $e->getResponse()->getStatusCode();
+            if ($statusCode === Response::HTTP_UNAUTHORIZED ) {
+                $content = json_decode($e->getResponse()->getContent(false), true);
+                if($content['message'] == 'Expired JWT Token'){
+                    $this->session->remove('lpn_token');
+                    throw new CustomException($this->translator->trans("Veuillez retaper votre mot de passe Little Ponails, s'il vous plaît."));
+                }
+                throw new CustomException($content['message']);
+            }
+            if ($statusCode === 401) {
+                $this->session->remove('lpn_token');
+                throw new CustomException($this->translator->trans("Veuillez retaper votre mot de passe Little Ponails, s'il vous plaît."));
+            }
+            throw $e; 
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
 }

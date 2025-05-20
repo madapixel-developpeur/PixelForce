@@ -33,6 +33,7 @@ twig:
     lpn_link_contract_form_link: "%env(LITTLE_PONAILS_FORM_LINK)%"
     lpn_starter_kit_shop_url: "%env(LITTLE_PONAILS_STARTER_KIT_SHOP_URL)%"
     lpn_contact_mail: "%env(LITTLE_PONAILS_CONTACT_MAIL)%"
+    lpn_back_url: "%env(LITTLE_PONAILS_BACK_URL)%"
     
   paths:
     # pour spécifier le namespace des image. Exemple d'utilisation : email.image('@images/logo.png')

@@ -13,126 +13,235 @@
 	<div class="row px-3 content-formation">
 		<div class="card card-body-custom mt-2 px-5 py-5">
 			<div class="row  justify-content-center">
-				<div class="col-md-8">
-				
+				<div class="col-md-10">
+
 					<h1 class='text-center mb-5'>{% trans %}Information sur mon compte Little Ponails !{% endtrans %}</h1>
 					<div class="d-flex justify-content-between mb-3">
-						<span><span class="h6">{{'Compte' | trans }} :</span>
-						{% set accontStatusParam = littlePonailsAgentSecteur.lpnStatusParam %}
+						<span>
+							<span class="h6">{{'Compte' | trans }}
+								:</span>
+							{% set accontStatusParam = littlePonailsAgentSecteur.lpnStatusParam %}
 							<button class="btn btn-sm btn-{{accontStatusParam.btn_class }}">
 								{{
 									accontStatusParam.str | trans
 								}}
 							</button>
 						</span>
-                        <a href="{{ bo_secteur_little_ponails }}" class="btn btn-primary" target="_blank">
-                            {% trans %} Ouvrir mon back-office{% endtrans %} <i class="fas fa-external-link-alt me-2"></i>
-                        </a>
-                    </div>
+						<a href="{{ bo_secteur_little_ponails }}" class="btn btn-primary" target="_blank">
+							{% trans %}
+							Ouvrir mon back-office{% endtrans %}
+							<i class="fas fa-external-link-alt me-2"></i>
+						</a>
+					</div>
 					{% if app.session.get('secteurId') == secteur_little_ponails_id and not app.user.isLpnInformationCompleted %}
 						<div class="bg-warning bg-opacity-10 border border-warning rounded p-3 d-flex align-items-start mt-3">
 							<span class="me-2 fs-5 text-warning">⚠️</span>
-							<div class="text-warning">
+							<div
+								class="text-warning">
 								{# <strong>Action requise</strong><br> #}
 								{% trans %}Vous ne pourrez recevoir vos rémunérations qu'après avoir complété les informations supplémentaires requises.{% endtrans %}
 							</div>
 						</div>
 					{% endif %}
 					<!-- First Name Field -->
-                  
+
 					<div class="form-group mb-3">
-                        <label for="firstname" class="form-label">{% trans %}Prénom{% endtrans %}</label>
-                        <input type="text" class="form-control" id="firstname" value="{{ user.prenom }}" disabled>
+						<label for="firstname" class="form-label">{% trans %}Prénom{% endtrans %}</label>
+						<input type="text" class="form-control" id="firstname" value="{{ user.prenom }}" disabled>
 					</div>
 
 					<!-- Last Name Field -->
 					<div class="form-group mb-3">
-                        <label for="nom" class="form-label">{% trans %}Nom de famille{% endtrans %}</label>
-                        <input type="text" class="form-control" id="nom" value="{{ user.nom }}" disabled>
+						<label for="nom" class="form-label">{% trans %}Nom de famille{% endtrans %}</label>
+						<input type="text" class="form-control" id="nom" value="{{ user.nom }}" disabled>
 					</div>
 
 					<!-- Username Field -->
 					<div class="form-group mb-3">
-                        <label for="username" class="form-label">{% trans %}Nom d'utilisateur sur Little Ponails{% endtrans %}</label>
-                        <input type="text" class="form-control" id="username" value="{{ user.prenom }}" disabled>
+						<label for="username" class="form-label">{% trans %}Nom d'utilisateur sur Little Ponails{% endtrans %}</label>
+						<input type="text" class="form-control" id="username" value="{{ user.prenom }}" disabled>
 					</div>
 
 					{% if app.session.get('secteurId') == secteur_little_ponails_id and not app.user.isLpnInformationCompleted %}
 						{{ form_start(form, { attr: { id: 'registration-form', enctype: 'multipart/form-data' } }) }}
-							
-						
-							<!-- Supporting Documents Field -->
-						
-							<div class="form-group mb-3">
-								{{ form_row(form.identity) }}
-							</div>
 
-						
-							<div class="form-group mb-3">
-								{{ form_label(form.kbis) }}
-								{{ form_widget(form.kbis, {'attr': {'class': 'form-control'}}) }}
-								{{ form_errors(form.kbis) }}
-							</div>
 
-							{% if needCredentials %}
-								<div class="form-group mb-3">
-									{{ form_row(form.password) }}
-								</div>
-							{% endif %}
-							
-							<button type="submit" class="btn btn-primary">{% trans %}Soumettre{% endtrans %}</button>
+						<!-- Supporting Documents Field -->
+
+						<div class="form-group mb-3">
+							{{ form_row(form.identity) }}
+						</div>
+
+
+						<div class="form-group mb-3">
+							{{ form_label(form.kbis) }}
+							{{ form_widget(form.kbis, {'attr': {'class': 'form-control'}}) }}
+							{{ form_errors(form.kbis) }}
+						</div>
+
+						{% if needCredentials %}
+							<div class="form-group mb-3">
+								{{ form_row(form.password) }}
+							</div>
+						{% endif %}
+
+						<button type="submit" class="btn btn-primary">{% trans %}Soumettre{% endtrans %}</button>
 
 						{{ form_end(form) }}
 
 					{% else %}
-						<div class="bg-success bg-opacity-10 border border-success rounded p-3 d-flex align-items-start mt-3">
+						<div class="bg-success bg-opacity-10 border border-success rounded p-3 d-flex align-items-start mt-3 mb-5">
 							<span class="me-2 fs-5 text-success">📄</span>
 							<div class="text-success">
 								<strong>{% trans %}Documents complétés{% endtrans %}</strong><br>
 								{% trans %}Vous avez fourni les documents supplémentaires requis.{% endtrans %}
 							</div>
 						</div>
+						<div>
+							<div class="d-flex justify-content-between mb-3">
+								<div><span class="h5">{% trans %}Liste des pièces justificatives{% endtrans %}</div>
+								<a href="{{ path('agent_lpn_supporting_documents_add') }}" class="btn btn-primary">
+									{% trans %}
+									Ajouter une pièce justificative{% endtrans %}
+								</a>
+							</div>
+							<div class="table-responsive">
+								<table class="table">
+									<tbody class="align-items-center">
+										<tr>
+											<th class="text-start">{% trans %}Nom du fichier{% endtrans %}</th>
+											<th class="text-start">{% trans %}Type du document{% endtrans %}</th>
+											<th class="text-start">{% trans %}Statut{% endtrans %}</th>
+											<th></th>
+										</tr>
+
+										{% for support_document in agentInfoFromLpn.supportingDocuments %}
+											<tr>
+												<td class="text-start">{{ support_document.filename }}</td>
+												<td class="text-start" >{{ get_document_type_from_lpn(support_document.documentType) }}</td>
+												<td class="text-start">{{ get_document_status_from_lpn(support_document.status) }}</td>
+												<td class="d-flex justify-content-center align-items-center">
+													{% set confirmationMessage = 'Êtes-vous sûr(e) de vouloir supprimer ce document?' |trans %}
+													<form method="post" id="delete_support_document"  class="ms-1" style="display: inline-block;" onsubmit="confirmationForm('delete_support_document','{{ path('agent_lpn_supporting_documents_delete', { id : support_document.id })  }}','{{ confirmationMessage }}')">
+														<button href="" class="btn btn-danger mx-2 btn-sm">
+															<i data-feather="trash"></i>
+														</button>
+													</form>  
+													<a href="{{ lpn_back_url ~ '/' ~  support_document.filepath }}" class="btn btn-info mx-2 btn-sm" target="_blank" {% if support_document.filepath is null %}disabled{% endif %}>
+														<i data-feather="eye"></i>
+													</a>
+												</td>
+											</tr>
+										
+										{% else %}
+											<tr>
+												<td colspan="7" class="text-center alert-body alert alert-primary">{% trans %}Vide{% endtrans %}</td>
+											</tr>
+										{% endfor %}
+
+									</tbody>
+								</table>
+							</div>
+						</div>
 						<hr>
 						{% if littlePonailsAgentSecteur.accountFromPlaformStatus == constant('App\\Entity\\AgentSecteur::ACCOUNT_CREATED') %}
 							<div class"next-step-block">
 								<h6>{{ 'buy_kit'|trans({'{{ url }}': lpn_starter_kit_shop_url})|raw }}</h6>
-								<h6>{{ 'fill_contract_reseller_document'|trans({'{{ url }}': lpn_link_contract_form_link})|raw }} <a href="mailto:{{ lpn_contact_mail }}">{{ lpn_contact_mail }}</a></h6>
+								<h6>{{ 'fill_contract_reseller_document'|trans({'{{ url }}': lpn_link_contract_form_link})|raw }}
+									<a href="mailto:{{ lpn_contact_mail }}">{{ lpn_contact_mail }}</a>
+								</h6>
 								<br>
 								<div class="d-flex justify-content-end mb-3">
 									<a href="{{ lpn_starter_kit_shop_url }}" class="btn btn-primary mx-1" target="_blank">
-										{% trans %}Acheter mon kit de démarrage{% endtrans %} <i class="fas fa-toolbox me-2"></i>
+										{% trans %}Acheter mon kit de démarrage{% endtrans %}
+										<i class="fas fa-toolbox me-2"></i>
 									</a>
 									<a href="{{ path('agent_lpn_sign_reseller_contract') }}" class="btn btn-primary mx-1">
-										{% trans %}Remplir le contrat de revendeur{% endtrans %} <i class="fas fa-file me-2"></i>
+										{% trans %}Remplir le contrat de revendeur{% endtrans %}
+										<i class="fas fa-file me-2"></i>
 									</a>
 								</div>
 							</div>
-						{% elseif littlePonailsAgentSecteur.accountFromPlaformStatus == constant('App\\Entity\\AgentSecteur::ACCOUNT_WAITING_FOR_VALIDATION') %}
-							<div class="bg-warning bg-opacity-10 border border-warning rounded p-3 d-flex align-items-start mt-3">
-								<span class="me-2 fs-5 text-warning"></span>
-								<div class="text-warning">
-									{# <strong>Action requise</strong><br> #}
-									{% trans %}Votre compte est en cours de validation.{% endtrans %}
+							{% elseif littlePonailsAgentSecteur.accountFromPlaformStatus == constant('App\\Entity\\AgentSecteur::ACCOUNT_WAITING_FOR_VALIDATION') %}
+								<div class="bg-warning bg-opacity-10 border border-warning rounded p-3 d-flex align-items-start mt-3">
+									<span class="me-2 fs-5 text-warning"></span>
+									<div
+										class="text-warning">
+										{# <strong>Action requise</strong><br> #}
+										{% trans %}Votre compte est en cours de validation.{% endtrans %}
+									</div>
 								</div>
-							</div>
-						{% elseif littlePonailsAgentSecteur.accountFromPlaformStatus == constant('App\\Entity\\AgentSecteur::ACCOUNT_INACTIVE') %}
-							<div class="bg-danger bg-opacity-10 border border-danger rounded p-3 d-flex align-items-start mt-3">
-								<span class="me-2 fs-5 text-danger"></span>
-								<div class="text-danger">
-									{# <strong>Action requise</strong><br> #}
-									{% trans %}Votre compte a été désactivé.{% endtrans %}
+							{% elseif littlePonailsAgentSecteur.accountFromPlaformStatus == constant('App\\Entity\\AgentSecteur::ACCOUNT_INACTIVE') %}
+								<div class="bg-danger bg-opacity-10 border border-danger rounded p-3 d-flex align-items-start mt-3">
+									<span class="me-2 fs-5 text-danger"></span>
+									<div
+										class="text-danger">
+										{# <strong>Action requise</strong><br> #}
+										{% trans %}Votre compte a été désactivé.{% endtrans %}
+									</div>
 								</div>
-							</div>
+							{% elseif littlePonailsAgentSecteur.accountFromPlaformStatus == constant('App\\Entity\\AgentSecteur::ACCOUNT_ACTIVE') %}
+								<div class="mt-3">
+									
+									<div class="d-flex justify-content-between mb-3">
+										<div><span class="h5">{% trans %}Liste des contrats{% endtrans %}:</div>
+										<a href="{{ path('agent_lpn_sign_reseller_contract') }}" class="btn btn-primary" >
+											{% trans %}Remplir le contrat de revendeur{% endtrans %}
+										</a>
+									</div>
+									<div class="table-responsive">
+										<table class="table">
+											<tbody class="align-items-center">
+												<tr>
+													<th>{% trans %}Date du contrat{% endtrans %}</th>
+													<th>{% trans %}Nom et prénoms{% endtrans %}</th>
+													<th>{% trans %}Info{% endtrans %}</th>
+													<th>{% trans %}Email{% endtrans %}</th>
+													<th>{% trans %}Téléphone{% endtrans %}</th>
+													<th>{% trans %}N°SIREN{% endtrans %}</th>
+													<th></th>
+												</tr>
+
+												{% for document in agentInfoFromLpn.agentContracts %}
+													<tr>
+														<td class="text-start">{{ document.createdAt ? document.createdAt|date('d-m-Y à H:i') : '-' }}</td>
+														<td class="text-start">{{ document.lastname }}</td>
+														<td class="text-start">
+															<b>{% trans %}Pays{% endtrans %} :</b> {{ document.country_code }} </br>
+															<b>{% trans %}Code postal{% endtrans %} :</b>{{ document.postal_code }}</br>
+															<b>{% trans %}Adresse{% endtrans %} :</b>{{ document.address }} </br>
+															<b>{% trans %}Ville{% endtrans %} :</b>{{ document.city }}
+														</td>
+														<td class="text-start">{{ document.email }}</td>
+														<td class="text-start">{{ document.phone_number }}</td>
+														<td class="text-start">{{ document.siren }}</td>
+
+														<td class="d-flex justify-content-center align-items-center">
+															<a href="{{ lpn_back_url ~ '/' ~  document.filepath }}" class="btn btn-info mx-2 btn-sm" {% if document.filepath is null %}disabled{% endif %} target="_blank">
+																<i data-feather="eye"></i>
+															</a>
+														</td>
+													</tr>
+												{% else %}
+													<tr>
+														<td colspan="7" class="text-center alert-body alert alert-primary">{% trans %}Vide{% endtrans %}</td>
+													</tr>
+												{% endfor %}
+
+											</tbody>
+										</table>
+									</div>
+								</div>
+							{% endif %}
+
 						{% endif %}
 
-					{% endif %}
-					
+					</div>
 				</div>
 			</div>
 		</div>
-	</div>
-{% endblock %}
-{% block javascripts %}
-	{{ parent() }}
-	
-{% endblock %}
+	{% endblock %}
+	{% block javascripts %}
+		{{ parent() }}
+
+	{% endblock %}

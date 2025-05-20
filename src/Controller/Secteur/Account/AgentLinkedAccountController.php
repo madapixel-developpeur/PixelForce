@@ -3,16 +3,17 @@
 
 namespace App\Controller\Secteur\Account;
 
-use App\Entity\AgentSecteur;
 use App\Entity\User;
 use App\Entity\Secteur;
 use App\Entity\UserOTP;
+use App\Entity\AgentSecteur;
 use App\Services\LpnService;
 use App\Services\OtpService;
 use App\Services\AuthService;
 use App\Util\Search\Constants;
 use App\Exception\CustomException;
 use App\Repository\SecteurRepository;
+use App\Form\LpnSupportDocumentFormType;
 use App\Form\LpnResellerContractFormType;
 use App\Form\SignUpLittlePonailsFormType;
 use App\Form\SingUpLittlePonailsFormType;
@@ -21,7 +22,9 @@ use Symfony\Component\Mime\Part\DataPart;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -153,7 +156,7 @@ class AgentLinkedAccountController extends AbstractController
         $secteur_id = $this->session->get('secteurId');
         $secteur = $this->secteurRepository->findOneBy(['id' => $secteur_id]);
         $littlePonailsAgentSecteur = $user->getAgentSecteurById($secteur_id);
-        $this->authService->getAccountStatusFromLpn($littlePonailsAgentSecteur);
+        $agentInfoFromLpn = $this->authService->getAccountStatusFromLpn($littlePonailsAgentSecteur);
 
         $form->handleRequest($request);
         if ($form->isSubmitted()  && $form->isValid()) {
@@ -185,7 +188,8 @@ class AgentLinkedAccountController extends AbstractController
             'form' => $form->createView(),
             'user' => $this->getUser(),
             'needCredentials' => $needCredentials,
-            'littlePonailsAgentSecteur' => $littlePonailsAgentSecteur
+            'littlePonailsAgentSecteur' => $littlePonailsAgentSecteur,
+            'agentInfoFromLpn' => $agentInfoFromLpn
         ]);
     }
 
@@ -288,6 +292,9 @@ class AgentLinkedAccountController extends AbstractController
                 );
                 if($nextStep == 0){
                     return $this->redirectToRoute('agent_update_platform_secteur_account');
+                }
+                if($nextStep == 1){
+                    return $this->redirectToRoute('agent_lpn_supporting_documents_add');
                 }else{
                     return $this->redirectToRoute('agent_lpn_sign_reseller_contract');
                 }
@@ -307,6 +314,83 @@ class AgentLinkedAccountController extends AbstractController
 
         return $this->render('security/LPN/lpn_access_credentials.html.twig', [
             'form' => $form->createView(),
+        ]);
+    }
+
+
+    #[Route('/little-ponails/supporting-documents/delete/{id}', name: 'agent_lpn_supporting_documents_delete', methods:['POST'])]
+    public function deleteSupportingDocuments(Request $request,string $id): Response
+    {
+        try{
+            $this->LpnService->deleteSupportingDocument($id);
+            $this->addFlash(
+                'success',
+                $this->translator->trans('Document supprimé avec succès')
+            );
+        }
+        catch(\Exception $ex){
+            $this->addFlash(
+                'danger',
+                $_ENV['CUSTOM_ERROR_MESSAGE']
+            );
+        }
+        return $this->redirectToRoute('agent_update_platform_secteur_account');
+    }
+
+    #[Route('/little-ponails/supporting-documents/details/{id}', name: 'agent_lpn_supporting_documents_details')]
+    public function viewSupportingDocuments(Request $request,string $id): Response
+    {
+        try{
+            $this->LpnService->deleteSupportingDocument($id);
+            $this->addFlash(
+                'success',
+                $this->translator->trans('Document supprimé avec succès')
+            );
+        }
+        catch(\Exception $ex){
+            $this->addFlash(
+                'danger',
+                $_ENV['CUSTOM_ERROR_MESSAGE']
+            );
+        }
+        return $this->redirectToRoute('agent_update_platform_secteur_account');
+    }
+
+    #[Route('/little-ponails/supporting-documents/ajout', name: 'agent_lpn_supporting_documents_add')]
+    public function sendSupportingDocuments(Request $request): Response
+    {
+        $form = $this->createForm(LpnSupportDocumentFormType::class, []);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            try{
+                $data = $form->getData();
+                $files = $this->getFilesDataToSendApi($request, [
+                    'file_support',
+                ], 'lpn_support_document_form');
+                $dataFiles = [];
+                $dataFiles[$data['document_type']] = $files['file_support'];
+                $this->authService->sendSupportingDocuments($this->getUser(), [], $dataFiles);
+                $this->addFlash(
+                    'success',
+                    $this->translator->trans('Document envoyé avec succès')
+                );
+                return $this->redirectToRoute('agent_update_platform_secteur_account');
+          
+            } catch (CustomException $e) {
+                $this->addFlash(
+                    'danger',
+                    $e->getMessage()
+                );
+             } catch(\Exception $ex){
+                $this->addFlash(
+                    'danger',
+                    $_ENV['CUSTOM_ERROR_MESSAGE']
+                );
+            }
+        }
+        return $this->render('user_category/agent/secteur/LPN/add_support_document.html.twig', [
+            'form' => $form->createView(),
+            'user' => $this->getUser()
         ]);
     }
 
@@ -375,4 +459,7 @@ class AgentLinkedAccountController extends AbstractController
             }
         }
     }
+
+
+   
 }
