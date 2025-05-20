@@ -118,8 +118,8 @@
 										{% for support_document in agentInfoFromLpn.supportingDocuments %}
 											<tr>
 												<td class="text-start">{{ support_document.filename }}</td>
-												<td class="text-start" >{{ get_document_type_from_lpn(support_document.documentType) }}</td>
-												<td class="text-start">{{ get_document_status_from_lpn(support_document.status) }}</td>
+												<td class="text-start" >{{ get_document_type_from_lpn(support_document.documentType) | trans  }}</td>
+												<td class="text-start">{{ get_document_status_from_lpn(support_document.status) | trans }}</td>
 												<td class="d-flex justify-content-center align-items-center">
 													{% set confirmationMessage = 'Êtes-vous sûr(e) de vouloir supprimer ce document?' |trans %}
 													<form method="post" id="delete_support_document"  class="ms-1" style="display: inline-block;" onsubmit="confirmationForm('delete_support_document','{{ path('agent_lpn_supporting_documents_delete', { id : support_document.id })  }}','{{ confirmationMessage }}')">
