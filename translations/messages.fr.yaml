@@ -700,3 +700,23 @@ Valide: Valide
 Identité: Identité
 KBis: KBis
 Pièces d'identité: Pièces d'identité
+'champ obligatoire': 'champ obligatoire'
+'Numero Téléphone': 'Numero Téléphone'
+'Numéro Téléphone': 'Numéro Téléphone'
+Pseudo: Pseudo
+'Entrer votre pseudo': 'Entrer votre pseudo'
+'Adresse Mail': 'Adresse Mail'
+'Votre RIB': 'Votre RIB'
+'Paramètre du compte utilisateur': 'Paramètre du compte utilisateur'
+'Votre compte': 'Votre compte'
+Accueil: Accueil
+'Paramètre du compte': 'Paramètre du compte'
+Sécurité: Sécurité
+'Détails du profil': 'Détails du profil'
+Réinitialiser: Réinitialiser
+'Les extensions autorisées: png, jpg, jpeg, svg.': 'Les extensions autorisées: png, jpg, jpeg, svg.'
+'Le pseudo ne peut pas être vide.': 'Le pseudo ne peut pas être vide.'
+'Le pseudo ne peut contenir que des lettres, des chiffres, des underscores et des tirets.': 'Le pseudo ne peut contenir que des lettres, des chiffres, des underscores et des tirets.'
+'Le pseudo ne peut contenir que des lettres (sans accent), des chiffres, des underscores (_) et des tirets (-).': 'Le pseudo ne peut contenir que des lettres (sans accent), des chiffres, des underscores (_) et des tirets (-).'
+'Le nom d''utilisateur ne peut contenir que des lettres (sans accent), des chiffres, des underscores (_) et des tirets (-).': 'Le nom d''utilisateur ne peut contenir que des lettres (sans accent), des chiffres, des underscores (_) et des tirets (-).'
+'Pixelforce est entièrement gratuit. Aucune offre payante n''est associée à notre plateforme.': 'Pixelforce est entièrement gratuit. Aucune offre payante n''est associée à notre plateforme.'

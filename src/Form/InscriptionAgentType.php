@@ -10,6 +10,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use App\Form\FormEvents\SecteurChoiceListListener;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -95,8 +96,14 @@ class InscriptionAgentType extends AbstractType
                     'step' => 2
                 ],
                 'constraints' => [
-                    new NotNull([],$this->translator->trans('Champ obligatoire'))
-                ]
+                    new NotBlank([
+                        'message' => $this->translator->trans('Champ obligatoire'),
+                    ]),
+                    new Regex([
+                        'pattern' => '/^[a-zA-Z0-9_-]+$/', 
+                        'message' => $this->translator->trans('Le nom d\'utilisateur ne peut contenir que des lettres (sans accent), des chiffres, des underscores (_) et des tirets (-).'),
+                    ]),
+                ],
             ])
 
             ->add('email', EmailType::class, [

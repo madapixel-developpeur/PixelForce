@@ -701,6 +701,25 @@ Valide: Valid
 Identité: Identity
 KBis: KBis
 Pièces d'identité: Identity documents
+'champ obligatoire': 'required field'
+'Numero Téléphone': 'Phone Number'
+'Numéro Téléphone': 'Phone Number'
+Pseudo: 'Username'
+'Entrer votre pseudo': 'Enter your username'
+'Adresse Mail': 'Email Address'
+'Votre RIB': 'Your Bank Details'
+'Paramètre du compte utilisateur': 'User Account Settings'
+'Votre compte': 'Your Account'
+Accueil: 'Home'
+'Paramètre du compte': 'Account Settings'
+Sécurité: 'Security'
+'Détails du profil': 'Profile Details'
+Réinitialiser: 'Reset'
+'Les extensions autorisées: png, jpg, jpeg, svg.': 'Allowed file types: png, jpg, jpeg, svg.'
+'Le pseudo ne peut pas être vide.': 'Username cannot be empty.'
+'Le pseudo ne peut contenir que des lettres, des chiffres, des underscores et des tirets.': 'Username can only contain letters, numbers, underscores and hyphens.'
+'Le pseudo ne peut contenir que des lettres (sans accent), des chiffres, des underscores (_) et des tirets (-).': 'Username can only contain letters (without accents), numbers, underscores (_) and hyphens (-).'
+'Le nom d''utilisateur ne peut contenir que des lettres (sans accent), des chiffres, des underscores (_) et des tirets (-).': 'Username can only contain letters (without accents), numbers, underscores (_) and hyphens (-).'
 
 
 

@@ -1,28 +1,28 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-    Paramètre du compte utilisateur
+    {% trans %}Paramètre du compte utilisateur{% endtrans %}
 {% endblock %}
 
 {% block body %}
     <div class="row breadcrumbs-top mb-4">
         <div class="col-12 ">
-            <h2 class="content-header-title h-100 float-start mb-0">Votre compte</h2>
+            <h2 class="content-header-title h-100 float-start mb-0">{% trans %}Votre compte{% endtrans %}</h2>
             <div class="breadcrumb-wrapper h-100 d-flex">
                 <ol class="breadcrumb my-auto ps-md-4 ps-0">
                     <li class="breadcrumb-item">
                         {% set role = app.user.roles[0]  %}
                         {% if role == constant('App\\Entity\\User::ROLE_ADMINISTRATEUR') %}
-                            <a href="{{ path('admin_dashboard') }}">Accueil</a>
+                            <a href="{{ path('admin_dashboard') }}">{% trans %}Accueil{% endtrans %}</a>
                         {% elseif role == constant('App\\Entity\\User::ROLE_COACH') %}
-                            <a href="{{ path('coach_agent_list') }}">Accueil</a>
+                            <a href="{{ path('coach_agent_list') }}">{% trans %}Accueil{% endtrans %}</a>
                         {% elseif role == constant('App\\Entity\\User::ROLE_AGENT') %}
-                            <a href="{{ path('agent_home') }}">Accueil</a>
+                            <a href="{{ path('agent_home') }}">{% trans %}Accueil{% endtrans %}</a>
                         {% endif %}
                     </li>
-                    <li class="breadcrumb-item"><a href="#">Paramètre du compte </a>
+                    <li class="breadcrumb-item"><a href="#">{% trans %}Paramètre du compte {% endtrans %}</a>
                     </li>
-                    <li class="breadcrumb-item active"> Compte
+                    <li class="breadcrumb-item active"> {% trans %}Compte{% endtrans %}
                     </li>
                 </ol>
             </div>
@@ -35,14 +35,14 @@
                 <li class="nav-item">
                     <a class="nav-link active bg-princ" href="{{ path('user_accountSetting', {id:app.user.id}) }}">
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-user font-medium-3 me-50"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                        <span class="fw-bold">Compte</span>
+                        <span class="fw-bold">{% trans %}Compte{% endtrans %}</span>
                     </a>
                 </li>
                 <!-- security -->
                 <li class="nav-item">
                     <a class="nav-link" href="{{ path('user_passwordSetting', {id:app.user.id}) }}">
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-lock font-medium-3 me-50"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-                        <span class="fw-bold">Sécurité</span>
+                        <span class="fw-bold">{% trans %}Sécurité{% endtrans %}</span>
                     </a>
                 </li>
             </ul>
@@ -50,7 +50,7 @@
             <!-- profile -->
             <div class="card mt-4">
                 <div class="card-header border-bottom">
-                    <h4 class="card-title">Détails du profil</h4>
+                    <h4 class="card-title">{% trans %}Détails du profil{% endtrans %}</h4>
                 </div>
                 <div class="card-body py-2 my-25">
                     {{ form_start(form, {attr:{
@@ -70,10 +70,10 @@
                         <!-- upload and reset button -->
                         <div class="d-flex align-items-end mt-75 ms-1">
                             <div>
-                                <label for="account-upload" class="btn btn-sm btn-primary mb-75 me-75 waves-effect waves-float waves-light">Télécharger</label>
+                                <label for="account-upload" class="btn btn-sm btn-primary mb-75 me-75 waves-effect waves-float waves-light">{% trans %}Télécharger{% endtrans %}</label>
                                 <input type="file" name="user_avatar" id="account-upload" hidden="" accept="image/*">
-                                <button type="button" id="account-reset" class="btn btn-sm btn-outline-secondary mb-75 waves-effect">Réinitialiser</button>
-                                <p class="mb-0">Les extensions autorisées: png, jpg, jpeg, svg.</p>
+                                <button type="button" id="account-reset" class="btn btn-sm btn-outline-secondary mb-75 waves-effect">{% trans %}Réinitialiser{% endtrans %}</button>
+                                <p class="mb-0">{% trans %}Les extensions autorisées: png, jpg, jpeg, svg.{% endtrans %}</p>
                             </div>
                         </div>
                         <!--/ upload and reset button -->
@@ -126,7 +126,7 @@
                     </div>
                     {{ form_rest(form) }}
                     <div>
-                        <button class="btn btn-primary" type="submit">Enregistrer</button>
+                        <button class="btn btn-primary" type="submit">{% trans %}Enregistrer{% endtrans %}</button>
                     </div>
                     {{ form_end(form) }}
                     <!--/ form -->
