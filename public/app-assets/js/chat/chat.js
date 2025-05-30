@@ -200,6 +200,18 @@ myChatApp.service("chat", function ($http) {
   };
 });
 
+myChatApp.directive('fileModel', ['$parse', function($parse) {
+  return {
+    restrict: 'A',
+    link: function(scope, element, attrs) {
+      element.bind('change', function() {
+        $parse(attrs.fileModel).assign(scope, element[0].files);
+        scope.$apply();
+      });
+    }
+  };
+}]);
+
 myChatApp.filter("truncate", function () {
   return function (value, max) {
     if (!value) return "";
@@ -659,18 +671,36 @@ myChatApp.controller("chatUser", function ($scope, $q, chat) {
   $scope.nbrPerPageAddMembers = 10;
   $scope.membersSelectedToAdd = [];
   $scope.isLoadingAddingMembers = false;
+  $scope.selectedFiles = [];
+  // $scope.myFile = [];
 
   const edjsParser = edjsHTML();
   let editorInstance = null;
 
   $scope.openFileSelector = function () {
-    console.log('herrrrrrrrrrrrre')
       document.getElementById('fileInput').click();
   };
 
+  // $scope.$watch('myFile', function(newVal, oldVal) {
+  //   if (newVal && newVal.length > 0) {
+  //     const newFiles = [...$scope.selectedFiles];
+  //     for(const f of newVal){
+  //       newFiles.push({file: f, name: f.name});
+  //     }
+  //     $scope.selectedFiles = newFiles;
+  //   }
+  // });
+
   $scope.fileChanged = function (input) {
     const files = input.files;
-    console.log('Selected files:', files);
+    if(files && files.length > 0) {
+      const newFiles = [...$scope.selectedFiles];
+      for(const f of files){
+        newFiles.push({file: f, name: f.name});
+      }
+      $scope.selectedFiles = newFiles;
+    }
+    
   
   };
 

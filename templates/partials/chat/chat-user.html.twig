@@ -71,7 +71,14 @@
       </div>
     </div>
   <div class="chat-box-footer" ng-if="conversationId">
-    
+    <div class="file-list" ng-if="selectedFiles && selectedFiles.length > 0">
+      <div ng-repeat="f in selectedFiles track by $index" class="file-box rounded p-2 d-inline-flex align-items-center" style="border: solid 1px #000;" >
+        <i class="fa fa-file text-primary me-2" aria-hidden="true"></i>
+        <span class="me-2">{{'{{f.name}}'}}</span>
+        <i class="fa fa-times text-danger cursor-pointer" aria-hidden="true" ></i>
+      </div>
+      
+    </div>
       <div class="d-flex align-items-center px-3 py-2" style="height: 100%;" ng-if="!isLoading && !isHeaderLoading">
     {# <textarea type="text" class="chat-input-text flex-grow-1 me-2" placeholder="Écrivez ici..." ng-model="ctrl.message"></textarea> #}
     <div id="editorjs" class="chat-input-text flex-grow-1 me-2"></div>
@@ -82,7 +89,8 @@
         <i class="ti ti-loader fs-2 my-loader" ng-if="isSending"></i>
         <i class="ti ti-send fs-2" ng-if="!isSending"></i>
     </button>
-    <input type="file" id="fileInput" style="display: none" onchange="angular.element(this).scope().fileChanged(this)" multiple/>
+    {# file-model="myFile" #}
+    <input type="file" id="fileInput" style="display: none"  multiple onchange="angular.element(this).scope().fileChanged(this)"/>
     
     </div>
   </div>
