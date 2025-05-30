@@ -663,6 +663,17 @@ myChatApp.controller("chatUser", function ($scope, $q, chat) {
   const edjsParser = edjsHTML();
   let editorInstance = null;
 
+  $scope.openFileSelector = function () {
+    console.log('herrrrrrrrrrrrre')
+      document.getElementById('fileInput').click();
+  };
+
+  $scope.fileChanged = function (input) {
+    const files = input.files;
+    console.log('Selected files:', files);
+  
+  };
+
   $scope.isEditorVisible = function () {
     return (
       !$scope.isHeaderLoading &&

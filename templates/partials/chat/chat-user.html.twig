@@ -75,10 +75,16 @@
       <div class="d-flex align-items-center px-3 py-2" style="height: 100%;" ng-if="!isLoading && !isHeaderLoading">
     {# <textarea type="text" class="chat-input-text flex-grow-1 me-2" placeholder="Écrivez ici..." ng-model="ctrl.message"></textarea> #}
     <div id="editorjs" class="chat-input-text flex-grow-1 me-2"></div>
+    <button type="button" class="chat-input-submit" ng-click="openFileSelector()">
+        <i class="ti ti-paperclip fs-2"></i>
+    </button>
     <button type="submit" class="chat-input-submit" ng-attr-disabled="isSending" ng-click="onSubmit()" >
         <i class="ti ti-loader fs-2 my-loader" ng-if="isSending"></i>
         <i class="ti ti-send fs-2" ng-if="!isSending"></i>
-    </button></div>
+    </button>
+    <input type="file" id="fileInput" style="display: none" onchange="angular.element(this).scope().fileChanged(this)" multiple/>
+    
+    </div>
   </div>
 
   <div class="modal fade chat-modal" tabindex="-1" id="groupSettings" aria-labelledby="exampleModalLabel" aria-hidden="true">
