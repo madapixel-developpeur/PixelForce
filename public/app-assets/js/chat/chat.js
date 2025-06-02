@@ -56,6 +56,20 @@ myChatApp.service("chat", function ($http) {
     return response.data;
   };
 
+  this.uploadFile = async function (file) {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const response = await $http({
+      transformRequest: angular.identity,
+      method: "POST",
+      url: `${window.baseUrlChat}/upload/file`,
+      data: formData,
+      headers: { "Content-Type": undefined },
+    });
+    return response.data.data;
+  };
+
   this.addConversation = async function (data) {
     const response = await $http({
       method: "POST",
@@ -199,6 +213,21 @@ myChatApp.service("chat", function ($http) {
     return response.data;
   };
 });
+
+myChatApp.directive("fileModel", [
+  "$parse",
+  function ($parse) {
+    return {
+      restrict: "A",
+      link: function (scope, element, attrs) {
+        element.bind("change", function () {
+          $parse(attrs.fileModel).assign(scope, element[0].files);
+          scope.$apply();
+        });
+      },
+    };
+  },
+]);
 
 myChatApp.filter("truncate", function () {
   return function (value, max) {
@@ -370,6 +399,16 @@ myChatApp.controller("chatUserList", function ($scope, chat) {
   $scope.data = [];
   $scope.total = 0;
   $scope.messageType = null;
+
+  $scope.getMessageContent = function (message) {
+    return (
+      message.content ??
+      (message.data && message.data.files && message.data.files.length > 0
+        ? message.data.files.length + " pièce(s) jointe(s)"
+        : "")
+    );
+  };
+
   $scope.addConversation = function () {
     $scope.$parent.changeView("SEARCH");
   };
@@ -659,9 +698,31 @@ myChatApp.controller("chatUser", function ($scope, $q, chat) {
   $scope.nbrPerPageAddMembers = 10;
   $scope.membersSelectedToAdd = [];
   $scope.isLoadingAddingMembers = false;
+  $scope.selectedFiles = [];
 
   const edjsParser = edjsHTML();
   let editorInstance = null;
+
+  $scope.openFileSelector = function () {
+    document.getElementById("fileInput").click();
+  };
+
+  $scope.removeFile = function (f) {
+    $scope.selectedFiles = $scope.selectedFiles.filter((val) => val !== f);
+  };
+
+  $scope.fileChanged = function (input) {
+    const files = input.files;
+    if (files && files.length > 0) {
+      const newFiles = [...$scope.selectedFiles];
+      for (const f of files) {
+        newFiles.push({ file: f, name: f.name });
+      }
+      $scope.$apply(function () {
+        $scope.selectedFiles = newFiles;
+      });
+    }
+  };
 
   $scope.isEditorVisible = function () {
     return (
@@ -887,6 +948,42 @@ myChatApp.controller("chatUser", function ($scope, $q, chat) {
       .catch((error) => console.error(error));
   };
 
+  $scope.getFileShortName = function (file) {
+    if (file.name.length <= 20) return file.name;
+    const extensionLength = file.extension.length + 1;
+    return file.name.substr(0, 20 - extensionLength) + "." + file.extension;
+  };
+
+  $scope.downloadFile = function (file) {
+    const a = document.createElement("a");
+    a.href = `${window.baseUrlChat}/upload/${file.path}`;
+    a.download = file.name || "";
+    a.target = "__blank";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  };
+
+  $scope.getFileUrl = function (file) {
+    return `${window.baseUrlChat}/upload/${file.path}`;
+  };
+
+  $scope.isImage = function (file) {
+    const imageExtensions = [
+      "jpg",
+      "jpeg",
+      "png",
+      "gif",
+      "bmp",
+      "webp",
+      "svg",
+      "ico",
+      "tiff",
+      "avif",
+    ];
+    return imageExtensions.includes(file.extension);
+  };
+
   $scope.scrollToBottom = function () {
     document
       .getElementById("bottom")
@@ -904,28 +1001,36 @@ myChatApp.controller("chatUser", function ($scope, $q, chat) {
   $scope.onSubmit = async function () {
     const output = await editorInstance.save();
     let html = edjsParser.parse(output);
-    console.log(html);
-    console.log("message ===" + html);
-    console.log("onsubmit", JSON.stringify(html));
-    if (!html) {
+
+    if (!html && $scope.selectedFiles.length === 0) {
       return;
     }
-    html = linkifyText(html);
+
     $scope.isSending = true;
-    chat
-      .sendMessage($scope.$parent.conversationId, { content: html })
-      .then((result) => {
-        $scope.$apply(() => {
-          editorInstance.clear();
-          $scope.addMessage(result);
-        });
-      })
-      .catch((error) => console.error(error))
-      .finally(() => {
-        $scope.$apply(() => {
-          $scope.isSending = false;
-        });
+    try {
+      const fileData = [];
+      for (const file of $scope.selectedFiles) {
+        fileData.push(await chat.uploadFile(file.file));
+      }
+      console.log(fileData);
+      if (html) html = linkifyText(html);
+      else html = undefined;
+      const result = await chat.sendMessage($scope.$parent.conversationId, {
+        content: html,
+        data: fileData.length > 0 ? { files: fileData } : undefined,
       });
+      $scope.$apply(() => {
+        editorInstance.clear();
+        $scope.addMessage(result);
+        $scope.selectedFiles = [];
+      });
+    } catch (error) {
+      console.error(error);
+    } finally {
+      $scope.$apply(() => {
+        $scope.isSending = false;
+      });
+    }
   };
 
   $scope.fetchConversation = function () {

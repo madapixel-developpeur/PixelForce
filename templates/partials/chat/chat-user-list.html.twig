@@ -79,7 +79,7 @@
             
           </div>
           <div class="d-flex justify-content-between">
-            <span class="fs-6 message-text truncate-multiline" ng-bind-html="(conversation.lastMessage ? conversation.lastMessage.content : ('Démarrer la conversation
+            <span class="fs-6 message-text truncate-multiline" ng-bind-html="(conversation.lastMessage ? getMessageContent(conversation.lastMessage) : ('Démarrer la conversation
               maintenant' | truncate: 30)) | to_trusted"></span>
             <span class="fs-6">{{ "{{conversation.lastMessage ? (conversation.lastMessage.createdAt | myTimeAgo) :
               ''}}" }}</span>

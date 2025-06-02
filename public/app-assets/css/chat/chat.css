@@ -284,6 +284,7 @@
 .custom-chat .chat-user .chat-box-footer {
   color: #fff;
   height: 80px;
+  position: relative;
 }
 
 .custom-chat .chat-user .operator-name {
@@ -324,6 +325,7 @@
   margin-left: 10px;
   padding: 10px;
   border-radius: 3px;
+  margin-bottom: 8px;
 }
 
 .custom-chat .chat-user .chat-button-header {
@@ -553,4 +555,20 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.custom-chat .chat-user .file-list {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  width: 100%;
+  height: 80px;
+  background-color: #d3eafd;
+  overflow: auto;
+  padding: 4px;
+  color: #000;
+  display: flex;
+  flex-flow: wrap;
+  gap: 8px;
+  align-items: center;
 }
