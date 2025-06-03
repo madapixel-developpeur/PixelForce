@@ -32,15 +32,7 @@ class MyApiAuthenticatedController extends AbstractController
         if($userId !== null) {
             $user = $this->userRepository->find($userId); 
         }
-        return $this->json([
-            "userId" => $user->getId(),
-            "lastname" => $user->getNom(),
-            "firstname" => $user->getPrenom(),
-            "email" => $user->getEmail(),
-            "username" => $user->getUsername(),
-            "roles" => $user->getRoles(),
-            "roleLabel" => $user->getRoleLabel()
-        ]);
+        return $this->json($user->getUserDataChat());
     }
 
 }

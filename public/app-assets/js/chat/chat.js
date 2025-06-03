@@ -277,6 +277,21 @@ myChatApp.controller("chatWidget", function ($scope, socket, chat) {
     });
   });
 
+  $scope.isConversationMyGroup = function (conversation) {
+    return (
+      conversation.isGroup &&
+      conversation.handle === "pixelforce-team-" + window.userId
+    );
+  };
+
+  $scope.isConversationTeamGroup = function (conversation) {
+    return (
+      conversation.isGroup &&
+      conversation.handle &&
+      conversation.handle.startsWith("pixelforce-team-")
+    );
+  };
+
   $scope.getAvatarClassRoles = function (roles) {
     roles = roles ?? [];
     if (
@@ -743,11 +758,12 @@ myChatApp.controller("chatUser", function ($scope, $q, chat) {
     $("#groupSettings").modal("show");
   };
 
-  $scope.fetchDataMembers = function (newPage = 1) {
+  $scope.fetchDataMembers = function (newPage = 1, refresh = false) {
     if (newPage == 1) $scope.isLoadingMembers = true;
     else $scope.isLoadingMoreMembers = true;
 
     const httpParamsNotFlattened = {
+      refresh: refresh ? "1" : undefined,
       pagination: { page: newPage, nbrPerPage: $scope.nbrPerPageMembers },
       sort: [{ property: "createdAt", order: "DESC" }],
       filter: {
@@ -756,7 +772,7 @@ myChatApp.controller("chatUser", function ($scope, $q, chat) {
           ? [
               {
                 property:
-                  "concat(coalesce(user.firstname, ''), ' ', coalesce(user.lastname, ''), ' ', coalesce(u.email, ''), ' ', coalesce(u.username, ''))",
+                  "concat(coalesce(user.firstname, ''), ' ', coalesce(user.lastname, ''), ' ', coalesce(user.email, ''), ' ', coalesce(user.username, ''))",
                 value: $scope.searchMemberText.trim(),
                 cond: "like",
                 match: "contains",
@@ -790,6 +806,11 @@ myChatApp.controller("chatUser", function ($scope, $q, chat) {
           $scope.isLoadingMoreMembers = false;
         });
       });
+  };
+
+  $scope.refreshDataMembers = function () {
+    $scope.searchMemberText = "";
+    $scope.fetchDataMembers(1, true);
   };
 
   $scope.loadMoreMembers = function () {

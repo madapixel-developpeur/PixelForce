@@ -1977,4 +1977,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
         }
         return false;
     }
+
+
+    public function getUserDataChat(){
+        return [
+            "userId" => $this->getId(),
+            "lastname" => $this->getNom(),
+            "firstname" => $this->getPrenom(),
+            "email" => $this->getEmail(),
+            "username" => $this->getUsername(),
+            "roles" => $this->getRoles(),
+            "roleLabel" => $this->getRoleLabel()
+        ];
+    }
 }

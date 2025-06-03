@@ -206,6 +206,18 @@ class AgentService
         return $data;
     }
 
+    public function getTeamMembers(User $user, int $currentLevel = 1){
+        $team[] = $user;
+        $limit = intval($_ENV['LIMIT_NIVEAU_EQUIPE_LINEAIRE']);
+        if($currentLevel  <= $limit){
+            $children = $this->repoUser->findBy(['parrain'=>$user->getId()]);
+            foreach ($children as $child) {
+                $team = [...$team,...$this->getTeamMembers($child, $currentLevel+1)];
+            }
+        }
+        return $team;
+    }
+
     public function getNumberOfTeam(User $user,int $currentLevel){
         $equipe = 0;
         if($currentLevel  > $_ENV['LIMIT_NIVEAU_EQUIPE_LINEAIRE']) return 0;

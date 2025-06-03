@@ -62,7 +62,8 @@
               <span ng-if="!conversation.isGroup"><b>{{ "{{ isConversationCreator(conversation) ? conversation.inviteeUser.firstname + ' ' +
                   conversation.inviteeUser.lastname : conversation.createdByUser.firstname + ' ' +
                   conversation.createdByUser.lastname }}" }}</b></span>
-                <span ng-if="conversation.isGroup"><b>{{"{{conversation.name}}"}}</b></span>
+                <span ng-if="conversation.isGroup && !isConversationMyGroup(conversation)"><b>{{"{{conversation.name}}"}}</b></span>
+                <span ng-if="isConversationMyGroup(conversation)"><b>Mon Equipe</b></span>
               <span class="badge rounded-pill bg-light-danger" ng-if="isNewMessage(conversation)">
                 1
               </span>
