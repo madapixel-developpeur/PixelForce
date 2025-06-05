@@ -342,16 +342,24 @@
                                         <a target="_blank" class="vision-button w-100 text-center rounded-3 mt-4 mb-4 mb-md-0 p-3 " href="{{configSecteurService.getRefUrl(generateReference(app.user.id,app.user.id))}}">{% trans %}Explorez nos offres{% endtrans %} </a>    
                                         {% elseif secteurAgent.id == secteur_finance_id %}
                                         
-                                        <h6 class="mt-3">
-                                        <span class="text-white">{% trans %}Lien d'invitation{% endtrans %} :</span>
-                                        {% if dataStat.statFinance and dataStat.statFinance.referral_code_text %}
-                                        <a class="text-dark-template fs-5" href="{{path('agent_inscription', {'ref': dataStat.statFinance.referral_code_text})}}" >  {% trans %}Cliquer ici{% endtrans %} </a>
-                                        <a class="p-2 text-dark-template fs-5" href="#" onclick="copyLink('{{url('agent_inscription', {'ref': dataStat.statFinance.referral_code_text})}}','Lien d\'invitation {{url('agent_inscription', {'ref': dataStat.statFinance.referral_code_text})}} copié avec succès')"><i class="fa-solid fa-copy"></i></a> 
-                                        {% else %}
-                                        <a class="text-dark-template fs-5" href="{{path('agent_inscription', {'ambassador_username':  app.user.username})}}" >  {% trans %}Cliquer ici{% endtrans %} </a>
-                                        <a class="p-2 text-dark-template fs-5" href="#" onclick="copyLink('{{url('agent_inscription', {'ambassador_username':  app.user.username})}}','Lien d\'invitation {{url('agent_inscription', {'ambassador_username':  app.user.username})}} copié avec succès')"><i class="fa-solid fa-copy"></i></a> 
-                                        {% endif %}
-                                        </h6>
+                                            <h6 class="mt-3">
+                                            <span class="text-white">{% trans %}Lien d'invitation{% endtrans %} :</span>
+                                            {% if dataStat.statFinance and dataStat.statFinance.referral_code_text %}
+                                            <a class="text-dark-template fs-5" href="{{path('agent_inscription', {'ref': dataStat.statFinance.referral_code_text})}}" >  {% trans %}Cliquer ici{% endtrans %} </a>
+                                            <a class="p-2 text-dark-template fs-5" href="#" onclick="copyLink('{{url('agent_inscription', {'ref': dataStat.statFinance.referral_code_text})}}','Lien d\'invitation {{url('agent_inscription', {'ref': dataStat.statFinance.referral_code_text})}} copié avec succès')"><i class="fa-solid fa-copy"></i></a> 
+                                            {% else %}
+                                            <a class="text-dark-template fs-5" href="{{path('agent_inscription', {'ambassador_username':  app.user.username})}}" >  {% trans %}Cliquer ici{% endtrans %} </a>
+                                            <a class="p-2 text-dark-template fs-5" href="#" onclick="copyLink('{{url('agent_inscription', {'ambassador_username':  app.user.username})}}','Lien d\'invitation {{url('agent_inscription', {'ambassador_username':  app.user.username})}} copié avec succès')"><i class="fa-solid fa-copy"></i></a> 
+                                            {% endif %}
+                                            </h6>
+                                        {% elseif secteurAgent.id == secteur_little_ponails_id %}
+                                            {% set onlineShopURL = get_lpn_online_shop(app.user.id) %}
+                                            {% set productLink = generate_product_link(app.session.get('secteurId'),app.user.id) %}
+                                            {# <h6 class="mt-3">
+                                            <span class="text-white">{% trans %}Lien d'affiliation produit{% endtrans %} :</span> 
+                                            <a class="p-2 text-white fs-5" href="#" onclick="copyLink('{{ productLink  }}','{{ 'Votre lien produit a été copié avec succès' | trans }}) "><i class="fa-solid fa-copy"></i></a> 
+                                            </h6> #}
+                                            <a target="_blank" class="vision-button w-100 text-center rounded-3 mt-4 mb-4 mb-md-0 p-3 " href="{{ onlineShopURL }}">{% trans %}Explorez nos produits{% endtrans %} </a>    
                                         {% endif %}
                                         {# <a target="_blank" href="{{secteur.liens}}" class="card-link">Lien vers {{secteur.nom}}</strong></a> #}
                                     </div>
