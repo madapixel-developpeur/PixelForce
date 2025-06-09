@@ -23,10 +23,10 @@ class AgentSecteur
 
 
     public const LPN_ACCOUNT_STATUS = [
-        self::ACCOUNT_CREATED => ['str'=> 'Créé' ,'btn_class'=> 'info'],
-        self::ACCOUNT_INACTIVE => ['str'=> 'Désactivé' ,'btn_class'=> 'danger'],
-        self::ACCOUNT_ACTIVE => ['str'=> 'Actif' ,'btn_class'=> 'info'],
-        self::ACCOUNT_WAITING_FOR_VALIDATION => ['str'=> 'En cours de validation' ,'btn_class'=> 'warning'],
+        self::ACCOUNT_CREATED => ['str' => 'Créé', 'btn_class' => 'info'],
+        self::ACCOUNT_INACTIVE => ['str' => 'Désactivé', 'btn_class' => 'danger'],
+        self::ACCOUNT_ACTIVE => ['str' => 'Actif', 'btn_class' => 'info'],
+        self::ACCOUNT_WAITING_FOR_VALIDATION => ['str' => 'En cours de validation', 'btn_class' => 'warning'],
     ];
 
     /**
@@ -67,27 +67,32 @@ class AgentSecteur
      */
     private $sectorPlatformUsername;
 
-     /**
+    /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $sectorPlatformAccountId;
 
-     /**
+    /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $sectorPlatformAgentUsername;
 
 
     /**
-    * @ORM\Column(type="integer", options={"default": 0})
-    */
+     * @ORM\Column(type="integer", options={"default": 0})
+     */
     private $sectorPlatformDocumentState = self::DOCUMENT_NOT_PROVIDED;
 
 
     /**
-    * @ORM\Column(type="integer", options={"default": 0})
-    */
+     * @ORM\Column(type="integer", options={"default": 0})
+     */
     private $accountFromPlaformStatus = self::ACCOUNT_CREATED;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true, options={"default"=false})
+     */
+    private bool $childrenSonporBeenChanged = false;
 
 
     public function getId(): ?int
@@ -160,7 +165,7 @@ class AgentSecteur
         return $this;
     }
 
-   
+
 
     /**
      * Get the value of sectorPlatformUsername
@@ -254,13 +259,38 @@ class AgentSecteur
         return $this;
     }
 
-    public function getLpnStatusParam(){
-        if(isset(self::LPN_ACCOUNT_STATUS[$this->getAccountFromPlaformStatus()])){
+    public function getLpnStatusParam()
+    {
+        if (isset(self::LPN_ACCOUNT_STATUS[$this->getAccountFromPlaformStatus()])) {
             return self::LPN_ACCOUNT_STATUS[$this->getAccountFromPlaformStatus()];
         }
         return [
             'str' => '',
             'btn_class' => '',
         ];
+    }
+
+    /**
+     * Get the value of childrenSonporBeenChanged
+     *
+     * @return bool
+     */
+    public function getChildrenSonporBeenChanged(): bool
+    {
+        return $this->childrenSonporBeenChanged;
+    }
+
+    /**
+     * Set the value of childrenSonporBeenChanged
+     *
+     * @param bool $childrenSonporBeenChanged
+     *
+     * @return self
+     */
+    public function setChildrenSonporBeenChanged(bool $childrenSonporBeenChanged): self
+    {
+        $this->childrenSonporBeenChanged = $childrenSonporBeenChanged;
+
+        return $this;
     }
 }

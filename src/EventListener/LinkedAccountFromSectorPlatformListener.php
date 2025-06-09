@@ -51,10 +51,10 @@ class LinkedAccountFromSectorPlatformListener
         $secteur_id = $this->session->get('secteurId');
         $secteur = $this->secteurRepository->findOneBy(['id' => $secteur_id]);
         if($user && $this->authorizationChecker->isGranted(User::ROLE_AGENT) && $secteur?->getId() == $_ENV['SECTEUR_LITTLE_PONAILS_ID']){
-            $agentSecteur = $user->getAgentSecteurById($secteur?->getId());
-            if(!$agentSecteur->getSectorPlatformAccountId()){
+            try {
+                $agentSecteur = $user->getAgentSecteurById($secteur?->getId());
+            } catch (\Throwable $th) {
                 $this->authService->checkAndCreateAccountLpn($user);
-                // $event->setResponse(new RedirectResponse($this->urlGenerator->generate('agent_check_platform_secteur_account')));
             }
         }
 

@@ -170,6 +170,9 @@ class AgentAccountController extends AbstractController
         if ($secteur->getId() == $_ENV['SECTEUR_DIGITAL_ID'] && !in_array(User::ROLE_REVENDEUR, $user->getRoles())) {
             return $this->redirectToRoute('agent_pro_dashboard', ['id' => $secteur->getId()]);
         }
+        elseif ($secteur->getId() == $_ENV['SECTEUR_LITTLE_PONAILS_ID'] && !$user?->getAgentSecteurById($_ENV['SECTEUR_LITTLE_PONAILS_ID'])?->getChildrenSonporBeenChanged()) {
+            return $this->redirectToRoute('agent_update_platform_secteur_account');
+        }
         return $this->redirectToRoute('agent_dashboard_secteur', ['id' => $secteur->getId()]);
     }
 
@@ -179,6 +182,7 @@ class AgentAccountController extends AbstractController
     public function agentAddSector(Secteur $secteur)
     {
         try {
+            $this->entityManager->beginTransaction();
             $user = $this->getUser();
             $agentSecteur = new AgentSecteur();
             $agentSecteur->setAgent($user);
@@ -190,10 +194,18 @@ class AgentAccountController extends AbstractController
             if($secteur->getId() == $_ENV['SECTEUR_LITTLE_PONAILS_ID']){
                 $this->authService->checkAndCreateAccountLpn($user,$agentSecteur);
             }
+            $this->entityManager->flush();
+            $this->entityManager->commit();
         } catch (CustomException $th) {
+            if ($this->entityManager->getConnection()->isTransactionActive()) {
+                $this->entityManager->rollback();
+            }
             $this->addFlash('danger', $th->getMessage());
             return $this->redirectToRoute('agent_home',['id'=> $secteur->getId()]);
         } catch (\Throwable $th) {
+            if ($this->entityManager->getConnection()->isTransactionActive()) {
+                $this->entityManager->rollback();
+            }
             $this->addFlash('danger', $_ENV['CUSTOM_ERROR_MESSAGE']);
             return $this->redirectToRoute('agent_home',['id'=> $secteur->getId()]);
         }

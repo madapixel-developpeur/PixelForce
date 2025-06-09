@@ -2,11 +2,12 @@
 
 namespace App\Repository;
 
+use App\Entity\User;
 use App\Entity\AgentSecteur;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use Doctrine\ORM\OptimisticLockException;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @method AgentSecteur|null find($id, $lockMode = null, $lockVersion = null)
@@ -55,6 +56,19 @@ class AgentSecteurRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult()
         ;
+    }
+
+    public function getLpnInfoOfDirectChildrenByParrainId($agentIds){
+        return $this->createQueryBuilder('a')
+            ->select('a')
+            ->join('a.agent','u')
+            ->andWhere('u.parrain IN (:agentIds)')
+            ->andWhere('a.sectorPlatformUsername IS NOT NULL')
+            ->andWhere('a.secteur = :lpn_secteur_id')
+            ->setParameter('agentIds', $agentIds)
+            ->setParameter('lpn_secteur_id', $_ENV['SECTEUR_LITTLE_PONAILS_ID'])
+            ->getQuery()
+            ->getResult();
     }
 
     // /**

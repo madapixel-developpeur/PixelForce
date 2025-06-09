@@ -220,6 +220,63 @@ class AuthService
         }
     }
 
+    public function getUsernameOfSponsorInLpn(User $user){
+        $parrain = $user->getParrain();
+        $lpnAgentSecteurInfo = $parrain?->getAgentSecteurById($_ENV['SECTEUR_LITTLE_PONAILS_ID']);
+        return (!$parrain || !$lpnAgentSecteurInfo || !$lpnAgentSecteurInfo->getSectorPlatformAgentUsername()) ? null : $lpnAgentSecteurInfo->getSectorPlatformAgentUsername();
+    }
+
+
+     public function updateAgentSponsorFromLpnApi(User $user,$data,$token){
+        $LPN_BACK_URL = $_ENV['LITTLE_PONAILS_BACK_URL'];
+        try{
+            $response = $this->client->request(
+                'POST',
+                $LPN_BACK_URL . '/api/mlm/agent/update-children-sponsor',
+                [
+                    'headers' =>
+                        ['Authorization' => 'Bearer ' . $token ]
+                    ,
+                    'json' => $data
+                ]
+            );
+
+            $content = json_decode($response->getContent(), true);
+            return $content;
+        } catch (HttpExceptionInterface $e) {
+            $statusCode = $e->getResponse()->getStatusCode();
+            if ($statusCode === 422 || $statusCode === 400) {
+                $content = json_decode($e->getResponse()->getContent(false), true);
+                throw new CustomException($content['message']);
+            }
+            if ($statusCode === 401) {
+                $this->session->remove('lpn_token');
+                throw new CustomException($this->translator->trans("Veuillez retaper votre mot de passe Little Ponails, s'il vous plaît."));
+            }
+            throw $e; 
+        } catch (\Throwable $th) {
+            throw $th;
+        }      
+    }
+
+
+    public function updateDirectChildrenSponsorInLpn(User $user,$info){
+        $this->entityManager->refresh($user); 
+        $data=[];
+        $lpnInfoOfDirectChildren = $this->agentSecteurRepository->getLpnInfoOfDirectChildrenByParrainId([$user->getId()]);
+        $lpnIdentifications = array_map(function($data){
+            return $data->getSectorPlatformUsername();
+        }, $lpnInfoOfDirectChildren);
+        $data['directChildrenIdentification'] = $lpnIdentifications ;
+        $token = (isset($info['token'])) ? $info['token'] : $this->session->get('lpn_token','');
+        $agentSecteurLpn = $user->getAgentSecteurById($_ENV['SECTEUR_LITTLE_PONAILS_ID']);
+
+        $this->updateAgentSponsorFromLpnApi($user,$data,$token);
+        $agentSecteurLpn->setChildrenSonporBeenChanged(true);
+        $this->entityManager->persist($agentSecteurLpn);
+        $this->entityManager->flush();
+    }
+
     public function createLpnAccountFromPixelForceInfo(User $user){
 
         $data = [
@@ -232,7 +289,13 @@ class AuthService
             'provider'=> Constants::LPN_PIXELFORCE_PROVIDER,
             'password'=> Constants::DEFAULT_LPN_PASSWORD 
         ];
-        return $this->createLittlePonailsAccountFromApi($data);
+        $usernameOfSponsorInLpn = $this->getUsernameOfSponsorInLpn($user);
+        if($usernameOfSponsorInLpn){
+            $data['sponsor'] = $usernameOfSponsorInLpn;
+        }
+        $info = $this->createLittlePonailsAccountFromApi($data);
+        $this->updateDirectChildrenSponsorInLpn($user,$info);
+        return $info;
         
     }
 
@@ -370,6 +433,10 @@ class AuthService
     public function getAccessToLpn(User $user,$info){
         try {
             $token = $this->getLoginToken($user,$info);
+            $littlePonailsAgentSecteur = $user->getAgentSecteurById($_ENV['SECTEUR_LITTLE_PONAILS_ID']);
+            if(!$littlePonailsAgentSecteur->getChildrenSonporBeenChanged()){
+                $this->updateDirectChildrenSponsorInLpn($user,['token' => $token]);
+            }
             return $token; 
         } catch (\Throwable $th) {
             throw $th;
