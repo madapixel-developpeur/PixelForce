@@ -71,6 +71,17 @@ class AgentSecteurRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+     public function getNoneFixedLpnNetwork(){
+        return $this->createQueryBuilder('a')
+            ->select('a')
+            ->andWhere('a.sectorPlatformUsername IS NOT NULL')
+            ->andWhere('a.childrenSonporBeenChanged = false')
+            ->andWhere('a.secteur = :lpn_secteur_id')
+            ->setParameter('lpn_secteur_id', $_ENV['SECTEUR_LITTLE_PONAILS_ID'])
+            ->getQuery()
+            ->getResult();
+    }
+
     // /**
     //  * @return AgentSecteur[] Returns an array of AgentSecteur objects
     //  */

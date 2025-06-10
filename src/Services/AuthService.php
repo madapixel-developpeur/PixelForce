@@ -227,7 +227,7 @@ class AuthService
     }
 
 
-     public function updateAgentSponsorFromLpnApi(User $user,$data,$token){
+    public function updateAgentSponsorFromLpnApi(User $user,$data,$token){
         $LPN_BACK_URL = $_ENV['LITTLE_PONAILS_BACK_URL'];
         try{
             $response = $this->client->request(
@@ -327,25 +327,32 @@ class AuthService
 
     }
 
-    public function getLoginToken(User $user,$data){
+    public function getLoginToken(User $user,$data,$isBackgroundOperation = false){
         if($this->session->get('lpn_token')){
             return $this->session->get('lpn_token');
         }
         $LPN_BACK_URL = $_ENV['LITTLE_PONAILS_BACK_URL'];
 
-        $agentSecteur = $user->getAgentSecteurById($_ENV['SECTEUR_LITTLE_PONAILS_ID']);
-        if(!$agentSecteur){
-            throw new CustomException($this->translator->trans('Veuillez vous inscrire sur Little Ponails'));
-        }
+        if(!$isBackgroundOperation){
+            $agentSecteur = $user->getAgentSecteurById($_ENV['SECTEUR_LITTLE_PONAILS_ID']);
+            if(!$agentSecteur){
+                throw new CustomException($this->translator->trans('Veuillez vous inscrire sur Little Ponails'));
+            }
 
-        if(!isset($data['password'])){
-            throw new CustomException($this->translator->trans('Veuillez vous connecter à Little Ponails'));
-        }
+            if(!isset($data['password'])){
+                throw new CustomException($this->translator->trans('Veuillez vous connecter à Little Ponails'));
+            }
 
-        $credentials =   [
-            'password' => $data['password'],
-            'username' => $agentSecteur->getSectorPlatformUsername(),
-        ];
+            $credentials =   [
+                'password' => $data['password'],
+                'username' => $agentSecteur->getSectorPlatformUsername(),
+            ];
+        }else{
+              $credentials =   [
+                'password' => $data['password'],
+                'username' => $data['username'],
+            ];
+        }
         try{
             $response = $this->client->request(
                 'GET',
@@ -538,5 +545,72 @@ class AuthService
         return $agentInfo;
     }
 
+    public function updateLpnNetworkApi($data,$token){
+        $LPN_BACK_URL = $_ENV['LITTLE_PONAILS_BACK_URL'];
+        try{
+            $response = $this->client->request(
+                'POST',
+                $LPN_BACK_URL . '/api/admin/agents/update-lpn-network',
+                [
+                    'headers' =>
+                        ['Authorization' => 'Bearer ' . $token ]
+                    ,
+                    'json' => ['info' => $data ]
+                ]
+            );
+
+            $content = json_decode($response->getContent(), true);
+            return $content;
+        } catch (HttpExceptionInterface $e) {
+            $statusCode = $e->getResponse()->getStatusCode();
+            if ($statusCode === 422 || $statusCode === 400) {
+                $content = json_decode($e->getResponse()->getContent(false), true);
+                throw new CustomException($content['message']);
+            }
+            if ($statusCode === 401) {
+                $this->session->remove('lpn_token');
+                throw new CustomException($this->translator->trans("Veuillez retaper votre mot de passe Little Ponails, s'il vous plaît."));
+            }
+            throw $e; 
+        } catch (\Throwable $th) {
+            throw $th;
+        }      
+    }
+
+
+    public function redesignLpnNetworkBasedOnPixelForceNetwork($credential){
+        try {
+            $this->entityManager->beginTransaction();
+            $token = $this->getLoginToken(new User(),$credential,true);
+            $data = [];
+            $noneFixedNetwork = $this->agentSecteurRepository->getNoneFixedLpnNetwork();
+            foreach ($noneFixedNetwork as $item) {
+                $lpnInfoOfDirectChildren = $this->agentSecteurRepository->getLpnInfoOfDirectChildrenByParrainId([$item->getAgent()->getId()]);
+                if(count($lpnInfoOfDirectChildren) == 0 ) continue;
+                $lpnIdentifications = array_map(function($data){
+                    return $data->getSectorPlatformUsername();
+                }, $lpnInfoOfDirectChildren);
+
+                $data[] = [
+                    'userIdentification' => $item->getSectorPlatformUsername(),
+                    'directChildrenIdentification' => $lpnIdentifications
+                ];
+            } 
+            $this->updateLpnNetworkApi($data,$token);
+
+            foreach ($noneFixedNetwork as $item) {
+                $item->setChildrenSonporBeenChanged(true);
+                $this->entityManager->persist($item);
+            }
+
+            $this->entityManager->flush();
+            $this->entityManager->commit();
+       } catch (\Throwable $th) {
+            if ($this->entityManager->getConnection()->isTransactionActive()) {
+                $this->entityManager->rollback();
+            }
+            throw $th;
+        }
+    }
 
 }
