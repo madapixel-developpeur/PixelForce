@@ -204,6 +204,7 @@ myChatApp.service("chat", function ($http) {
   };
 
   this.createGroup = async function (data) {
+    data.isPublic = !!data.isPublic;
     const response = await $http({
       method: "POST",
       url: `${window.baseUrlChat}/chat/conversation-group`,
@@ -581,6 +582,7 @@ myChatApp.controller("chatUserSearchList", function ($scope, $q, chat) {
 
   $scope.newGroup = {
     name: "",
+    isPublic: false,
   };
 
   $scope.submitNewGroup = function () {
@@ -594,7 +596,8 @@ myChatApp.controller("chatUserSearchList", function ($scope, $q, chat) {
           $("#createGroupModal").modal("hide");
           $scope.$apply(() => {
             $scope.$parent.setConversationId(result.id);
-            $scope.$parent.$broadcast("openMemberModals", {});
+            if (!result.isPublic)
+              $scope.$parent.$broadcast("openMemberModals", {});
           });
         })
         .catch((error) => console.error(error))
@@ -610,6 +613,7 @@ myChatApp.controller("chatUserSearchList", function ($scope, $q, chat) {
   $scope.resetNewGroup = function () {
     $scope.newGroup = {
       name: "",
+      isPublic: false,
     };
     $scope.myFormNewGroup.$setPristine();
     $scope.myFormNewGroup.$setUntouched();

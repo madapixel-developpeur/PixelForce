@@ -94,8 +94,12 @@
     <span ng-show="myFormNewGroup.name.$touched && myFormNewGroup.name.$error.required" 
           class="help-block">Nom obligatoire.</span>
   </div>
+  
 </div>
- 
+ <div class="form-group form-check">
+    <input type="checkbox" class="form-check-input" id="isPublic" ng-model="newGroup.isPublic" name="isPublic">
+    <label class="form-check-label" for="isPublic">Publique</label>
+  </div>
       </div>
       
       <div class="modal-footer">
