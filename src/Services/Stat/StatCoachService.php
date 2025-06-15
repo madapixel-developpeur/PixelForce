@@ -117,6 +117,52 @@ class StatCoachService
     }
 
 
+    public function getCurrentPaymentInfo(){
+        try {
+            $BO_URL = $_ENV['PBB_WS_URL'];
+            $response = $this->client->request(
+                'GET',
+                $BO_URL . '/api/payment-info',
+            );
+            $content = json_decode($response->getContent(), true);
+            return $content;
+       } catch (HttpExceptionInterface $e) {
+            $statusCode = $e->getResponse()->getStatusCode();
+            if ($statusCode === 422 || $statusCode === 400) {
+                $content = json_decode($e->getResponse()->getContent(false), true);
+                throw new CustomException($content['message']);
+            }
+            throw $e; 
+        } catch (\Throwable $th) {
+            throw $th;
+        }   
+       
+    }
+
+    public function updatePaymentInfo($data){
+          try {
+            $BO_URL = $_ENV['PBB_WS_URL'];
+            $response = $this->client->request(
+                'POST',
+                $BO_URL . '/api/payment-info/udpate',
+                [
+                    'json' => $data, 
+                ]
+            );
+            $content = json_decode($response->getContent(), true);
+            return $content;
+       } catch (HttpExceptionInterface $e) {
+            $statusCode = $e->getResponse()->getStatusCode();
+            if ($statusCode === 422 || $statusCode === 400) {
+                $content = json_decode($e->getResponse()->getContent(false), true);
+                throw new CustomException($content['message']);
+            }
+            throw $e; 
+        } catch (\Throwable $th) {
+            throw $th;
+        }   
+    }
+
     
 
     

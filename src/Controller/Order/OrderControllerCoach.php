@@ -4,10 +4,11 @@ namespace App\Controller\Order;
 
 use Exception;
 use App\Entity\Order;
-use App\Exception\CustomException;
 use App\Services\PdfExport;
 use App\Services\ExcelService;
 use App\Services\SearchService;
+use App\Form\PaymentInfoFormType;
+use App\Exception\CustomException;
 use App\Repository\UserRepository;
 use App\Repository\OrderRepository;
 use App\Form\OrderSearchTypeDigital;
@@ -55,7 +56,7 @@ class OrderControllerCoach extends AbstractController
     }
 
     /**
-     * @Route("/{all}", name="coach_order_history")
+     * @Route("/list/{all}", name="coach_order_history")
      */
     public function index(Request $request, PaginatorInterface $paginator, SearchService $searchService,int $all = 0): Response
     {
@@ -195,13 +196,33 @@ class OrderControllerCoach extends AbstractController
         return $this->redirectToRoute('coach_order_history');
     }
 
-    //  /**
-    //  * @Route("/information-paiement/", name="coach_update_payment_information")
-    //  */
-    // public function paymentInfomration(Request $request): Response
-    // {
-       
-    // }
+     /**
+     * @Route("/information-paiement/", name="coach_update_payment_information")
+     */
+    public function paymentInfomration(Request $request): Response
+    {
+        $currentPaymentInfo = $this->statCoachService->getCurrentPaymentInfo();
+        $form = $this->createForm(PaymentInfoFormType::class,$currentPaymentInfo, [
+            'data_class' => null,
+        ]);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            try {
+                $data = $form->getData();
+                $this->statCoachService->updatePaymentInfo($data);
+                $this->addFlash('success',$this->translator->trans('Informations modifiées aveec succès'));
+                return $this->redirectToRoute('coach_update_payment_information');
+            }catch (CustomException $ex) {
+                $this->addFlash('danger',$ex->getMessage());
+            }catch (\Exception $ex) {
+                $this->addFlash('danger', $_ENV['CUSTOM_ERROR_MESSAGE']);
+            }
+        }
+        
+        return $this->render('user_category/coach/parameter/digital/payment_info.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
 
     
 
