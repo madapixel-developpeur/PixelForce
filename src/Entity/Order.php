@@ -15,9 +15,11 @@ use Doctrine\ORM\Mapping as ORM;
 class Order
 {
 
+    public const PBB_CREATED_STATUS = 0;
     public const CREATED = 100;
     public const PAIED = 1;
     public const VALIDATED = 2;
+    public const REFUSED = -1;
 
     public const STATUS = [
         self::CREATED => "Créée", 
@@ -29,6 +31,24 @@ class Order
         "Créée" => self::CREATED, 
         "Payée" => self::PAIED,
         "Livrée" => self::VALIDATED
+    ];
+
+
+    public const PBB_PAYMENT_INFO = [
+        '2' => [
+            'status_order' =>[
+                [ 'status_value' => 0 , 'action'=>''],
+                [ 'status_value' => 2 , 'action'=>'Marquer comme reçu'],
+                [ 'status_value' => 3 , 'action'=>'Encaisser'],
+                [ 'status_value' => 1 , 'action'=>'Terminer'],
+            ],
+        ],
+        '3' => [
+            'status_order' =>[
+                [ 'status_value' => 0 , 'action'=>''],
+                [ 'status_value' => 1 , 'action'=>'Terminer'],
+            ],
+        ],
     ];
 
     /**
@@ -271,5 +291,9 @@ class Order
         $this->invoicePath = $invoicePath;
 
         return $this;
+    }
+
+    public function getNextActionStatus(){
+        // if(!isset(self::PBB_PAYMENT_INFO[$this->getPa]))
     }
 }

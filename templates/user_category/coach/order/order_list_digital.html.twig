@@ -1,0 +1,166 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	{% trans %}Commandes{% endtrans %}
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+{% endblock %}
+
+{% block body %}
+
+	<div class="row mb-3">
+		<div class="col-12  mt-2 mt-md-3">
+			<h4 class="my-auto general-primary-text">{% trans %}Liste des commandes{% endtrans %}</h4>
+		</div>
+	</div>
+	<div class="card card-company-table p-5 rounded-3" style="">
+				<div class="card-body p-0">
+					<div class="card-head mb-3">
+						<div class="row">
+							<div class="col-0 col-md-6">
+							</div>
+							<div class="col-12 col-md-6 d-flex justify-content-center">
+								<form action="" class="input-group rounded-3 m-2 w-75">
+                                    <button class="input-group-text border-0" id="search-addon" type="submit">
+										<i class="fas fa-search"></i>
+									</button>
+                                    <input type="search"name="search" class="form-control  input-group-text border-0" placeholder="{{ 'Chercher' | trans }}" aria-label="Search" aria-describedby="search-addon" />
+                                </form>
+								<div class="col-6 col-md-4">
+                                    <div class="input-group rounded-3 m-2">
+                                        <button class="input-group-text border-0 w-100" type="button" data-toggle="collapse" data-target="#filters" aria-expanded="false" aria-controls="filters">
+                                            <span class="input-group-text border-0 w-25 rounded-4 me-4" id="filter-toggle">
+                                                <i class="fa-solid fa-bars-staggered"></i>
+                                            </span>
+                                            {% trans %}Filtres{% endtrans %}
+                                        </button>
+                                    </div>
+                                </div>
+							</div>
+						</div>
+                    </div>
+                    {{ form_start(form, {'attr': { 'id': 'product-filter-form'}}) }}
+                    <div class="collapse" id="filters">
+                        <div class="block block--bordered block--rounded">
+                             <h1 class="block__text block__text--center mt-2" >{% trans %}Options de filtre{% endtrans %} :</h1>
+                             <div class="filter-wrap">
+                                    <!-- Formulaire de recherche -->
+                                        <div class="search-form">
+                                            <div class="filter-form">
+                                                <div class="col-12 col-md-2">
+                                                        {{form_label(form.dateMin)}}
+                                                        {{form_widget(form.dateMin)}}
+                                                        {{form_errors(form.dateMin)}}
+                                                </div>
+                                                <div class="col-12 col-md-2">
+                                                        {{form_label(form.dateMax)}}
+                                                        {{form_widget(form.dateMax)}}
+                                                        {{form_errors(form.dateMax)}}
+                                                </div>
+                                                <div class="col-12 col-md-2">
+                                                        {{form_label(form.clientName)}}
+                                                        {{form_widget(form.clientName)}}
+                                                        {{form_errors(form.clientName)}}
+                                                </div>
+                                                <div class="col-12  col-md-2">
+                                                        {{form_label(form.referenceVente)}}
+                                                        {{form_widget(form.referenceVente)}}
+                                                        {{form_errors(form.referenceVente)}}
+                                                </div>
+
+                                                <div class="btn-wrap">
+                                                    <button class="btn btn-primary" type="submit" name="action_button" value="search_action"><i data-feather="filter"></i>{% trans %}Filtrer{% endtrans %}</button>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                             </div>
+                        </div>
+                    </div>
+                     <div class="row w-100">
+                        <div class="col-12 col-md-12 mt-3 d-flex align-items-center justify-content-start p-0 mb-3 ">
+                            <button name="action_button" value="excel"  class=" mt-2 btn btn-success btn-sm me-2 rounded-3"><i class="fa fa-print"></i> <span class="ms-1">{% trans %}Exporter excel{% endtrans %}</span></button>
+                            <button name="action_button" value="csv"  class=" mt-2 btn btn-success btn-sm me-2 rounded-3"><i class="fa fa-print"></i> <span class="ms-1">{% trans %}Exporter csv{% endtrans %}</span></button>
+                            <button name="action_button" value="pdf"  class=" mt-2  btn btn-danger btn-sm me-2 rounded-3"><i class="fa fa-file-text"></i> <span class="ms-1">{% trans %}Exporter pdf{% endtrans %}</span></button>
+                        </div>
+                    </div>
+                    {{ form_end(form) }}
+
+                    
+                    {% if orderList|length ==0 %}
+                        <div class="alert alert-primary p-3 text-center" role="alert">
+                            <div class="alert-body">
+                                {% trans %}Aucune Commande{% endtrans %}
+                            </div>
+                        </div>
+                    {% endif %}
+                    {% if orderList|length !=0 %}
+					<div class="table-responsive">
+						<table class="table text-center">
+							<tbody class="align-items-center">
+								<tr>
+									<th>{% trans %}Date{% endtrans %}</th>
+                                    <th class="text-start">{% trans %}Client{% endtrans %}</th>
+                                    <th class="text-start">{% trans %}Pack - (service){% endtrans %}</th>
+                                    <th class="text-right">{% trans %}Montant{% endtrans %}</th>
+                                    <th>{% trans %}Référence{% endtrans %}</th>
+                                    <th>{% trans %}Mode de paiement{% endtrans %}</th>
+                                    <th>{% trans %}Info commande{% endtrans %}</th>
+                                    <th>{% trans %}Statut{% endtrans %}</th>
+                                    <th></th>
+                                </tr>
+
+								{% for order in orderList %}
+                                    <tr>
+                                        <td>{{order.createdAt | date("d/m/Y H:i")}}</td>
+                                        <td class="text-start">{{order.infoClient.firstName}} {{order.infoClient.lastName}}</td>
+                                        <td class="text-start">{{order.package.name}} - ({{order.package.service}})</td>
+                                        <td class="text-right">{{order.amount | number_format(2, ',', ' ') }}</td>
+                                        <td>{{order.infoClient.referenceVente}}</td>
+                                        <td>{{order.paymentMode.name | trans }}</td>
+										<td>
+											{% if order.refTransfer is not null %}
+												{{ ('Référence du virement' | trans) ~ ': "'~ order.refTransfer ~"\""}}	
+											{% elseif order.checkNumber is not null %}
+												{{ ('Numero du chèque' | trans) ~ ': '~ order.checkNumber}}	
+											{% endif %}
+										</td>
+                                        <td>{{order.statusStr | trans }}</td>
+										<td class="col-action d-flex align-items-center justify-content-center py-2">
+											{% set next_status = get_next_action_status_order(order.paymentMode.id ,order.status) %}
+											{% if next_status is not empty %}
+												<form id='update_order_status'  method="post" onsubmit="confirmationForm('update_order_status','{{ path('coach_change_order_status') }}','Êtes-vous sûr(e) de vouloir continuer?')">
+													<input type="hidden" name="order_id" value='{{ order.id }}'>
+													<input type="hidden" name="status" value='{{ next_status.status_value }}'>
+													<button class="btn btn-sm btn-success" type="submit">
+														{{ next_status.action }}
+													</button>
+												</form>
+											{% endif %}
+                                            <a type='button' class="btn btn-sm btn-info ms-2" href="{{path('agent_order_details_digital', {'id': order.id})}}">
+                                                Détail
+                                            </a>
+											<form id="refuse_order" method="post" onsubmit="confirmationForm('refuse_order','{{ path('coach_change_order_status') }}','Êtes-vous sûr(e) de vouloir refuser cet achat?')">
+												<input type="hidden" name="order_id" value='{{ order.id }}'>
+												<input type="hidden" name="status" value='{{ constant('App\\Entity\\Order::REFUSED') }}'>
+												<button class="btn btn-sm btn-danger ms-2" type="submit">
+													Refuser
+												</button>
+											</form>
+                                        </td>   
+                                    </tr>
+                                {% endfor %}
+
+						</tbody>
+					</table>
+				</div>
+				<div class="pagination d-flex justify-content-center">
+					{{ knp_pagination_render(orderList)}}
+				</div>
+			{% endif %}
+		</div>
+	</div>
+
+{% endblock %}

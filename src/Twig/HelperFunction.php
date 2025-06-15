@@ -2,18 +2,19 @@
 
 namespace App\Twig;
 
-use App\Repository\AgentSecteurRepository;
 use DateTime;
 use Twig\TwigFilter;
+use App\Entity\Order;
 use DateTimeInterface;
 use IntlDateFormatter;
 use Twig\TwigFunction;
 use App\Util\GenericUtil;
-use App\Repository\SecteurRepository;
 use App\Services\AuthService;
+use App\Util\LittlePonailsConstant;
+use App\Repository\SecteurRepository;
 use Twig\Extension\AbstractExtension;
 use App\Services\Stat\StatAgentService;
-use App\Util\LittlePonailsConstant;
+use App\Repository\AgentSecteurRepository;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Bundle\SecurityBundle\SecurityBundle;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -57,6 +58,7 @@ class HelperFunction extends AbstractExtension
             new TwigFunction('generate_product_link', [$this, 'generateProductLink']),
             new TwigFunction('get_document_status_from_lpn', [$this, 'getDocumentStatusFromLpn']),
             new TwigFunction('get_document_type_from_lpn', [$this, 'getDocumentTypeFromLpn']),
+            new TwigFunction('get_next_action_status_order', [$this, 'getNextActionStatus']),
 
         ];
     }
@@ -202,6 +204,20 @@ class HelperFunction extends AbstractExtension
             return LittlePonailsConstant::DOCUMENT_TYPE[$type_value];
         }
         return '';
+    }
+
+    public function getNextActionStatus($paymentMode,$currentStatus){
+        if(isset(Order::PBB_PAYMENT_INFO[$paymentMode])){
+            $parameter = Order::PBB_PAYMENT_INFO[$paymentMode];
+            foreach ($parameter['status_order'] as $index => $status) {
+                if ($status['status_value'] === $currentStatus) {
+                    return $parameter['status_order'][$index + 1] ?? [];
+                }
+            }
+            return [];
+        }else{
+            return [];
+        }
     }
 
     

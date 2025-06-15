@@ -159,6 +159,22 @@
                                                     <div class="detail-title">{% trans %}Statut{% endtrans %}</div>
                                                     <div class="detail-amt discount-amt text-primary">{{order.statusStr | trans }}</div>
                                                 </li>
+                                                  <li class="price-detail">
+                                                    <div class="detail-title">{% trans %}Mode de paiement{% endtrans %}</div>
+                                                    <div class="detail-amt discount-amt text-primary">{{order.paymentMode.name | trans }}</div>
+                                                </li>
+                                                {% if order.refTransfer is not null %}
+                                                    <li class="price-detail">
+                                                        <div class="detail-title">{% trans %}Référence virement{% endtrans %}</div>
+                                                        <div class="detail-amt discount-amt text-primary">{{order.refTransfer }}</div>
+                                                    </li>
+                                                {% elseif order.checkNumber is not null %}
+                                                       <li class="price-detail">
+                                                        <div class="detail-title">{% trans %}Numero de chèque{% endtrans %}</div>
+                                                        <div class="detail-amt discount-amt text-primary">{{order.checkNumber }}</div>
+                                                    </li>
+                                                {% endif %}
+                                                
                                                 
                                             </ul>
                                             <hr />
