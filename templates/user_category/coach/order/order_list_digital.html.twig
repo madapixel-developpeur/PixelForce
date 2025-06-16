@@ -131,7 +131,8 @@
 										<td class="col-action d-flex align-items-center justify-content-center py-2">
 											{% set next_status = get_next_action_status_order(order.paymentMode.id ,order.status) %}
 											{% if next_status is not empty %}
-												<form id='update_order_status'  method="post" onsubmit="confirmationForm('update_order_status','{{ path('coach_change_order_status') }}','Êtes-vous sûr(e) de vouloir continuer?')">
+                                                {% set form_update_id = 'update_order_status_'~ order.id %}
+												<form id='{{form_update_id}}'  method="post" onsubmit="confirmationForm('{{ form_update_id }}','{{ path('coach_change_order_status') }}','Êtes-vous sûr(e) de vouloir continuer?')">
 													<input type="hidden" name="order_id" value='{{ order.id }}'>
 													<input type="hidden" name="status" value='{{ next_status.status_value }}'>
 													<button class="btn btn-sm btn-success" type="submit">
@@ -142,13 +143,16 @@
                                             <a type='button' class="btn btn-sm btn-info ms-2" href="{{path('agent_order_details_digital', {'id': order.id})}}">
                                                 Détail
                                             </a>
-											<form id="refuse_order" method="post" onsubmit="confirmationForm('refuse_order','{{ path('coach_change_order_status') }}','Êtes-vous sûr(e) de vouloir refuser cet achat?')">
-												<input type="hidden" name="order_id" value='{{ order.id }}'>
-												<input type="hidden" name="status" value='{{ constant('App\\Entity\\Order::REFUSED') }}'>
-												<button class="btn btn-sm btn-danger ms-2" type="submit">
-													Refuser
-												</button>
-											</form>
+                                            {% if next_status is not empty %}
+                                                {% set refuse_order = 'refuse_order_'~ order.id %}
+                                                <form id="{{refuse_order}}" method="post" onsubmit="confirmationForm('{{refuse_order}}','{{ path('coach_change_order_status') }}','Êtes-vous sûr(e) de vouloir refuser cet achat?')">
+                                                    <input type="hidden" name="order_id" value='{{ order.id }}'>
+                                                    <input type="hidden" name="status" value='{{ constant('App\\Entity\\Order::REFUSED') }}'>
+                                                    <button class="btn btn-sm btn-danger ms-2" type="submit">
+                                                        Refuser
+                                                    </button>
+                                                </form>
+                                            {% endif %}
                                         </td>   
                                     </tr>
                                 {% endfor %}
