@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Entity\Secteur;
 use App\Entity\AgentSecteur;
+use App\Form\PlatformIdentityType;
 use App\Services\AuthService;
 use App\Manager\EntityManager;
 use App\Manager\StripeManager;
@@ -191,8 +192,8 @@ class AgentAccountController extends AbstractController
             $agentSecteur->setDateValidation(new \DateTime());
             $this->entityManager->save($agentSecteur);
             $this->entityManager->flush();
-            if($secteur->getId() == $_ENV['SECTEUR_LITTLE_PONAILS_ID']){
-                $this->authService->checkAndCreateAccountLpn($user,$agentSecteur);
+            if ($secteur->getId() == $_ENV['SECTEUR_LITTLE_PONAILS_ID']) {
+                $this->authService->checkAndCreateAccountLpn($user, $agentSecteur);
             }
             $this->entityManager->flush();
             $this->entityManager->commit();
@@ -201,15 +202,15 @@ class AgentAccountController extends AbstractController
                 $this->entityManager->rollback();
             }
             $this->addFlash('danger', $th->getMessage());
-            return $this->redirectToRoute('agent_home',['id'=> $secteur->getId()]);
+            return $this->redirectToRoute('agent_home', ['id' => $secteur->getId()]);
         } catch (\Throwable $th) {
             if ($this->entityManager->getConnection()->isTransactionActive()) {
                 $this->entityManager->rollback();
             }
             $this->addFlash('danger', $_ENV['CUSTOM_ERROR_MESSAGE']);
-            return $this->redirectToRoute('agent_home',['id'=> $secteur->getId()]);
+            return $this->redirectToRoute('agent_home', ['id' => $secteur->getId()]);
         }
-        
+
 
         return $this->redirectToRoute('agent_generate_sessionSecteur_before_redirect_to_route_dahsboard', ['id' => $secteur->getId()]);
     }
@@ -219,6 +220,10 @@ class AgentAccountController extends AbstractController
      */
     public function agent_dashboard_secteur(Request $request, PaginatorInterface $paginator, Secteur $secteur, StatAgentService $statAgentService, UserRepository $userRepository, UserTransactionRepository $userTransactionRepository, CategorieFormationRepository $categorieFormationRepository)
     {
+
+
+
+
         // dd($secteur);
         $agent = (object) $this->getUser();
         $this->agentService->setStartDate($agent);
@@ -278,6 +283,16 @@ class AgentAccountController extends AbstractController
 
         $videoFinFormation = $this->secteurVideoFormationRepository->findOneBy(['secteur' => $sessionSecteurId]);
         $announcements = $this->announcementRepository->getActiveAnnoncement($secteur, new \DateTime(), ['type' => User::ROLE_REVENDEUR]);
+
+        $secteurProbotxId = $this->getParameter('secteur_probot_x_id');
+        $formProbotxPlatformIdView = null;
+        if ($sessionSecteurId == $secteurProbotxId) {
+
+            $platformIdentity = $agent->getPlatformIdForPlatform(User::PLATFORM_PROBOT_X);
+            $formProbotxPlatformId = $this->createForm(PlatformIdentityType::class, $platformIdentity);
+            $formProbotxPlatformIdView = $formProbotxPlatformId->createView();
+        }
+
         return $this->render('user_category/agent/dashboard_secteur.html.twig', [
             'secteur' => $secteur,
             'firstFormation' => $firstFormation,
@@ -308,13 +323,40 @@ class AgentAccountController extends AbstractController
             'visible' => $visible,
             'expert' => $expert,
             'videoFinFormation' => $videoFinFormation,
-            'announcements' => $announcements
+            'announcements' => $announcements,
+            'formProbotxPlatformIdView' => $formProbotxPlatformIdView
+        ]);
+    }
+
+    #[Route('/agent/save-platform-probot-x-id', name: 'agent_save_platform_probot_x_id')]
+    public function save_platform_probot_x_id(Request $request)
+    {
+        $agent = (object) $this->getUser();
+        $sessionSecteurId = $this->session->get('secteurId');
+        $platformIdentity = $agent->getPlatformIdForPlatform(User::PLATFORM_PROBOT_X);
+        $formProbotxPlatformId = $this->createForm(PlatformIdentityType::class, $platformIdentity);
+        $formProbotxPlatformId->handleRequest($request);
+        if ($formProbotxPlatformId->isSubmitted() && $formProbotxPlatformId->isValid()) {
+
+            try {
+                $this->entityManager->persist($platformIdentity);
+                $this->entityManager->flush();
+                $this->addFlash('success', "Informations enregistrées avec succès");
+
+            } catch (\Exception $ex) {
+                $this->addFlash('danger', $ex->getMessage());
+            }
+
+        }
+
+        return $this->redirectToRoute('agent_dashboard_secteur', [
+            'id' => $sessionSecteurId
         ]);
     }
 
     /**     * @Route("/agent/view/{secteur_network}", name="agent_view")
      */
-    public function admin_agent_view(Request $request, AgentSecteurService $agentSecteurService, UserRepository $repoUser, PaginatorInterface $paginator, StatAgentService $statAgentService,$secteur_network = '')
+    public function admin_agent_view(Request $request, AgentSecteurService $agentSecteurService, UserRepository $repoUser, PaginatorInterface $paginator, StatAgentService $statAgentService, $secteur_network = '')
     {
         $secteur_finance_id = $this->getParameter('secteur_finance_id');
 
@@ -333,30 +375,26 @@ class AgentAccountController extends AbstractController
             }
             $countEquipe = count($filleul);
             $countDirect = count($filleul);
-        }
-        else if ($sessionSecteurId == $_ENV['SECTEUR_LITTLE_PONAILS_ID'] && $secteur_network) {
-            $data = $statAgentService->getAgentStatLittlePonailsNetwork($ambassadeur,$sessionSecteurId);
+        } else if ($sessionSecteurId == $_ENV['SECTEUR_LITTLE_PONAILS_ID'] && $secteur_network) {
+            $data = $statAgentService->getAgentStatLittlePonailsNetwork($ambassadeur, $sessionSecteurId);
             $caStat = [
-                "ca_perso" =>  $data['ca_perso'],
+                "ca_perso" => $data['ca_perso'],
                 "ca_equipe" => $data['ca_equipe']
             ];
-            $countEquipe =  $data['countTeam'];
-            $countDirect =  $data['countDirectChildren'];
+            $countEquipe = $data['countTeam'];
+            $countDirect = $data['countDirectChildren'];
             $filleul = [];
-        }
-        else if ($sessionSecteurId == $_ENV['SECTEUR_LITTLE_PONAILS_ID']) {
+        } else if ($sessionSecteurId == $_ENV['SECTEUR_LITTLE_PONAILS_ID']) {
             $result = $this->repoUser->findBy(['parrain' => $ambassadeur->getId()]);
             $filleul = $paginator->paginate(
                 $result,
                 $request->query->getInt('page', 1),
                 5
             );
-            $caStat = $statAgentService->getAgentCaStatEquipe($ambassadeur,$sessionSecteurId);
+            $caStat = $statAgentService->getAgentCaStatEquipe($ambassadeur, $sessionSecteurId);
             $countEquipe = $this->agentService->getNumberOfTeam($ambassadeur, 1);
             $countDirect = count($result);
-        } 
-          
-        else {
+        } else {
             $result = $this->repoUser->findBy(['parrain' => $ambassadeur->getId()]);
             $filleul = $paginator->paginate(
                 $result,
@@ -383,7 +421,7 @@ class AgentAccountController extends AbstractController
     /**
      * @Route("/agent/filleul-tree/{secteur_network}", name="app_agent_data_lineaire")
      */
-    public function getDataUnilevel(Request $request,$secteur_network = '')
+    public function getDataUnilevel(Request $request, $secteur_network = '')
     {
         $sessionSecteurId = $request->get('secteurId');
         if (!$sessionSecteurId) {
@@ -397,17 +435,14 @@ class AgentAccountController extends AbstractController
         } else {
             $user = (object) $this->getUser();
         }
-        $limit =  $_ENV['LIMIT_NIVEAU_EQUIPE_LINEAIRE'];
+        $limit = $_ENV['LIMIT_NIVEAU_EQUIPE_LINEAIRE'];
         if ($sessionSecteurId == $secteur_finance_id) {
             $unilevel = $this->statAgentService->getInovaUnilevelChildren($user, true);
-        } 
-        else if ($sessionSecteurId == $_ENV['SECTEUR_LITTLE_PONAILS_ID'] && $secteur_network) {
+        } else if ($sessionSecteurId == $_ENV['SECTEUR_LITTLE_PONAILS_ID'] && $secteur_network) {
             $unilevel = $this->statAgentService->getLittlePonailsUnilevelChildren($user, 1, true, $limit);
-        }
-        else if ($sessionSecteurId == $_ENV['SECTEUR_LITTLE_PONAILS_ID'] ) {
+        } else if ($sessionSecteurId == $_ENV['SECTEUR_LITTLE_PONAILS_ID']) {
             $unilevel = $this->agentService->getUnilevelChildren($user, 1, true, $limit);
-        }
-        else {
+        } else {
             $unilevel = $this->agentService->getUnilevelChildren($user, 1, true, $limit);
             $unilevel = $this->statAgentService->addSummaryCaToUnilevel($unilevel, $secteur->getId(), $secteur->getType()->getId());
         }

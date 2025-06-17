@@ -3,6 +3,7 @@
 namespace App\Twig;
 
 use App\Repository\AgentSecteurRepository;
+use App\Repository\UserRepository;
 use DateTime;
 use Twig\TwigFilter;
 use DateTimeInterface;
@@ -36,7 +37,8 @@ class HelperFunction extends AbstractExtension
         SessionInterface $session,
         private SecteurRepository $secteurRepository,
         private AgentSecteurRepository $agentSecteurRepository,
-        private AuthService $authService
+        private AuthService $authService,
+        private UserRepository $userRepository
     ) {
         $this->router = $router;
         $this->requestStack = $requestStack;
@@ -110,15 +112,17 @@ class HelperFunction extends AbstractExtension
         return $this->statAgentService->getAgentStat($agent, $secteur);
     }
 
-    public function getOrderAmountHt($amountTTC,$savedAmountHT,$TVA){
-        if($savedAmountHT == 0 &&  $amountTTC > 0 ){
-            return $amountTTC / (1. + $TVA/100);
+    public function getOrderAmountHt($amountTTC, $savedAmountHT, $TVA)
+    {
+        if ($savedAmountHT == 0 && $amountTTC > 0) {
+            return $amountTTC / (1. + $TVA / 100);
         }
         return $savedAmountHT;
 
     }
 
-    public function getAttribute($obj,$field){
+    public function getAttribute($obj, $field)
+    {
         try {
             $value = GenericUtil::getPropertyValue($obj, $field);
             return $value;
@@ -137,25 +141,28 @@ class HelperFunction extends AbstractExtension
 
         $formatter = new IntlDateFormatter($locale, IntlDateFormatter::FULL, IntlDateFormatter::NONE);
         $formatter->setPattern('MMMM'); // Full month name
-        
+
         return ucfirst($formatter->format($date)); // Capitalize first letter
     }
 
-    public function getLPNOnlineShop($id){
+    public function getLPNOnlineShop($id)
+    {
         $agentSecteur = $this->agentSecteurRepository->findOneBy([
             'agent' => $id,
             'secteur' => $_ENV['SECTEUR_LITTLE_PONAILS_ID']
         ]);
-        if(!$agentSecteur) return '';
-        if($agentSecteur && $agentSecteur->getSectorPlatformUsername() && empty($agentSecteur->getSectorPlatformAgentUsername()) ){
+        if (!$agentSecteur)
+            return '';
+        if ($agentSecteur && $agentSecteur->getSectorPlatformUsername() && empty($agentSecteur->getSectorPlatformAgentUsername())) {
             $this->authService->setUsernameFromLPN($agentSecteur);
         }
-        return $_ENV['LITTLE_PONAILS_WORDPRESS_BASE_URL'].'?sponsor='.$agentSecteur->getSectorPlatformAgentUsername();
+        return $_ENV['LITTLE_PONAILS_WORDPRESS_BASE_URL'] . '?sponsor=' . $agentSecteur->getSectorPlatformAgentUsername();
     }
 
-    public function getLpnCommandStatusMeaningStr($status,$type = "wc-"){
+    public function getLpnCommandStatusMeaningStr($status, $type = "wc-")
+    {
         $statusMData = [
-            'wc-' =>[
+            'wc-' => [
                 "wc-processing" => "En cours de préparation",
                 "wc-completed" => "Completée",
                 "wc-refunded" => "Remboursée",
@@ -163,46 +170,48 @@ class HelperFunction extends AbstractExtension
                 "wc-cancelled" => "Annulée",
             ],
             "emp" => [
-                "processing"=> "En cours de préparation",
-                "completed"=> "Completée",
-                "refunded"=> "Remboursée",
-                "trash"=> "Archivée",
-                "cancelled"=> "Annulée"
+                "processing" => "En cours de préparation",
+                "completed" => "Completée",
+                "refunded" => "Remboursée",
+                "trash" => "Archivée",
+                "cancelled" => "Annulée"
             ]
         ];
-        if(!isset($statusMData[$type])) return '';
+        if (!isset($statusMData[$type]))
+            return '';
         return $statusMData[$type][$status] ?? '';
     }
 
-    public function generateProductLink($secteurId,$userId){
-        $link = "" ;
-        if($secteurId == $_ENV['SECTEUR_DIGITAL_ID']){
-            return  $_ENV['CATALOGUES_BASE_URL'].'?ref='.$this->generateReference($userId,$userId);
-        }
-        elseif($secteurId == $_ENV['SECTEUR_LITTLE_PONAILS_ID']){
+    public function generateProductLink($secteurId, $userId)
+    {
+        $link = "";
+        if ($secteurId == $_ENV['SECTEUR_DIGITAL_ID']) {
+            return $_ENV['CATALOGUES_BASE_URL'] . '?ref=' . $this->generateReference($userId, $userId);
+        } elseif ($secteurId == $_ENV['SECTEUR_LITTLE_PONAILS_ID']) {
             return $this->getLPNOnlineShop($userId);
-        }
-        elseif($secteurId == $_ENV['SECTEUR_PROBOT_X_ID']){
-            return $_ENV['PROBOT_X_LINK_REGISTER'];
-        }
-        else{
+        } elseif ($secteurId == $_ENV['SECTEUR_PROBOT_X_ID']) {
+            $user = $this->userRepository->find($userId);
+            return $user->getProbotXLink();
+        } else {
             return $link;
         }
     }
 
-    public function getDocumentStatusFromLpn($status_value){
-        if(isset(LittlePonailsConstant::DOCUMENT_STATUS[$status_value])){
+    public function getDocumentStatusFromLpn($status_value)
+    {
+        if (isset(LittlePonailsConstant::DOCUMENT_STATUS[$status_value])) {
             return LittlePonailsConstant::DOCUMENT_STATUS[$status_value];
         }
         return '';
     }
 
-    public function getDocumentTypeFromLpn($type_value){
-        if(isset(LittlePonailsConstant::DOCUMENT_TYPE[$type_value])){
+    public function getDocumentTypeFromLpn($type_value)
+    {
+        if (isset(LittlePonailsConstant::DOCUMENT_TYPE[$type_value])) {
             return LittlePonailsConstant::DOCUMENT_TYPE[$type_value];
         }
         return '';
     }
 
-    
+
 }

@@ -27,9 +27,46 @@
 {% block body %}
     <div class="mt-3">
         <section id="dashboard-ecommerce">
-            <div  class="col-md-12" >
+        <div class="row mt-md-5 pt-md-3">
+            <div  class="{% if app.session.get('secteurId') == secteur_probot_x_id %}col-md-8{% else %}col-md-12{% endif %}" >
                 {{ include ('global/util/banner.html.twig') }}
 			</div>
+            {% if app.session.get('secteurId') == secteur_probot_x_id %}
+            <div class="col-md-4">
+            <div class="card">
+            <div class="card-body">
+                <p class="alert alert-warning">Lors de votre inscription sur Probot X, il est préférable d’utiliser le nom d’utilisateur et l’adresse e-mail que vous utilisez sur Pixelforce.
+Si vous vous êtes déjà inscrit sur Probot X avec d’autres informations, veuillez mettre à jour les champs ci-dessous afin qu’ils correspondent à votre nom d’utilisateur et votre adresse e-mail sur Probot X.</p>
+                {{ form_start(formProbotxPlatformIdView, {'attr': { 'action': path('agent_save_platform_probot_x_id'), 'class': 'my-form', 'id': formProbotxPlatformIdView.vars.id}}) }}
+                {# {% for label, messages in app.flashes() %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ label }}">
+                            <div class="alert-body">
+                            {{ message }}
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endfor %} #}
+                <div class="my-form-widget">
+                    {{form_label(formProbotxPlatformIdView.email)}}
+                    {{form_widget(formProbotxPlatformIdView.email)}}
+                    {{form_errors(formProbotxPlatformIdView.email)}}
+                </div>
+                <div class="my-form-widget">
+                    {{form_label(formProbotxPlatformIdView.username)}}
+                    {{form_widget(formProbotxPlatformIdView.username)}}
+                    {{form_errors(formProbotxPlatformIdView.username)}}
+                </div>
+                
+                <div class="btn-wrap">
+                    <button class="btn btn-primary" type="submit"><i data-feather="save"></i>Enregistrer</button>
+                </div>
+            {{ form_end(formProbotxPlatformIdView) }}
+            </div>
+            </div>
+            </div>
+            {% endif %}
+            </div>
 
 
            <div class="row match-height">
@@ -167,8 +204,8 @@
                                 <a class="regular-button w-100 text-center mb-3 action-button" href="#" onclick="copyLink('{{ catalogues_base_url }}?ref={{generateReference(app.user.id,app.user.id) }}','Lien de référence {{ catalogues_base_url }}?ref={{generateReference(app.user.id,app.user.id) }} copié avec succès') ">{% trans %}J’ai un client qui veut prendre un service{% endtrans %}</a>  
                                 {% endif %}
                                 {% if app.session.get('secteurId') == secteur_probot_x_id %}
-                                <a class="regular-button w-100 text-center mb-3 action-button" target="__blank" href="{{ probot_x_link_register }}">{% trans %}Je veux découvrir les services de Probot X{% endtrans %}</a>  
-                                <a class="regular-button w-100 text-center mb-3 action-button" href="#" onclick="copyLink('{{ probot_x_link_register }}','Lien de référence {{ probot_x_link_register }} copié avec succès') ">{% trans %}J’ai un client qui veut prendre un service{% endtrans %}</a>  
+                                <a class="regular-button w-100 text-center mb-3 action-button" target="__blank" href="{{ app.user.probotXLink }}">{% trans %}Je veux découvrir les services de Probot X{% endtrans %}</a>  
+                                <a class="regular-button w-100 text-center mb-3 action-button" href="#" onclick="copyLink('{{ app.user.probotXLink }}','Lien de référence {{ app.user.probotXLink }} copié avec succès') ">{% trans %}J’ai un client qui veut prendre un service{% endtrans %}</a>  
                                 {% endif %}
                                 {% if app.session.get('secteurId') == secteur_little_ponails_id %}
                                     {% set onlineShopURL = get_lpn_online_shop(app.user.id) %}
@@ -327,7 +364,7 @@
                                         {% if secteurAgent.id ==  secteurDigitalId %}
                                         {% set the_link = catalogues_base_url ~ '?ref=' ~ generateReference(app.user.id,app.user.id) %}
                                         {% elseif secteurAgent.id ==  secteur_probot_x_id %}
-                                        {% set the_link = probot_x_link_register %}
+                                        {% set the_link = app.user.probotXLink %}
                                         {% endif %}
                                         <p>
                                             {{secteur.longDescriptionForDarkBackground |replace({'[the_link]': the_link }) | raw }}  

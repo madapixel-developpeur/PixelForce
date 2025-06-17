@@ -100,6 +100,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
 
     const EXPIRY_DATE = 14;
 
+    const PLATFORM_PROBOT_X = 'probotx';
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -411,6 +413,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
      */
     private $lang = 'fr';
 
+    /**
+     * @ORM\OneToMany(targetEntity=PlatformIdentity::class, mappedBy="user")
+     */
+    private $platformIdentities;
+
     public function __construct()
     {
         $this->coachAgents = new ArrayCollection();
@@ -434,6 +441,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
         $this->orderDigitals = new ArrayCollection();
         $this->devisCompanies = new ArrayCollection();
         $this->fils = new ArrayCollection();
+        $this->platformIdentities = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -1933,8 +1941,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
     public function getAgentSecteurById($idSecteur)
     {
         $agentSecteurs = $this->getAgentSecteurs();
-        foreach($agentSecteurs as $agentSecteur){
-            if($agentSecteur->getSecteur()?->getId() == $idSecteur){
+        foreach ($agentSecteurs as $agentSecteur) {
+            if ($agentSecteur->getSecteur()?->getId() == $idSecteur) {
                 return $agentSecteur;
             }
         }
@@ -1970,16 +1978,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
 
         return $this;
     }
-    public function isLpnInformationCompleted(){
+    public function isLpnInformationCompleted()
+    {
         $agentSecteur = $this->getAgentSecteurById($_ENV['SECTEUR_LITTLE_PONAILS_ID']);
-        if($agentSecteur && $agentSecteur->getSectorPlatformDocumentState() == AgentSecteur::DOCUMENT_SENT){
+        if ($agentSecteur && $agentSecteur->getSectorPlatformDocumentState() == AgentSecteur::DOCUMENT_SENT) {
             return true;
         }
         return false;
     }
 
 
-    public function getUserDataChat(){
+    public function getUserDataChat()
+    {
         return [
             "userId" => $this->getId(),
             "lastname" => $this->getNom(),
@@ -1989,5 +1999,54 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
             "roles" => $this->getRoles(),
             "roleLabel" => $this->getRoleLabel()
         ];
+    }
+    /**
+     * @return Collection<int, PlatformIdentity>
+     */
+    public function getPlatformIdentities(): Collection
+    {
+        return $this->platformIdentities;
+    }
+
+    public function addPlatformIdentity(PlatformIdentity $platformIdentity): self
+    {
+        if (!$this->platformIdentities->contains($platformIdentity)) {
+            $this->platformIdentities[] = $platformIdentity;
+            $platformIdentity->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removePlatformIdentity(PlatformIdentity $platformIdentity): self
+    {
+        if ($this->platformIdentities->removeElement($platformIdentity)) {
+            // set the owning side to null (unless already changed)
+            if ($platformIdentity->getUser() === $this) {
+                $platformIdentity->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getPlatformIdForPlatform($platform)
+    {
+        foreach ($this->getPlatformIdentities() as $pi) {
+            if ($pi->getPlatform() === $platform)
+                return $pi;
+        }
+        $result = new PlatformIdentity();
+        $result->setPlatform($platform);
+        $result->setUser($this);
+        $result->setEmail($this->getEmail());
+        $result->setUsername($this->getUsername());
+        return $result;
+    }
+
+    public function getProbotXLink()
+    {
+        $identity = $this->getPlatformIdForPlatform(User::PLATFORM_PROBOT_X);
+        return str_replace("[username]", $identity->getUsername(), $_ENV['PROBOT_X_LINK_REGISTER']);
     }
 }
