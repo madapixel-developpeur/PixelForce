@@ -2046,7 +2046,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
 
     public function getProbotXLink()
     {
-        $identity = $this->getPlatformIdForPlatform(User::PLATFORM_PROBOT_X);
+        $identity = $this->getProbotXPlatformId();
         return str_replace("[username]", $identity->getUsername(), $_ENV['PROBOT_X_LINK_REGISTER']);
+    }
+
+    public function getProbotXPlatformId(){
+        return $this->getPlatformIdForPlatform(User::PLATFORM_PROBOT_X);
     }
 }

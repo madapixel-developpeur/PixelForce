@@ -80,6 +80,19 @@
             {% endif %}
             <li class="nav-item dropdown dropdown-user">      
                    <div class="d-flex align-items-center">
+                   {% if  app.session.get('secteurId')  not in [secteurDigitalId,secteur_little_ponails_id] or  (not app.session.has('secteurId') and is_granted('ROLE_AGENT'))  %}
+                        <div class="mx-2">
+                            {% set route = app.request.attributes.get('_route') %}
+                            {% set route_params = app.request.attributes.get('_route_params') %}
+                            {% set params = route_params|merge(app.request.query.all) %}
+                            <ul class="d-flex align-items-center flex-end " style="padding:5px; list-style-type:none; justify-content:flex-end;">
+                                <li><a href="{{ path(route, params|merge({ lang: 'fr' })) }}"><img src="{{asset( "assets/flags/fr.png" ) }}" style="height: 15px;" alt="FR" /></a></li>
+                                <li style="margin-left:10px; margin-right:10px"> | </li>
+                                <li><a href="{{ path(route, params|merge({ lang: 'en' })) }}"><img src="{{asset( "assets/flags/en.png" ) }}"  style="height: 15px;" alt="EN" /></a></li>
+
+                            </ul>
+                        </div>
+                    {% endif %}
                         <div class="avatar me-3 ml-5">
                                 <img class="round object-fit-cover h-100 w-100"
                                     src="{{ path('user_avatar', {id:app.user.id}) }}"
@@ -89,19 +102,7 @@
 
                         <div class="user-nav  me-2 d-none d-md-block">
                             <ul class="list-unstyled p-0">
-                                {% if  app.session.get('secteurId')  not in [secteurDigitalId,secteur_little_ponails_id] or  (not app.session.has('secteurId') and is_granted('ROLE_AGENT'))  %}
-                                    <li>
-                                        {% set route = app.request.attributes.get('_route') %}
-                                        {% set route_params = app.request.attributes.get('_route_params') %}
-                                        {% set params = route_params|merge(app.request.query.all) %}
-                                        <ul class="d-flex align-items-center flex-end " style="padding:5px; list-style-type:none; justify-content:flex-end;">
-                                            <li><a href="{{ path(route, params|merge({ lang: 'fr' })) }}"><img src="{{asset( "assets/flags/fr.png" ) }}" style="height: 15px;" alt="FR" /></a></li>
-                                            <li style="margin-left:10px; margin-right:10px"> | </li>
-                                            <li><a href="{{ path(route, params|merge({ lang: 'en' })) }}"><img src="{{asset( "assets/flags/en.png" ) }}"  style="height: 15px;" alt="EN" /></a></li>
-
-                                        </ul>
-                                    </li>
-                                {% endif %}
+                                
                                 <li class="p-0">
                                     <span class="user-status header-user">{{ app.user.prenom|default(' ') }}</span>
                                     {# <span class="user-name header-user" >{{ app.user.nom }}</span> #}
