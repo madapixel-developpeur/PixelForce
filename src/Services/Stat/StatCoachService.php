@@ -148,6 +148,32 @@ class StatCoachService
         }   
     }
 
+      public function deletePackageElement($data){
+        try {
+            $BO_URL = $_ENV['PBB_WS_URL'];
+            $response = $this->client->request(
+                'POST',
+                $BO_URL . '/api/delete-package-element',
+                [
+                    'json' => $data, 
+                ]
+            );
+            $content = json_decode($response->getContent(), true);
+            return $content;
+       } catch (HttpExceptionInterface $e) {
+            $statusCode = $e->getResponse()->getStatusCode();
+            if ($statusCode === 422 || $statusCode === 400) {
+                $content = json_decode($e->getResponse()->getContent(false), true);
+                throw new CustomException($content['message']);
+            }
+            throw $e; 
+        } catch (\Throwable $th) {
+            throw $th;
+        }   
+    }
+
+    
+
     
 
     

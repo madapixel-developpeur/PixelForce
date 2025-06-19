@@ -17,6 +17,10 @@
 					{{ package.name }}</h3>
 			</div>
 			<hr>
+			<div class="d-flex align-items-center justify-content-end mt-3">
+				<a role="button" class="btn btn-warning" href="{{ path('coach_edit_package_digital',{id : package.id})}}">
+					<i class="fa fa-edit"></i>&nbsp;Modifier</a>
+			</div>
 			<div class="row mt-3 justify-content-center">
 				<div class="col-md-12 mb-2">
 					<div class="course-overview mb-2">
@@ -78,7 +82,11 @@
 												<a class="btn btn-sm btn-warning" role="button" href="{{ path('coach_update_package_prix_contrat_digital',{id : package.id, 'idPrixContrat' :item.id})}}">
 													<i class="fa fa-edit"></i>
 												</a>
-												<form action="" method="post">
+												{% set idForm = 'price-contrat-'~item.id  %}
+												<form id="{{ idForm }}" action="" method="post" onsubmit="confirmationForm('{{ idForm }}','{{ path('app_coach_delete_package_element')  }}','Êtes-vous sûr(e) de vouloir supprimer cette element?')">
+													 <input type="hidden" name="id" value='{{ item.id }}'>
+													 <input type="hidden" name="id-package" value='{{ package.id }}'>
+                                					<input type="hidden" name="type" value='price-type-contrat'>
 													<button class="btn btn-sm btn-danger ms-2" type="submit">
 														<i class="fa fa-trash"></i>
 													</button>
@@ -121,7 +129,11 @@
 												<a class="btn btn-sm btn-warning" role="button" href="{{ path('coach_update_package_subservice_digital',{id : package.id, 'idsubservice' :item.id})}}">
 													<i class="fa fa-edit"></i>
 												</a>
-												<form action="" method="post">
+												{% set idForm = 'subservice-contrat-'~item.id  %}
+												<form id="{{ idForm }}" action="" method="post" onsubmit="confirmationForm('{{ idForm }}','{{ path('app_coach_delete_package_element')  }}','Êtes-vous sûr(e) de vouloir supprimer cette element?')">
+													 <input type="hidden" name="id" value='{{ item.id }}'>
+													 <input type="hidden" name="id-package" value='{{ package.id }}'>
+                                					<input type="hidden" name="type" value='subservice'>
 													<button class="btn btn-sm btn-danger ms-2" type="submit">
 														<i class="fa fa-trash"></i>
 													</button>

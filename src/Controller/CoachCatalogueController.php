@@ -237,6 +237,31 @@ class CoachCatalogueController extends AbstractController
     }
 
 
+    #[Route('/package-element-delete', name: 'app_coach_delete_package_element', methods: ['POST'])]
+    public function deletePackageElement(Request $request): Response
+    {
+        try {
+            $data = [
+                'id' => $request->request->get('id'),
+                'type' => $request->request->get('type'),
+            ];
+            if(empty($data['id'])|| empty($data['type'])){
+                throw new CustomException('Information manquante');
+            }
+            $this->statCoachService->deletePackageElement($data);
+            $message ='Statut du package mise à jour avec succès';
+            $this->addFlash('success',$this->translator->trans($message));
+        }catch (CustomException $ex) {
+            $this->addFlash('danger',$ex->getMessage());
+        }catch (\Exception $ex) {
+            // dd($ex);
+            $this->addFlash('danger', $_ENV['CUSTOM_ERROR_MESSAGE']);
+        }
+        return $this->redirectToRoute('coach_view_package_digital',['id'=>  $request->request->get('id-package') ]);
+
+    }
+
+
   
     #[Route('/element-catalogues/{id}/delete', name: 'app_coach_delete_catalogues_element', methods: ['POST'])]
     public function delete($id): Response
