@@ -211,6 +211,30 @@ class CoachCatalogueController extends AbstractController
     }
 
 
+    
+    #[Route('/changer-statut-package', name: 'app_coach_change_package_status', methods: ['POST'])]
+    public function changePackageStatus(Request $request): Response
+    {
+        try {
+            $data = [
+                'id' => $request->request->get('id'),
+                'new_status' => $request->request->get('new_status'),
+            ];
+            if(empty($data['id']) || empty($data['new_status'])){
+                throw new CustomException('Information manquante');
+            }
+            $this->statCoachService->updatePackageStatus($data);
+            $message ='Statut du package mise à jour avec succès';
+            $this->addFlash('success',$this->translator->trans($message));
+        }catch (CustomException $ex) {
+            $this->addFlash('danger',$ex->getMessage());
+        }catch (\Exception $ex) {
+            // dd($ex);
+            $this->addFlash('danger', $_ENV['CUSTOM_ERROR_MESSAGE']);
+        }
+        return $this->redirectToRoute('coach_package_digital_list');
+
+    }
 
 
   

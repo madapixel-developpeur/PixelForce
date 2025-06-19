@@ -79,11 +79,17 @@
                             <a class="btn btn-sm btn-info  ms-2 " role="button" href="  {{ path('coach_view_package_digital',{ 'id' : package.id }) }}">
                                 <i class="fa fa-eye"></i>
                             </a>
-                            {# <form action="{{path('coach_quiz_item_choice_delete', {'id': choice.id})}}" method="post">
-                                <button class="btn btn-sm btn-danger ms-2" type="submit">
-                                    <i class="fa fa-trash"></i>
+                            <form action="{{path('app_coach_change_package_status')}}" method="post">
+                                {% set new_status = (package.statut < 0 ) ? constant("App\\DTO\\PackageDTO::VALID") : constant("App\\DTO\\PackageDTO::INVALID") %}
+                                {% set action = (package.statut < 0 ) ? 'Activer' : 'Désactiver' %}
+                                {% set class_action = (package.statut < 0 ) ? 'success' : 'danger' %}
+
+                                <input type="hidden" name="id" value='{{ package.id }}'>
+                                <input type="hidden" name="new_status" value='{{ new_status }}'>
+                                <button class="btn btn-sm btn-{{ class_action }} ms-2" type="submit">
+                                    {{ action }}
                                 </button>
-                            </form> #}
+                            </form>
 
                           
                         </td>

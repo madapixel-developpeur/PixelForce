@@ -5,6 +5,12 @@ use JsonSerializable;
 
 class PackageDTO implements JsonSerializable
 {
+
+
+
+    public const VALID = 1;
+    public const INVALID = -1;
+
     private ?int $id = null;
     private ?string $name = null;
     private ?string $service = null;
@@ -13,6 +19,7 @@ class PackageDTO implements JsonSerializable
     private ?string $period = null;
     private ?int $statut = null;
     private ?int $packageType = null;
+
 
     public function getId(): ?int
     {
