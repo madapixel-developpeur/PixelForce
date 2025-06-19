@@ -31,7 +31,41 @@
             <div  class="col-md-12" >
                 {{ include ('global/util/banner.html.twig') }}
 			</div>
+
+            <div  class="col-md-12 mt-3" >
             
+            {% if app.session.get('secteurId') == secteur_probot_x_id %}
+                                <div class="card">
+                                <div class="card-body">
+                                    {% if probotXIdNotSaved %}
+                                    <p class="alert alert-danger">Pour vous inscrire sur ProbotX, utilisez de préférence le même nom d’utilisateur et e-mail que sur Pixelforce. Si vous êtes déjà inscrit avec d’autres informations, merci de les mettre à jour ci-dessous.
+                    Veuillez vous inscrire en cliquant sur le lien: <a href="{{app.user.probotXLink}}">{{app.user.probotXLink}}.</a></p>
+                                     {% else %}
+                                     <p class="alert alert-warning">Vous pouvez maintenant parrainer sur Probot X avec votre lien: <a href="{{app.user.probotXLink}}">{{app.user.probotXLink}}</a></p>
+                                     {% endif %}   
+                                    {{ form_start(formProbotxPlatformIdView, {'attr': { 'action': path('agent_save_platform_probot_x_id'), 'class': 'my-form', 'id': formProbotxPlatformIdView.vars.id, 'style': 'margin: 0 !important;'}}) }}
+                                    <div class="d-flex align-items-end justify-content-start"> 
+                                    <div class="my-form-widget">
+                                        {{form_label(formProbotxPlatformIdView.email)}}
+                                        {{form_widget(formProbotxPlatformIdView.email)}}
+                                        {{form_errors(formProbotxPlatformIdView.email)}}
+                                    </div>
+                                    <div class="my-form-widget mx-3">
+                                        {{form_label(formProbotxPlatformIdView.username)}}
+                                        {{form_widget(formProbotxPlatformIdView.username)}}
+                                        {{form_errors(formProbotxPlatformIdView.username)}}
+                                    </div>
+                                    
+                                    
+                                    <div class="btn-wrap" style="margin-bottom: 10px;">
+                                        <button class="btn btn-primary" type="submit"><i data-feather="save"></i>Enregistrer</button>
+                                    </div>
+                                    </div>
+                                {{ form_end(formProbotxPlatformIdView) }}
+                                </div>
+                                </div>
+                                {% endif %}
+                                </div>
 
 
            <div class="row match-height">
@@ -157,37 +191,6 @@
                                             {% trans %}Compléter mes informations{% endtrans %}<i class="bi bi-arrow-right ms-2"></i>
                                         </a>
                                     </div>
-                                {% endif %}
-
-                                {% if app.session.get('secteurId') == secteur_probot_x_id %}
-                                <div class="card">
-                                <div class="card-body">
-                                    {% if probotXIdNotSaved %}
-                                    <p class="alert alert-warning">Lors de votre inscription sur Probot X, il est préférable d’utiliser le nom d’utilisateur et l’adresse e-mail que vous utilisez sur Pixelforce.
-                    Si vous vous êtes déjà inscrit sur Probot X avec d’autres informations, veuillez mettre à jour les champs ci-dessous afin qu’ils correspondent à votre nom d’utilisateur et votre adresse e-mail sur Probot X.
-                    Veuillez vous inscrire en cliquant sur le lien: <a href="{{app.user.probotXLink}}">{{app.user.probotXLink}}.</a></p>
-                                     {% else %}
-                                     <p class="alert alert-warning">Vous pouvez maintenant parrainer sur Probot X avec votre lien: <a href="{{app.user.probotXLink}}">{{app.user.probotXLink}}</a></p>
-                                     {% endif %}   
-                                    {{ form_start(formProbotxPlatformIdView, {'attr': { 'action': path('agent_save_platform_probot_x_id'), 'class': 'my-form', 'id': formProbotxPlatformIdView.vars.id}}) }}
-                                    
-                                    <div class="my-form-widget">
-                                        {{form_label(formProbotxPlatformIdView.email)}}
-                                        {{form_widget(formProbotxPlatformIdView.email)}}
-                                        {{form_errors(formProbotxPlatformIdView.email)}}
-                                    </div>
-                                    <div class="my-form-widget">
-                                        {{form_label(formProbotxPlatformIdView.username)}}
-                                        {{form_widget(formProbotxPlatformIdView.username)}}
-                                        {{form_errors(formProbotxPlatformIdView.username)}}
-                                    </div>
-                                    
-                                    <div class="btn-wrap">
-                                        <button class="btn btn-primary" type="submit"><i data-feather="save"></i>Enregistrer</button>
-                                    </div>
-                                {{ form_end(formProbotxPlatformIdView) }}
-                                </div>
-                                </div>
                                 {% endif %}
 
 
