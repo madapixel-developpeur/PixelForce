@@ -26,8 +26,11 @@
             </div>
         {% endfor %}
         <div class="block__header mb-1" >
-            <h1 class="block__title">Liste des "Packages Pixelsior" :</h1>
-            <div class="fab-btn-wrap">
+            <h1 class="block__title">Liste des "Packages Pixelsior" : 
+               
+            </h1>
+            <div class="fab-btn-wrap d-flex flex-row">
+                <a  href="{{ path('coach_package_digital_list') }}" class="btn btn-primary btn--rounded fab-btn me-2">Voir tout</a>
                 <a  href="{{ path('coach_edit_package_digital') }}" class="btn btn-primary btn--rounded fab-btn"><i data-feather="plus"></i>Ajouter</a>
             </div>
         </div>

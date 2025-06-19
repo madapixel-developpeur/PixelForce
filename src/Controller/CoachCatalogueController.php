@@ -58,7 +58,8 @@ class CoachCatalogueController extends AbstractController
     #[Route('/', name: 'coach_service_digital_list')]
     public function index(Request $request): Response
     {
-        $services =Constants::PBB_CATALOGUES_SERVICES;
+        $services = $this->catalogueService->getAllExistingServiceName();
+        $services = array_column($services, 'service');
         return $this->render('user_category/coach/catalogues/digital/service_list.html.twig', [
             'result' => $services,
         ]);

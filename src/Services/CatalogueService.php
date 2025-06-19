@@ -84,5 +84,20 @@ class CatalogueService
     }
 
 
+    
+    public function getAllExistingServiceName()
+    {
+        $url = $_ENV['PBB_WS_URL'];
+        $response = $this->httpClient->request(
+            'GET',
+            $url . "/api/all-existing-services-name",
+            []
+
+        );
+        $content = json_decode($response->getContent(), true) ;
+        return $content;
+    }
+
+
   
 }

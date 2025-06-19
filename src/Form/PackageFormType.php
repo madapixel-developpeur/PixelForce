@@ -28,6 +28,8 @@ class PackageFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $packageTypeList = $this->catalogueService->getTypePackages();
+        $services = $this->catalogueService->getAllExistingServiceName();
+        $services = array_column($services, 'service');
 
         $packageTypeDTOs = $this->serializer->denormalize(
             $packageTypeList,
@@ -80,14 +82,14 @@ class PackageFormType extends AbstractType
                     new NotBlank(['message' => 'Champ obligatoire']),
                 ]
             ])
-            // ->add('service', ChoiceType::class, [
-            //     "label" => "Service",
-            //     "required" => true,
-            //     "choices" => array_combine( Constants::PBB_CATALOGUES_SERVICES,  Constants::PBB_CATALOGUES_SERVICES),
-            //     "constraints" => [
-            //         new NotBlank(["message" => "Champ obligatoire"])
-            //     ]
-            // ])
+            ->add('service', ChoiceType::class, [
+                "label" => "Service",
+                "required" => true,
+                "choices" => array_combine( $services,  $services),
+                "constraints" => [
+                    new NotBlank(["message" => "Champ obligatoire"])
+                ]
+            ])
             ->add('packageType', ChoiceType::class, [
                 "label" => "Type du package",
                 'choices' => $packageTypeDTOs,
