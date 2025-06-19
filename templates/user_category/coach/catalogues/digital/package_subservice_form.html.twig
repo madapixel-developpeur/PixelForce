@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	Package - Subservice
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+{% endblock %}
+
+{% block body %}
+	<a href="{{ path('coach_view_package_digital',{'id' : package.id  }) }}" class="btn btn-secondary my-3"> <i class="fa-solid fa-circle-arrow-left"></i> Retour </a>
+	<div class="block block--bordered block--rounded">
+		<h1 class="block__text block__text--center mt-2">
+			{% if isEdit %}
+                Modification 
+            {% else %}
+                Création      
+            {% endif %}
+			Package - Subservice</h1>
+		{{ form_start(form, {attr:{
+                enctype:"multipart/form-data",
+                'class': 'my-form'
+        }}) }}
+		<div class="mb-3">
+			<label for="service" class="form-label required">Service</label>
+            <input type="text" id="service" name="service"disabled class="form-control" value="{{ package.service }}">
+        </div>
+        <div class="mb-3">
+			<label for="package" class="form-label required">Package</label>
+            <input type="text" id="package" name="package"disabled class="form-control"  value="{{ package.name }}">
+        </div>
+		{{ form_rest(form) }}
+		<div>
+			<button class="btn btn-primary" type="submit">
+				{% if isEdit %}
+					Modifier
+				{% else %}
+					Créer     
+				{% endif %}
+			</button>
+		</div>
+		{{ form_end(form) }}
+	</div>
+{% endblock %}

@@ -29,6 +29,14 @@
     </li>
 </ul>
 </li>
+<li class=" nav-item"><a class="d-flex align-items-center" href="#"><i data-feather="briefcase"></i><span class="menu-title text-truncate" data-i18n="Components">{% trans %}Catalogue service{% endtrans %}</span></a>
+<ul class="menu-content">
+    <li><a class="d-flex align-items-center" href="{{path('coach_service_digital_list')}}"><i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="Alerts">{% trans %}Services{% endtrans %}</span></a>
+    </li>
+    <li><a class="d-flex align-items-center" href="{{ path('coach_package_digital_list') }}"><i data-feather="circle"></i><span class="menu-item text-truncate" data-i18n="Alerts">{% trans %}Packages{% endtrans %}</span></a>
+    </li>
+</ul>
+</li>
 {% endif %}
 {% endif %}
 {% elseif app.user.uniqueCoachSecteur.type.id == 2 %}

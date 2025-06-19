@@ -1,0 +1,102 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	{% trans %}Catalogue - Services{% endtrans %}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .banniere-img{
+            max-width: 100%;  /* L'image ne dépasse pas la cellule */
+            height: auto;  /* Ajuste la hauteur en conservant le ratio */
+            display: block; 
+        }
+    </style>
+{% endblock %}
+
+{% block body %} 
+
+<div class="block block--bordered block--rounded">
+        {% for label, message in app.flashes %}
+            <div class="alert alert-{{label}} p-3 text-center" role="alert">
+                <div class="alert-body">
+                    {{message}}
+                </div>
+            </div>
+        {% endfor %}
+        <div class="block__header mb-1" >
+            <h1 class="block__title">Liste des "Packages Pixelsior" :</h1>
+            <div class="fab-btn-wrap">
+                <a  href="{{ path('coach_edit_package_digital') }}" class="btn btn-primary btn--rounded fab-btn"><i data-feather="plus"></i>Ajouter</a>
+            </div>
+        </div>
+        {% if packages|length ==0 %}
+                <div class="alert alert-primary p-3 text-center" role="alert">
+                    <div class="alert-body">
+                        Aucun résultat.
+                    </div>
+                </div>
+        {% endif %}
+        {% if packages|length > 0 %}
+        <div class="table-responsive mb-1">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th class="col">#</th>
+                        <th class="col">Service</th>
+                        <th class="col">Nom</th>
+                        <th class="col-">Type</th>
+                        <th class="col-">Statut</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for package in packages %}
+                    <tr>
+                        <td>{{ package.id }}</td>
+                        <td>{{ package.service }}</td>
+                        <td>{{ package.name }}</td>
+                        <td>
+                        {% if package.period is null %}
+                            {% trans %}Un seul paiement{% endtrans %}
+                        {% else %}
+                            {{ package.period | trans }}
+                        {% endif %}
+                        </td>
+                        <td class"text-center">
+                            {% if package.statut < 0 %}
+                                {% trans %}Désactivé{% endtrans %}
+                            {% else %}
+                                {% trans %}Activé{% endtrans %}
+                            {% endif %}
+                        </td>
+                        
+                        <td class="justify-content-center d-flex h-100">
+                            <a class="btn btn-sm btn-warning" role="button" href="  {{ path('coach_edit_package_digital',{ 'id' : package.id }) }}">
+                                <i class="fa fa-edit"></i>
+                            </a>
+                            <a class="btn btn-sm btn-info  ms-2 " role="button" href="  {{ path('coach_view_package_digital',{ 'id' : package.id }) }}">
+                                <i class="fa fa-eye"></i>
+                            </a>
+                            {# <form action="{{path('coach_quiz_item_choice_delete', {'id': choice.id})}}" method="post">
+                                <button class="btn btn-sm btn-danger ms-2" type="submit">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                            </form> #}
+
+                          
+                        </td>
+                       
+                        
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            
+        </div>
+        {% endif %}
+    </div>
+
+{% endblock %}
