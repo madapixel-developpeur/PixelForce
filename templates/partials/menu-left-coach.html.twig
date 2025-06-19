@@ -12,6 +12,7 @@
     </li>
 </ul>
 </li>
+<li class=" nav-item"><a class="d-flex align-items-center" href="{{ path('app_coach_catalogue_product_sector_list') }}"><i data-feather="tag"></i><span class="menu-title text-truncate" data-i18n="Catalogues">{% trans %}Catalogue secteur{% endtrans %}</span></a></li>
 {% if app.user.uniqueCoachSecteur.isFonctionnaliteActive(constant('App\\Util\\FonctionnalitesTypeSecteur::FONCTIONNALITE_COMMON_AUDIT')) %} <li class=" nav-item"><a class="d-flex align-items-center" href="{{ path('audit_list') }}"><i class="fa-solid fa-magnifying-glass"></i><span class="menu-title text-truncate" data-i18n="User">{% trans %}Audit{% endtrans %}</span></a> {% endif %}
 {# <li class=" nav-item"><a class="d-flex align-items-center" href="{{ path('coach_zoom_list') }}"><i data-feather="video"></i><span class="menu-title text-truncate" data-i18n="User">Réunions</span></a> #}
 {% if app.user.uniqueCoachSecteur.type.id == 1 %}

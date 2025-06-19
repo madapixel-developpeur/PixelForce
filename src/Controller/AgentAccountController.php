@@ -5,13 +5,13 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Entity\Secteur;
 use App\Entity\AgentSecteur;
-use App\Form\PlatformIdentityType;
 use App\Services\AuthService;
 use App\Manager\EntityManager;
 use App\Manager\StripeManager;
 use App\Services\StripeService;
 use App\Entity\CategorieFormation;
 use App\Exception\CustomException;
+use App\Form\PlatformIdentityType;
 use App\Repository\UserRepository;
 use App\Services\User\AgentService;
 use App\Repository\ContactRepository;
@@ -35,6 +35,7 @@ use App\Services\CategorieFormationAgentService;
 use App\Repository\RFormationCategorieRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Repository\SecteurVideoFormationRepository;
+use App\Repository\CatalogueProductSectorRepository;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -80,7 +81,8 @@ class AgentAccountController extends AbstractController
         private StatAgentService $statAgentService,
         private AnnouncementRepository $announcementRepository,
         private TranslatorInterface $translator,
-        private AuthService $authService
+        private AuthService $authService,
+        private CatalogueProductSectorRepository $catalogueProductSectorRepository 
     ) {
         $this->repoSecteur = $repoSecteur;
         $this->repoAgentSecteur = $repoAgentSecteur;
@@ -283,7 +285,7 @@ class AgentAccountController extends AbstractController
 
         $videoFinFormation = $this->secteurVideoFormationRepository->findOneBy(['secteur' => $sessionSecteurId]);
         $announcements = $this->announcementRepository->getActiveAnnoncement($secteur, new \DateTime(), ['type' => User::ROLE_REVENDEUR]);
-
+        $services = array_chunk($this->catalogueProductSectorRepository->findBy(['secteur'=> $secteur]),3);
         $secteurProbotxId = $this->getParameter('secteur_probot_x_id');
         $formProbotxPlatformIdView = null;
         if ($sessionSecteurId == $secteurProbotxId) {
@@ -324,7 +326,8 @@ class AgentAccountController extends AbstractController
             'expert' => $expert,
             'videoFinFormation' => $videoFinFormation,
             'announcements' => $announcements,
-            'formProbotxPlatformIdView' => $formProbotxPlatformIdView
+            'formProbotxPlatformIdView' => $formProbotxPlatformIdView,
+            'services' =>  $services
         ]);
     }
 

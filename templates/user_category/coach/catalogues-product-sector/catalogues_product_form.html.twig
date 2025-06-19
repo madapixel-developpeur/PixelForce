@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	Catalogue Produit Service - Nouveau
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %} 
+    <a href="" class="btn btn-secondary my-3"> <i class="fa-solid fa-circle-arrow-left"></i> Retour </a>
+    <div class="block block--bordered block--rounded">
+        <h1 class="block__text block__text--center mt-2" >{% if product is defined %}Modifier le service{% else %} Ajouter un service{% endif %}</h1>
+            {{ form_start(form, {attr:{
+                enctype:"multipart/form-data",
+                'class': 'my-form'
+            }}) }}
+            {{ form_rest(form) }}
+            {% if product is defined %}
+                <div class="col-md-12 py-5 d-flex justify-content-center">
+                    <img class="d-block w-75" src="{{ asset('files/') ~ product.image }}" alt="{{ product.title }}">
+                </div>
+            {% endif %}
+            <div>
+                <button class="btn btn-primary" type="submit">Enregistrer</button>
+            </div>
+            {{ form_end(form) }}
+    </div>
+{% endblock %}
+
+
