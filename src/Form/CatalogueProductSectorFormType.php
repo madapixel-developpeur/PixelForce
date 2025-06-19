@@ -51,7 +51,7 @@ class CatalogueProductSectorFormType extends AbstractType
             ->add('image', FileType::class, [
                 "label" => "Image",
                 'mapped' => false,
-                "required" => !$options['isEdit'],
+                "required" => false,
                 'constraints' => array_merge(
                     [new File([
                         'mimeTypes' => [
