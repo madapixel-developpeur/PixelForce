@@ -164,7 +164,8 @@
                                 <div class="card-body">
                                     {% if probotXIdNotSaved %}
                                     <p class="alert alert-warning">Lors de votre inscription sur Probot X, il est préférable d’utiliser le nom d’utilisateur et l’adresse e-mail que vous utilisez sur Pixelforce.
-                    Si vous vous êtes déjà inscrit sur Probot X avec d’autres informations, veuillez mettre à jour les champs ci-dessous afin qu’ils correspondent à votre nom d’utilisateur et votre adresse e-mail sur Probot X.</p>
+                    Si vous vous êtes déjà inscrit sur Probot X avec d’autres informations, veuillez mettre à jour les champs ci-dessous afin qu’ils correspondent à votre nom d’utilisateur et votre adresse e-mail sur Probot X.
+                    Veuillez vous inscrire en cliquant sur le lien: <a href="{{app.user.probotXLink}}">{{app.user.probotXLink}}.</a></p>
                                      {% else %}
                                      <p class="alert alert-warning">Vous pouvez maintenant parrainer sur Probot X avec votre lien: <a href="{{app.user.probotXLink}}">{{app.user.probotXLink}}</a></p>
                                      {% endif %}   
