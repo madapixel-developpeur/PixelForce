@@ -1,0 +1,71 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	{% trans %}Catalogue - Services{% endtrans %}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .banniere-img{
+            max-width: 100%;  /* L'image ne dépasse pas la cellule */
+            height: auto;  /* Ajuste la hauteur en conservant le ratio */
+            display: block; 
+        }
+    </style>
+{% endblock %}
+
+{% block body %} 
+
+<div class="block block--bordered block--rounded">
+        {% for label, message in app.flashes %}
+            <div class="alert alert-{{label}} p-3 text-center" role="alert">
+                <div class="alert-body">
+                    {{message}}
+                </div>
+            </div>
+        {% endfor %}
+        <div class="block__header mb-1" >
+            <h1 class="block__title">Liste des services :</h1>
+        </div>
+        {% if result|length ==0 %}
+                <div class="alert alert-primary p-3 text-center" role="alert">
+                    <div class="alert-body">
+                        Aucun résultat.
+                    </div>
+                </div>
+        {% endif %}
+        {% if result|length > 0 %}
+        <div class="table-responsive mb-1">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th class="col-1">#</th>
+                        <th class="col-10">Nom</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in result %}
+                    <tr>
+                        <td>{{ loop.index }}</td>
+                        <td>{{ item }}</td>
+                        
+                        <td class="justify-content-center d-flex h-100">
+                            <a href="{{ path('coach_package_digital_list',{'service' : item })}}" class="btn btn-success ms-1">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                        </td>
+                       
+                        
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            
+        </div>
+        {% endif %}
+    </div>
+
+{% endblock %}

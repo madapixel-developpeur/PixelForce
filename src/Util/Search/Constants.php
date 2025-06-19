@@ -19,7 +19,22 @@ class Constants {
     public const DEFAULT_LPN_PASSWORD='Pa$$word!'; 
 
     public const DEFAULT_LPN_LEGAL_STATUS = "REVENDEUR";
-    
+
+    public const PBB_CATALOGUES_SERVICES = ['SEO','SEA','SOCIAL MEDIA MANAGER','WEB DEVELOPMENT','DESIGN','TECHLEAD'];
+    // const SERVICE = [
+    //     'SEO' => 1,
+    //     'DEV_WEB' => 2,
+    //     'SOCIAL_MEDIA' => 3,
+    //     'CONC_GRAPH' => 4,
+    //     'GOOGLE_ADWORDS' => 5,
+    //     'DEV_APP_MOB' => 6
+    // ];
+
+    public const PACKAGE_PERIOD = [
+        'MENSUEL' => 'Mensuel',
+        'ANNUEL' => 'Annuel',
+        'QUOTIDIEN' => 'Quotidien'
+    ];
 
     public static function getExcludedPathsForSectorCheckUp(array $givenPath = []): array
     {

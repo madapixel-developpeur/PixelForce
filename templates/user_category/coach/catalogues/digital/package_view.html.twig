@@ -1,0 +1,153 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	Package - Détail
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+{% endblock %}
+
+{% block body %}
+	<a href="{{ path('coach_package_digital_list') }}" class="btn btn-secondary my-3"> <i class="fa-solid fa-circle-arrow-left"></i> Retour </a>
+	<div class="row px-3 content-formation">
+		<div class="card card-body-custom mt-2 px-5">
+			<div class="row mt-3 justify-content-center mt-4 mb-2">
+				<h3 class="text-center general-primary-text">Package -
+					{{ package.name }}</h3>
+			</div>
+			<hr>
+			<div class="d-flex align-items-center justify-content-end mt-3">
+				<a role="button" class="btn btn-warning" href="{{ path('coach_edit_package_digital',{id : package.id})}}">
+					<i class="fa fa-edit"></i>&nbsp;Modifier</a>
+			</div>
+			<div class="row mt-3 justify-content-center">
+				<div class="col-md-12 mb-2">
+					<div class="course-overview mb-2">
+						<p>
+							<b>Service</b>
+							{{ package.service }}</p>
+						<p>
+							<b>Nom:</b>
+							{{ package.name }}</p>
+						<p>
+							<b>Type:</b>
+							{% if package.period is null %}
+								{% trans %}Un seul paiement{% endtrans %}
+							{% else %}
+								{{ package.period | trans }}
+							{% endif %}
+						</p>
+						<p>
+							<b>Statut:</b>
+							{% if package.statut < 0 %}
+								{% trans %}Désactivé{% endtrans %}
+							{% else %}
+								{% trans %}Activé{% endtrans %}
+							{% endif %}
+						</p>
+						<p>
+						<b>Prix:</b>
+							{{ package.amount }}
+						</p>
+					</div>
+				</div>
+
+				<div class="col-md-12 mb-5">
+					<div class="">
+						<div class="d-flex align-items-center justify-content-between mt-3">
+                            <h4 class="justify-content-around my-auto  mb-3">
+                                {% trans %}Prix par type de contrat{% endtrans %}
+                            </h4>
+							<a role="button" class="btn btn-success my-4" href="{{ path('coach_update_package_prix_contrat_digital',{id : package.id})}}">
+								<i class="fa fa-plus"></i>&nbsp;Ajouter</a>
+						</div>
+						<div class="table-responsive">
+							<table class="table table-striped table-hover text-center sortable">
+								<thead>
+									<tr style="white-space:nowrap">
+										<th scope="col" class="text-center">#</th>
+										<th scope="col" class="text-start">Type de contrat</th>
+										<th scope="col" class="text-end">Prix</th>
+                                        <th></th>
+									</tr>
+								</thead>
+								<tbody>
+									{% for item in package.packagePriceByTypeContrats %}
+										<tr>
+											<td>{{loop.index }}</td>
+											<td class="text-start">{{item.typeContrat.label }}</td>
+											<td class="text-end">{{item.priceTtc }}</td>
+											<td class="d-flex align-items-center justify-content-center">
+												<a class="btn btn-sm btn-warning" role="button" href="{{ path('coach_update_package_prix_contrat_digital',{id : package.id, 'idPrixContrat' :item.id})}}">
+													<i class="fa fa-edit"></i>
+												</a>
+												{% set idForm = 'price-contrat-'~item.id  %}
+												<form id="{{ idForm }}" action="" method="post" onsubmit="confirmationForm('{{ idForm }}','{{ path('app_coach_delete_package_element')  }}','Êtes-vous sûr(e) de vouloir supprimer cette element?')">
+													 <input type="hidden" name="id" value='{{ item.id }}'>
+													 <input type="hidden" name="id-package" value='{{ package.id }}'>
+                                					<input type="hidden" name="type" value='price-type-contrat'>
+													<button class="btn btn-sm btn-danger ms-2" type="submit">
+														<i class="fa fa-trash"></i>
+													</button>
+												</form>
+											</td>
+										</tr>
+									{% endfor %}
+
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-12 mb-5">
+					<div class="">
+						<div class="d-flex align-items-center justify-content-between mt-3">
+                            <h4 class="justify-content-around my-auto  mb-3">
+                                {% trans %}Contenu{% endtrans %}
+                            </h4>
+							<a role="button" class="btn btn-success my-4" href="{{ path('coach_update_package_subservice_digital',{id : package.id})}}">
+								<i class="fa fa-plus"></i>&nbsp;Ajouter</a>
+						</div>
+						<div class="table-responsive">
+							<table class="table table-striped table-hover text-center sortable">
+								<thead>
+									<tr style="white-space:nowrap">
+										<th scope="col" class="text-center">#</th>
+										<th scope="col" class="text-start">Nom</th>
+										<th scope="col" class="text-start">Contenu</th>
+                                        <th></th>
+									</tr>
+								</thead>
+								<tbody>
+									{% for item in package.packageSubservice %}
+										<tr>
+											<td>{{loop.index }}</td>
+											<td class="text-start">{{item.name }}</td>
+											<td class="text-start">{{item.content }}</td>
+											<td class="d-flex align-items-center justify-content-center">
+												<a class="btn btn-sm btn-warning" role="button" href="{{ path('coach_update_package_subservice_digital',{id : package.id, 'idsubservice' :item.id})}}">
+													<i class="fa fa-edit"></i>
+												</a>
+												{% set idForm = 'subservice-contrat-'~item.id  %}
+												<form id="{{ idForm }}" action="" method="post" onsubmit="confirmationForm('{{ idForm }}','{{ path('app_coach_delete_package_element')  }}','Êtes-vous sûr(e) de vouloir supprimer cette element?')">
+													 <input type="hidden" name="id" value='{{ item.id }}'>
+													 <input type="hidden" name="id-package" value='{{ package.id }}'>
+                                					<input type="hidden" name="type" value='subservice'>
+													<button class="btn btn-sm btn-danger ms-2" type="submit">
+														<i class="fa fa-trash"></i>
+													</button>
+												</form>
+											</td>
+										</tr>
+									{% endfor %}
+
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
