@@ -213,5 +213,56 @@ class HelperFunction extends AbstractExtension
         return '';
     }
 
+    public function transformMonthlyBreakDownStatToDataset($data){
+        $labels = [];
+        $datasets = [];
+        $colorsParameters = [
+            [
+                'borderColor' => '#0d6efd',    
+                'backgroundColor' => 'rgba(13, 110, 253, 0.1)'
+            ],
+            [
+                'borderColor' => '#e8355d',
+                'backgroundColor' => 'rgba(232, 53, 93, 0.1)'
+            ],
+            [
+                'borderColor' => '#dc3545',    
+                'backgroundColor' => 'rgba(220, 53, 69, 0.1)'
+            ],
+            [
+                'borderColor' => '#fd7e14',   
+                'backgroundColor' => 'rgba(253, 126, 20, 0.1)'
+            ],
+            [
+                'borderColor' => '#6f42c1',  
+                'backgroundColor' => 'rgba(111, 66, 193, 0.1)'
+            ],
+            [
+                'borderColor' => '#20c997',    
+                'backgroundColor' => 'rgba(32, 201, 151, 0.1)'
+            ]
+        ];
+
+        $currentColorIndex = 0;
+        foreach ($data as $key => $value) {
+            $colorParameter = $colorsParameters[$currentColorIndex] ?? $colorsParameters[0];
+            $labels = array_keys($value);
+            $datasets[] = [
+                'label' => $key,
+                'data' => array_values($value),
+                'borderColor' => $colorParameter['borderColor'] ,
+                'backgroundColor' =>  $colorParameter['backgroundColor'] ,
+                'pointBackgroundColor' => $colorParameter['borderColor'] ,
+                'fill' => true,
+                'tension' => 0.4,
+            ];
+            $currentColorIndex++;
+        }
+        return [
+            'labels' =>$labels,
+            'datasets' =>$datasets,
+        ];
+    }
+
 
 }

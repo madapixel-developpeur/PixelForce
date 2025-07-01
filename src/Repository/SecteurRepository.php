@@ -75,6 +75,17 @@ class SecteurRepository extends ServiceEntityRepository
             ->getResult(); 
     }
 
+     public function getStatValidSecteur() {
+        return $this->createQueryBuilder('s')
+            ->join('s.agentSecteurs', 'ag', 'WITH', 's.id = as.secteur')
+            ->andWhere('s.active = :active')
+            ->setParameter('active',Secteur::ACTIVE_STATE)
+            ->addSelect('COUNT(s.id) AS userCount')
+            ->groupBy('s')
+            ->getQuery()
+            ->getResult(); 
+    }
+
     // /**
     //  * @return Secteur[] Returns an array of Secteur objects
     //  */

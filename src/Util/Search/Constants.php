@@ -21,6 +21,8 @@ class Constants {
     public const DEFAULT_LPN_LEGAL_STATUS = "REVENDEUR";
 
     public const PBB_CATALOGUES_SERVICES = ['SEO','SEA','SOCIAL MEDIA MANAGER','WEB DEVELOPMENT','DESIGN','TECHLEAD'];
+
+    public const NUMBER_OF_USER_TO_SHOW = 10;
     // const SERVICE = [
     //     'SEO' => 1,
     //     'DEV_WEB' => 2,

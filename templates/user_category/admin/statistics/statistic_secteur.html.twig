@@ -1,0 +1,110 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title %}
+	Activité commerciale & sectorielle
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	{{ encore_entry_link_tags('vuexy_dashboard_ecommerce') }}
+
+{% endblock %}
+
+
+{% block body %}
+	<section id="dashboard-ecommerce">
+		<div class="row match-height">
+			<div class="col-md-12">
+				<h4 class=" mt-3 mb-3 choix-secteur-primary">Statistiques par secteurs</h4>
+				<div class="card">
+					<div class="card-body">
+						<div class="table-responsive m-2 mt-4">
+							<table class="table table-bordered">
+								<thead>
+									<tr>
+                                        <th></th>
+										<th>Secteur</th>
+										<th class="text-center">Nombre d'agent</th>
+										<th class="text-center">CA du mois</th>
+										<th class="text-center">CA annuel</th>
+										<th class="text-center">CA cumulé</th>
+									</tr>
+								</thead>
+								<tbody>
+									{% for item in statSecteur %}
+										<tr>
+                                            <td>{{ loop.index }} </td>
+											<td class="text-start">{{ item.secteur  }}</td>
+											<td class="text-end">{{ item.count_agent |  number_format(0, ',', ' ') }} <i class="fas fa-user ms-1 text-muted"></i></td>
+											<td class="text-end">{{ item.total_month |  number_format(2, ',', ' ') }} €</td>
+											<td class="text-end">{{ item.total_year |  number_format(2, ',', ' ')}} €</td>
+											<td class="text-end">{{ item.total_cumul |  number_format(2, ',', ' ') }} €</td>
+										</tr>
+									{% else %}
+										<tr>
+											<td colspan="12" class="text-center bg-light">Aucun secteur trouvé</td>
+										</tr>
+									{% endfor %}
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<h4 class=" mt-2 mb-3 choix-secteur-primary">Graphique CA - Secteur</h4>
+		<div class="row match-height" style="min-height:100px">
+			<div class="col-md-12">
+				<div class="card">
+					<div class="card-body">
+						<canvas id="caChart" height="100"></canvas>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+{% endblock %}
+{% block javascripts %}
+	{{ parent() }}
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+	<script>
+		const labels = {{ monthlyBreakdown.labels |json_encode|raw }};
+
+		const datasets = {{ monthlyBreakdown.datasets|json_encode|raw }};
+
+
+		const ctx = document.getElementById('caChart')?.getContext('2d');
+
+		if (ctx) {
+			new Chart(ctx, {
+				type: 'line',
+				data: {
+					labels,
+					datasets
+				},
+				options: {
+					responsive: true,
+					plugins: {
+						legend: {
+							position: 'top'
+						},
+						tooltip: {
+							callbacks: {
+								label: (context) => context.formattedValue + ' €'
+							}
+						}
+					},
+					scales: {
+						y: {
+							beginAtZero: true,
+							ticks: {
+								callback: value => value + ' €'
+							}
+						}
+					}
+				}
+			});
+		}
+	</script>
+
+{% endblock %}

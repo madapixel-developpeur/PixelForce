@@ -102,6 +102,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
 
     const PLATFORM_PROBOT_X = 'probotx';
 
+    const ACTIVE_ACCOUNT_STATE = 1;
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue

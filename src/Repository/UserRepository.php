@@ -2,20 +2,22 @@
 
 namespace App\Repository;
 
+use DateInterval;
+use App\Entity\User;
+use DateTimeImmutable;
+use App\Entity\Secteur;
 use App\Entity\AgentSecteur;
 use App\Entity\CanalMessage;
 use App\Entity\CoachSecteur;
-use App\Entity\SearchEntity\UserSearch;
-use App\Entity\Secteur;
-use App\Entity\User;
-use DateInterval;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\OptimisticLockException;
+use App\Util\Search\Constants;
 use Doctrine\ORM\ORMException;
+use App\Entity\SearchEntity\UserSearch;
+use Doctrine\ORM\OptimisticLockException;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
-use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 
 /**
  * @method User|null find($id, $lockMode = null, $lockVersion = null)
@@ -584,5 +586,71 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->getEntityManager()
             ->createQuery($query)
             ->execute($params);
+    }
+
+    public function getCountActiveAgent()
+    {
+        return $this->createQueryBuilder('u')
+            ->select('COALESCE(COUNT(u.id),0)')
+            ->where('u.active = :active')
+            ->andWhere('JSON_CONTAINS(u.roles, :role) = 1')
+            ->setParameter('active', User::ACTIVE_ACCOUNT_STATE)
+            ->setParameter('role', json_encode(User::ROLE_AGENT))
+            ->getQuery()
+            ->setMaxResults(1)
+            ->getSingleScalarResult();
+
+    }
+
+    public function getCountActiveAgentByCountry(){
+        return $this->createQueryBuilder('u')
+            ->select('COALESCE(COUNT(u.id),0) as total','u.pays as country_code')
+            ->where('u.active = :active')
+            ->andWhere('JSON_CONTAINS(u.roles, :role) = 1')
+            ->setParameter('active', User::ACTIVE_ACCOUNT_STATE)
+            ->setParameter('role', json_encode(User::ROLE_AGENT))
+            ->groupBy('u.pays')
+            ->getQuery()
+            ->getResult();
+
+    }
+
+    public function getRecentRegisteredUser($options = []){
+        $now = new DateTimeImmutable('now');
+        $startOfMonth = $now->modify('first day of this month')->setTime(0,0,0);
+        $endOfMonth = $now->modify('last day of this month')->setTime(23,59,59);
+
+        $NUMBER_OF_USER_TO_SHOW = 25;
+        $query =  $this->createQueryBuilder('u')
+            ->select('u.created_at','u.email','u.username','u.nom','u.prenom','u.pays','u.id')
+            ->where('u.active = :active')
+            ->andWhere('JSON_CONTAINS(u.roles, :role) = 1')
+            ->setParameter('active', User::ACTIVE_ACCOUNT_STATE)
+            ->setParameter('role', json_encode(User::ROLE_AGENT));
+
+        if(!isset($options['DATE_OFFSET_OFF'])){
+            $query->andWhere('u.created_at BETWEEN :start AND :end')
+            ->setParameter('start', $startOfMonth)
+            ->setParameter('end', $endOfMonth);
+        }
+        return $query->setMaxResults($options['items_number'] ?? $NUMBER_OF_USER_TO_SHOW)
+            ->orderBy('u.created_at',$options['order'] ?? 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function getAmountOfReferralRanking(){
+        return $this->createQueryBuilder('u')
+            ->select('COALESCE(COUNT(u.id),0) as total','p.username','p.nom','p.prenom','p.id')
+            ->join('u.parrain', 'p')
+            ->where('u.active = :active')
+            ->andWhere('JSON_CONTAINS(u.roles, :role) = 1')
+            ->setParameter('active', User::ACTIVE_ACCOUNT_STATE)
+            ->setParameter('role', json_encode(User::ROLE_AGENT))
+            ->groupBy('p')
+            ->setMaxResults(Constants::NUMBER_OF_USER_TO_SHOW)
+            ->orderBy('total','DESC')
+            ->getQuery()
+            ->getResult();
     }
 }

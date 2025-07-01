@@ -1,0 +1,301 @@
+{% set labels = caMonthlyData |keys %}
+{% set data = caMonthlyData|map(v => v)  %}
+{% extends 'base_admin.html.twig' %}
+
+{% block title %}Dashboard admin
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	{{ encore_entry_link_tags('vuexy_dashboard_ecommerce') }}
+	{# {{ encore_entry_link_tags('vuexy_chart_apex') }} #}
+	<style>
+		.pixelforce-color{
+			color: #7d78e1 !important;
+		}
+
+		.bg-pxl{
+			background-color : #7d78e1 !important;
+		}
+		.stat {
+			align-items: center;
+			background: #d3e2f7;
+			border-radius: 50%;
+			color: #3b7ddd;
+			display: flex;
+			height: 40px;
+			justify-content: center;
+			width: 40px;
+		}
+		#geoUserChart,
+		#sectorUserChart {
+			max-width: 400px;
+			max-height: 400px;
+			width: 100%;
+			height: auto;
+		}
+		.country-bar {
+			display: flex;
+			align-items: center;
+			margin-bottom: 8px;
+			font-family: sans-serif;
+		}
+
+		.country-label {
+			width: 120px;
+			font-weight: bold;
+		}
+
+		.country-bar-bg {
+			flex: 1;
+			background: #f1f1f1;
+			height: 16px;
+			border-radius: 4px;
+			margin-left: 8px;
+			position: relative;
+			overflow: hidden;
+		}
+
+		.country-bar-fill {
+			background: #4a90e2;
+			height: 100%;
+			position: absolute;
+			left: 0;
+			top: 0;
+		}
+
+		.country-count {
+			margin-left: 10px;
+			color: #333;
+			font-size: 13px;
+		}
+		.card-title{
+			font-size: 1.1rem !important;
+		}
+	</style>
+{% endblock %}
+
+
+{% block body %}
+	<section id="dashboard-ecommerce">
+		<div class="row match-height">
+			<div class="col-md-3 mt-3">
+				<div class="card">
+					<div class="card-body p-4">
+						<div class="row">
+							<div class="col mt-0">
+								<h5 class="card-title">CA [{{ "now"|localized_month }}]</h5>
+							</div>
+
+							<div class="col-auto">
+								<div class="stat bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 34px; height: 34px;">
+									<i class="fas fa-calendar-alt align-middle fs-6"></i>
+								</div>
+							</div>
+						</div>
+						<h3 style="margin-top: 1rem; margin-bottom: 1rem;font-size: 2rem;" class="fw-bold text-primary">
+							{{ statCA.total_month | number_format(2, ',', ' ') }}
+							€
+						</h3>
+					</div>
+
+				</div>
+			</div>
+			<div class="col-md-3 mt-3">
+				<div class="card">
+					<div class="card-body p-4">
+						<div class="row">
+							<div class="col mt-0">
+								<h5 class="card-title">CA [{{"now" | date('Y')}}]</h5>
+							</div>
+
+							<div class="col-auto">
+								<div class="stat bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 34px; height: 34px;">
+									<i class="fas fa-calendar align-middle fs-6"></i>
+								</div>
+							</div>
+						</div>
+						<h3 style="margin-top: 1rem; margin-bottom: 1rem;font-size: 2rem;" class="fw-bold text-primary">{{ statCA.total_year |  number_format(2, ',', ' ') }} €</h3>
+
+					</div>
+
+				</div>
+			</div>
+			<div class="col-md-3 mt-3">
+				<div class="card">
+					<div class="card-body p-4">
+						<div class="row">
+							<div class="col mt-0">
+								<h5 class="card-title">CA [cumulé]</h5>
+							</div>
+
+							<div class="col-auto">
+								<div class="stat bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 34px; height: 34px;">
+									<i class="fas fa-signal align-middle fs-6"></i>
+								</div>
+							</div>
+						</div>
+						<h3 style="margin-top: 1rem; margin-bottom: 1rem;font-size: 2rem;" class="fw-bold text-primary">{{ statCA.total_cumul |  number_format(2, ',', ' ') }} €</h3>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-3 mt-3">
+				<div class="card">
+					<div class="card-body p-4">
+						<div class="row">
+							<div class="col mt-0">
+								<h5 class="card-title">Apporteurs d'affaires</h5>
+							</div>
+
+							<div class="col-auto">
+								<div class="stat bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 34px; height: 34px;">
+									<i class="fas fa-user align-middle  fs-6"></i>
+								</div>
+							</div>
+						</div>
+						<h3 style="margin-top: 1rem; margin-bottom: 1rem;font-size: 2rem;" class="fw-bold text-primary">{{ countAgents |  number_format(0, ',', ' ')}}</h3>
+					</div>
+				</div>
+			</div>
+		</div>
+		<h4 class=" mt-2 mb-3 choix-secteur-primary">Évolution du chiffre d’affaires - 2025</h4>
+		<div class="row match-height" style="min-height:100px">
+			<div class="col-md-12">
+				<div class="card">
+					<div class="card-body">
+						<canvas id="caChart" height="100"></canvas>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row match-height" style="min-height:100px">
+			<div class="col-md-6">
+				<h4 class=" mt-2 mb-3 choix-secteur-primary">Répartition par pays</h4>
+				<div class="card">
+					<div class="card-body ">
+						<div class="container px-2 mt-1">
+							{% for key,value in statGeoAgents %}
+								<div class="mb-2">
+								<div class="d-flex justify-content-between mb-1">
+									<span>
+										{{ key }}
+									</span>
+									<span>{{ value.count }} <i class="fas fa-user me-1 text-muted"></i></span>
+								</div>
+								<div class="progress" style="height: 20px;">
+									<div class="progress-bar bg-primary" style="width: {{ value.width }}%"></div>
+								</div>
+							</div>
+							{% else %}
+								
+							{% endfor %}
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<h4 class=" mt-2 mb-3 choix-secteur-primary">Répartition par secteur</h4>
+				<div class="card">
+					<div class="card-body ">
+						<div class="container px-2 mt-1">
+							{% for key,value in statSecteurAgents %}
+								<div class="mb-3">
+									<div class="d-flex justify-content-between mb-1">
+										{{ key }}
+										<span>{{ value.count }} <i class="fas fa-user me-1 text-muted"></i> ({{  value.width }}%)</span>
+									</div>
+									<div class="progress" style="height: 20px;">
+										<div class="progress-bar bg-primary" style="width: {{ value.width }}%"></div>
+									</div>
+								</div>
+							{% else %}
+								
+							{% endfor %}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<h4 class=" mt-2 mb-3 choix-secteur-primary">Nouveaux inscrits du mois</h4>
+		<div class="row match-height">
+			<div class="col-md-12">
+				<div class="card">
+					<div class="card-body">
+						<div class="table-responsive m-2 mt-4">
+							<table class="table table-bordered">
+								<thead>
+									<tr>
+										<th>Date d'inscription</th>
+										<th>Nom d'utilisateur</th>
+										<th>Nom & Prénom(s)</th>
+										<th>Email</th>
+									</tr>
+								</thead>
+								<tbody>
+								{% for user in recentRegisteredUsers %}
+									<tr>
+										<td>{{ user.created_at | date('d-m-Y à H:i') }}</td>
+										<td>{{ user.username }}</td>
+										<td>{{ user.nom ~''~ user.prenom  }}</td>
+										<td>{{ user.email}}</td>
+									</tr>
+								{% else %}
+									<tr>
+										<td colspan="12" class="text-center bg-light">Aucun utilisateur inscrit ce mois-ci</td>
+									</tr>
+								{% endfor %}
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+
+	</section>
+{% endblock %}
+{% block javascripts %}
+	{{ parent() }}
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const ctx = document.getElementById('caChart').getContext('2d');
+		const labels = {{ labels|json_encode|raw }};
+  		const dataValues = {{ data|json_encode|raw }};
+
+        const caChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+               	labels: labels,	
+                datasets: [{
+                    label: "CA en €",
+					data: dataValues,
+                    borderColor: '#0d6efd',
+                    backgroundColor: 'rgba(13, 110, 253, 0.1)',
+                    fill: true,
+                    tension: 0.3
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'CA (€)'
+                        }
+                    }
+                },
+                plugins: {
+                    title: {
+                        display: true,
+                        text: ''
+                    }
+                }
+            }
+        });
+
+    </script>
+{% endblock %}

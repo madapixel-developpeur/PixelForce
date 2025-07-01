@@ -82,6 +82,21 @@ class AgentSecteurRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function getStatAgentBySecteur(){
+         return $this->createQueryBuilder('a')
+            ->select('s.nom AS secteur, COUNT(DISTINCT a.agent) AS total')
+            ->join('a.agent','u')
+            ->join('a.secteur','s')
+            ->andWhere('u.active = :active')
+            ->andWhere('a.statut = :active_secteur')
+            ->andWhere('a.secteur IS NOT NULL and a.agent IS NOT NULL')
+            ->setParameter('active', User::ACTIVE_ACCOUNT_STATE)
+            ->setParameter('active_secteur', AgentSecteur::ACCOUNT_ACTIVE)
+            ->groupBy('s')
+            ->getQuery()
+            ->getResult();
+    }
+
     // /**
     //  * @return AgentSecteur[] Returns an array of AgentSecteur objects
     //  */

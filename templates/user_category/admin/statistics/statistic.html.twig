@@ -1,0 +1,183 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title %}
+	Statistiques réseau & performance
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	{{ encore_entry_link_tags('vuexy_dashboard_ecommerce') }}
+	<style>
+
+	</style>
+
+{% endblock %}
+
+
+{% block body %}
+	<section id="dashboard-ecommerce">
+		<div class="row match-height">
+			<div class="col-md-12">
+				<h4 class=" mt-2 mb-3 choix-secteur-primary">Classement CA</h4>
+				<div class="card">
+					<div class="card-body">
+						<div class="  d-sm-flex justify-content-end align-items-center mb-3">
+							<form  method="POST" id="update_classement" onsubmit="confirmationForm('update_classement','{{ path('app_admin_update_agent_ca_trakcing')  }}','Êtes-vous sûr(e) de vouloir continuer?')">
+								<button type="submit"  class="btn btn-primary">Mettre à jour le classement</button>
+							</form>
+						</div>
+						<div class="table-responsive m-2 mt-4">
+							<table class="table table-bordered">
+								<thead>
+									<tr>
+										<th class='col-1'></th>
+                                        <th class='col-1'></th>
+										<th>Nom & Prénom(s)</th>
+										<th>Nom d'utilisateur</th>
+										<th class="text-center">CA</th>
+										<th class="text-center">Info</th>
+									</tr>
+								</thead>
+								<tbody>
+									{% for user in agentRankedByCa %}
+										<tr>
+                                            <td class="text-center fs-5">
+												{{ loop.index }}
+												{% if loop.index == 1 %}
+													🥇
+												{% elseif loop.index == 2 %}
+													🥈
+												{% elseif loop.index == 3 %}
+													🥉
+												{% endif %}
+											</td>
+											<td class="text-center">
+												<div class="avatar">
+													<img class="round object-fit-cover h-100 w-100"
+														src="{{ path('user_avatar', {id:user.id}) }}"
+														onerror='this.onerror=null; this.src="{{ asset('assets/vuexy/images/portrait/small/avatar-s-11.jpg') }}"'
+														alt="avatar" >
+												</div>
+											</td>
+											<td>{{  user.nom ~''~ user.prenom  }}</td>
+											<td>{{ user.username }}</td>
+											<td class='text-end'>{{ user.total_ca |number_format(2, ',', ' ') }} €</td>
+											<td>
+												{% for  key,value in user.details %}
+													<b>{{ key }} :</b> {{ value  }} </br>
+												{% endfor %}
+											</td>
+										</tr>
+									{% else %}
+										<tr>
+											<td colspan="12" class="text-center bg-light">Aucun utilisateur inscrit ce mois-ci</td>
+										</tr>
+									{% endfor %}
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+            <div class="col-md-12">
+				<h4 class=" mt-2 mb-3 choix-secteur-primary">Classement parrainage</h4>
+				<div class="card">
+					<div class="card-body">
+						<div class="table-responsive m-2 mt-4">
+							<table class="table table-bordered">
+								<thead>
+									<tr>
+										<th class='col-1'></th>
+                                        <th class='col-1'></th>
+										<th>Nom & Prénom(s)</th>
+										<th>Nom d'utilisateur</th>
+										<th class="text-center">Total</th>
+									</tr>
+								</thead>
+								<tbody>
+									{% for user in agentWithMostReferral %}
+										<tr>
+											<td class="text-center fs-5">
+												{{ loop.index }}
+												{% if loop.index == 1 %}
+													🥇
+												{% elseif loop.index == 2 %}
+													🥈
+												{% elseif loop.index == 3 %}
+													🥉
+												{% endif %}
+											</td>
+											<td class="text-center">
+												<div class="avatar">
+													<img class="round object-fit-cover h-100 w-100"
+														src="{{ path('user_avatar', {id:user.id}) }}"
+														onerror='this.onerror=null; this.src="{{ asset('assets/vuexy/images/portrait/small/avatar-s-11.jpg') }}"'
+														alt="avatar" >
+												</div>
+											</td>
+											<td>{{  user.nom ~''~ user.prenom  }}</td>
+											<td>{{ user.username }}</td>
+											<td class='text-end'>{{ user.total | number_format(0, ',', ' ') }}<i class="fas fa-user ms-1 text-muted"></i></td>
+										</tr>
+									{% else %}
+										<tr>
+											<td colspan="12" class="text-center bg-light">Aucun utilisateur inscrit ce mois-ci</td>
+										</tr>
+									{% endfor %}
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<h4 class=" mt-2 mb-3 choix-secteur-primary">Derniers inscrits</h4>
+		<div class="row match-height">
+			<div class="col-md-12">
+				<div class="card">
+					<div class="card-body">
+						<div class="table-responsive m-2 mt-4">
+							<table class="table table-bordered">
+								<thead>
+									<tr>
+										<th class='col-1'></th>
+										<th>Nom d'utilisateur</th>
+										<th>Nom & Prénom(s)</th>
+										<th>Pays</th>
+										<th>Date d'inscription</th>
+									</tr>
+								</thead>
+								<tbody>
+									{% for user in recentRegisteredUsers %}
+										<tr>
+											<td class="text-center">
+												<div class="avatar">
+													<img class="round object-fit-cover h-100 w-100"
+														src="{{ path('user_avatar', {id:user.id}) }}"
+														onerror='this.onerror=null; this.src="{{ asset('assets/vuexy/images/portrait/small/avatar-s-11.jpg') }}"'
+														alt="avatar" >
+												</div>
+											</td>
+											<td>{{ user.username }}</td>
+											<td>{{ user.nom ~''~ user.prenom  }}</td>
+											<td>{{ user.pays |country_name('fr') }}</td>
+											<td>{{ user.created_at | date('d-m-Y à H:i') }}</td>
+										</tr>
+									{% else %}
+										<tr>
+											<td colspan="12" class="text-center bg-light">Aucun utilisateur inscrit ce mois-ci</td>
+										</tr>
+									{% endfor %}
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+{% endblock %}
+{% block javascripts %}
+	{{ parent() }}
+
+{% endblock %}
