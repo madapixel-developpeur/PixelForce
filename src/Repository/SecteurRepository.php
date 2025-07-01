@@ -77,11 +77,12 @@ class SecteurRepository extends ServiceEntityRepository
 
      public function getStatValidSecteur() {
         return $this->createQueryBuilder('s')
-            ->join('s.agentSecteurs', 'ag', 'WITH', 's.id = as.secteur')
+            ->select('s.nom AS secteur, COUNT(DISTINCT ast.agent) AS total')
+            ->leftJoin('s.agentSecteurs', 'ast', 'WITH', 's.id = ast.secteur')
             ->andWhere('s.active = :active')
             ->setParameter('active',Secteur::ACTIVE_STATE)
-            ->addSelect('COUNT(s.id) AS userCount')
             ->groupBy('s')
+            ->orderBy('total','DESC')
             ->getQuery()
             ->getResult(); 
     }

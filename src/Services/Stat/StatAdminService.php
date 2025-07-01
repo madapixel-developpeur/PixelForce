@@ -126,6 +126,8 @@ class StatAdminService
     public function getStatAgentBySecteur(){
         $statSecteurAgents = $this->agentSecteurRepository->getStatAgentBySecteur();
         $countAgents = $this->userRepository->getCountActiveAgent();
+
+        $statSecteurAgents = $this->secteurRepository->getStatValidSecteur();
         $statSecteurAgents = array_column($statSecteurAgents,'total','secteur');
         arsort($statSecteurAgents);
         foreach ($statSecteurAgents as $secteur => $count) {
