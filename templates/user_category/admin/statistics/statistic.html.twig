@@ -70,7 +70,7 @@
 										</tr>
 									{% else %}
 										<tr>
-											<td colspan="12" class="text-center bg-light">Aucun utilisateur inscrit ce mois-ci</td>
+											<td colspan="12" class="text-center bg-light">Aucun utilisateur trouvé</td>
 										</tr>
 									{% endfor %}
 								</tbody>
@@ -121,7 +121,7 @@
 										</tr>
 									{% else %}
 										<tr>
-											<td colspan="12" class="text-center bg-light">Aucun utilisateur inscrit ce mois-ci</td>
+											<td colspan="12" class="text-center bg-light">Aucun utilisateur trouvé</td>
 										</tr>
 									{% endfor %}
 								</tbody>
@@ -185,23 +185,23 @@
 				event.preventDefault();
 				const form = $(this);
 				Swal.fire({
-	title: "Confirmation",
-	text: "Êtes-vous sûr(e) de vouloir mettre à jour le classement ?\n\nLa mise à jour se fait en arrière-plan et sera complétée dans quelques minutes.",
-	icon: "warning",
-	showCancelButton: true,
-	confirmButtonText: "Confirmer",
-	cancelButtonText: "Annuler",
-	customClass: {
-		confirmButton: "btn btn-success",
-		cancelButton: "btn btn-danger ms-2"
-	},
-	buttonsStyling: false,
-}).then(function (t) {
-	if(t.value){
-		console.log($(this));
-		form.off('submit').submit();
-	}
-});
+					title: "Confirmation",
+					text: "Êtes-vous sûr(e) de vouloir mettre à jour le classement ?\n\nLa mise à jour se fait en arrière-plan et sera complétée dans quelques minutes.",
+					icon: "warning",
+					showCancelButton: true,
+					confirmButtonText: "Confirmer",
+					cancelButtonText: "Annuler",
+					customClass: {
+						confirmButton: "btn btn-success",
+						cancelButton: "btn btn-danger ms-2"
+					},
+					buttonsStyling: false,
+				}).then(function (t) {
+					if(t.value){
+						console.log($(this));
+						form.off('submit').submit();
+					}
+				});
 
 
 		 	});
