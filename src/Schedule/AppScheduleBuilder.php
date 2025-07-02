@@ -37,6 +37,6 @@ class AppScheduleBuilder implements ScheduleBuilder
             $this->statAdminService->refreshCaTrackingTable();
         })
         ->description('refresh agent global CA ')
-        ->hourly();
+        ->cron('0 2,8,14,20 * * *');
     }
 }

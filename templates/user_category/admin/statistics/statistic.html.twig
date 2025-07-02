@@ -22,7 +22,7 @@
 				<div class="card">
 					<div class="card-body">
 						<div class="  d-sm-flex justify-content-end align-items-center mb-3">
-							<form  method="POST" id="update_classement" onsubmit="confirmationForm('update_classement','{{ path('app_admin_update_agent_ca_trakcing')  }}','Êtes-vous sûr(e) de vouloir continuer?')">
+							<form  method="POST" action="{{ path('app_admin_update_agent_ca_trakcing') }}" class="confirmation">
 								<button type="submit"  class="btn btn-primary">Mettre à jour le classement</button>
 							</form>
 						</div>
@@ -179,5 +179,34 @@
 {% endblock %}
 {% block javascripts %}
 	{{ parent() }}
+	<script>
+		$(document).ready(function() {
+  			$('.confirmation').submit(function(e) {
+				event.preventDefault();
+				const form = $(this);
+				Swal.fire({
+	title: "Confirmation",
+	text: "Êtes-vous sûr(e) de vouloir mettre à jour le classement ?\n\nLa mise à jour se fait en arrière-plan et sera complétée dans quelques minutes.",
+	icon: "warning",
+	showCancelButton: true,
+	confirmButtonText: "Confirmer",
+	cancelButtonText: "Annuler",
+	customClass: {
+		confirmButton: "btn btn-success",
+		cancelButton: "btn btn-danger ms-2"
+	},
+	buttonsStyling: false,
+}).then(function (t) {
+	if(t.value){
+		console.log($(this));
+		form.off('submit').submit();
+	}
+});
 
+
+		 	});
+
+			
+		});
+	</script>
 {% endblock %}
