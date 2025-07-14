@@ -81,14 +81,14 @@ class InscriptionAgentType extends AbstractType
                     new NotNull([],$this->translator->trans('Champ obligatoire'))
                 ]
             ])
-            ->add('codePostal', TextType::class, [
-                'label' => false,
-                'attr' => [
-                    'placeholder' => $this->translator->trans('Code postal'),
-                    'step' => 1
-                ],
-                "required" => true
-            ])
+            // ->add('codePostal', TextType::class, [
+            //     'label' => false,
+            //     'attr' => [
+            //         'placeholder' => $this->translator->trans('Code postal'),
+            //         'step' => 1
+            //     ],
+            //     "required" => true
+            // ])
             ->add('username', TextType::class, [
                 'label' => false,
                 'attr' => [
@@ -157,14 +157,14 @@ class InscriptionAgentType extends AbstractType
                 ],
                 'mapped' => false
             ])
-            ->add('numero_rue', TextType::class, [
-                'label' => false,
-                'attr' => [
-                    'placeholder' => $this->translator->trans('Numéro de rue'),
-                    'step' => 1
-                ],
-                "required" => true
-            ])
+            // ->add('numero_rue', TextType::class, [
+            //     'label' => false,
+            //     'attr' => [
+            //         'placeholder' => $this->translator->trans('Numéro de rue'),
+            //         'step' => 1
+            //     ],
+            //     "required" => true
+            // ])
             ->add('ville', TextType::class, [
                 'label' => false,
                 'attr' => [

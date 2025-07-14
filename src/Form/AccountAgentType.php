@@ -84,13 +84,13 @@ class AccountAgentType extends AbstractType
                 'required' => false,
             ])
 
-            ->add('numero_rue', TextType::class, [
-                'label' => $this->translator->trans('Numéro de rue'),
-                'attr' => [
-                    'placeholder' => $this->translator->trans('Numéro de rue')
-                ],
-                "required" => false
-            ])
+            // ->add('numero_rue', TextType::class, [
+            //     'label' => $this->translator->trans('Numéro de rue'),
+            //     'attr' => [
+            //         'placeholder' => $this->translator->trans('Numéro de rue')
+            //     ],
+            //     "required" => false
+            // ])
             ->add('ville', TextType::class, [
                 'label' => $this->translator->trans('Ville'),
                 'attr' => [
@@ -105,13 +105,13 @@ class AccountAgentType extends AbstractType
                 'required' => true,
                 'attr' => ['class' => 'form-control'],
             ])
-            ->add('codePostal', TextType::class, [
-                'label' => $this->translator->trans('Code postal'),
-                'attr' => [
-                    'placeholder' => $this->translator->trans('Code postal')
-                ],
-                "required" => false
-            ])
+            // ->add('codePostal', TextType::class, [
+            //     'label' => $this->translator->trans('Code postal'),
+            //     'attr' => [
+            //         'placeholder' => $this->translator->trans('Code postal')
+            //     ],
+            //     "required" => false
+            // ])
 
 
             ->add('adresse', TextType::class, [
