@@ -117,16 +117,20 @@ class SecteurRepository extends ServiceEntityRepository
     */
     public function findAllActive()
     {
-        return $this->createQueryBuilder('u')
-            ->orWhere('u.active >= 0')
-            ->orWhere('u.active is null')
+        return $this->createQueryBuilder('s')
+            ->addSelect('(CASE WHEN s.appearanceOrder IS NULL THEN 1 ELSE 0 END) AS HIDDEN null_order')
+            ->orWhere('s.active >= 0')
+            ->orWhere('s.active is null')
+            ->addOrderBy('null_order', 'ASC') 
+            ->addOrderBy('s.appearanceOrder', 'ASC')
             ->getQuery()
             ->getResult();
     }
 
     public function filter(\App\Entity\SearchEntity\SecteurSearch $secteurSearch)
     {
-        $queryBuilder = $this->createQueryBuilder('s');
+        $queryBuilder = $this->createQueryBuilder('s')
+         ->addSelect('(CASE WHEN s.appearanceOrder IS NULL THEN 1 ELSE 0 END) AS HIDDEN null_order');
 
         if (empty($_GET)) {
             $queryBuilder
@@ -151,6 +155,10 @@ class SecteurRepository extends ServiceEntityRepository
                 ->andWhere('s.active = :active')
                 ->setParameter('active', $secteurSearch->getEtat());
         }
+        $queryBuilder
+            ->addOrderBy('null_order', 'ASC') 
+            ->addOrderBy('s.appearanceOrder', 'ASC');
+
 
         return $queryBuilder->getQuery();
     }

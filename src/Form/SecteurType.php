@@ -4,17 +4,20 @@ namespace App\Form;
 
 use App\Entity\Secteur;
 use App\Entity\TypeSecteur;
-use App\Repository\TypeSecteurRepository;
+use Doctrine\DBAL\Types\SmallIntType;
 use App\Util\FonctionnalitesTypeSecteur;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\NotNull;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
-use Symfony\Component\Validator\Constraints\File;
+use App\Repository\TypeSecteurRepository;
 use FOS\CKEditorBundle\Form\Type\CKEditorType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\Validator\Constraints\NotNull;
+use Symfony\Component\Validator\Constraints\Positive;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 class SecteurType extends AbstractType
@@ -108,6 +111,12 @@ class SecteurType extends AbstractType
                 'expanded' => true,
                 'choices' => FonctionnalitesTypeSecteur::getFonctionnaliteLabels($secteur?->getType()?->getId()??FonctionnalitesTypeSecteur::TYPE_STANDARD),
                 "required" => false,
+            ])
+            ->add('appearanceOrder', IntegerType::class, [
+                "label" => "Ordre d'apparition",
+                'constraints' => [
+                    new Positive(['message' => "L'ordre d'apparition doit être un nombre positif"]),
+                ]
             ])
         ;
     }

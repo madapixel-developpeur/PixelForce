@@ -115,7 +115,7 @@ class AgentAccountController extends AbstractController
         $this->session->remove('secteurId');
         $this->agentService->setSesssionEnabledContent($agent);
 
-        $allSecteurs = $this->repoSecteur->findAllActive();
+        $allSecteurs = $this->repoSecteur->findAllActive(['orderByAppearance' => true]);
 
         // On vérifie le statut de compte de l'utilisateur
         $accountStatus = $agent->getAccountStatus();

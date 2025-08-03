@@ -125,7 +125,10 @@ class Secteur implements JsonSerializable
     private $fonctionnalites;
 
 
-
+    /**
+     * @ORM\Column(type="smallint",nullable=true)
+     */
+    private $appearanceOrder;
 
 
     public function __construct()
@@ -569,5 +572,23 @@ class Secteur implements JsonSerializable
 
     public function getActiveStateStr(){
         return $this->getActive() == self::ACTIVE_STATE ? "Activé": "Désactivé";
+    }
+
+    /**
+     * Get the value of appearanceOrder
+     */
+    public function getAppearanceOrder()
+    {
+        return $this->appearanceOrder;
+    }
+
+    /**
+     * Set the value of appearanceOrder
+     */
+    public function setAppearanceOrder($appearanceOrder): self
+    {
+        $this->appearanceOrder = $appearanceOrder;
+
+        return $this;
     }
 }
