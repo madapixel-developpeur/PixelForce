@@ -15,6 +15,80 @@
         background-color: #3e4f9c !important;
         color: #fff !important; }
 
+            
+            p.text-black,
+            p.text-muted {
+                font-size: 14px;
+            }
+
+            .greeting-emoji {
+                font-size: 2rem;
+            }
+
+            .profile-img {
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                object-fit: cover;
+            }
+
+            .tab-btn.active {
+                background: #0059FF;
+                color: #fff;
+            }
+
+            .tab-btn {
+                border: 1px solid #0059FF;
+                color: #0059FF;
+                margin-right: 8px;
+            }
+
+            .video-placeholder {
+                /* background: repeating-linear-gradient(45deg, #e5e7eb, #e5e7eb 10px, #f3f4f6 10px, #f3f4f6 20px); */
+                background-color: #6A5FB2;
+                background-size: contain;
+                height: 500px;
+                border-radius: 18px;
+                /* align-content: end; */
+                position: relative;
+                /* background-size: cover; */
+                background-position: center;
+                background-repeat: no-repeat;
+                transition: background-image 0.3s;
+            }
+
+            /* .continue-btn {
+                position: absolute;
+                bottom: 20px;
+                right: 30px;
+            } */
+
+            .step-circle {
+                background: #0059FF;
+                color: #fff;
+                width: 80px;
+                height: 80px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-top-left-radius: 24px;
+                border-top-right-radius: 24px;
+                border-bottom-right-radius: 24px;
+                font-size: 2.5rem;
+                margin: 0 auto 10px auto;
+                box-shadow: 0 4px 24px rgba(37, 99, 235, 0.12);
+                font-weight: bold;
+            }
+
+            .step-card {
+                border: none;
+                background: transparent;
+            }
+
+            .custom-black-color{
+                color:black;
+            }
+
     </style>
 {% endblock %}
 
@@ -22,169 +96,151 @@
     {% set stripe_defaultButton =  "S'abonner (" ~ planPrice ~ " €)" %}
 
     <div class="container-page">
-        <h1 class="choix-secteur-primary mt-3">{{ 'Bonjour %prenom%! Bienvenue sur Pixelforce'|trans({'%prenom%': app.user.prenom|default('')}) }} </h1>    
-
-        {% if app.session.get('enabledContent') == true %}
-            {% if app.request.get('stripe_checkout') == 'successfully' %}
-                <div class="text-center alert alert-success h5">
-                    {% trans %}Paiement efféctué avec succès !{% endtrans %}
-                </div>
-            {% endif %}
-            <div class="row pt-3">
-                <div class="col-12 col-md-5">
-                    <h6 class="">{% trans %}Découvrez comment Pixelforce peut transformer votre activité. Regardez cette courte vidéo pour en savoir plus sur les opportunités qui vous attendent.{% endtrans %} </h6>
-                </div>
-                <div class="col-0 col-md-7"></div>
-            </div>
-            <div class="row video-swipper-container pt-3" style="min-height:700px;" >
-                <div class="col-md-8 d-flex align-items-center">
-                    <div class="ratio ratio-16x9">
-                        <iframe id="secteurVideo" src="{{video_information_vimeo_src}}" allow="autoplay; fullscreen; picture-in-picture; clipboard-write"></iframe>
-                        <script src="https://player.vimeo.com/api/player.js"></script>
+        <div class="row justify-content-center mt-3">
+            <div class="col-md-10">
+                <h1 class="fw-bold text-black">{% trans %}Bonjour{% endtrans %} <span class="greeting-emoji">👋</span>
+                    <br>{{  app.user.fullName|default('')}}!
+                </h1>
+                {% if app.session.get('enabledContent') == true %}
+            
+                    {% if app.request.get('stripe_checkout') == 'successfully' %}
+                        <div class="text-center alert alert-success h5">
+                            {% trans %}Paiement efféctué avec succès !{% endtrans %}
+                        </div>
+                    {% endif %}
+                    <div class="row pt-3 mb-5">
+                        <div class="col-12 col-md-5 text-black">
+                            <h6 class="text-dark">{% trans %}Découvrez comment Pixelforce peut transformer votre activité. Regardez cette courte vidéo pour en savoir plus sur les opportunités qui vous attendent.{% endtrans %} </h6>
+                        </div>
+                        <div class="col-0 col-md-7"></div>
                     </div>
-                </div>
+                    <div class="content-tab mb-5 mt-2">
+                        <div class="tab-btn-group row justify-content-center">
+                            <div class="col-md-10 text-center">
+                                {% for secteur in allSecteurs %}
+                                    {% set agentSecteur = repoAgentSecteur.findOneBy({'secteur' : secteur, 'agent' : agent}) %}
+                                    <button class="btn tab-btn rounded-pill px-4 mb-2 {% if loop.first %} first-element{% endif %}" 
+                                        data-img-url="{{ absolute_url(asset('files/') ~  secteur.affiche) }}" 
+                                        data-id-secteur="{{ secteur.id }}">{{ secteur.nom }}</button>
 
-                <div class="col-md-4 d-flex align-items-center" >
-                    <div class="row d-flex align-items-center mx-3">
-                       
-                        <div class="swiper custom-sector " style=" height: 680px;">
-                        
-                            <div class="swiper-wrapper my-custom-swiper-wrapper" >
-                            {% for secteur in allSecteurs|batch(2) %}
-                                <div class="swiper-slide d-flex align-items-center">
-                                    <div class="row w-100">
-                                        <div class="up-arrow-button text-center arrow-swiper">
-                                            <i class="fas fa-chevron-up"></i>
-                                        </div>
-                                        {% for s in secteur %}
-                                            {% set agentSecteur = repoAgentSecteur.findOneBy({'secteur' : s, 'agent' : agent}) %}
-                                            
-                                            <div class="col-12 col-md-12 d-flex align-items-center ">
-                                                <div class="card choix-secteur-card w-100">
-                                                  <div class="d-flex align-items-center justify-content-center " style="height: 180px; background-color: #6A5FB2; overflow: hidden;">
-                                                        {% if s.affiche %}
-                                                            
-                                                            <img src="{{ asset('files/') }}/{{ s.affiche }}" 
-                                                                class="img-fluid" 
-                                                                style="max-height: 100%; max-width: 100%; object-fit: contain;" 
-                                                                alt="...">
-                                                    
-                                                                
-                                                        {% endif %}
-                                                    </div>
-                                                    <div class="card-body choix-secteur-card-body rounded-bottom d-flex align-items-end">
-                                                        <div class="row card-body-part-a w-100" >
-                                                            <div class="col-8 d-flex align-items-center">
-                                                                <h5 class=" text-white fw-bold m-0">{{ s.nom }}</h5>
-                                                                {# <p class="card-text">{{ s.description }}</p> #}
-                                                            </div>
-                                                            <div class="col-4 text-end">
-                                                                {% if agentSecteur is null and s.active > 0 %}
-                                                                    <!-- <a href="" class="btn btn-primary" disabled><i class="fa-solid fa-location-arrow"></i> Découvrir</a> -->
-                                                                    <a href="{{ path('agent_add_sector', {id: s.id}) }}" class="regular-white-button   font-weight-bold rounded-3 pl-3 pr-3"> {% trans %}Ajouter{% endtrans %} </a>
-                                                                    {% elseif agentSecteur and agentSecteur.statut == true and s.active > 0 %}
-                                                                        <a href="{{ path('agent_generate_sessionSecteur_before_redirect_to_route_dahsboard', {id: s.id}) }}" class="regular-white-button  font-weight-bold rounded-3 pl-3 pr-3"> {% trans %}Accéder{% endtrans %} </a>
-                                                                    {% elseif agentSecteur and agentSecteur.statut == false and s.active > 0 %}
-                                                                        <a class="regular-white-button   font-weight-bold rounded-3 pl-3 pr-3"> {% trans %}En attente de validation{% endtrans %}</a>
-                                                                {% else %}
-                                                                    <a href="#" class="btn btn-primary" disabled>{% trans %}Bientôt Disponible{% endtrans %}</a>
-                                                                {% endif %}
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        {% endfor %}
-                                        <div class="down-arrow-button  text-center arrow-swiper mt-0">
-                                            <i class="fas fa-chevron-down"></i>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            {% endfor %}
-                            
+                                    <input type="hidden" id="image-url-{{ secteur.id }}" >
+                                    {% if agentSecteur is null and secteur.active > 0 %}
+                                        <input type="hidden" id="{{ 'info-sector-' ~ secteur.id }}" 
+                                            data-url-secteur="{{ path('agent_add_sector', {id: secteur.id}) }}" 
+                                            data-button-text="{{ 'Ajouter ' | trans }}"
+                                        >
+                                    {% elseif agentSecteur and agentSecteur.statut == true and secteur.active > 0 %}
+                                        <input type="hidden" id="{{ 'info-sector-' ~ secteur.id }}" 
+                                            data-url-secteur="{{ path('agent_generate_sessionSecteur_before_redirect_to_route_dahsboard', {id: secteur.id}) }}" 
+                                            data-button-text="{{ 'Accéder ' | trans }}"
+                                        >
+                                    {% elseif agentSecteur and agentSecteur.statut == false and secteur.active > 0 %}
+                                        <input type="hidden" id="{{ 'info-sector-' ~ secteur.id }}" 
+                                            data-url-secteur="#" 
+                                            data-button-text="{{ 'En attente de validation ' | trans }}"
+                                        >
+                                    {% else %}
+                                        <input type="hidden" id="{{ 'info-sector-' ~ secteur.id }}" 
+                                            data-url-secteur="#" 
+                                            data-button-text="{{ 'Bientôt Disponible' | trans }}"
+                                            data-is-disabled="true"
+                                        >
+                                    {% endif %}
+                                {% endfor %}
                             </div>
-                    
-                        
-
-                        </div>
-                    
-                    </div>
-                </div>
-            </div>
-            
-            
-            {# <h1 class="choix-secteur-primary mt-5 ml-5">Choisissez votre secteur</h1>
-            <div class="row pt-3 ml-5">
-                <div class="col-12 col-md-5">
-                    <h6 class="">Maintenant que vous connaissez les opportunités offertes par Pixelforce, sélectionnez le secteur qui correspond le mieux à votre activité.</h6>
-                </div>
-                <div class="col-0 col-md-7"></div>
-            </div> #}
-                
-           
-                
-            
-        {% else %}
-            <div class="row mt-3">
-                <div class="col-12 col-md-6 mx-auto">
-                    <div class="alert alert-warning text-center">
-                        {% if accountStatus == USER_ACCOUNT_STATUS['UNPAID']  %}
-                            {% set agent_accountStatus = USER_ACCOUNT_STATUS['UNPAID'] %}
-                            <h5 class="text-warning"> Veuillez procéder au paiement pour activer votre compte </h5>
-                        {% elseif expiredAccount %}
-                            {% set agent_accountStatus = USER_ACCOUNT_STATUS['EXPIRED'] %}
-                            Votre essaie de 14 jours sur PixelForce est expirée, veuillez procéder au paiement pour reactiver votre compte
-                            <span class="mt-2">...Ou contacter le responsable pour plus d'informations</span>
-                        {% endif %}
-
-                         <div class="alert alert-secondary mt-3">
-                            {% set agent = app.user %}
-                            {% set agentSecteurs = repoAgentSecteur.findBy({'agent' : agent}) %}
-                            <i class="fa-solid fa-circle-info me-1"></i> 
-                            Vous avez choisi le(s) secteur(s) suivant(s) : <span class="fw-bolder"> {{ agent.allSecteursOfUser(agentSecteurs) }}</span>. 
-                            Vous pouvez vous abonner pour seulement  <span class="fw-bolder">{{ planPrice }} euro/mois</span>.
                         </div>
                     </div>
-
-                    <!-- Stripe form -->
-                    <form  method="post" id="subscription-payment-form">
-                        <div id="card-errors" role="alert"></div>
-                        <div id="card-elements"></div>
-        
-                        <div class="w-100 text-center">
-                            <button id="card-button-submit" class="btn btn-primary mt-3"><i class="fa-solid fa-cart-shopping me-1"></i> <span class="label-button">{{ stripe_defaultButton }}</span> <span class="loader-submit"></span></button>
+                    <div class=" video-placeholder px-md-5 px-3 py-4 mb-5 d-flex justify-content-md-between align-items-end" id="video-placeholder">
+                        <div id="video-info">
+                            <h2 class="fw-bold text-white">Pixelforce</h2>
+                            <p class="text-white mb-3">Découvrez comment Pixelforce peut transformer votre activité. <br>Regardez cette courte vidéo pour en savoir plus sur les opportunités qui vous attendent. </p>
                         </div>
-                    </form>
-                </div>
+                        <a class="btn btn-primary continue-btn rounded-3 d-md-block px-md-4 py-2 mb-3" id="button-access-sector">Continuer</a>
+                    </div>
+                    <div class="text-center mb-5 ">
+                        <h1 class="fw-bold text-black">Comment ça marche?</h1>
+                        <p class="text-dark">Découvrez comment Pixelforce peut transformer votre activité. <br>Regardez cette courte vidéo pour en savoir plus sur les opportunités qui vous attendent. </p>
+                    </div>
+                    <div class="row text-center mb-5">
+                        <div class="col-md-4 mb-4">
+                            <div class="step-circle mb-3">1</div>
+                            {# <h5>Your Content Goes Here</h5> #}
+                            <p class="text-dark">Choisis un ou plusieurs secteurs</p>
+                        </div>
+                        <div class="col-md-4 mb-4">
+                            <div class="step-circle mb-3">2</div>
+                            {# <h5>Your Content Goes Here</h5> #}
+                            <p class="text-dark">Clique sur le bouton continuer si le secteur est déjà disponible</p>
+                        </div>
+                        <div class="col-md-4 mb-4">
+                            <div class="step-circle mb-3">3</div>
+                            {# <h5>Your Content Goes Here</h5> #}
+                            <p class="text-dark">Accède aux formations</p>
+                        </div>
+                    </div>     
+                {% else %}
+                    <div class="row mt-3">
+                        <div class="col-12 col-md-6 mx-auto">
+                            <div class="alert alert-warning text-center">
+                                {% if accountStatus == USER_ACCOUNT_STATUS['UNPAID']  %}
+                                    {% set agent_accountStatus = USER_ACCOUNT_STATUS['UNPAID'] %}
+                                    <h5 class="text-warning"> Veuillez procéder au paiement pour activer votre compte </h5>
+                                {% elseif expiredAccount %}
+                                    {% set agent_accountStatus = USER_ACCOUNT_STATUS['EXPIRED'] %}
+                                    Votre essaie de 14 jours sur PixelForce est expirée, veuillez procéder au paiement pour reactiver votre compte
+                                    <span class="mt-2">...Ou contacter le responsable pour plus d'informations</span>
+                                {% endif %}
+
+                                <div class="alert alert-secondary mt-3">
+                                    {% set agent = app.user %}
+                                    {% set agentSecteurs = repoAgentSecteur.findBy({'agent' : agent}) %}
+                                    <i class="fa-solid fa-circle-info me-1"></i> 
+                                    Vous avez choisi le(s) secteur(s) suivant(s) : <span class="fw-bolder"> {{ agent.allSecteursOfUser(agentSecteurs) }}</span>. 
+                                    Vous pouvez vous abonner pour seulement  <span class="fw-bolder">{{ planPrice }} euro/mois</span>.
+                                </div>
+                            </div>
+
+                            <!-- Stripe form -->
+                            <form  method="post" id="subscription-payment-form">
+                                <div id="card-errors" role="alert"></div>
+                                <div id="card-elements"></div>
+                
+                                <div class="w-100 text-center">
+                                    <button id="card-button-submit" class="btn btn-primary mt-3"><i class="fa-solid fa-cart-shopping me-1"></i> <span class="label-button">{{ stripe_defaultButton }}</span> <span class="loader-submit"></span></button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                
+
+                
+                    <input type="hidden" id="agent_accountStatus" value="{{ agent_accountStatus }}">
+                    <input type="hidden" id="sessionAgentId" value="{{ agent.id }}">
+                    <input type="hidden" id="planSubscriptionId" value="{{ plan.id }}">
+                    <input type="hidden" id="stripe_stripePriceId" value="{{ plan.stripePriceId }}">
+                    <input type="hidden" id="stripe_stripePriceName" value="{{ plan.stripePriceName }}">
+                    <input type="hidden" id="stripe_stripeToken" value="{{ stripe_publishable_key }}">
+                    <input type="hidden" id="stripe_clientSecret" value="{{ stripeIntentSecret }}">
+                    <input type="hidden" id="stripe_url_stripeSubscription" value="{{ path('agent_stripe_subscription_plan_account_execute') }}">
+                    <input type="hidden" id="stripe_urlSuccessTransaction" value="{{ path('agent_home') }}">
+                    <input type="hidden" id="stripe_urlErrorTransaction" value="{{ path('agent_home') }}">
+                    <input type="hidden" id="stripe_defaultButton" value="{{ stripe_defaultButton }}">
+                    
+                    <input type="hidden" id="stripe_nameHolder" value="{{ agent.prenom }}">
+                    <input type="hidden" id="stripe_emailHolder" value="{{ agent.email }}">
+                    <input type="hidden" id="stripe_PostalCodeHolder" value="{{ agent.codePostal }}">     
+                {% endif %}
+
+
             </div>
-         
-
-          
-            <input type="hidden" id="agent_accountStatus" value="{{ agent_accountStatus }}">
-            <input type="hidden" id="sessionAgentId" value="{{ agent.id }}">
-            <input type="hidden" id="planSubscriptionId" value="{{ plan.id }}">
-            <input type="hidden" id="stripe_stripePriceId" value="{{ plan.stripePriceId }}">
-            <input type="hidden" id="stripe_stripePriceName" value="{{ plan.stripePriceName }}">
-            <input type="hidden" id="stripe_stripeToken" value="{{ stripe_publishable_key }}">
-            <input type="hidden" id="stripe_clientSecret" value="{{ stripeIntentSecret }}">
-            <input type="hidden" id="stripe_url_stripeSubscription" value="{{ path('agent_stripe_subscription_plan_account_execute') }}">
-            <input type="hidden" id="stripe_urlSuccessTransaction" value="{{ path('agent_home') }}">
-		    <input type="hidden" id="stripe_urlErrorTransaction" value="{{ path('agent_home') }}">
-            <input type="hidden" id="stripe_defaultButton" value="{{ stripe_defaultButton }}">
-            
-            <input type="hidden" id="stripe_nameHolder" value="{{ agent.prenom }}">
-            <input type="hidden" id="stripe_emailHolder" value="{{ agent.email }}">
-            <input type="hidden" id="stripe_PostalCodeHolder" value="{{ agent.codePostal }}">     
-        {% endif %}
-
+        </div>
     </div>
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
     {% if app.session.get('enabledContent')  == false  %}
-        <script src="https://js.stripe.com/v3/"></script>     
+        <script src="https://secteur..stripe.com/v3/"></script>     
         {{ encore_entry_script_tags('StripeAgentRegistrationSubscription') }}
     {% endif %}
 
@@ -235,8 +291,57 @@
             swiper.slideNext();
         });
     }); 
-      
-
         
+    </script>
+
+    <script>
+        const btns = document.querySelectorAll('.tab-btn-group button');
+        const videoPlaceholder = document.getElementById('video-placeholder');
+        const info = document.getElementById('video-info');
+
+
+        window.addEventListener('DOMContentLoaded', function() {
+            const firstButton = document.querySelector('.tab-btn-group button.first-element');
+
+            if (firstButton) {
+                const imgUrl = firstButton.getAttribute('data-img-url');
+                firstButton.classList.add('active');
+                videoPlaceholder.style.backgroundImage = `url('${ imgUrl }')`;
+            }
+
+        });
+
+        btns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                btns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const imageUrl = btn.dataset.imgUrl;
+                const idSecteur = btn.dataset.idSecteur;
+
+
+                const inputWithSectorInformation = document.getElementById('info-sector-' + idSecteur);
+                const buttonText = inputWithSectorInformation.dataset.buttonText;
+                const urlSecteur = inputWithSectorInformation.dataset.urlSecteur;
+
+                const buttonAccessSector = document.getElementById('button-access-sector');
+                buttonAccessSector.textContent = buttonText;
+                buttonAccessSector.href = urlSecteur;
+                buttonAccessSector.disabled = inputWithSectorInformation.dataset.isDisabled === 'true';
+
+                if (imageUrl) {
+                    videoPlaceholder.style.backgroundImage = `url('${ imageUrl }')`;
+                } else {
+                    videoPlaceholder.style.backgroundImage = '';
+                    
+                }
+
+                videoPlaceholder.focus();
+                const bounding = videoPlaceholder.getBoundingClientRect();
+                window.scrollTo({
+                    top: bounding.top + window.pageYOffset - (window.innerHeight / 2) + (bounding.height / 2)
+                });
+            });
+        });
+
     </script>
 {% endblock %}
