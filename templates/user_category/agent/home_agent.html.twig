@@ -6,7 +6,7 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <link rel="stylesheet" type="text/css" href="{{asset('app-assets/css/pages/app-home-agent.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{asset('app-assets/css/pages/app-home-agent.css?v=202508040803')}}">
     <link  rel="stylesheet"   href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
     <style>
         .btn-primary {
@@ -16,78 +16,7 @@
         color: #fff !important; }
 
             
-            p.text-black,
-            p.text-muted {
-                font-size: 14px;
-            }
-
-            .greeting-emoji {
-                font-size: 2rem;
-            }
-
-            .profile-img {
-                width: 40px;
-                height: 40px;
-                border-radius: 50%;
-                object-fit: cover;
-            }
-
-            .tab-btn.active {
-                background: #0059FF;
-                color: #fff;
-            }
-
-            .tab-btn {
-                border: 1px solid #0059FF;
-                color: #0059FF;
-                margin-right: 8px;
-            }
-
-            .video-placeholder {
-                /* background: repeating-linear-gradient(45deg, #e5e7eb, #e5e7eb 10px, #f3f4f6 10px, #f3f4f6 20px); */
-                background-color: #6A5FB2;
-                background-size: contain;
-                height: 500px;
-                border-radius: 18px;
-                /* align-content: end; */
-                position: relative;
-                /* background-size: cover; */
-                background-position: center;
-                background-repeat: no-repeat;
-                transition: background-image 0.3s;
-            }
-
-            /* .continue-btn {
-                position: absolute;
-                bottom: 20px;
-                right: 30px;
-            } */
-
-            .step-circle {
-                background: #0059FF;
-                color: #fff;
-                width: 80px;
-                height: 80px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                border-top-left-radius: 24px;
-                border-top-right-radius: 24px;
-                border-bottom-right-radius: 24px;
-                font-size: 2.5rem;
-                margin: 0 auto 10px auto;
-                box-shadow: 0 4px 24px rgba(37, 99, 235, 0.12);
-                font-weight: bold;
-            }
-
-            .step-card {
-                border: none;
-                background: transparent;
-            }
-
-            .custom-black-color{
-                color:black;
-            }
+            
 
     </style>
 {% endblock %}
@@ -110,11 +39,11 @@
                     {% endif %}
                     <div class="row pt-3 mb-5">
                         <div class="col-12 col-md-5 text-black">
-                            <h6 class="text-dark">{% trans %}Découvrez comment Pixelforce peut transformer votre activité. Regardez cette courte vidéo pour en savoir plus sur les opportunités qui vous attendent.{% endtrans %} </h6>
+                            <p class="text-black">{% trans %}Découvrez comment Pixelforce peut transformer votre activité. Regardez cette courte vidéo pour en savoir plus sur les opportunités qui vous attendent.{% endtrans %} </p>
                         </div>
                         <div class="col-0 col-md-7"></div>
                     </div>
-                    <div class="content-tab mb-5 mt-2">
+                    <div class="content-tab mb-4 mt-2">
                         <div class="tab-btn-group row justify-content-center">
                             <div class="col-md-10 text-center">
                                 {% for secteur in allSecteurs %}
@@ -127,17 +56,17 @@
                                     {% if agentSecteur is null and secteur.active > 0 %}
                                         <input type="hidden" id="{{ 'info-sector-' ~ secteur.id }}" 
                                             data-url-secteur="{{ path('agent_add_sector', {id: secteur.id}) }}" 
-                                            data-button-text="{{ 'Ajouter ' | trans }}"
+                                            data-button-text="{{ 'Ajouter' | trans }}"
                                         >
                                     {% elseif agentSecteur and agentSecteur.statut == true and secteur.active > 0 %}
                                         <input type="hidden" id="{{ 'info-sector-' ~ secteur.id }}" 
                                             data-url-secteur="{{ path('agent_generate_sessionSecteur_before_redirect_to_route_dahsboard', {id: secteur.id}) }}" 
-                                            data-button-text="{{ 'Accéder ' | trans }}"
+                                            data-button-text="{{ 'Accéder' | trans }}"
                                         >
                                     {% elseif agentSecteur and agentSecteur.statut == false and secteur.active > 0 %}
                                         <input type="hidden" id="{{ 'info-sector-' ~ secteur.id }}" 
                                             data-url-secteur="#" 
-                                            data-button-text="{{ 'En attente de validation ' | trans }}"
+                                            data-button-text="{{ 'En attente de validation' | trans }}"
                                         >
                                     {% else %}
                                         <input type="hidden" id="{{ 'info-sector-' ~ secteur.id }}" 
@@ -150,32 +79,33 @@
                             </div>
                         </div>
                     </div>
-                    <div class=" video-placeholder px-md-5 px-3 py-4 mb-5 d-flex justify-content-md-between align-items-end" id="video-placeholder">
+                    <div class="video-placeholder px-md-5 px-3 py-4 mb-5 d-flex justify-content-md-between align-items-end" id="video-placeholder">
                         <div id="video-info">
                             <h2 class="fw-bold text-white">Pixelforce</h2>
-                            <p class="text-white mb-3">Découvrez comment Pixelforce peut transformer votre activité. <br>Regardez cette courte vidéo pour en savoir plus sur les opportunités qui vous attendent. </p>
+                            <p class="text-white mb-3">{% trans %}Découvrez comment Pixelforce peut transformer votre activité.{% endtrans %} <br>{% trans %}Regardez cette courte vidéo pour en savoir plus sur les opportunités qui vous attendent. {% endtrans %}</p>
                         </div>
-                        <a class="btn btn-primary continue-btn rounded-3 d-md-block px-md-4 py-2 mb-3" id="button-access-sector">Continuer</a>
+                        <div>
+                            <a class="btn text-white rounded-pill continue-btn rounded-3 d-md-block px-md-4 py-2 mb-3" id="button-access-sector">{% trans %}Continuer{% endtrans %}</a>
+                        </div>
                     </div>
                     <div class="text-center mb-5 ">
-                        <h1 class="fw-bold text-black">Comment ça marche?</h1>
-                        <p class="text-dark">Découvrez comment Pixelforce peut transformer votre activité. <br>Regardez cette courte vidéo pour en savoir plus sur les opportunités qui vous attendent. </p>
+                        <h1 class="fw-bold text-black">{% trans %}Comment ça marche?{% endtrans %}</h1>
+                        <p class="text-dark">{% trans %}Découvrez comment Pixelforce peut transformer votre activité.{% endtrans %} <br>{% trans %}Regardez cette courte vidéo pour en savoir plus sur les opportunités qui vous attendent. {% endtrans %}</p>
                     </div>
+
+
                     <div class="row text-center mb-5">
                         <div class="col-md-4 mb-4">
-                            <div class="step-circle mb-3">1</div>
-                            {# <h5>Your Content Goes Here</h5> #}
-                            <p class="text-dark">Choisis un ou plusieurs secteurs</p>
+                            <div class="step-circle mb-3" id="step1">1</div>
+                            <p class="text-dark  step-text">{% trans %}Choisis un ou plusieurs secteurs{% endtrans %}</p>
                         </div>
                         <div class="col-md-4 mb-4">
-                            <div class="step-circle mb-3">2</div>
-                            {# <h5>Your Content Goes Here</h5> #}
-                            <p class="text-dark">Clique sur le bouton continuer si le secteur est déjà disponible</p>
+                            <div class="step-circle mb-3" id="step2">2</div>
+                            <p class="text-dark  step-text">{% trans %}Clique sur le bouton continuer si le secteur est déjà disponible{% endtrans %}</p>
                         </div>
                         <div class="col-md-4 mb-4">
-                            <div class="step-circle mb-3">3</div>
-                            {# <h5>Your Content Goes Here</h5> #}
-                            <p class="text-dark">Accède aux formations</p>
+                            <div class="step-circle mb-3" id="step3">3</div>
+                            <p class="text-dark  step-text">{% trans %}Accède aux formations{% endtrans %}</p>
                         </div>
                     </div>     
                 {% else %}
@@ -294,22 +224,84 @@
         
     </script>
 
+    {# <script src="https://cdn.jsdelivr.net/npm/leader-line"></script> #}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsPlumb/2.15.6/js/jsplumb.min.js"></script>
     <script>
         const btns = document.querySelectorAll('.tab-btn-group button');
         const videoPlaceholder = document.getElementById('video-placeholder');
         const info = document.getElementById('video-info');
 
+        jsPlumb.ready(function () {
+            jsPlumb.setContainer(document.body);
+
+            let connections = [];
+
+            const commonStyle = {
+                paintStyle: { stroke: '#ccc', strokeWidth: 2, dashstyle: '4 2' },
+                endpoint: 'Blank',
+                overlays: [['Arrow', { width: 10, length: 10, location: 1 }]],
+                connector: ['Bezier', { curviness: 100 }]
+            };
+
+            function updateConnections() {
+                // Remove previous connections
+                connections.forEach(conn => jsPlumb.deleteConnection(conn));
+                connections = [];
+
+                const isSmallScreen = window.innerWidth < 480;
+                const anchors = isSmallScreen ? ['Left', 'Right'] : ['Top', 'Bottom'];
+
+                // Make new connections and store them
+                connections.push(jsPlumb.connect({
+                    source: 'step1',
+                    target: 'step2',
+                    anchors: anchors,
+                    ...commonStyle
+                }));
+
+                connections.push(jsPlumb.connect({
+                    source: 'step2',
+                    target: 'step3',
+                    anchors: anchors,
+                    ...commonStyle
+                }));
+
+                // Force jsPlumb to recalculate positions
+                jsPlumb.repaintEverything();
+            }
+
+            // Initial render
+            updateConnections();
+
+            // Resize listener with slight delay to ensure layout settles
+            let resizeTimeout;
+            window.addEventListener('resize', function () {
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(() => {
+                    updateConnections();
+                }, 250); // Wait a bit to let the DOM layout settle
+            });
+        });
+
+        
+
+        function changeActiveSection(id) {
+            btns.forEach(btn => {
+                if (btn !== button) {
+                    btn.classList.remove('active');
+                }
+            });
+            button.classList.add('active');
+        }
 
         window.addEventListener('DOMContentLoaded', function() {
             const firstButton = document.querySelector('.tab-btn-group button.first-element');
-
             if (firstButton) {
-                const imgUrl = firstButton.getAttribute('data-img-url');
-                firstButton.classList.add('active');
-                videoPlaceholder.style.backgroundImage = `url('${ imgUrl }')`;
+                firstButton.click();
             }
-
         });
+
+
 
         btns.forEach(btn => {
             btn.addEventListener('click', function() {

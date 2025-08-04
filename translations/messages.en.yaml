@@ -723,8 +723,24 @@ Réinitialiser: 'Reset'
 'Le nom d''utilisateur ne peut contenir que des lettres (sans accent), des chiffres, des underscores (_) et des tirets (-).': 'Username can only contain letters (without accents), numbers, underscores (_) and hyphens (-).'
 lpn_identification_note: "🔔 <strong>Note:</strong> Your login details (username and password) have been sent by email. Please check your inbox. If you don't see the message, be sure to look in your junk or spam folder."
 'Explorez nos produits': "Explore our products"
-
-
+'Produit ajoutée avec succès': 'Product added successfully'
+'Produit modifiée avec succès': 'Product modified successfully'
+'Produit supprimée avec succès': 'Product deleted successfully'
+'Découvrez comment Pixelforce peut transformer votre activité.': 'Discover how Pixelforce can transform your business.'
+'Regardez cette courte vidéo pour en savoir plus sur les opportunités qui vous attendent.': 'Watch this short video to learn more about the opportunities that await you.'
+'Comment ça marche?': 'How does it work?'
+'Choisis un ou plusieurs secteurs': 'Choose one or more sectors'
+'Clique sur le bouton continuer si le secteur est déjà disponible': 'Click the continue button if the sector is already available'
+'Accède aux formations': 'Access the trainings'
+'Catalogue - Services': 'Catalogue - Services'
+'Un seul paiement': 'A single payment'
+Activé: Activated
+'Prix par type de contrat': 'Price by contract type'
+'Service (Catalogue)': 'Service (Catalogue)'
+'Catalogue Digital': 'Digital Catalogue'
+Services: Services
+Packages: Packages
+Continuer: Continue
 
 
 
